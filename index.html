@@ -8,17 +8,40 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <!-- Screen 1: Event Banner -->
+    <!-- Screen 1: Home Page -->
     <div id="screen-banner" class="screen active">
         <div class="banner-content">
-            <div class="event-banner">
-                <!-- Event banner image will be uploaded by user -->
-                <div class="banner-placeholder">EVENT BANNER</div>
+            <!-- Two horizontal images -->
+            <div class="header-images">
+                <img src="images/header-left.jpg" alt="Rotary Logo" class="header-img" onerror="this.style.display='none'">
+                <img src="images/header-right.jpg" alt="Event Branding" class="header-img" onerror="this.style.display='none'">
             </div>
-            <div class="register-card">
-                <h2>Event Registration</h2>
-                <p>Join us for an unforgettable experience</p>
-                <button class="btn-primary" onclick="showScreen('screen-register-type')">Register Now</button>
+            
+            <!-- Main Event Info -->
+            <div class="event-info">
+                <h1 class="main-title">Sneha Sourabha</h1>
+                <h2 class="subtitle">ROTARY DISTRICT CONFERENCE 2025-26</h2>
+                <p class="slogan">Join the district's grand celebration — be part of the legacy.</p>
+                
+                <button class="btn-register" onclick="showScreen('screen-register-type')">Register Now</button>
+                
+                <!-- Event Card -->
+                <div class="event-card">
+                    <div class="event-detail">
+                        <div class="detail-icon">📅</div>
+                        <div class="detail-info">
+                            <strong>Dates</strong>
+                            <p>30–31 Jan & 1 Feb 2026</p>
+                        </div>
+                    </div>
+                    <div class="event-detail">
+                        <div class="detail-icon">📍</div>
+                        <div class="detail-info">
+                            <strong>Venue</strong>
+                            <p><a href="https://maps.google.com/?q=Silent+Shores+Mysore" target="_blank" class="venue-link">Silent Shores, Mysore</a></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -28,27 +51,83 @@
         <div class="screen-content">
             <h2>Select Registration Type</h2>
             <div class="selection-group">
-                <div class="selection-card" data-type="individual">
-                    <div class="icon">👤</div>
-                    <h3>Individual</h3>
-                    <p>Solo registration</p>
-                    <div class="price">₹500</div>
+                <div class="selection-card" data-type="rotarian">
+                    <div class="icon">👔</div>
+                    <div class="card-content">
+                        <h3>Rotarian</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
                 </div>
-                <div class="selection-card" data-type="couple">
-                    <div class="icon">👫</div>
-                    <h3>Couple</h3>
-                    <p>Registration for two</p>
-                    <div class="price">₹900</div>
+                <div class="selection-card" data-type="rotarian-spouse">
+                    <div class="icon">�</div>
+                    <div class="card-content">
+                        <h3>Rotarian with Spouse</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
                 </div>
-                <div class="selection-card" data-type="group">
-                    <div class="icon">👥</div>
-                    <h3>Group</h3>
-                    <p>4+ participants</p>
-                    <div class="price">₹1500</div>
+                <div class="selection-card" data-type="ann">
+                    <div class="icon">👩</div>
+                    <div class="card-content">
+                        <h3>Ann</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
                 </div>
-            </div>
-            <div class="selection-details" id="selection-details">
-                <p>Select a registration type to continue</p>
+                <div class="selection-card" data-type="annet">
+                    <div class="icon">👨</div>
+                    <div class="card-content">
+                        <h3>Annet</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="selection-card" data-type="guest">
+                    <div class="icon">🎫</div>
+                    <div class="card-content">
+                        <h3>Guest</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="selection-card" data-type="rotaractor">
+                    <div class="icon">🌟</div>
+                    <div class="card-content">
+                        <h3>Rotaractor</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="selection-card" data-type="silver-donor">
+                    <div class="icon">🥈</div>
+                    <div class="card-content">
+                        <h3>Silver Donor</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="selection-card" data-type="silver-sponsor">
+                    <div class="icon">💎</div>
+                    <div class="card-content">
+                        <h3>Silver Sponsor</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="selection-card" data-type="gold-sponsor">
+                    <div class="icon">🥇</div>
+                    <div class="card-content">
+                        <h3>Gold Sponsor</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="selection-card" data-type="platinum-sponsor">
+                    <div class="icon">💠</div>
+                    <div class="card-content">
+                        <h3>Platinum Sponsor</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="selection-card" data-type="patron-sponsor">
+                    <div class="icon">👑</div>
+                    <div class="card-content">
+                        <h3>Patron Sponsor</h3>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
             </div>
             <button class="btn-primary" id="btn-continue-type" disabled onclick="showScreen('screen-personal-details')">Continue</button>
         </div>
@@ -57,25 +136,44 @@
     <!-- Screen 3: Personal Details -->
     <div id="screen-personal-details" class="screen">
         <div class="screen-content">
-            <h2>Personal Details</h2>
+            <h2>Registration Details</h2>
             <form id="personal-form" class="form-container">
                 <div class="form-group">
                     <input type="text" id="full-name" required placeholder=" ">
                     <label for="full-name">Full Name</label>
                 </div>
                 <div class="form-group">
+                    <input type="tel" id="mobile" required placeholder=" " pattern="[0-9]{10}" maxlength="10">
+                    <label for="mobile">Mobile Number</label>
+                </div>
+                <div class="form-group">
                     <input type="email" id="email" required placeholder=" ">
                     <label for="email">Email Address</label>
                 </div>
                 <div class="form-group">
-                    <input type="tel" id="phone" required placeholder=" " pattern="[0-9]{10}">
-                    <label for="phone">Phone Number</label>
+                    <select id="club-name" required>
+                        <option value="">Select Club</option>
+                    </select>
+                    <label for="club-name" class="select-label">Club Name</label>
                 </div>
                 <div class="form-group">
-                    <input type="text" id="city" required placeholder=" ">
-                    <label for="city">City</label>
+                    <label class="meal-label">Meal Preference</label>
+                    <div class="meal-toggle">
+                        <button type="button" class="meal-btn veg" data-meal="Veg">
+                            <span class="meal-icon">🌱</span>
+                            <span>Veg</span>
+                        </button>
+                        <button type="button" class="meal-btn non-veg" data-meal="Non-Veg">
+                            <span class="meal-icon">🍗</span>
+                            <span>Non-Veg</span>
+                        </button>
+                        <button type="button" class="meal-btn jain" data-meal="Jain">
+                            <span class="meal-icon">🍃</span>
+                            <span>Jain</span>
+                        </button>
+                    </div>
                 </div>
-                <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
+                <button type="button" class="btn-primary" onclick="showReview()">Review & Continue</button>
             </form>
         </div>
     </div>
@@ -89,13 +187,15 @@
                     <h3>Registration Type</h3>
                     <p id="review-type"></p>
                     <p class="review-price" id="review-price"></p>
+                    <div id="review-description" class="review-description"></div>
                 </div>
                 <div class="review-section">
                     <h3>Personal Information</h3>
                     <p><strong>Name:</strong> <span id="review-name"></span></p>
+                    <p><strong>Mobile:</strong> <span id="review-mobile"></span></p>
                     <p><strong>Email:</strong> <span id="review-email"></span></p>
-                    <p><strong>Phone:</strong> <span id="review-phone"></span></p>
-                    <p><strong>City:</strong> <span id="review-city"></span></p>
+                    <p><strong>Club:</strong> <span id="review-club"></span></p>
+                    <p><strong>Meal Preference:</strong> <span id="review-meal"></span></p>
                 </div>
             </div>
             <button class="btn-primary" onclick="showScreen('screen-payment')">Proceed to Payment</button>
@@ -130,11 +230,24 @@
                 <div class="success-icon">✓</div>
                 <h2>Registration Successful!</h2>
                 <p>Your registration has been confirmed.</p>
-                <div class="confirmation-details">
+                <div class="confirmation-details" id="confirmation-card">
                     <p><strong>Confirmation ID:</strong> <span id="confirmation-id"></span></p>
+                    <p><strong>Name:</strong> <span id="success-name"></span></p>
+                    <p><strong>Mobile:</strong> <span id="success-mobile"></span></p>
+                    <p><strong>Registration Type:</strong> <span id="success-type"></span></p>
                     <p><strong>Amount Paid:</strong> <span id="success-amount"></span></p>
+                    <p><strong>Transaction ID:</strong> <span id="success-txn"></span></p>
+                    <p><strong>UPI ID:</strong> <span id="success-upi"></span></p>
                 </div>
-                <p class="info-text">A confirmation email has been sent to your registered email address.</p>
+                <p class="info-text">This is an acknowledgment. Please keep for your records. Official confirmation and instructions will follow via WhatsApp/email.</p>
+                <div class="download-btns">
+                    <button class="btn-download" onclick="downloadAsPDF()">
+                        📄 Download as PDF
+                    </button>
+                    <button class="btn-download" onclick="downloadAsImage()">
+                        🖼️ Download as Image
+                    </button>
+                </div>
                 <button class="btn-primary" onclick="resetForm()">Register Another</button>
             </div>
         </div>

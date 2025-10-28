@@ -3,23 +3,99 @@ let registrationData = {
     type: '',
     typeName: '',
     price: 0,
+    description: '',
     fullName: '',
+    mobile: '',
     email: '',
-    phone: '',
-    city: ''
+    clubName: '',
+    mealPreference: '',
+    transactionId: '',
+    upiId: ''
 };
 
-// Registration type options with pricing
+// Registration type options with complete details
 const registrationTypes = {
-    individual: { name: 'Individual', price: 500 },
-    couple: { name: 'Couple', price: 900 },
-    group: { name: 'Group', price: 1500 }
+    'rotarian': {
+        name: 'Rotarian',
+        price: 7500,
+        description: 'Full conference access for Rotarian members',
+        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Networking events']
+    },
+    'rotarian-spouse': {
+        name: 'Rotarian with Spouse',
+        price: 14000,
+        description: 'Full conference access for Rotarian and spouse',
+        inclusions: ['All conference sessions for two', 'Meals for two', 'Conference kits', 'Couple events']
+    },
+    'ann': {
+        name: 'Ann',
+        price: 7500,
+        description: 'Full conference access for Ann members',
+        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Networking events']
+    },
+    'annet': {
+        name: 'Annet',
+        price: 7500,
+        description: 'Full conference access for Annet members',
+        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Networking events']
+    },
+    'guest': {
+        name: 'Guest',
+        price: 5000,
+        description: 'Guest registration with limited access',
+        inclusions: ['Selected sessions', 'Meals', 'Networking events']
+    },
+    'rotaractor': {
+        name: 'Rotaractor',
+        price: 3000,
+        description: 'Special rate for Rotaract members',
+        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Youth networking']
+    },
+    'silver-donor': {
+        name: 'Silver Donor',
+        price: 25000,
+        description: 'Silver donor recognition',
+        inclusions: ['Premium seating', 'VIP access', 'Donor recognition', 'Special privileges']
+    },
+    'silver-sponsor': {
+        name: 'Silver Sponsor',
+        price: 50000,
+        description: 'Silver sponsor package',
+        inclusions: ['Brand visibility', '2 delegate passes', 'Sponsor booth', 'Marketing collateral']
+    },
+    'gold-sponsor': {
+        name: 'Gold Sponsor',
+        price: 100000,
+        description: 'Gold sponsor package',
+        inclusions: ['Premium brand visibility', '4 delegate passes', 'Premium sponsor booth', 'Marketing opportunities']
+    },
+    'platinum-sponsor': {
+        name: 'Platinum Sponsor',
+        price: 200000,
+        description: 'Platinum sponsor package',
+        inclusions: ['Maximum brand visibility', '6 delegate passes', 'Prime booth location', 'Exclusive marketing rights']
+    },
+    'patron-sponsor': {
+        name: 'Patron Sponsor',
+        price: 500000,
+        description: 'Patron sponsor - highest tier',
+        inclusions: ['Top-tier brand visibility', '10 delegate passes', 'Exclusive patron lounge', 'Title sponsorship opportunities']
+    }
 };
+
+// Load clubs from JSON
+let clubsList = [];
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
+    // Load clubs
+    loadClubs();
+    
     // Setup registration type selection
     setupRegistrationSelection();
+    
+    // Setup meal preference selection
+    setupMealPreference();
     
     // Prevent form submission on enter
     document.getElementById('personal-form').addEventListener('submit', function(e) {
@@ -30,34 +106,70 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFormValidation();
 });
 
-// Setup registration type selection
+// Load clubs from JSON file
+async function loadClubs() {
+    try {
+        const response = await fetch('data/clubs.json');
+        clubsList = await response.json();
+        
+        // Populate club dropdown
+        const clubSelect = document.getElementById('club-name');
+        clubsList.forEach(club => {
+            const option = document.createElement('option');
+            option.value = club;
+            option.textContent = club;
+            clubSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading clubs:', error);
+    }
+}
+
+// Setup registration type selection with expand/collapse
 function setupRegistrationSelection() {
     const cards = document.querySelectorAll('.selection-card');
-    const detailsDiv = document.getElementById('selection-details');
     const continueBtn = document.getElementById('btn-continue-type');
     
     cards.forEach(card => {
         card.addEventListener('click', function() {
-            // Remove previous selection
-            cards.forEach(c => c.classList.remove('selected'));
-            
-            // Add selection to clicked card
-            this.classList.add('selected');
-            
-            // Get selected type
             const type = this.getAttribute('data-type');
             const typeInfo = registrationTypes[type];
+            
+            // If already expanded and selected, just return
+            if (this.classList.contains('selected') && this.classList.contains('expanded')) {
+                return;
+            }
+            
+            // Collapse all other cards
+            cards.forEach(c => {
+                c.classList.remove('selected', 'expanded');
+                const existingDetails = c.querySelector('.selection-details');
+                if (existingDetails) {
+                    existingDetails.remove();
+                }
+            });
+            
+            // Expand and select this card
+            this.classList.add('selected', 'expanded');
+            
+            // Create details section
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'selection-details';
+            detailsDiv.innerHTML = `
+                <div class="price">₹${typeInfo.price.toLocaleString('en-IN')}</div>
+                <div class="description">${typeInfo.description}</div>
+                <ul>
+                    ${typeInfo.inclusions.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+            
+            this.appendChild(detailsDiv);
             
             // Update registration data
             registrationData.type = type;
             registrationData.typeName = typeInfo.name;
             registrationData.price = typeInfo.price;
-            
-            // Update details display
-            detailsDiv.innerHTML = `
-                <p><strong>${typeInfo.name} Registration</strong></p>
-                <p>Amount: ₹${typeInfo.price}</p>
-            `;
+            registrationData.description = typeInfo.description;
             
             // Enable continue button
             continueBtn.disabled = false;
@@ -65,9 +177,27 @@ function setupRegistrationSelection() {
     });
 }
 
+// Setup meal preference toggle
+function setupMealPreference() {
+    const mealBtns = document.querySelectorAll('.meal-btn');
+    
+    mealBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove selection from all buttons
+            mealBtns.forEach(b => b.classList.remove('selected'));
+            
+            // Add selection to clicked button
+            this.classList.add('selected');
+            
+            // Update registration data
+            registrationData.mealPreference = this.getAttribute('data-meal');
+        });
+    });
+}
+
 // Setup form validation
 function setupFormValidation() {
-    const inputs = document.querySelectorAll('#personal-form input');
+    const inputs = document.querySelectorAll('#personal-form input, #personal-form select');
     
     inputs.forEach(input => {
         input.addEventListener('input', function() {
@@ -77,6 +207,12 @@ function setupFormValidation() {
         input.addEventListener('blur', function() {
             validateInput(this);
         });
+    });
+    
+    // Mobile number validation
+    const mobileInput = document.getElementById('mobile');
+    mobileInput.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
     });
 }
 
@@ -108,12 +244,13 @@ function showScreen(screenId) {
 function showReview() {
     // Collect personal details
     const fullName = document.getElementById('full-name').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
     const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const city = document.getElementById('city').value.trim();
+    const clubName = document.getElementById('club-name').value;
+    const mealPreference = registrationData.mealPreference;
     
     // Validate all fields
-    if (!fullName || !email || !phone || !city) {
+    if (!fullName || !mobile || !email || !clubName || !mealPreference) {
         alert('Please fill in all fields');
         return;
     }
@@ -127,55 +264,112 @@ function showReview() {
     
     // Phone validation (10 digits)
     const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(phone)) {
-        alert('Please enter a valid 10-digit phone number');
+    if (!phoneRegex.test(mobile)) {
+        alert('Please enter a valid 10-digit mobile number');
         return;
     }
     
     // Update registration data
     registrationData.fullName = fullName;
+    registrationData.mobile = mobile;
     registrationData.email = email;
-    registrationData.phone = phone;
-    registrationData.city = city;
+    registrationData.clubName = clubName;
     
     // Populate review screen
     document.getElementById('review-type').textContent = registrationData.typeName;
-    document.getElementById('review-price').textContent = `₹${registrationData.price}`;
+    document.getElementById('review-price').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+    
+    // Add description with inclusions
+    const typeInfo = registrationTypes[registrationData.type];
+    const descriptionHTML = `
+        <p>${typeInfo.description}</p>
+        <ul>
+            ${typeInfo.inclusions.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+    `;
+    document.getElementById('review-description').innerHTML = descriptionHTML;
+    
     document.getElementById('review-name').textContent = fullName;
+    document.getElementById('review-mobile').textContent = mobile;
     document.getElementById('review-email').textContent = email;
-    document.getElementById('review-phone').textContent = phone;
-    document.getElementById('review-city').textContent = city;
+    document.getElementById('review-club').textContent = clubName;
+    document.getElementById('review-meal').textContent = mealPreference;
     
     // Show review screen
     showScreen('screen-review');
     
     // Also populate payment screen
     document.getElementById('payment-type').textContent = registrationData.typeName;
-    document.getElementById('payment-amount').textContent = `₹${registrationData.price}`;
+    document.getElementById('payment-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
 }
 
 // Process payment
 function processPayment(status) {
     if (status === 'success') {
-        // Generate confirmation ID
-        const confirmationId = 'REG' + Date.now().toString().slice(-8);
+        // Generate transaction details (simulate payment gateway response)
+        const confirmationId = 'SS' + Date.now().toString().slice(-8);
+        const transactionId = 'TXN' + Date.now().toString().slice(-10);
+        const upiId = 'user@upi'; // This would come from payment gateway
+        
+        registrationData.transactionId = transactionId;
+        registrationData.upiId = upiId;
         
         // Populate success screen
         document.getElementById('confirmation-id').textContent = confirmationId;
-        document.getElementById('success-amount').textContent = `₹${registrationData.price}`;
+        document.getElementById('success-name').textContent = registrationData.fullName;
+        document.getElementById('success-mobile').textContent = registrationData.mobile;
+        document.getElementById('success-type').textContent = registrationData.typeName;
+        document.getElementById('success-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+        document.getElementById('success-txn').textContent = transactionId;
+        document.getElementById('success-upi').textContent = upiId;
         
         // Show success screen
         showScreen('screen-success');
         
-        // In real implementation, send data to server here
+        // In real implementation:
+        // 1. Send data to backend API
+        // 2. Store in database
+        // 3. Trigger WhatsApp confirmation
+        // 4. Send email confirmation
+        
         console.log('Registration successful:', {
             confirmationId,
-            ...registrationData
+            ...registrationData,
+            registrationDate: new Date().toISOString(),
+            paymentStatus: 'Paid',
+            verificationStatus: 'Pending'
         });
     } else {
         // Show failure screen
         showScreen('screen-failure');
     }
+}
+
+// Download acknowledgment as PDF
+function downloadAsPDF() {
+    // This requires jsPDF library - placeholder for now
+    alert('PDF download functionality will be implemented with jsPDF library.\n\nFor production, include jsPDF and generate PDF with all confirmation details.');
+    
+    // Production implementation would be:
+    // const { jsPDF } = window.jspdf;
+    // const doc = new jsPDF();
+    // Add all confirmation details to PDF
+    // doc.save('sneha-sourabha-registration.pdf');
+}
+
+// Download acknowledgment as Image
+function downloadAsImage() {
+    // This requires html2canvas library - placeholder for now
+    alert('Image download functionality will be implemented with html2canvas library.\n\nFor production, include html2canvas and capture the confirmation card as image.');
+    
+    // Production implementation would be:
+    // const card = document.getElementById('confirmation-card');
+    // html2canvas(card).then(canvas => {
+    //     const link = document.createElement('a');
+    //     link.download = 'sneha-sourabha-registration.png';
+    //     link.href = canvas.toDataURL();
+    //     link.click();
+    // });
 }
 
 // Reset form and start over
@@ -185,10 +379,14 @@ function resetForm() {
         type: '',
         typeName: '',
         price: 0,
+        description: '',
         fullName: '',
+        mobile: '',
         email: '',
-        phone: '',
-        city: ''
+        clubName: '',
+        mealPreference: '',
+        transactionId: '',
+        upiId: ''
     };
     
     // Clear form inputs
@@ -196,28 +394,31 @@ function resetForm() {
     
     // Clear selections
     document.querySelectorAll('.selection-card').forEach(card => {
-        card.classList.remove('selected');
+        card.classList.remove('selected', 'expanded');
+        const details = card.querySelector('.selection-details');
+        if (details) details.remove();
     });
     
-    // Reset selection details
-    document.getElementById('selection-details').innerHTML = '<p>Select a registration type to continue</p>';
+    // Clear meal preference
+    document.querySelectorAll('.meal-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
     
     // Disable continue button
     document.getElementById('btn-continue-type').disabled = true;
     
     // Reset input borders
-    document.querySelectorAll('#personal-form input').forEach(input => {
+    document.querySelectorAll('#personal-form input, #personal-form select').forEach(input => {
         input.style.borderColor = 'var(--light-gold)';
     });
     
-    // Go back to banner screen
+    // Go back to home screen
     showScreen('screen-banner');
 }
 
 // Prevent pull-to-refresh on mobile
 document.body.addEventListener('touchmove', function(e) {
     if (e.target.closest('.screen-content')) {
-        // Allow scrolling within screen-content
         return;
     }
     e.preventDefault();

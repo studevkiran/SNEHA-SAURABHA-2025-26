@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Sneha Sourabha 2025-26</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Login Screen -->
+        <div id="admin-login" class="admin-screen active">
+            <div class="login-card">
+                <h1>Admin Dashboard</h1>
+                <p>Sneha Sourabha 2025-26</p>
+                <form id="login-form" onsubmit="return handleLogin(event)">
+                    <div class="form-group">
+                        <input type="text" id="username" required placeholder=" ">
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="password" required placeholder=" ">
+                        <label for="password">Password</label>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="admin-dashboard" class="admin-screen">
+            <header class="admin-header">
+                <h2>Dashboard</h2>
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </header>
+
+            <!-- Overview Cards -->
+            <div class="dashboard-overview">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="total-registrations">0</h3>
+                        <p>Total Registrations</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3 id="total-revenue">₹0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="paid-count">0</h3>
+                        <p>Paid</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3 id="pending-count">0</h3>
+                        <p>Pending</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal Summary -->
+            <div class="section">
+                <h3>Meal Preferences</h3>
+                <div class="meal-summary">
+                    <div class="meal-stat veg">
+                        <span class="meal-icon">🌱</span>
+                        <span id="veg-count">0</span> Veg
+                    </div>
+                    <div class="meal-stat non-veg">
+                        <span class="meal-icon">🍗</span>
+                        <span id="non-veg-count">0</span> Non-Veg
+                    </div>
+                    <div class="meal-stat jain">
+                        <span class="meal-icon">🍃</span>
+                        <span id="jain-count">0</span> Jain
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Actions -->
+            <div class="section">
+                <div class="section-header">
+                    <h3>Registrations</h3>
+                    <div class="actions">
+                        <button onclick="showManualEntry()" class="btn-action">+ Manual Entry</button>
+                        <button onclick="exportData('csv')" class="btn-action">📊 Export CSV</button>
+                        <button onclick="exportData('excel')" class="btn-action">📗 Export Excel</button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters">
+                    <select id="filter-type" onchange="filterRegistrations()">
+                        <option value="">All Types</option>
+                        <option value="rotarian">Rotarian</option>
+                        <option value="rotarian-spouse">Rotarian with Spouse</option>
+                        <option value="ann">Ann</option>
+                        <option value="annet">Annet</option>
+                        <option value="guest">Guest</option>
+                        <option value="rotaractor">Rotaractor</option>
+                    </select>
+                    <select id="filter-payment" onchange="filterRegistrations()">
+                        <option value="">All Payment Status</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Failed">Failed</option>
+                    </select>
+                    <select id="filter-meal" onchange="filterRegistrations()">
+                        <option value="">All Meals</option>
+                        <option value="Veg">Veg</option>
+                        <option value="Non-Veg">Non-Veg</option>
+                        <option value="Jain">Jain</option>
+                    </select>
+                    <input type="text" id="search-box" placeholder="Search by name, mobile, email..." onkeyup="searchRegistrations()">
+                </div>
+
+                <!-- Registrations Table -->
+                <div class="table-container">
+                    <table id="registrations-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                                <th>Club</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Meal</th>
+                                <th>Payment</th>
+                                <th>Verified</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registrations-tbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Entry Modal -->
+        <div id="manual-entry-modal" class="modal">
+            <div class="modal-content">
+                <h2>Manual Registration Entry</h2>
+                <p class="note">Use this for walk-in registrations or corrections</p>
+                <!-- Similar form as main registration -->
+                <button onclick="closeManualEntry()" class="btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/admin.js"></script>
+</body>
+</html>
