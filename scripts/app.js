@@ -111,7 +111,8 @@ async function loadClubs() {
         clubsList.forEach(club => {
             const option = document.createElement('option');
             option.value = club.name;
-            option.textContent = `${club.id}. ${club.name}`;
+            option.textContent = club.name;
+            option.setAttribute('data-id', club.id);
             clubSelect.appendChild(option);
         });
     } catch (error) {
@@ -155,6 +156,7 @@ function setupRegistrationSelection() {
                 <ul>
                     ${typeInfo.inclusions.map(item => `<li>${item}</li>`).join('')}
                 </ul>
+                <button class="btn-continue" onclick="showScreen('screen-details')">Continue</button>
             `;
             
             this.appendChild(detailsDiv);
@@ -165,8 +167,8 @@ function setupRegistrationSelection() {
             registrationData.price = typeInfo.price;
             registrationData.description = typeInfo.description;
             
-            // Enable continue button
-            continueBtn.disabled = false;
+            // Disable the screen continue button since we have inline button
+            continueBtn.disabled = true;
         });
     });
 }
