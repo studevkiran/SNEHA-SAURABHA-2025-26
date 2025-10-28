@@ -24,17 +24,16 @@ A complete mobile-first conference registration website for the Rotary District 
   6. Acknowledgment with PDF/Image Download
 
 ### Registration Types
-1. **Rotarian** - ₹7,500
-2. **Rotarian with Spouse** - ₹14,000
-3. **Ann** - ₹7,500
-4. **Annet** - ₹7,500
-5. **Guest** - ₹5,000
-6. **Rotaractor** - ₹3,000
-7. **Silver Donor** - ₹25,000
-8. **Silver Sponsor** - ₹50,000
-9. **Gold Sponsor** - ₹1,00,000
-10. **Platinum Sponsor** - ₹2,00,000
-11. **Patron Sponsor** - ₹5,00,000
+1. **Rotarian** - ₹4,500 (Admission, Food & 1 Memento)
+2. **Rotarian with Spouse** - ₹7,500 (Admission with spouse + 2 children below 12 years, Food & 1 Memento)
+3. **Ann** - ₹3,500 (Admission & Food)
+4. **Annet** - ₹2,000 (Admission & Food)
+5. **Guest** - ₹4,500 (Admission, Food & 1 Memento)
+6. **Silver Donor** - ₹20,000 (Admission with spouse + 2 children below 12 years, Food & 2 Mementos)
+7. **Silver Sponsor** - ₹25,000 (Admission with spouse + 2 children below 12 years, Food, 1 Memento & Double Room)
+8. **Gold Sponsor** - ₹50,000 (Admission with spouse + 2 children below 12 years, Food, Special Memento & Double Room)
+9. **Platinum Sponsor** - ₹75,000 (Admission with spouse + 2 children below 12 years, Food, Special Memento & Premium Room)
+10. **Patron Sponsor** - ₹1,00,000 (Admission with spouse + 2 children below 12 years, Food, Special Memento & Suite Room)
 
 ### Advanced Features
 - **91 Rotary Clubs** loaded from JSON
