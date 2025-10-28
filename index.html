@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#D4AF37">
+    <title>Event Registration</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- Screen 1: Event Banner -->
+    <div id="screen-banner" class="screen active">
+        <div class="banner-content">
+            <div class="event-banner">
+                <!-- Event banner image will be uploaded by user -->
+                <div class="banner-placeholder">EVENT BANNER</div>
+            </div>
+            <div class="register-card">
+                <h2>Event Registration</h2>
+                <p>Join us for an unforgettable experience</p>
+                <button class="btn-primary" onclick="showScreen('screen-register-type')">Register Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 2: Registration Type Selection -->
+    <div id="screen-register-type" class="screen">
+        <div class="screen-content">
+            <h2>Select Registration Type</h2>
+            <div class="selection-group">
+                <div class="selection-card" data-type="individual">
+                    <div class="icon">👤</div>
+                    <h3>Individual</h3>
+                    <p>Solo registration</p>
+                    <div class="price">₹500</div>
+                </div>
+                <div class="selection-card" data-type="couple">
+                    <div class="icon">👫</div>
+                    <h3>Couple</h3>
+                    <p>Registration for two</p>
+                    <div class="price">₹900</div>
+                </div>
+                <div class="selection-card" data-type="group">
+                    <div class="icon">👥</div>
+                    <h3>Group</h3>
+                    <p>4+ participants</p>
+                    <div class="price">₹1500</div>
+                </div>
+            </div>
+            <div class="selection-details" id="selection-details">
+                <p>Select a registration type to continue</p>
+            </div>
+            <button class="btn-primary" id="btn-continue-type" disabled onclick="showScreen('screen-personal-details')">Continue</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: Personal Details -->
+    <div id="screen-personal-details" class="screen">
+        <div class="screen-content">
+            <h2>Personal Details</h2>
+            <form id="personal-form" class="form-container">
+                <div class="form-group">
+                    <input type="text" id="full-name" required placeholder=" ">
+                    <label for="full-name">Full Name</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" required placeholder=" ">
+                    <label for="email">Email Address</label>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" required placeholder=" " pattern="[0-9]{10}">
+                    <label for="phone">Phone Number</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="city" required placeholder=" ">
+                    <label for="city">City</label>
+                </div>
+                <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Screen 4: Review -->
+    <div id="screen-review" class="screen">
+        <div class="screen-content">
+            <h2>Review Details</h2>
+            <div class="review-container">
+                <div class="review-section">
+                    <h3>Registration Type</h3>
+                    <p id="review-type"></p>
+                    <p class="review-price" id="review-price"></p>
+                </div>
+                <div class="review-section">
+                    <h3>Personal Information</h3>
+                    <p><strong>Name:</strong> <span id="review-name"></span></p>
+                    <p><strong>Email:</strong> <span id="review-email"></span></p>
+                    <p><strong>Phone:</strong> <span id="review-phone"></span></p>
+                    <p><strong>City:</strong> <span id="review-city"></span></p>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="showScreen('screen-payment')">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <!-- Screen 5: Payment -->
+    <div id="screen-payment" class="screen">
+        <div class="screen-content">
+            <h2>Payment</h2>
+            <div class="payment-container">
+                <div class="payment-summary">
+                    <p>Registration Type: <span id="payment-type"></span></p>
+                    <h3>Amount to Pay: <span id="payment-amount"></span></h3>
+                </div>
+                <div class="payment-options">
+                    <button class="payment-btn" onclick="processPayment('success')">
+                        💳 Pay Now
+                    </button>
+                    <button class="payment-btn payment-btn-secondary" onclick="processPayment('failed')">
+                        Simulate Failed Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 6: Success Acknowledgment -->
+    <div id="screen-success" class="screen">
+        <div class="screen-content">
+            <div class="acknowledgment">
+                <div class="success-icon">✓</div>
+                <h2>Registration Successful!</h2>
+                <p>Your registration has been confirmed.</p>
+                <div class="confirmation-details">
+                    <p><strong>Confirmation ID:</strong> <span id="confirmation-id"></span></p>
+                    <p><strong>Amount Paid:</strong> <span id="success-amount"></span></p>
+                </div>
+                <p class="info-text">A confirmation email has been sent to your registered email address.</p>
+                <button class="btn-primary" onclick="resetForm()">Register Another</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 7: Failure Acknowledgment -->
+    <div id="screen-failure" class="screen">
+        <div class="screen-content">
+            <div class="acknowledgment">
+                <div class="failure-icon">✕</div>
+                <h2>Payment Failed</h2>
+                <p>We couldn't process your payment.</p>
+                <div class="failure-details">
+                    <p>Please try again or contact support if the issue persists.</p>
+                </div>
+                <button class="btn-primary" onclick="showScreen('screen-payment')">Retry Payment</button>
+                <button class="btn-secondary" onclick="resetForm()">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/app.js"></script>
+</body>
+</html>
