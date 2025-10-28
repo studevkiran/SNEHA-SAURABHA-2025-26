@@ -17,69 +17,63 @@ let registrationData = {
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: 7500,
-        description: 'Full conference access for Rotarian members',
-        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Networking events']
+        price: 4500,
+        description: 'Admission, Food & 1 Memento',
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: 14000,
-        description: 'Full conference access for Rotarian and spouse',
-        inclusions: ['All conference sessions for two', 'Meals for two', 'Conference kits', 'Couple events']
+        price: 7500,
+        description: 'Admission with spouse + 2 children below 12 years, Food & 1 Memento',
+        inclusions: ['Admission for Rotarian and spouse', 'Admission for 2 children below 12 years', 'Food for all', '1 Memento']
     },
     'ann': {
         name: 'Ann',
-        price: 7500,
-        description: 'Full conference access for Ann members',
-        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Networking events']
+        price: 3500,
+        description: 'Admission & Food',
+        inclusions: ['Conference admission', 'Food for all sessions']
     },
     'annet': {
         name: 'Annet',
-        price: 7500,
-        description: 'Full conference access for Annet members',
-        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Networking events']
+        price: 2000,
+        description: 'Admission & Food',
+        inclusions: ['Conference admission', 'Food for all sessions']
     },
     'guest': {
         name: 'Guest',
-        price: 5000,
-        description: 'Guest registration with limited access',
-        inclusions: ['Selected sessions', 'Meals', 'Networking events']
-    },
-    'rotaractor': {
-        name: 'Rotaractor',
-        price: 3000,
-        description: 'Special rate for Rotaract members',
-        inclusions: ['All conference sessions', 'Meals', 'Conference kit', 'Youth networking']
+        price: 4500,
+        description: 'Admission, Food & 1 Memento',
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'silver-donor': {
         name: 'Silver Donor',
-        price: 25000,
-        description: 'Silver donor recognition',
-        inclusions: ['Premium seating', 'VIP access', 'Donor recognition', 'Special privileges']
+        price: 20000,
+        description: 'Admission with spouse + 2 children below 12 years, Food & 2 Memento',
+        inclusions: ['Admission for donor and spouse', 'Admission for 2 children below 12 years', 'Food for all', '2 Mementos']
     },
     'silver-sponsor': {
         name: 'Silver Sponsor',
-        price: 50000,
-        description: 'Silver sponsor package',
-        inclusions: ['Brand visibility', '2 delegate passes', 'Sponsor booth', 'Marketing collateral']
+        price: 25000,
+        description: 'Admission with spouse + 2 children below 12 years, Food & 1 Memento, Double Room at venue (no extra beds)',
+        inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', '1 Memento', 'Double Room at venue (no extra beds)']
     },
     'gold-sponsor': {
         name: 'Gold Sponsor',
-        price: 100000,
-        description: 'Gold sponsor package',
-        inclusions: ['Premium brand visibility', '4 delegate passes', 'Premium sponsor booth', 'Marketing opportunities']
+        price: 50000,
+        description: 'Admission with spouse + 2 children below 12 years, Food & special Memento, Double Room at venue (no extra beds)',
+        inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', 'Special Memento', 'Double Room at venue (no extra beds)']
     },
     'platinum-sponsor': {
         name: 'Platinum Sponsor',
-        price: 200000,
-        description: 'Platinum sponsor package',
-        inclusions: ['Maximum brand visibility', '6 delegate passes', 'Prime booth location', 'Exclusive marketing rights']
+        price: 75000,
+        description: 'Admission with spouse + 2 children below 12 years, Food & special Memento, Premium Room at venue (no extra beds)',
+        inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', 'Special Memento', 'Premium Room at venue (no extra beds)']
     },
     'patron-sponsor': {
         name: 'Patron Sponsor',
-        price: 500000,
-        description: 'Patron sponsor - highest tier',
-        inclusions: ['Top-tier brand visibility', '10 delegate passes', 'Exclusive patron lounge', 'Title sponsorship opportunities']
+        price: 100000,
+        description: 'Admission with spouse + 2 children below 12 years, Food & special Memento, Suite Room at venue (no extra beds)',
+        inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', 'Special Memento', 'Suite Room at venue (no extra beds)']
     }
 };
 
@@ -116,8 +110,8 @@ async function loadClubs() {
         const clubSelect = document.getElementById('club-name');
         clubsList.forEach(club => {
             const option = document.createElement('option');
-            option.value = club;
-            option.textContent = club;
+            option.value = club.name;
+            option.textContent = `${club.id}. ${club.name}`;
             clubSelect.appendChild(option);
         });
     } catch (error) {
