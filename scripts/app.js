@@ -364,16 +364,6 @@ function showReview() {
     document.getElementById('review-type').textContent = registrationData.typeName;
     document.getElementById('review-price').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
     
-    // Add description with inclusions
-    const typeInfo = registrationTypes[registrationData.type];
-    const descriptionHTML = `
-        <p>${typeInfo.description}</p>
-        <ul>
-            ${typeInfo.inclusions.map(item => `<li>${item}</li>`).join('')}
-        </ul>
-    `;
-    document.getElementById('review-description').innerHTML = descriptionHTML;
-    
     document.getElementById('review-name').textContent = fullName;
     document.getElementById('review-mobile').textContent = mobile;
     document.getElementById('review-email').textContent = email;

@@ -309,7 +309,7 @@ h3 {
 }
 
 .meal-group {
-    margin-top: 1.5rem;
+    margin-top: 2rem;
 }
 
 .form-group input,
@@ -370,7 +370,7 @@ h3 {
 /* Meal Preference Toggle - No Icons, More Space */
 .meal-label {
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     color: var(--text-dark);
     font-size: 14px;
     font-weight: 600;
@@ -379,7 +379,7 @@ h3 {
 .meal-toggle {
     display: flex;
     gap: 10px;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .meal-btn {
