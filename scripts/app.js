@@ -13,6 +13,101 @@ let registrationData = {
     upiId: ''
 };
 
+// Embedded fallback list of clubs (used when fetching local file via file:// is blocked by browser)
+const EMBEDDED_CLUBS = [
+    { "id": 1, "name": "B C Road City" },
+    { "id": 2, "name": "Baikampady" },
+    { "id": 3, "name": "Bajpe" },
+    { "id": 4, "name": "Ballalbagh" },
+    { "id": 5, "name": "Bannanje" },
+    { "id": 6, "name": "Belthangady" },
+    { "id": 7, "name": "Bolar" },
+    { "id": 8, "name": "Central Mall" },
+    { "id": 9, "name": "City East" },
+    { "id": 10, "name": "City North" },
+    { "id": 11, "name": "City South" },
+    { "id": 12, "name": "City West" },
+    { "id": 13, "name": "Cotton Hill" },
+    { "id": 14, "name": "Dharwad" },
+    { "id": 15, "name": "Gokarn" },
+    { "id": 16, "name": "Hampankatta" },
+    { "id": 17, "name": "Hostel Road" },
+    { "id": 18, "name": "Hubli" },
+    { "id": 19, "name": "Ibrahim" },
+    { "id": 20, "name": "Jayanagar" },
+    { "id": 21, "name": "K.R. Market" },
+    { "id": 22, "name": "Kadri" },
+    { "id": 23, "name": "Kankanady" },
+    { "id": 24, "name": "Kasargod" },
+    { "id": 25, "name": "Kinnigoli" },
+    { "id": 26, "name": "Kodialbail" },
+    { "id": 27, "name": "Kotekar" },
+    { "id": 28, "name": "Kundapura" },
+    { "id": 29, "name": "M. G. Road" },
+    { "id": 30, "name": "Mangalore" },
+    { "id": 31, "name": "Marnamikatta" },
+    { "id": 32, "name": "Mudipu" },
+    { "id": 33, "name": "Mulki" },
+    { "id": 34, "name": "N.A. Road" },
+    { "id": 35, "name": "Nellur" },
+    { "id": 36, "name": "Padil" },
+    { "id": 37, "name": "Panambur" },
+    { "id": 38, "name": "Puttur" },
+    { "id": 39, "name": "Ramachandrapura" },
+    { "id": 40, "name": "Sampige" },
+    { "id": 41, "name": "Santhosh" },
+    { "id": 42, "name": "Shakthinagar" },
+    { "id": 43, "name": "Shivamogga" },
+    { "id": 44, "name": "Someshwar" },
+    { "id": 45, "name": "Surathkal" },
+    { "id": 46, "name": "Tannirbavi" },
+    { "id": 47, "name": "Town Hall" },
+    { "id": 48, "name": "Ullal" },
+    { "id": 49, "name": "Uppinangady" },
+    { "id": 50, "name": "Vamanjoor" },
+    { "id": 51, "name": "Vijayapura" },
+    { "id": 52, "name": "Vittal" },
+    { "id": 53, "name": "Yeshwantpur" },
+    { "id": 54, "name": "Zillah" },
+    { "id": 55, "name": "Alleppey" },
+    { "id": 56, "name": "Belgaum" },
+    { "id": 57, "name": "Chikmagalur" },
+    { "id": 58, "name": "Davanagere" },
+    { "id": 59, "name": "Erode" },
+    { "id": 60, "name": "Gulbarga" },
+    { "id": 61, "name": "Hassan" },
+    { "id": 62, "name": "Ichalkaranji" },
+    { "id": 63, "name": "Jalgaon" },
+    { "id": 64, "name": "Kolar" },
+    { "id": 65, "name": "Lonavala" },
+    { "id": 66, "name": "Miraj" },
+    { "id": 67, "name": "Nagpur" },
+    { "id": 68, "name": "Osmanabad" },
+    { "id": 69, "name": "Pondicherry" },
+    { "id": 70, "name": "Quilon" },
+    { "id": 71, "name": "Ratnagiri" },
+    { "id": 72, "name": "Salem" },
+    { "id": 73, "name": "Tirupur" },
+    { "id": 74, "name": "Udupi" },
+    { "id": 75, "name": "Venkatagiri" },
+    { "id": 76, "name": "Wayanad" },
+    { "id": 77, "name": "Xavier Town" },
+    { "id": 78, "name": "Yadgir" },
+    { "id": 79, "name": "Zunheboto" },
+    { "id": 80, "name": "Newtown" },
+    { "id": 81, "name": "Old City" },
+    { "id": 82, "name": "Harbour" },
+    { "id": 83, "name": "Greenfield" },
+    { "id": 84, "name": "Lighthouse" },
+    { "id": 85, "name": "Oakwood" },
+    { "id": 86, "name": "Riverside" },
+    { "id": 87, "name": "Sunset" },
+    { "id": 88, "name": "Valley" },
+    { "id": 89, "name": "Willow" },
+    { "id": 90, "name": "Zenith" },
+    { "id": 91, "name": "Aurora" }
+];
+
 // Registration type options with complete details
 const registrationTypes = {
     'rotarian': {
@@ -102,22 +197,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Load clubs from JSON file
 async function loadClubs() {
+    const clubSelect = document.getElementById('club-name');
+    // Reset options (keep first placeholder)
+    clubSelect.innerHTML = '<option value="">Select Club</option>';
+
     try {
+        // Try fetching the clubs JSON (works when served over http/https)
         const response = await fetch('data/clubs.json');
+        if (!response.ok) throw new Error('Network response was not ok');
         clubsList = await response.json();
-        
-        // Populate club dropdown
-        const clubSelect = document.getElementById('club-name');
-        clubsList.forEach(club => {
-            const option = document.createElement('option');
-            option.value = club.name;
-            option.textContent = club.name;
-            option.setAttribute('data-id', club.id);
-            clubSelect.appendChild(option);
-        });
     } catch (error) {
-        console.error('Error loading clubs:', error);
+        // If fetch fails (commonly when opening index.html via file://), fall back to embedded list
+        console.warn('Could not load data/clubs.json (falling back to embedded list):', error);
+        clubsList = EMBEDDED_CLUBS.slice();
     }
+
+    // Populate club dropdown
+    clubsList.forEach(club => {
+        const option = document.createElement('option');
+        option.value = club.name;
+        option.textContent = `${club.id}. ${club.name}`;
+        option.setAttribute('data-id', club.id);
+        clubSelect.appendChild(option);
+    });
 }
 
 // Setup registration type selection with expand/collapse

@@ -308,7 +308,7 @@ h3 {
     position: relative;
 }
 
-.form-group:has(.meal-toggle) {
+.meal-group {
     margin-top: 1.5rem;
 }
 
@@ -434,6 +434,18 @@ h3 {
 
 .meal-btn:active {
     transform: scale(0.98);
+}
+
+/* Mobile: stack meal buttons to avoid overlap on narrow viewports */
+@media (max-width: 480px) {
+    .meal-toggle {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .meal-btn {
+        width: 100%;
+    }
 }
 
 /* Review Section */
