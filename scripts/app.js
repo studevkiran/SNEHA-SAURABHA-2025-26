@@ -226,6 +226,8 @@ async function loadClubs() {
 function setupRegistrationSelection() {
     const cards = document.querySelectorAll('.selection-card');
     const continueBtn = document.getElementById('btn-continue-type');
+    const descriptionBox = document.getElementById('selection-description-box');
+    const descriptionText = document.getElementById('selected-description');
     
     cards.forEach(card => {
         card.addEventListener('click', function() {
@@ -237,6 +239,10 @@ function setupRegistrationSelection() {
             
             // Select this card
             this.classList.add('selected');
+            
+            // Show description box with details
+            descriptionBox.classList.add('visible');
+            descriptionText.textContent = typeInfo.description;
             
             // Update registration data
             registrationData.type = type;

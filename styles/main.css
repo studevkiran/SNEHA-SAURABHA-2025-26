@@ -266,6 +266,29 @@ h3 {
     color: var(--amber-gold);
 }
 
+/* Description Box - Shows selected card details */
+.description-box {
+    display: none;
+    background: linear-gradient(135deg, var(--light-gold) 0%, var(--cream) 100%);
+    border: 2px solid var(--primary-gold);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 6px rgba(212, 175, 55, 0.2);
+}
+
+.description-box.visible {
+    display: block;
+}
+
+.description-box p {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
 /* Compact Form Styles - No Floating Labels */
 .compact-form {
     display: flex;
