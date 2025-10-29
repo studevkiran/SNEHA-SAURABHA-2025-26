@@ -124,42 +124,29 @@ async function loadClubs() {
 function setupRegistrationSelection() {
     const cards = document.querySelectorAll('.selection-card');
     const continueBtn = document.getElementById('btn-continue-type');
+    const detailsContainer = document.getElementById('selection-details-container');
+    const priceEl = document.getElementById('details-price');
+    const descriptionEl = document.getElementById('details-description');
+    const inclusionsEl = document.getElementById('details-inclusions');
     
     cards.forEach(card => {
         card.addEventListener('click', function() {
             const type = this.getAttribute('data-type');
             const typeInfo = registrationTypes[type];
             
-            // If already expanded and selected, just return
-            if (this.classList.contains('selected') && this.classList.contains('expanded')) {
-                return;
-            }
+            // Remove selection from all cards
+            cards.forEach(c => c.classList.remove('selected'));
             
-            // Collapse all other cards
-            cards.forEach(c => {
-                c.classList.remove('selected', 'expanded');
-                const existingDetails = c.querySelector('.selection-details');
-                if (existingDetails) {
-                    existingDetails.remove();
-                }
-            });
+            // Select this card
+            this.classList.add('selected');
             
-            // Expand and select this card
-            this.classList.add('selected', 'expanded');
+            // Show details container below grid
+            detailsContainer.style.display = 'block';
             
-            // Create details section
-            const detailsDiv = document.createElement('div');
-            detailsDiv.className = 'selection-details';
-            detailsDiv.innerHTML = `
-                <div class="price">₹${typeInfo.price.toLocaleString('en-IN')}</div>
-                <div class="description">${typeInfo.description}</div>
-                <ul>
-                    ${typeInfo.inclusions.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-                <button class="btn-continue" onclick="showScreen('screen-details')">Continue</button>
-            `;
-            
-            this.appendChild(detailsDiv);
+            // Populate details
+            priceEl.textContent = `₹${typeInfo.price.toLocaleString('en-IN')}`;
+            descriptionEl.textContent = typeInfo.description;
+            inclusionsEl.innerHTML = typeInfo.inclusions.map(item => `<li>${item}</li>`).join('');
             
             // Update registration data
             registrationData.type = type;
@@ -167,8 +154,8 @@ function setupRegistrationSelection() {
             registrationData.price = typeInfo.price;
             registrationData.description = typeInfo.description;
             
-            // Disable the screen continue button since we have inline button
-            continueBtn.disabled = true;
+            // Enable continue button
+            continueBtn.disabled = false;
         });
     });
 }
