@@ -686,6 +686,49 @@ h3 {
     border: 2px solid var(--light-gold);
 }
 
+/* PhonePe Payment Button */
+.phonepe-btn {
+    background: linear-gradient(135deg, #5F259F 0%, #7A3DB8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.phonepe-btn:hover {
+    background: linear-gradient(135deg, #7A3DB8 0%, #5F259F 100%);
+    box-shadow: 0 4px 12px rgba(95, 37, 159, 0.3);
+}
+
+.payment-gateway-badge {
+    background: var(--white);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--light-gold);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 15px !important;
+}
+
+.payment-info {
+    background: var(--light-gold);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.payment-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.payment-note {
+    margin-top: 15px;
+    color: var(--text-light);
+    font-size: 12px;
+}
+
 /* Acknowledgment */
 .acknowledgment {
     text-align: center;

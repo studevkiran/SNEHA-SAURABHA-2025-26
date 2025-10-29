@@ -10,6 +10,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- PhonePe Payment Gateway -->
+    <script src="config/phonepe-config.js"></script>
+    <script src="scripts/phonepe-service.js"></script>
 </head>
 <body>
     <!-- WhatsApp Floating Button -->
@@ -174,16 +178,30 @@
             <h2>Payment</h2>
             <div class="payment-container">
                 <div class="payment-summary">
+                    <p class="payment-gateway-badge">
+                        <img src="https://www.phonepe.com/webstatic/6.8.0/static/media/new_logo_d.svg" alt="PhonePe" style="height: 24px; vertical-align: middle;">
+                        Secure Payment Gateway
+                    </p>
                     <p>Registration Type: <span id="payment-type"></span></p>
                     <h3>Amount to Pay: <span id="payment-amount"></span></h3>
                 </div>
+                <div class="payment-info">
+                    <p>✓ 100% Safe & Secure</p>
+                    <p>✓ Multiple payment options</p>
+                    <p>✓ Instant confirmation</p>
+                </div>
                 <div class="payment-options">
-                    <button class="payment-btn" onclick="processPayment('success')">
-                        💳 Pay Now
+                    <button class="payment-btn phonepe-btn" onclick="initiatePhonePePayment()">
+                        <img src="https://www.phonepe.com/webstatic/6.8.0/static/media/new_logo_d.svg" alt="PhonePe" style="height: 20px; margin-right: 8px;">
+                        Pay with PhonePe
                     </button>
                     <button class="payment-btn payment-btn-secondary" onclick="processPayment('failed')">
-                        Simulate Failed Payment
+                        ← Back to Review
                     </button>
+                </div>
+                <p class="payment-note">
+                    <small>🔒 Powered by PhonePe | Test Mode Active</small>
+                </p>
                 </div>
             </div>
         </div>

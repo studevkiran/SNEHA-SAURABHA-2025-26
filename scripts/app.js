@@ -372,6 +372,44 @@ function showReview() {
     document.getElementById('payment-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
 }
 
+// Initiate PhonePe payment
+async function initiatePhonePePayment() {
+    try {
+        // Show loading state
+        const payBtn = event.target;
+        const originalText = payBtn.innerHTML;
+        payBtn.disabled = true;
+        payBtn.innerHTML = '⏳ Processing...';
+        
+        // Initiate payment with PhonePe
+        const paymentResponse = await phonePeService.initiatePayment(registrationData);
+        
+        if (paymentResponse.success) {
+            // Store transaction ID
+            registrationData.transactionId = paymentResponse.transactionId;
+            
+            // In production, redirect to PhonePe payment page
+            // window.location.href = paymentResponse.redirectUrl;
+            
+            // For testing, simulate payment success
+            setTimeout(() => {
+                processPayment('success');
+            }, 2000);
+            
+        } else {
+            alert('Payment initiation failed. Please try again.');
+            payBtn.disabled = false;
+            payBtn.innerHTML = originalText;
+        }
+        
+    } catch (error) {
+        console.error('Payment error:', error);
+        alert('An error occurred. Please try again.');
+        event.target.disabled = false;
+        event.target.innerHTML = originalText;
+    }
+}
+
 // Process payment
 function processPayment(status) {
     if (status === 'success') {
