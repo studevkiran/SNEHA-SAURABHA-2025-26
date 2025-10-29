@@ -51,43 +51,46 @@
         <div class="screen-content">
             <h2>Select Registration Type</h2>
             <div class="selection-group">
-                <div class="selection-card" data-type="rotarian">
-                    <h3>Rotarian</h3>
+                <div class="selection-card" data-type="rotarian" data-price="4500">
+                    <div class="card-name">Rotarian</div>
+                    <div class="card-price">₹4,500</div>
                 </div>
-                <div class="selection-card" data-type="rotarian-spouse">
-                    <h3>Rotarian with Spouse</h3>
+                <div class="selection-card" data-type="rotarian-spouse" data-price="7500">
+                    <div class="card-name">Rotarian + Spouse</div>
+                    <div class="card-price">₹7,500</div>
                 </div>
-                <div class="selection-card" data-type="ann">
-                    <h3>Ann</h3>
+                <div class="selection-card" data-type="ann" data-price="3500">
+                    <div class="card-name">Ann</div>
+                    <div class="card-price">₹3,500</div>
                 </div>
-                <div class="selection-card" data-type="annet">
-                    <h3>Annet</h3>
+                <div class="selection-card" data-type="annet" data-price="2000">
+                    <div class="card-name">Annet</div>
+                    <div class="card-price">₹2,000</div>
                 </div>
-                <div class="selection-card" data-type="guest">
-                    <h3>Guest</h3>
+                <div class="selection-card" data-type="guest" data-price="4500">
+                    <div class="card-name">Guest</div>
+                    <div class="card-price">₹4,500</div>
                 </div>
-                <div class="selection-card" data-type="silver-donor">
-                    <h3>Silver Donor</h3>
+                <div class="selection-card" data-type="silver-donor" data-price="20000">
+                    <div class="card-name">Silver Donor</div>
+                    <div class="card-price">₹20,000</div>
                 </div>
-                <div class="selection-card" data-type="silver-sponsor">
-                    <h3>Silver Sponsor</h3>
+                <div class="selection-card" data-type="silver-sponsor" data-price="25000">
+                    <div class="card-name">Silver Sponsor</div>
+                    <div class="card-price">₹25,000</div>
                 </div>
-                <div class="selection-card" data-type="gold-sponsor">
-                    <h3>Gold Sponsor</h3>
+                <div class="selection-card" data-type="gold-sponsor" data-price="50000">
+                    <div class="card-name">Gold Sponsor</div>
+                    <div class="card-price">₹50,000</div>
                 </div>
-                <div class="selection-card" data-type="platinum-sponsor">
-                    <h3>Platinum Sponsor</h3>
+                <div class="selection-card" data-type="platinum-sponsor" data-price="75000">
+                    <div class="card-name">Platinum Sponsor</div>
+                    <div class="card-price">₹75,000</div>
                 </div>
-                <div class="selection-card" data-type="patron-sponsor">
-                    <h3>Patron Sponsor</h3>
+                <div class="selection-card" data-type="patron-sponsor" data-price="100000">
+                    <div class="card-name">Patron Sponsor</div>
+                    <div class="card-price">₹1,00,000</div>
                 </div>
-            </div>
-            
-            <!-- Details shown below grid when card is selected -->
-            <div id="selection-details-container" class="details-container">
-                <div class="details-price" id="details-price"></div>
-                <div class="details-description" id="details-description"></div>
-                <ul class="details-inclusions" id="details-inclusions"></ul>
             </div>
             
             <button class="btn-primary" id="btn-continue-type" disabled onclick="showScreen('screen-personal-details')">Continue</button>
@@ -97,41 +100,31 @@
     <!-- Screen 3: Personal Details -->
     <div id="screen-personal-details" class="screen">
         <div class="screen-content">
-            <h2>Registration Details</h2>
-            <form id="personal-form" class="form-container">
-                <div class="form-group">
-                    <input type="text" id="full-name" required placeholder=" ">
-                    <label for="full-name">Full Name</label>
+            <h2>Your Details</h2>
+            <form id="personal-form" class="compact-form">
+                <div class="form-row">
+                    <input type="text" id="full-name" required placeholder="Full Name">
                 </div>
-                <div class="form-group">
-                    <input type="tel" id="mobile" required placeholder=" " pattern="[0-9]{10}" maxlength="10">
-                    <label for="mobile">Mobile Number</label>
+                <div class="form-row">
+                    <input type="tel" id="mobile" required placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10">
                 </div>
-                <div class="form-group">
-                    <input type="email" id="email" required placeholder=" ">
-                    <label for="email">Email Address</label>
+                <div class="form-row">
+                    <input type="email" id="email" required placeholder="Email Address">
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <select id="club-name" required>
-                        <option value="">Select Club</option>
+                        <option value="">Select Your Club</option>
                     </select>
-                    <label for="club-name" class="select-label">Club Name</label>
                 </div>
-                <div class="form-group meal-group">
-                    <label class="meal-label">Meal Preference</label>
-                    <div class="meal-toggle">
-                        <button type="button" class="meal-btn veg" data-meal="Veg">
-                            Veg
-                        </button>
-                        <button type="button" class="meal-btn non-veg" data-meal="Non-Veg">
-                            Non-Veg
-                        </button>
-                        <button type="button" class="meal-btn jain" data-meal="Jain">
-                            Jain
-                        </button>
+                <div class="form-row meal-row">
+                    <div class="meal-label-compact">Meal Preference</div>
+                    <div class="meal-buttons">
+                        <button type="button" class="meal-btn-compact veg" data-meal="Veg">Veg</button>
+                        <button type="button" class="meal-btn-compact non-veg" data-meal="Non-Veg">Non-Veg</button>
+                        <button type="button" class="meal-btn-compact jain" data-meal="Jain">Jain</button>
                     </div>
                 </div>
-                <button type="button" class="btn-primary" onclick="showReview()">Review & Continue</button>
+                <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
             </form>
         </div>
     </div>

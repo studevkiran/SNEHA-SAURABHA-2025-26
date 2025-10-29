@@ -222,14 +222,10 @@ async function loadClubs() {
     });
 }
 
-// Setup registration type selection with expand/collapse
+// Setup registration type selection - simplified for compact design
 function setupRegistrationSelection() {
     const cards = document.querySelectorAll('.selection-card');
     const continueBtn = document.getElementById('btn-continue-type');
-    const detailsContainer = document.getElementById('selection-details-container');
-    const priceEl = document.getElementById('details-price');
-    const descriptionEl = document.getElementById('details-description');
-    const inclusionsEl = document.getElementById('details-inclusions');
     
     cards.forEach(card => {
         card.addEventListener('click', function() {
@@ -241,14 +237,6 @@ function setupRegistrationSelection() {
             
             // Select this card
             this.classList.add('selected');
-            
-            // Show details container below grid
-            detailsContainer.style.display = 'block';
-            
-            // Populate details
-            priceEl.textContent = `₹${typeInfo.price.toLocaleString('en-IN')}`;
-            descriptionEl.textContent = typeInfo.description;
-            inclusionsEl.innerHTML = typeInfo.inclusions.map(item => `<li>${item}</li>`).join('');
             
             // Update registration data
             registrationData.type = type;
@@ -262,9 +250,9 @@ function setupRegistrationSelection() {
     });
 }
 
-// Setup meal preference toggle
+// Setup meal preference toggle - updated for compact buttons
 function setupMealPreference() {
-    const mealBtns = document.querySelectorAll('.meal-btn');
+    const mealBtns = document.querySelectorAll('.meal-btn-compact');
     
     mealBtns.forEach(btn => {
         btn.addEventListener('click', function() {

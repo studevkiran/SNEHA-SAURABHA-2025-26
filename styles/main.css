@@ -207,25 +207,28 @@ h3 {
     margin-bottom: 8px;
 }
 
-/* Selection Cards - Simple Grid with No Icons */
+/* Selection Cards - Compact Grid with Price */
 .selection-group {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
 .selection-card {
     background: var(--white);
-    border: 3px solid var(--light-gold);
-    border-radius: 12px;
-    padding: 1.5rem 1rem;
+    border: 2px solid var(--light-gold);
+    border-radius: 8px;
+    padding: 0.75rem 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 80px;
+    min-height: 65px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -237,67 +240,144 @@ h3 {
     border-color: var(--primary-gold);
     background: linear-gradient(135deg, var(--light-gold) 0%, var(--cream) 100%);
     box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
-    border-width: 4px;
+    border-width: 3px;
 }
 
-.selection-card h3 {
-    margin: 0;
-    font-size: 1.1rem;
+.card-name {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+}
+
+.card-price {
+    font-size: 0.85rem;
     color: var(--primary-gold);
     font-weight: 700;
-    text-align: center;
-    line-height: 1.3;
 }
 
-@media (min-width: 768px) {
-    .selection-card h3 {
-        font-size: 1rem;
-    }
+.selection-card.selected .card-name {
+    color: var(--primary-gold);
 }
 
-/* Details Container - Below Grid */
-.details-container {
-    display: none;
-    background: var(--white);
-    border: 3px solid var(--primary-gold);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.2);
-}
-
-.details-container.visible {
-    display: block;
-}
-
-.details-price {
-    font-size: 1.75rem;
-    font-weight: bold;
+.selection-card.selected .card-price {
     color: var(--amber-gold);
-    margin-bottom: 1rem;
 }
 
-.details-description {
+/* Compact Form Styles - No Floating Labels */
+.compact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row input,
+.form-row select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--light-gold);
+    border-radius: 8px;
+    font-size: 15px;
+    background: var(--white);
+    transition: all 0.3s ease;
+    outline: none;
     color: var(--text-dark);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
 }
 
-.details-inclusions {
-    margin: 0;
-    padding-left: 1.5rem;
-    list-style-type: disc;
+.form-row input::placeholder {
+    color: var(--text-light);
 }
 
-.details-inclusions li {
-    color: #666;
-    font-size: 0.95rem;
-    margin: 0.5rem 0;
-    line-height: 1.5;
+.form-row select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
 }
 
-/* Form Styles */
+.form-row input:focus,
+.form-row select:focus {
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Compact Meal Preference */
+.meal-row {
+    margin-top: 0.5rem;
+}
+
+.meal-label-compact {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.meal-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.meal-btn-compact {
+    flex: 1;
+    padding: 12px 8px;
+    border: 2px solid var(--light-gold);
+    border-radius: 8px;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+}
+
+.meal-btn-compact.veg {
+    color: #2E7D32;
+}
+
+.meal-btn-compact.non-veg {
+    color: #C62828;
+}
+
+.meal-btn-compact.jain {
+    color: #F57C00;
+}
+
+.meal-btn-compact.selected {
+    transform: scale(1.02);
+}
+
+.meal-btn-compact.veg.selected {
+    background: #E8F5E9;
+    border-color: #2E7D32;
+    border-width: 3px;
+}
+
+.meal-btn-compact.non-veg.selected {
+    background: #FFEBEE;
+    border-color: #C62828;
+    border-width: 3px;
+}
+
+.meal-btn-compact.jain.selected {
+    background: #FFF3E0;
+    border-color: #F57C00;
+    border-width: 3px;
+}
+
+.meal-btn-compact:active {
+    transform: scale(0.98);
+}
+
+/* Old form styles - keep for backward compatibility if needed */
 .form-container {
     display: flex;
     flex-direction: column;
