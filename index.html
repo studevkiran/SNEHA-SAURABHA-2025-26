@@ -9,6 +9,7 @@
     <!-- Libraries for PDF and Image download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <!-- WhatsApp Floating Button -->
@@ -195,6 +196,13 @@
                 <div class="success-icon">✓</div>
                 <h2>Registration Successful!</h2>
                 <p>Your registration has been confirmed.</p>
+                
+                <!-- QR Code for venue check-in -->
+                <div class="qr-code-container">
+                    <div id="qr-code"></div>
+                    <p class="qr-label">Show this QR at venue for check-in</p>
+                </div>
+                
                 <div class="confirmation-details" id="confirmation-card">
                     <p><strong>Confirmation ID:</strong> <span id="confirmation-id"></span></p>
                     <p><strong>Name:</strong> <span id="success-name"></span></p>

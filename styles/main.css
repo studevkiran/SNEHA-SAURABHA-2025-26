@@ -720,6 +720,40 @@ h3 {
     color: var(--white);
 }
 
+/* QR Code Container */
+.qr-code-container {
+    background: var(--white);
+    border: 3px solid var(--primary-gold);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#qr-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#qr-code canvas,
+#qr-code img {
+    max-width: 200px !important;
+    height: auto !important;
+    border-radius: 8px;
+}
+
+.qr-label {
+    color: var(--primary-gold);
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+    text-align: center;
+}
+
 .confirmation-details,
 .failure-details {
     background: var(--white);

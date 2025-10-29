@@ -382,6 +382,7 @@ function processPayment(status) {
         
         registrationData.transactionId = transactionId;
         registrationData.upiId = upiId;
+        registrationData.confirmationId = confirmationId;
         
         // Populate success screen
         document.getElementById('confirmation-id').textContent = confirmationId;
@@ -391,6 +392,9 @@ function processPayment(status) {
         document.getElementById('success-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
         document.getElementById('success-txn').textContent = transactionId;
         document.getElementById('success-upi').textContent = upiId;
+        
+        // Generate QR Code
+        generateQRCode(confirmationId, registrationData.fullName, registrationData.typeName);
         
         // Show success screen
         showScreen('screen-success');
@@ -412,6 +416,29 @@ function processPayment(status) {
         // Show failure screen
         showScreen('screen-failure');
     }
+}
+
+// Generate QR Code for venue check-in
+function generateQRCode(confirmationId, name, type) {
+    const qrContainer = document.getElementById('qr-code');
+    qrContainer.innerHTML = ''; // Clear previous QR code
+    
+    // QR code data: JSON string with registration details
+    const qrData = JSON.stringify({
+        id: confirmationId,
+        name: name,
+        type: type,
+        mobile: registrationData.mobile
+    });
+    
+    new QRCode(qrContainer, {
+        text: qrData,
+        width: 200,
+        height: 200,
+        colorDark: "#2C2416",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
 }
 
 // Download acknowledgment as PDF
