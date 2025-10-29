@@ -416,29 +416,128 @@ function processPayment(status) {
 
 // Download acknowledgment as PDF
 function downloadAsPDF() {
-    // This requires jsPDF library - placeholder for now
-    alert('PDF download functionality will be implemented with jsPDF library.\n\nFor production, include jsPDF and generate PDF with all confirmation details.');
-    
-    // Production implementation would be:
-    // const { jsPDF } = window.jspdf;
-    // const doc = new jsPDF();
-    // Add all confirmation details to PDF
-    // doc.save('sneha-sourabha-registration.pdf');
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add header
+        doc.setFillColor(212, 175, 55); // Gold color
+        doc.rect(0, 0, 210, 40, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont(undefined, 'bold');
+        doc.text('Sneha Sourabha 2025-26', 105, 20, { align: 'center' });
+        
+        doc.setFontSize(14);
+        doc.text('Registration Confirmation', 105, 32, { align: 'center' });
+        
+        // Reset text color
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(12);
+        
+        // Add confirmation details
+        let y = 60;
+        const lineHeight = 12;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Confirmation ID:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(document.getElementById('confirmation-id').textContent, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Name:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(document.getElementById('success-name').textContent, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Mobile:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(document.getElementById('success-mobile').textContent, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Email:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(registrationData.email, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Club:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(registrationData.clubName, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Registration Type:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(document.getElementById('success-type').textContent, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Meal Preference:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(registrationData.mealPreference, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Amount Paid:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(document.getElementById('success-amount').textContent, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Transaction ID:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(document.getElementById('success-txn').textContent, 70, y);
+        y += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('UPI ID:', 20, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(document.getElementById('success-upi').textContent, 70, y);
+        y += lineHeight * 2;
+        
+        // Add footer note
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        const footerText = 'This is an acknowledgment. Official confirmation will follow via WhatsApp/Email.';
+        doc.text(footerText, 105, y, { align: 'center', maxWidth: 170 });
+        
+        // Add event details at bottom
+        y += 20;
+        doc.setTextColor(212, 175, 55);
+        doc.setFont(undefined, 'bold');
+        doc.text('Event: 30-31 Jan & 1 Feb 2026 | Venue: Silent Shores, Mysore', 105, y, { align: 'center' });
+        
+        // Save PDF
+        doc.save('sneha-sourabha-registration.pdf');
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        alert('Unable to generate PDF. Please try downloading as image instead.');
+    }
 }
 
 // Download acknowledgment as Image
 function downloadAsImage() {
-    // This requires html2canvas library - placeholder for now
-    alert('Image download functionality will be implemented with html2canvas library.\n\nFor production, include html2canvas and capture the confirmation card as image.');
-    
-    // Production implementation would be:
-    // const card = document.getElementById('confirmation-card');
-    // html2canvas(card).then(canvas => {
-    //     const link = document.createElement('a');
-    //     link.download = 'sneha-sourabha-registration.png';
-    //     link.href = canvas.toDataURL();
-    //     link.click();
-    // });
+    try {
+        const card = document.getElementById('confirmation-card');
+        
+        html2canvas(card, {
+            backgroundColor: '#FFF8DC',
+            scale: 2
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'sneha-sourabha-registration.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    } catch (error) {
+        console.error('Image generation error:', error);
+        alert('Unable to generate image. Please try downloading as PDF instead.');
+    }
 }
 
 // Reset form and start over
