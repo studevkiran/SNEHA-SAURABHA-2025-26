@@ -127,20 +127,25 @@ body {
     justify-content: center;
 }
 
-.main-title {
-    font-size: 32px;
-    font-weight: bold;
-    color: var(--primary-gold);
-    margin: 0 0 10px 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+.subtitle {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin: 0 0 8px 0;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    order: 1;
 }
 
-.subtitle {
-    font-size: 16px;
-    color: var(--text-dark);
+.main-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--primary-gold);
     margin: 0 0 15px 0;
-    font-weight: 600;
-    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    order: 2;
 }
 
 .slogan {
@@ -149,6 +154,7 @@ body {
     margin: 0 0 25px 0;
     font-style: italic;
     max-width: 300px;
+    order: 3;
 }
 
 .btn-register {
@@ -163,6 +169,7 @@ body {
     box-shadow: 0 4px 15px var(--shadow);
     margin-bottom: 25px;
     transition: all 0.3s ease;
+    order: 4;
 }
 
 .btn-register:active {
@@ -177,6 +184,7 @@ body {
     width: 100%;
     max-width: 350px;
     box-shadow: 0 4px 15px var(--shadow);
+    order: 5;
 }
 
 .event-detail {
