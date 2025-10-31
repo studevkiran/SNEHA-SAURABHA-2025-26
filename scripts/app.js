@@ -177,6 +177,26 @@ let clubsList = [];
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
+    // Check for payment callback
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+        // Payment successful - restore registration data and show success
+        const pendingData = sessionStorage.getItem('pendingRegistration');
+        if (pendingData) {
+            registrationData = JSON.parse(pendingData);
+            sessionStorage.removeItem('pendingRegistration');
+            
+            // Process successful payment
+            console.log('💳 Payment callback received - Success!');
+            processPayment('success');
+            return; // Don't run other initialization
+        }
+    } else if (urlParams.get('payment') === 'cancelled') {
+        // Payment cancelled
+        alert('Payment was cancelled. Please try again.');
+        showScreen('screen-payment');
+    }
+    
     // Load clubs
     loadClubs();
     
@@ -410,17 +430,25 @@ async function initiateInstamojoPayment() {
             console.log('💰 Payment link created:', paymentResponse.paymentUrl);
             console.log('🔢 Transaction ID:', paymentResponse.transactionId);
             
-            // In production, redirect to Instamojo payment page
+            // Store registration data in sessionStorage for payment callback
+            sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
+            
+            // Redirect to mock payment gateway page
+            const paymentUrl = `payment-gateway.html?` +
+                `purpose=${encodeURIComponent(registrationData.typeName)}` +
+                `&amount=${registrationData.price}` +
+                `&name=${encodeURIComponent(registrationData.fullName)}` +
+                `&email=${encodeURIComponent(registrationData.email)}` +
+                `&phone=${registrationData.mobile}` +
+                `&txn_id=${paymentResponse.transactionId}`;
+            
+            console.log('� Redirecting to payment gateway...');
+            
+            // In production, this would be:
             // window.location.href = paymentResponse.paymentUrl;
             
-            // For testing, simulate payment success after 2 seconds
-            payBtn.innerHTML = '✓ Opening Payment Gateway...';
-            console.log('⏱️ Waiting 2 seconds before simulating success...');
-            
-            setTimeout(() => {
-                console.log('🎉 Simulating successful payment...');
-                processPayment('success');
-            }, 2000);
+            // For testing with mock gateway:
+            window.location.href = paymentUrl;
             
         } else {
             console.error('❌ Payment failed:', paymentResponse.error);
