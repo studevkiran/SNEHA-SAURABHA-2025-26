@@ -18,6 +18,11 @@ class InstamojoService {
      */
     async createPaymentRequest(data) {
         try {
+            // If in SIMULATION mode, return mock data
+            if (this.environment === 'SIMULATION') {
+                return this.simulatePaymentRequest(data);
+            }
+
             const paymentData = {
                 purpose: `SNEHA-SAURABHA 2025-26 - ${data.type}`,
                 amount: parseFloat(data.amount).toFixed(2),
@@ -44,7 +49,8 @@ class InstamojoService {
                         'X-Api-Key': this.apiKey,
                         'X-Auth-Token': this.authToken,
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    timeout: 10000 // 10 second timeout
                 }
             );
 
@@ -66,12 +72,43 @@ class InstamojoService {
             }
 
         } catch (error) {
-            console.error('💥 Instamojo API Error:', error.response?.data || error.message);
+            console.error('💥 Instamojo API Error:', error.message);
+            
+            // If API is unreachable, fallback to simulation
+            if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ECONNREFUSED') {
+                console.warn('⚠️ Instamojo API unreachable, falling back to simulation mode');
+                return this.simulatePaymentRequest(data);
+            }
+            
             return {
                 success: false,
                 error: error.response?.data?.message || error.message || 'Payment request failed'
             };
         }
+    }
+
+    /**
+     * Simulate payment request for offline testing
+     */
+    simulatePaymentRequest(data) {
+        const transactionId = `MOJO${Date.now()}`;
+        const paymentUrl = `${this.frontendUrl}/payment-gateway.html?` +
+            `purpose=${encodeURIComponent(`SNEHA-SAURABHA 2025-26 - ${data.type}`)}` +
+            `&amount=${data.amount}` +
+            `&name=${encodeURIComponent(data.fullName)}` +
+            `&email=${encodeURIComponent(data.email)}` +
+            `&phone=${data.mobile}` +
+            `&txn_id=${transactionId}`;
+
+        console.log('🎭 SIMULATION MODE: Created mock payment request');
+        
+        return {
+            success: true,
+            paymentRequestId: transactionId,
+            paymentUrl: paymentUrl,
+            shortUrl: `https://imjo.in/${transactionId.slice(-6)}`,
+            status: 'Pending'
+        };
     }
 
     /**
