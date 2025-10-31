@@ -374,12 +374,17 @@ function showReview() {
 
 // Initiate Instamojo payment
 async function initiateInstamojoPayment() {
+    console.log('🚀 Payment button clicked!');
+    console.log('📋 Registration data:', registrationData);
+    
     try {
         // Show loading state
         const payBtn = event.target;
         const originalText = payBtn.innerHTML;
         payBtn.disabled = true;
         payBtn.innerHTML = '⏳ Creating Payment Link...';
+        
+        console.log('💳 Starting payment process...');
         
         // Prepare registration data for payment
         const paymentData = {
@@ -390,33 +395,42 @@ async function initiateInstamojoPayment() {
             mobile: registrationData.mobile
         };
         
+        console.log('📦 Payment data prepared:', paymentData);
+        
         // Create payment request with Instamojo
         const paymentResponse = await instamojoService.createPaymentRequest(paymentData);
+        
+        console.log('✅ Payment response received:', paymentResponse);
         
         if (paymentResponse.success) {
             // Store transaction ID
             registrationData.transactionId = paymentResponse.transactionId;
             registrationData.paymentRequestId = paymentResponse.paymentRequestId;
             
-            console.log('Payment link created:', paymentResponse.paymentUrl);
+            console.log('💰 Payment link created:', paymentResponse.paymentUrl);
+            console.log('🔢 Transaction ID:', paymentResponse.transactionId);
             
             // In production, redirect to Instamojo payment page
             // window.location.href = paymentResponse.paymentUrl;
             
             // For testing, simulate payment success after 2 seconds
             payBtn.innerHTML = '✓ Opening Payment Gateway...';
+            console.log('⏱️ Waiting 2 seconds before simulating success...');
+            
             setTimeout(() => {
+                console.log('🎉 Simulating successful payment...');
                 processPayment('success');
             }, 2000);
             
         } else {
+            console.error('❌ Payment failed:', paymentResponse.error);
             alert('Payment initiation failed: ' + (paymentResponse.error || 'Unknown error'));
             payBtn.disabled = false;
             payBtn.innerHTML = originalText;
         }
         
     } catch (error) {
-        console.error('Payment error:', error);
+        console.error('💥 Payment error:', error);
         alert('An error occurred. Please try again.');
         event.target.disabled = false;
         event.target.innerHTML = originalText;
@@ -425,7 +439,11 @@ async function initiateInstamojoPayment() {
 
 // Process payment
 function processPayment(status) {
+    console.log('💳 Processing payment with status:', status);
+    
     if (status === 'success') {
+        console.log('✅ Payment successful! Generating confirmation...');
+        
         // Generate transaction details (simulate payment gateway response)
         const confirmationId = 'SS' + Date.now().toString().slice(-8);
         const transactionId = 'TXN' + Date.now().toString().slice(-10);
@@ -434,6 +452,9 @@ function processPayment(status) {
         registrationData.transactionId = transactionId;
         registrationData.upiId = upiId;
         registrationData.confirmationId = confirmationId;
+        
+        console.log('🎫 Confirmation ID:', confirmationId);
+        console.log('🔢 Transaction ID:', transactionId);
         
         // Populate success screen
         document.getElementById('confirmation-id').textContent = confirmationId;
@@ -444,8 +465,12 @@ function processPayment(status) {
         document.getElementById('success-txn').textContent = transactionId;
         document.getElementById('success-upi').textContent = upiId;
         
+        console.log('📝 Success screen populated');
+        
         // Generate QR Code
         generateQRCode(confirmationId, registrationData.fullName, registrationData.typeName);
+        
+        console.log('🎉 Showing success screen...');
         
         // Show success screen
         showScreen('screen-success');
@@ -456,7 +481,7 @@ function processPayment(status) {
         // 3. Trigger WhatsApp confirmation
         // 4. Send email confirmation
         
-        console.log('Registration successful:', {
+        console.log('✨ Registration successful:', {
             confirmationId,
             ...registrationData,
             registrationDate: new Date().toISOString(),
