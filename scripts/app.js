@@ -554,197 +554,64 @@ function generateQRCode(confirmationId, name, type) {
     });
 }
 
-// Download acknowledgment as PDF
+// Download acknowledgment as PDF (using ticket design)
 function downloadAsPDF() {
     try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+        const ticket = document.getElementById('registration-ticket');
         
-        // Gold header background
-        doc.setFillColor(212, 175, 55);
-        doc.rect(0, 0, 210, 45, 'F');
-        
-        // Title
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(26);
-        doc.setFont(undefined, 'bold');
-        doc.text('SNEHA-SAURABHA', 105, 18, { align: 'center' });
-        
-        doc.setFontSize(12);
-        doc.text('Rotary District 3181 Conference 2025-26', 105, 28, { align: 'center' });
-        
-        doc.setFontSize(14);
-        doc.setFillColor(76, 175, 80);
-        doc.roundedRect(70, 33, 70, 8, 2, 2, 'F');
-        doc.text('✓ CONFIRMED', 105, 38.5, { align: 'center' });
-        
-        // Reset
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(11);
-        let y = 58;
-        const lineHeight = 10;
-        
-        // Registration Details Section
-        doc.setFillColor(212, 175, 55);
-        doc.rect(20, y-5, 170, 7, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFont(undefined, 'bold');
-        doc.text('REGISTRATION DETAILS', 105, y, { align: 'center' });
-        y += 12;
-        
-        doc.setTextColor(0, 0, 0);
-        doc.setFont(undefined, 'bold');
-        doc.text('Confirmation ID:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('confirmation-id').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Registration Type:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-type').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Amount Paid:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(212, 175, 55);
-        doc.setFontSize(13);
-        doc.setFont(undefined, 'bold');
-        doc.text(document.getElementById('success-amount').textContent, 80, y);
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(11);
-        y += lineHeight + 5;
-        
-        // Personal Information Section
-        doc.setFillColor(212, 175, 55);
-        doc.rect(20, y-5, 170, 7, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFont(undefined, 'bold');
-        doc.text('PERSONAL INFORMATION', 105, y, { align: 'center' });
-        y += 12;
-        
-        doc.setTextColor(0, 0, 0);
-        doc.setFont(undefined, 'bold');
-        doc.text('Name:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-name').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Mobile:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-mobile').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Email:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-email').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Club:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-club').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Meal Preference:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-meal').textContent, 80, y);
-        y += lineHeight + 5;
-        
-        // Payment Details Section
-        doc.setFillColor(212, 175, 55);
-        doc.rect(20, y-5, 170, 7, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFont(undefined, 'bold');
-        doc.text('PAYMENT DETAILS', 105, y, { align: 'center' });
-        y += 12;
-        
-        doc.setTextColor(0, 0, 0);
-        doc.setFont(undefined, 'bold');
-        doc.text('Transaction ID:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-txn').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Payment Date:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.text(document.getElementById('success-date').textContent, 80, y);
-        y += lineHeight;
-        
-        doc.setFont(undefined, 'bold');
-        doc.text('Payment Status:', 25, y);
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(76, 175, 80);
-        doc.text('✓ SUCCESS', 80, y);
-        y += lineHeight + 10;
-        
-        // Event Details
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(10);
-        doc.setFont(undefined, 'bold');
-        doc.text('EVENT INFORMATION', 105, y, { align: 'center' });
-        y += 8;
-        doc.setFont(undefined, 'normal');
-        doc.text('Date: 30-31 January & 1 February 2026', 105, y, { align: 'center' });
-        y += 6;
-        doc.text('Venue: Silent Shores Resort & Spa, Mysore', 105, y, { align: 'center' });
-        y += 6;
-        doc.text('Contact: +91 9980557785', 105, y, { align: 'center' });
-        y += 12;
-        
-        // Gratitude
-        doc.setTextColor(212, 175, 55);
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text('Thank You!', 105, y, { align: 'center' });
-        y += 8;
-        doc.setTextColor(80, 80, 80);
-        doc.setFontSize(9);
-        doc.setFont(undefined, 'normal');
-        const gratitudeText = 'We look forward to welcoming you at SNEHA-SAURABHA 2025-26.';
-        doc.text(gratitudeText, 105, y, { align: 'center' });
-        y += 5;
-        const gratitudeText2 = 'Your participation makes this conference special. See you in Mysore!';
-        doc.text(gratitudeText2, 105, y, { align: 'center' });
-        
-        // Footer
-        y = 280;
-        doc.setFillColor(245, 245, 245);
-        doc.rect(0, y-5, 210, 20, 'F');
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(8);
-        const footerText = 'Please save this ticket for your records. You will receive detailed event information via WhatsApp and email.';
-        doc.text(footerText, 105, y, { align: 'center', maxWidth: 180 });
-        
-        // Save PDF
-        const filename = `SNEHA-SAURABHA-${document.getElementById('confirmation-id').textContent}.pdf`;
-        doc.save(filename);
-        
-        console.log('✅ PDF downloaded:', filename);
+        // Capture the ticket as canvas
+        html2canvas(ticket, {
+            backgroundColor: '#FFFFFF',
+            scale: 2,
+            logging: false,
+            useCORS: true,
+            windowWidth: 794,  // A4 width in pixels at 96 DPI (210mm)
+            windowHeight: 1123 // A4 height in pixels at 96 DPI (297mm)
+        }).then(canvas => {
+            const { jsPDF } = window.jspdf;
+            
+            // Create PDF in A4 size
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+            
+            // Get canvas dimensions
+            const imgWidth = 210; // A4 width in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            // Add image to PDF
+            const imgData = canvas.toDataURL('image/png');
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            
+            // Save PDF
+            const filename = `SNEHA-SAURABHA-Ticket-${document.getElementById('confirmation-id').textContent}.pdf`;
+            pdf.save(filename);
+            
+            console.log('✅ PDF downloaded:', filename);
+        });
     } catch (error) {
         console.error('PDF generation error:', error);
-        alert('Unable to generate PDF. Please ensure you have internet connection for jsPDF library.');
+        alert('Unable to generate PDF. Please ensure you have internet connection for the required libraries.');
     }
 }
 
-// Download acknowledgment as Image
+// Download acknowledgment as Image (A4 size)
 function downloadAsImage() {
     try {
         const ticket = document.getElementById('registration-ticket');
         
         html2canvas(ticket, {
             backgroundColor: '#FFFFFF',
-            scale: 2,
+            scale: 3, // Higher resolution for better quality
             logging: false,
-            useCORS: true
+            useCORS: true,
+            windowWidth: 794,  // A4 width in pixels at 96 DPI (210mm)
+            windowHeight: 1123 // A4 height in pixels at 96 DPI (297mm)
         }).then(canvas => {
             const link = document.createElement('a');
-            const filename = `SNEHA-SAURABHA-${document.getElementById('confirmation-id').textContent}.png`;
+            const filename = `SNEHA-SAURABHA-Ticket-${document.getElementById('confirmation-id').textContent}.png`;
             link.download = filename;
             link.href = canvas.toDataURL('image/png');
             link.click();
