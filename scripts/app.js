@@ -495,7 +495,7 @@ function processPayment(status) {
         document.getElementById('success-name').textContent = registrationData.fullName;
         document.getElementById('success-mobile').textContent = registrationData.mobile;
         document.getElementById('success-email').textContent = registrationData.email;
-        document.getElementById('success-club').textContent = registrationData.club;
+        document.getElementById('success-club').textContent = registrationData.clubName || 'Not specified';
         document.getElementById('success-meal').textContent = registrationData.mealPreference;
         document.getElementById('success-type').textContent = registrationData.typeName;
         document.getElementById('success-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
@@ -690,18 +690,18 @@ function downloadAsPDF() {
         doc.text('EVENT INFORMATION', 105, y, { align: 'center' });
         y += 8;
         doc.setFont(undefined, 'normal');
-        doc.text('📅 Date: 30-31 January & 1 February 2026', 105, y, { align: 'center' });
+        doc.text('Date: 30-31 January & 1 February 2026', 105, y, { align: 'center' });
         y += 6;
-        doc.text('📍 Venue: Silent Shores Resort & Spa, Mysore', 105, y, { align: 'center' });
+        doc.text('Venue: Silent Shores Resort & Spa, Mysore', 105, y, { align: 'center' });
         y += 6;
-        doc.text('📞 Contact: +91 9980557785', 105, y, { align: 'center' });
+        doc.text('Contact: +91 9980557785', 105, y, { align: 'center' });
         y += 12;
         
         // Gratitude
         doc.setTextColor(212, 175, 55);
         doc.setFontSize(12);
         doc.setFont(undefined, 'bold');
-        doc.text('🙏 Thank You!', 105, y, { align: 'center' });
+        doc.text('Thank You!', 105, y, { align: 'center' });
         y += 8;
         doc.setTextColor(80, 80, 80);
         doc.setFontSize(9);
