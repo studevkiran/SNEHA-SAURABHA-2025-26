@@ -169,7 +169,14 @@
                     <p><strong>Meal Preference:</strong> <span id="review-meal"></span></p>
                 </div>
             </div>
-            <button class="btn-primary" onclick="showScreen('screen-payment')">Proceed to Payment</button>
+            <div style="display: flex; gap: 12px; flex-direction: column;">
+                <button class="btn-primary" onclick="initiateInstamojoPayment()" style="font-size: 18px; padding: 16px;">
+                    💳 PAY NOW
+                </button>
+                <button class="btn-secondary" onclick="showScreen('screen-personal-details')" style="background: #666;">
+                    ← Back to Edit
+                </button>
+            </div>
         </div>
     </div>
 

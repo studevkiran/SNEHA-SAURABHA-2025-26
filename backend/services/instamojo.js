@@ -74,9 +74,25 @@ class InstamojoService {
         } catch (error) {
             console.error('💥 Instamojo API Error:', error.message);
             
-            // If API is unreachable, fallback to simulation
-            if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ECONNREFUSED') {
-                console.warn('⚠️ Instamojo API unreachable, falling back to simulation mode');
+            // Check for authentication/permission errors
+            const errorMessage = error.response?.data?.message || error.message || '';
+            const isAuthError = errorMessage.includes('permission') || 
+                              errorMessage.includes('authentication') ||
+                              errorMessage.includes('credentials') ||
+                              error.response?.status === 401 ||
+                              error.response?.status === 403;
+            
+            // If API is unreachable or auth fails, fallback to simulation
+            if (error.code === 'ENOTFOUND' || 
+                error.code === 'ETIMEDOUT' || 
+                error.code === 'ECONNREFUSED' ||
+                isAuthError) {
+                
+                const reason = isAuthError ? 
+                    '⚠️ Invalid or expired test credentials' : 
+                    '⚠️ Instamojo API unreachable';
+                    
+                console.warn(`${reason}, falling back to simulation mode`);
                 return this.simulatePaymentRequest(data);
             }
             
