@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Payment...</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .callback-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FF6B35;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 24px;
+        }
+        
+        .status {
+            background: #FFF3CD;
+            padding: 12px;
+            border-radius: 8px;
+            color: #856404;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="callback-container">
+        <div class="spinner"></div>
+        <h2>Processing Payment</h2>
+        <p id="status-message">Please wait while we verify your payment...</p>
+        <div class="status" id="status-info">Verifying payment status</div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentRequestId = urlParams.get('payment_request_id');
+        const paymentId = urlParams.get('payment_id');
+        const paymentStatus = urlParams.get('payment_status');
+
+        console.log('Payment callback received:', {
+            paymentRequestId,
+            paymentId,
+            paymentStatus
+        });
+
+        // Update status
+        document.getElementById('status-info').textContent = 
+            `Status: ${paymentStatus || 'Verifying...'}`;
+
+        // Restore registration data
+        const pendingData = sessionStorage.getItem('pendingRegistration');
+        
+        if (paymentStatus === 'Credit') {
+            // Payment successful
+            console.log('✅ Payment successful!');
+            
+            if (pendingData) {
+                const registrationData = JSON.parse(pendingData);
+                registrationData.paymentId = paymentId;
+                registrationData.paymentRequestId = paymentRequestId;
+                registrationData.paymentStatus = 'Paid';
+                
+                // Store updated data
+                sessionStorage.setItem('completedRegistration', JSON.stringify(registrationData));
+                sessionStorage.removeItem('pendingRegistration');
+            }
+            
+            // Redirect to main page with success flag
+            setTimeout(() => {
+                window.location.href = 'index.html?payment=success';
+            }, 1500);
+            
+        } else if (paymentStatus === 'Failed') {
+            // Payment failed
+            console.error('❌ Payment failed');
+            document.getElementById('status-message').textContent = 'Payment failed. Redirecting...';
+            document.getElementById('status-info').textContent = 'Payment was not successful';
+            document.getElementById('status-info').style.background = '#F8D7DA';
+            document.getElementById('status-info').style.color = '#721C24';
+            
+            setTimeout(() => {
+                window.location.href = 'index.html?payment=failed';
+            }, 2000);
+            
+        } else {
+            // Pending or unknown status
+            console.log('⏳ Payment pending verification');
+            document.getElementById('status-message').textContent = 'Verifying payment...';
+            
+            setTimeout(() => {
+                window.location.href = 'index.html?payment=pending';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

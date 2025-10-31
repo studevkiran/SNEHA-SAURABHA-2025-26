@@ -2,11 +2,23 @@
  * Instamojo Payment Gateway Configuration
  * Event: SNEHA-SAURABHA 2025-26 - Rotary District Conference
  * 
- * SECURITY: Never commit production keys to repository
- * Use environment variables in production
+ * SECURITY: API calls now go through backend server
  */
 
 const INSTAMOJO_CONFIG = {
+    // Backend API URLs
+    BACKEND_URL: 'http://localhost:3000',
+    
+    // API Endpoints
+    endpoints: {
+        createPayment: '/api/payment/create',
+        verifyPayment: '/api/payment/verify',
+        webhook: '/api/webhook/instamojo'
+    },
+    
+    // Frontend URLs
+    callbackUrl: 'http://localhost:8000/payment-callback.html',
+    
     // Test Environment (Current)
     TEST: {
         apiKey: '084c9e123d2732c22f4ebb4f8c37481d',
