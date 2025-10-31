@@ -221,40 +221,142 @@
         </div>
     </div>
 
-    <!-- Screen 6: Success Acknowledgment -->
+    <!-- Screen 6: Success Acknowledgment - Registration Ticket -->
     <div id="screen-success" class="screen">
         <div class="screen-content">
-            <div class="acknowledgment">
-                <div class="success-icon">✓</div>
-                <h2>Registration Successful!</h2>
-                <p>Your registration has been confirmed.</p>
-                
-                <!-- QR Code for venue check-in -->
-                <div class="qr-code-container">
+            <div class="ticket-container" id="registration-ticket">
+                <!-- Ticket Header with Logos -->
+                <div class="ticket-header">
+                    <div class="ticket-logos">
+                        <div class="logo-left">
+                            <img src="images/header-left.jpg" alt="Rotary Logo" onerror="this.style.display='none'">
+                        </div>
+                        <div class="ticket-title">
+                            <h1>SNEHA-SAURABHA</h1>
+                            <p class="ticket-subtitle">Rotary District 3181 Conference 2025-26</p>
+                        </div>
+                        <div class="logo-right">
+                            <img src="images/header-right.jpg" alt="Event Logo" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <div class="ticket-success-badge">✓ CONFIRMED</div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Registration Type Section -->
+                <div class="ticket-section">
+                    <h3 class="section-title">Registration Details</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Confirmation ID:</span>
+                        <span class="detail-value" id="confirmation-id"></span>
+                    </div>
+                    <div class="detail-row highlight-row">
+                        <span class="detail-label">Registration Type:</span>
+                        <span class="detail-value" id="success-type"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Amount Paid:</span>
+                        <span class="detail-value amount" id="success-amount"></span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Personal Details Section -->
+                <div class="ticket-section">
+                    <h3 class="section-title">Personal Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value" id="success-name"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Mobile:</span>
+                        <span class="detail-value" id="success-mobile"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="success-email"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Club:</span>
+                        <span class="detail-value" id="success-club"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Meal Preference:</span>
+                        <span class="detail-value" id="success-meal"></span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Transaction Details Section -->
+                <div class="ticket-section">
+                    <h3 class="section-title">Payment Details</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Transaction ID:</span>
+                        <span class="detail-value" id="success-txn"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Date:</span>
+                        <span class="detail-value" id="success-date"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Status:</span>
+                        <span class="detail-value success-status">✓ SUCCESS</span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- QR Code for Check-in -->
+                <div class="ticket-qr-section">
                     <div id="qr-code"></div>
-                    <p class="qr-label">Show this QR at venue for check-in</p>
+                    <p class="qr-instruction">Scan this QR code at venue for check-in</p>
                 </div>
-                
-                <div class="confirmation-details" id="confirmation-card">
-                    <p><strong>Confirmation ID:</strong> <span id="confirmation-id"></span></p>
-                    <p><strong>Name:</strong> <span id="success-name"></span></p>
-                    <p><strong>Mobile:</strong> <span id="success-mobile"></span></p>
-                    <p><strong>Registration Type:</strong> <span id="success-type"></span></p>
-                    <p><strong>Amount Paid:</strong> <span id="success-amount"></span></p>
-                    <p><strong>Transaction ID:</strong> <span id="success-txn"></span></p>
-                    <p><strong>UPI ID:</strong> <span id="success-upi"></span></p>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Event Details -->
+                <div class="ticket-section event-details">
+                    <h3 class="section-title">Event Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Date:</span>
+                        <span class="detail-value">30-31 January & 1 February 2026</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📍 Venue:</span>
+                        <span class="detail-value">Silent Shores Resort & Spa, Mysore</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📞 Contact:</span>
+                        <span class="detail-value">+91 9980557785</span>
+                    </div>
                 </div>
-                <p class="info-text">This is an acknowledgment. Please keep for your records. Official confirmation and instructions will follow via WhatsApp/email.</p>
-                <div class="download-btns">
-                    <button class="btn-download" onclick="downloadAsPDF()">
-                        📄 Download as PDF
-                    </button>
-                    <button class="btn-download" onclick="downloadAsImage()">
-                        🖼️ Download as Image
-                    </button>
+
+                <!-- Gratitude Message -->
+                <div class="ticket-gratitude">
+                    <p>🙏 Thank you for registering!</p>
+                    <p class="gratitude-text">We look forward to welcoming you at SNEHA-SAURABHA 2025-26. Your participation makes this conference special. See you in Mysore!</p>
                 </div>
-                <button class="btn-primary" onclick="resetForm()">Register Another</button>
+
+                <!-- Footer Note -->
+                <div class="ticket-footer">
+                    <p>Please save this ticket for your records. You will receive detailed event information via WhatsApp and email shortly.</p>
+                </div>
             </div>
+
+            <!-- Download Buttons -->
+            <div class="download-section">
+                <button class="btn-download" onclick="downloadAsPDF()">
+                    📄 Download as PDF
+                </button>
+                <button class="btn-download" onclick="downloadAsImage()">
+                    🖼️ Download as Image
+                </button>
+            </div>
+            
+            <button class="btn-primary" onclick="resetForm()" style="margin-top: 20px;">Register Another Person</button>
         </div>
     </div>
 

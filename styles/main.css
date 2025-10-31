@@ -819,6 +819,217 @@ h3 {
     margin: 15px 0;
 }
 
+/* Registration Ticket Styles */
+.ticket-container {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFF8DC 100%);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto 20px;
+    border: 2px solid var(--primary-gold);
+}
+
+.ticket-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.ticket-logos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.logo-left img,
+.logo-right img {
+    max-width: 60px;
+    max-height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.ticket-title {
+    flex: 1;
+    text-align: center;
+}
+
+.ticket-title h1 {
+    color: var(--primary-gold);
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ticket-subtitle {
+    color: var(--text-light);
+    font-size: 12px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.ticket-success-badge {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.ticket-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--light-gold), transparent);
+    margin: 20px 0;
+}
+
+.ticket-section {
+    margin: 16px 0;
+}
+
+.section-title {
+    color: var(--primary-gold);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--light-gold);
+    padding-bottom: 8px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.detail-row:hover {
+    background: rgba(212, 175, 55, 0.1);
+    transform: translateX(4px);
+}
+
+.highlight-row {
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+    border-left: 4px solid var(--primary-gold);
+}
+
+.detail-label {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.detail-value {
+    color: var(--text-dark);
+    font-weight: 700;
+    font-size: 14px;
+    text-align: right;
+}
+
+.detail-value.amount {
+    color: var(--primary-gold);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.detail-value.success-status {
+    color: #4CAF50;
+    font-weight: 800;
+}
+
+.ticket-qr-section {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    margin: 16px 0;
+    border: 2px dashed var(--primary-gold);
+}
+
+.ticket-qr-section #qr-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.ticket-qr-section #qr-code canvas,
+.ticket-qr-section #qr-code img {
+    max-width: 180px !important;
+    height: auto !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.qr-instruction {
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.event-details .detail-row {
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.ticket-gratitude {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 191, 0, 0.1));
+    border-radius: 12px;
+    margin: 16px 0;
+}
+
+.ticket-gratitude p:first-child {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-gold);
+    margin-bottom: 8px;
+}
+
+.gratitude-text {
+    color: var(--text-dark);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.ticket-footer {
+    text-align: center;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    margin-top: 16px;
+    border: 1px dashed var(--light-gold);
+}
+
+.ticket-footer p {
+    color: var(--text-light);
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.download-section {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
 /* Download Buttons */
 .download-btns {
     display: flex;
