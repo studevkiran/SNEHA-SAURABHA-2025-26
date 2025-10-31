@@ -687,16 +687,16 @@ h3 {
 }
 
 /* PhonePe Payment Button */
-.phonepe-btn {
-    background: linear-gradient(135deg, #5F259F 0%, #7A3DB8 100%);
+.instamojo-btn {
+    background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.phonepe-btn:hover {
-    background: linear-gradient(135deg, #7A3DB8 0%, #5F259F 100%);
-    box-shadow: 0 4px 12px rgba(95, 37, 159, 0.3);
+.instamojo-btn:hover {
+    background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 100%);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .payment-gateway-badge {

@@ -11,9 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <!-- PhonePe Payment Gateway -->
-    <script src="config/phonepe-config.js"></script>
-    <script src="scripts/phonepe-service.js"></script>
+    <!-- Instamojo Payment Gateway -->
+    <script src="config/instamojo-config.js"></script>
+    <script src="scripts/instamojo-service.js"></script>
 </head>
 <body>
     <!-- WhatsApp Floating Button -->
@@ -179,7 +179,7 @@
             <div class="payment-container">
                 <div class="payment-summary">
                     <p class="payment-gateway-badge">
-                        <img src="https://www.phonepe.com/webstatic/6.8.0/static/media/new_logo_d.svg" alt="PhonePe" style="height: 24px; vertical-align: middle;">
+                        <img src="https://www.instamojo.com/blog/wp-content/uploads/2017/04/instamojo-logo.png" alt="Instamojo" style="height: 30px; vertical-align: middle;">
                         Secure Payment Gateway
                     </p>
                     <p>Registration Type: <span id="payment-type"></span></p>
@@ -187,20 +187,20 @@
                 </div>
                 <div class="payment-info">
                     <p>✓ 100% Safe & Secure</p>
-                    <p>✓ Multiple payment options</p>
-                    <p>✓ Instant confirmation</p>
+                    <p>✓ UPI, Cards, Wallets & Net Banking</p>
+                    <p>✓ Instant email & SMS confirmation</p>
                 </div>
                 <div class="payment-options">
-                    <button class="payment-btn phonepe-btn" onclick="initiatePhonePePayment()">
-                        <img src="https://www.phonepe.com/webstatic/6.8.0/static/media/new_logo_d.svg" alt="PhonePe" style="height: 20px; margin-right: 8px;">
-                        Pay with PhonePe
+                    <button class="payment-btn instamojo-btn" onclick="initiateInstamojoPayment()">
+                        <img src="https://www.instamojo.com/blog/wp-content/uploads/2017/04/instamojo-logo.png" alt="Instamojo" style="height: 24px; margin-right: 8px;">
+                        Pay with Instamojo
                     </button>
-                    <button class="payment-btn payment-btn-secondary" onclick="processPayment('failed')">
+                    <button class="payment-btn payment-btn-secondary" onclick="showScreen('screen-review')">
                         ← Back to Review
                     </button>
                 </div>
                 <p class="payment-note">
-                    <small>🔒 Powered by PhonePe | Test Mode Active</small>
+                    <small>🔒 Powered by Instamojo | Test Mode Active</small>
                 </p>
                 </div>
             </div>

@@ -372,32 +372,45 @@ function showReview() {
     document.getElementById('payment-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
 }
 
-// Initiate PhonePe payment
-async function initiatePhonePePayment() {
+// Initiate Instamojo payment
+async function initiateInstamojoPayment() {
     try {
         // Show loading state
         const payBtn = event.target;
         const originalText = payBtn.innerHTML;
         payBtn.disabled = true;
-        payBtn.innerHTML = '⏳ Processing...';
+        payBtn.innerHTML = '⏳ Creating Payment Link...';
         
-        // Initiate payment with PhonePe
-        const paymentResponse = await phonePeService.initiatePayment(registrationData);
+        // Prepare registration data for payment
+        const paymentData = {
+            type: registrationData.typeName,
+            amount: registrationData.price,
+            fullName: registrationData.fullName,
+            email: registrationData.email,
+            mobile: registrationData.mobile
+        };
+        
+        // Create payment request with Instamojo
+        const paymentResponse = await instamojoService.createPaymentRequest(paymentData);
         
         if (paymentResponse.success) {
             // Store transaction ID
             registrationData.transactionId = paymentResponse.transactionId;
+            registrationData.paymentRequestId = paymentResponse.paymentRequestId;
             
-            // In production, redirect to PhonePe payment page
-            // window.location.href = paymentResponse.redirectUrl;
+            console.log('Payment link created:', paymentResponse.paymentUrl);
             
-            // For testing, simulate payment success
+            // In production, redirect to Instamojo payment page
+            // window.location.href = paymentResponse.paymentUrl;
+            
+            // For testing, simulate payment success after 2 seconds
+            payBtn.innerHTML = '✓ Opening Payment Gateway...';
             setTimeout(() => {
                 processPayment('success');
             }, 2000);
             
         } else {
-            alert('Payment initiation failed. Please try again.');
+            alert('Payment initiation failed: ' + (paymentResponse.error || 'Unknown error'));
             payBtn.disabled = false;
             payBtn.innerHTML = originalText;
         }
