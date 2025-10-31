@@ -7,9 +7,9 @@ class InstamojoService {
         this.apiKey = process.env.INSTAMOJO_API_KEY;
         this.authToken = process.env.INSTAMOJO_AUTH_TOKEN;
         this.salt = process.env.INSTAMOJO_SALT;
-        this.apiEndpoint = this.environment === 'TEST' 
-            ? process.env.INSTAMOJO_TEST_API 
-            : process.env.INSTAMOJO_PROD_API;
+        // Instamojo uses the SAME endpoint for both test and production
+        // The difference is in the credentials used (test vs production API keys)
+        this.apiEndpoint = process.env.INSTAMOJO_API_ENDPOINT || 'https://www.instamojo.com/api/1.1';
         this.frontendUrl = process.env.FRONTEND_URL;
     }
 

@@ -53,7 +53,7 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
-    console.log(`💳 Instamojo API: ${process.env.NODE_ENV === 'TEST' ? process.env.INSTAMOJO_TEST_API : process.env.INSTAMOJO_PROD_API}`);
+    console.log(`💳 Instamojo API: ${process.env.INSTAMOJO_API_ENDPOINT}`);
     console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL}`);
 });
 
