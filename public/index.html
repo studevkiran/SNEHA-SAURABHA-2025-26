@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#D4AF37">
+    <title>Event Registration</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- Libraries for PDF and Image download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Cashfree Payment Gateway -->
+    <script src="config/cashfree-config.js"></script>
+    <script src="scripts/cashfree-service.js"></script>
+</head>
+<body>
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/919980557785" target="_blank" class="whatsapp-float" aria-label="Contact us on WhatsApp">
+        <svg viewBox="0 0 32 32" class="whatsapp-icon">
+            <path fill="currentColor" d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 7.933-2.127c2.42 1.37 5.173 2.127 8.067 2.127 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-4.713 1.262 1.262-4.669-0.292-0.508c-1.207-2.100-1.847-4.507-1.847-6.924 0-7.435 6.050-13.485 13.485-13.485s13.485 6.050 13.485 13.485c0 7.435-6.050 13.485-13.485 13.485zM21.947 18.773c-0.326-0.163-1.93-0.952-2.23-1.060s-0.517-0.163-0.735 0.163c-0.218 0.326-0.844 1.060-1.034 1.278s-0.381 0.244-0.707 0.081c-0.326-0.163-1.376-0.507-2.62-1.617-0.968-0.864-1.621-1.930-1.811-2.256s-0.020-0.502 0.143-0.665c0.147-0.147 0.326-0.381 0.489-0.572s0.218-0.326 0.326-0.544c0.108-0.218 0.054-0.408-0.027-0.572s-0.735-1.771-1.008-2.423c-0.265-0.635-0.534-0.548-0.735-0.558-0.190-0.009-0.408-0.011-0.626-0.011s-0.572 0.081-0.871 0.408c-0.299 0.326-1.141 1.116-1.141 2.721s1.169 3.156 1.332 3.374c0.163 0.218 2.301 3.515 5.576 4.929 0.779 0.336 1.387 0.537 1.861 0.687 0.783 0.249 1.496 0.214 2.060 0.130 0.628-0.094 1.930-0.789 2.202-1.549s0.272-1.413 0.190-1.549c-0.081-0.136-0.299-0.218-0.626-0.381z"/>
+        </svg>
+    </a>
+
+    <!-- Screen 1: Home Page -->
+    <div id="screen-banner" class="screen active">
+        <div class="banner-content">
+            <!-- Two horizontal images -->
+            <div class="header-images">
+                <img src="images/header-left.jpg" alt="Rotary District 3181" class="header-img">
+                <img src="images/header-right.jpg" alt="Sneha Sourabha" class="header-img">
+            </div>
+            
+            <!-- Main Event Info -->
+            <div class="event-info">
+                <h2 class="subtitle">ROTARY DISTRICT 3181 CONFERENCE 2025-26</h2>
+                <h1 class="main-title">Sneha Sourabha</h1>
+                <p class="slogan">Join the district's grand celebration — be part of the legacy.</p>
+                
+                <button class="btn-register" onclick="showScreen('screen-register-type')">Register Now</button>
+                
+                <!-- Event Card -->
+                <div class="event-card">
+                    <div class="event-detail">
+                        <div class="detail-icon">📅</div>
+                        <div class="detail-info">
+                            <strong>Dates</strong>
+                            <p>30–31 Jan & 1 Feb 2026</p>
+                        </div>
+                    </div>
+                    <div class="event-detail">
+                        <div class="detail-icon">📍</div>
+                        <div class="detail-info">
+                            <strong>Venue</strong>
+                            <p><a href="https://maps.google.com/?q=Silent+Shores+Mysore" target="_blank" class="venue-link">Silent Shores, Mysore</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 2: Registration Type Selection -->
+    <div id="screen-register-type" class="screen">
+        <div class="screen-content">
+            <h2>Select Registration Type</h2>
+            <div class="selection-group">
+                <div class="selection-card" data-type="rotarian" data-price="4500">
+                    <div class="card-name">Rotarian</div>
+                    <div class="card-price">₹4,500</div>
+                </div>
+                <div class="selection-card" data-type="rotarian-spouse" data-price="7500">
+                    <div class="card-name">Rotarian + Spouse</div>
+                    <div class="card-price">₹7,500</div>
+                </div>
+                <div class="selection-card" data-type="ann" data-price="3500">
+                    <div class="card-name">Ann</div>
+                    <div class="card-price">₹3,500</div>
+                </div>
+                <div class="selection-card" data-type="annet" data-price="2000">
+                    <div class="card-name">Annet</div>
+                    <div class="card-price">₹2,000</div>
+                </div>
+                <div class="selection-card" data-type="guest" data-price="4500">
+                    <div class="card-name">Guest</div>
+                    <div class="card-price">₹4,500</div>
+                </div>
+                <div class="selection-card" data-type="silver-donor" data-price="20000">
+                    <div class="card-name">Silver Donor</div>
+                    <div class="card-price">₹20,000</div>
+                </div>
+                <div class="selection-card" data-type="silver-sponsor" data-price="25000">
+                    <div class="card-name">Silver Sponsor</div>
+                    <div class="card-price">₹25,000</div>
+                </div>
+                <div class="selection-card" data-type="gold-sponsor" data-price="50000">
+                    <div class="card-name">Gold Sponsor</div>
+                    <div class="card-price">₹50,000</div>
+                </div>
+                <div class="selection-card" data-type="platinum-sponsor" data-price="75000">
+                    <div class="card-name">Platinum Sponsor</div>
+                    <div class="card-price">₹75,000</div>
+                </div>
+                <div class="selection-card" data-type="patron-sponsor" data-price="100000">
+                    <div class="card-name">Patron Sponsor</div>
+                    <div class="card-price">₹1,00,000</div>
+                </div>
+            </div>
+            
+            <!-- Description box - shows only when card is selected -->
+            <div id="selection-description-box" class="description-box">
+                <p id="selected-description"></p>
+            </div>
+            
+            <button class="btn-primary" id="btn-continue-type" disabled onclick="showScreen('screen-personal-details')">Continue</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: Personal Details -->
+    <div id="screen-personal-details" class="screen">
+        <div class="screen-content">
+            <h2>Your Details</h2>
+            <form id="personal-form" class="compact-form">
+                <div class="form-row">
+                    <input type="text" id="full-name" required placeholder="Full Name">
+                </div>
+                <div class="form-row">
+                    <input type="tel" id="mobile" required placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10">
+                </div>
+                <div class="form-row">
+                    <input type="email" id="email" required placeholder="Email Address">
+                </div>
+                <div class="form-row">
+                    <select id="club-name" required>
+                        <option value="">Select Your Club</option>
+                    </select>
+                </div>
+                <div class="form-row meal-row">
+                    <div class="meal-label-compact">Meal Preference</div>
+                    <div class="meal-buttons">
+                        <button type="button" class="meal-btn-compact veg" data-meal="Veg">Veg</button>
+                        <button type="button" class="meal-btn-compact non-veg" data-meal="Non-Veg">Non-Veg</button>
+                        <button type="button" class="meal-btn-compact jain" data-meal="Jain">Jain</button>
+                    </div>
+                </div>
+                <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Screen 4: Review -->
+    <div id="screen-review" class="screen">
+        <div class="screen-content">
+            <h2>Review Details</h2>
+            <div class="review-container">
+                <div class="review-section">
+                    <h3>Registration Type</h3>
+                    <p id="review-type"></p>
+                    <p class="review-price" id="review-price"></p>
+                </div>
+                <div class="review-section">
+                    <h3>Personal Information</h3>
+                    <p><strong>Name:</strong> <span id="review-name"></span></p>
+                    <p><strong>Mobile:</strong> <span id="review-mobile"></span></p>
+                    <p><strong>Email:</strong> <span id="review-email"></span></p>
+                    <p><strong>Club:</strong> <span id="review-club"></span></p>
+                    <p><strong>Meal Preference:</strong> <span id="review-meal"></span></p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; flex-direction: column;">
+                <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 18px; padding: 16px;">
+                    💳 PAY NOW
+                </button>
+                <button class="btn-secondary" onclick="showScreen('screen-personal-details')" style="background: #666;">
+                    ← Back to Edit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 5: Payment -->
+    <div id="screen-payment" class="screen">
+        <div class="screen-content">
+            <h2>Payment</h2>
+            <div class="payment-container">
+                <div class="payment-summary">
+                    <p class="payment-gateway-badge">
+                        <svg style="height: 30px; vertical-align: middle;" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="200" height="50" fill="#5C4EDB" rx="5"/>
+                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white" text-anchor="middle">Cashfree</text>
+                        </svg>
+                        <span style="margin-left: 8px;">Secure Payment Gateway</span>
+                    </p>
+                    <p>Registration Type: <span id="payment-type"></span></p>
+                    <h3>Amount to Pay: <span id="payment-amount"></span></h3>
+                </div>
+                <div class="payment-info">
+                    <p>✓ 100% Safe & Secure</p>
+                    <p>✓ UPI, Cards, Wallets & Net Banking</p>
+                    <p>✓ Instant email & SMS confirmation</p>
+                </div>
+                <div class="payment-options">
+                    <button class="payment-btn cashfree-btn" onclick="initiateCashfreePayment()">
+                        <svg style="height: 24px; margin-right: 8px;" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="200" height="50" fill="white" rx="5"/>
+                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#5C4EDB" text-anchor="middle">Cashfree</text>
+                        </svg>
+                        Pay with Cashfree
+                    </button>
+                    <button class="payment-btn payment-btn-secondary" onclick="showScreen('screen-review')">
+                        ← Back to Review
+                    </button>
+                </div>
+                <p class="payment-note">
+                    <small>🔒 Powered by Cashfree Payments | Secure & Fast</small>
+                </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 6: Success Acknowledgment - Registration Ticket -->
+    <div id="screen-success" class="screen">
+        <div class="screen-content">
+            <div class="ticket-container" id="registration-ticket">
+                <!-- Ticket Header with Logos -->
+                <div class="ticket-header">
+                    <div class="ticket-logos">
+                        <div class="logo-left">
+                            <img src="images/header-left.jpg" alt="Rotary Logo" onerror="this.style.display='none'">
+                        </div>
+                        <div class="ticket-title">
+                            <p class="ticket-subtitle">Rotary District 3181 Conference 2025-26</p>
+                            <h1>SNEHA-SAURABHA</h1>
+                        </div>
+                        <div class="logo-right">
+                            <img src="images/header-right.jpg" alt="Event Logo" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <div class="ticket-success-badge">✓ CONFIRMED</div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Registration Type Section -->
+                <div class="ticket-section">
+                    <h3 class="section-title">Registration Details</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Confirmation ID:</span>
+                        <span class="detail-value" id="confirmation-id"></span>
+                    </div>
+                    <div class="detail-row highlight-row">
+                        <span class="detail-label">Registration Type:</span>
+                        <span class="detail-value" id="success-type"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Amount Paid:</span>
+                        <span class="detail-value amount" id="success-amount"></span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Personal Details Section -->
+                <div class="ticket-section">
+                    <h3 class="section-title">Personal Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value" id="success-name"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Mobile:</span>
+                        <span class="detail-value" id="success-mobile"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="success-email"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Club:</span>
+                        <span class="detail-value" id="success-club"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Meal Preference:</span>
+                        <span class="detail-value" id="success-meal"></span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Transaction Details Section -->
+                <div class="ticket-section">
+                    <h3 class="section-title">Payment Details</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Transaction ID:</span>
+                        <span class="detail-value" id="success-txn"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Date:</span>
+                        <span class="detail-value" id="success-date"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Status:</span>
+                        <span class="detail-value success-status">✓ SUCCESS</span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- QR Code for Check-in -->
+                <div class="ticket-qr-section">
+                    <div id="qr-code"></div>
+                    <p class="qr-instruction">Scan this QR code at venue for check-in</p>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <!-- Event Details -->
+                <div class="ticket-section event-details">
+                    <h3 class="section-title">Event Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Date:</span>
+                        <span class="detail-value">30-31 January & 1 February 2026</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📍 Venue:</span>
+                        <span class="detail-value">Silent Shores Resort & Spa, Mysore</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📞 Contact:</span>
+                        <span class="detail-value">+91 9980557785</span>
+                    </div>
+                </div>
+
+                <!-- Gratitude Message -->
+                <div class="ticket-gratitude">
+                    <p>🙏 Thank you for registering!</p>
+                    <p class="gratitude-text">We look forward to welcoming you at SNEHA-SAURABHA 2025-26. Your participation makes this conference special. See you in Mysore!</p>
+                </div>
+
+                <!-- Footer Note -->
+                <div class="ticket-footer">
+                    <p>Please save this ticket for your records. You will receive detailed event information via WhatsApp and email shortly.</p>
+                </div>
+            </div>
+
+            <!-- Download Buttons -->
+            <div class="download-section">
+                <button class="btn-download" onclick="downloadAsPDF()">
+                    📄 Download as PDF
+                </button>
+                <button class="btn-download" onclick="downloadAsImage()">
+                    🖼️ Download as Image
+                </button>
+            </div>
+            
+            <button class="btn-primary" onclick="resetForm()" style="margin-top: 20px;">Register Another Person</button>
+        </div>
+    </div>
+
+    <!-- Screen 7: Failure Acknowledgment -->
+    <div id="screen-failure" class="screen">
+        <div class="screen-content">
+            <div class="acknowledgment">
+                <div class="failure-icon">✕</div>
+                <h2>Payment Failed</h2>
+                <p>We couldn't process your payment.</p>
+                <div class="failure-details">
+                    <p>Please try again or contact support if the issue persists.</p>
+                </div>
+                <button class="btn-primary" onclick="showScreen('screen-payment')">Retry Payment</button>
+                <button class="btn-secondary" onclick="resetForm()">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with Legal Links -->
+    <footer style="background: #2c2c2c; color: #fff; padding: 30px 20px; margin-top: 50px; text-align: center;">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 20px;">
+                <a href="terms-and-conditions.html" style="color: #D4A024; text-decoration: none;">Terms & Conditions</a>
+                <span style="color: #666;">|</span>
+                <a href="refund-policy.html" style="color: #D4A024; text-decoration: none;">Refund & Cancellation Policy</a>
+                <span style="color: #666;">|</span>
+                <a href="contact.html" style="color: #D4A024; text-decoration: none;">Contact Us</a>
+            </div>
+            <p style="margin: 10px 0; color: #999; font-size: 14px;">
+                SNEHA-SAURABHA 2025-26 | Rotary District 3181<br>
+                January 30-31 & February 1, 2026 | Silent Shores Resort, Mysore
+            </p>
+            <p style="margin: 10px 0; color: #777; font-size: 12px;">
+                Email: snehasaurabha2026@rotary3181.org | Phone: +91 98765 43210
+            </p>
+            <p style="margin: 10px 0; color: #666; font-size: 11px;">
+                © 2025 Rotary District 3181. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="scripts/app.js"></script>
+</body>
+</html>

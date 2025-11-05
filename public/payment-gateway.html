@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashfree Payment Gateway</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .payment-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .payment-header {
+            background: linear-gradient(135deg, #5C4EDB 0%, #7C3AED 100%);
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .payment-header svg {
+            height: 40px;
+            margin-bottom: 8px;
+        }
+        
+        .payment-header h1 {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .payment-body {
+            padding: 32px 24px;
+        }
+        
+        .test-mode-badge {
+            background: #FFF3CD;
+            border: 2px solid #FFC107;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 24px;
+            color: #856404;
+            font-weight: 600;
+        }
+        
+        .order-details {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .order-details h2 {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            padding-top: 12px;
+            margin-top: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #5C4EDB;
+        }
+        
+        .detail-label {
+            color: #6c757d;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: #212529;
+        }
+        
+        .payment-methods {
+            margin-bottom: 24px;
+        }
+        
+        .payment-methods h3 {
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 16px;
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .method-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .method-btn:hover {
+            border-color: #5C4EDB;
+            background: #F5F3FF;
+        }
+        
+        .method-btn.selected {
+            border-color: #5C4EDB;
+            background: #F5F3FF;
+            color: #5C4EDB;
+        }
+        
+        .method-btn .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .pay-button {
+            width: 100%;
+            background: linear-gradient(135deg, #5C4EDB 0%, #7C3AED 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+        
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(92, 78, 219, 0.3);
+        }
+        
+        .pay-button:active {
+            transform: translateY(0);
+        }
+        
+        .cancel-link {
+            display: block;
+            text-align: center;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .cancel-link:hover {
+            color: #495057;
+            text-decoration: underline;
+        }
+        
+        .security-info {
+            text-align: center;
+            color: #6c757d;
+            font-size: 12px;
+            padding: 16px;
+            border-top: 1px solid #e9ecef;
+            margin-top: 24px;
+        }
+        
+        .security-info svg {
+            height: 16px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #5C4EDB;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <svg viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="50" fill="white" rx="5"/>
+                <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#5C4EDB" text-anchor="middle">Cashfree</text>
+            </svg>
+            <h1>Secure Payment Gateway</h1>
+        </div>
+        
+        <div class="payment-body">
+            <div class="test-mode-badge">
+                ⚠️ TEST MODE - No real money will be charged
+            </div>
+            
+            <div class="order-details">
+                <h2>Order Summary</h2>
+                <div class="detail-row">
+                    <span class="detail-label">Purpose:</span>
+                    <span class="detail-value" id="purpose">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value" id="buyer-name">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value" id="buyer-email">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Mobile:</span>
+                    <span class="detail-value" id="buyer-phone">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Amount to Pay:</span>
+                    <span class="detail-value" id="amount">₹0</span>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Select Payment Method</h3>
+                <div class="method-grid">
+                    <div class="method-btn selected" data-method="upi">
+                        <div class="icon">📱</div>
+                        <div>UPI</div>
+                    </div>
+                    <div class="method-btn" data-method="card">
+                        <div class="icon">💳</div>
+                        <div>Cards</div>
+                    </div>
+                    <div class="method-btn" data-method="netbanking">
+                        <div class="icon">🏦</div>
+                        <div>Net Banking</div>
+                    </div>
+                    <div class="method-btn" data-method="wallet">
+                        <div class="icon">👛</div>
+                        <div>Wallets</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="pay-button" onclick="processTestPayment()">
+                Complete Payment
+            </button>
+            
+            <a href="#" class="cancel-link" onclick="cancelPayment()">Cancel & Go Back</a>
+            
+            <div class="security-info">
+                🔒 Your payment is secured with 256-bit encryption
+            </div>
+        </div>
+    </div>
+    
+    <div class="loading-overlay" id="loading">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Processing Payment...</h3>
+            <p style="color: #6c757d; margin-top: 8px;">Please wait</p>
+        </div>
+    </div>
+    
+    <script>
+        // Get payment data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentData = {
+            purpose: urlParams.get('purpose') || 'SNEHA-SAURABHA 2025-26 Registration',
+            amount: urlParams.get('amount') || '7500',
+            name: urlParams.get('name') || 'Guest',
+            email: urlParams.get('email') || 'user@example.com',
+            phone: urlParams.get('phone') || '9999999999',
+            transactionId: urlParams.get('txn_id') || 'SS_TEST_' + Date.now()
+        };
+        
+        // Populate payment details
+        document.getElementById('purpose').textContent = paymentData.purpose;
+        document.getElementById('buyer-name').textContent = paymentData.name;
+        document.getElementById('buyer-email').textContent = paymentData.email;
+        document.getElementById('buyer-phone').textContent = paymentData.phone;
+        document.getElementById('amount').textContent = '₹' + parseFloat(paymentData.amount).toLocaleString('en-IN');
+        
+        // Payment method selection
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Process test payment
+        function processTestPayment() {
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            
+            // Simulate payment processing (2-3 seconds)
+            setTimeout(() => {
+                // In test mode, always succeed
+                // In production, this would actually process the payment
+                
+                // Redirect back to success page
+                window.location.href = '../index.html?payment=success&txn_id=' + paymentData.transactionId;
+            }, 2500);
+        }
+        
+        // Cancel payment
+        function cancelPayment() {
+            if (confirm('Are you sure you want to cancel this payment?')) {
+                window.location.href = '../index.html?payment=cancelled';
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
