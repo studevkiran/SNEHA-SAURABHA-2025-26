@@ -1,5 +1,5 @@
 // API: Create new registration
-const { createRegistration } = require('../../lib/db');
+const { createRegistration, createPaymentLog } = require('../../lib/db-functions');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -17,64 +17,81 @@ module.exports = async (req, res) => {
 
   try {
     const {
-      confirmationId,
-      registrationType,
-      fullName,
-      mobile,
+      name,
       email,
+      mobile,
       clubName,
-      mealPreference,
+      registrationType,
       amount,
+      mealPreference,
+      orderId,
       transactionId,
-      qrData,
-      manuallyAdded = false
+      paymentStatus = 'Pending',
+      paymentMethod = 'Cashfree'
     } = req.body;
 
     // Validation
-    if (!confirmationId || !fullName || !mobile || !email) {
+    if (!name || !email || !mobile || !clubName || !registrationType || !amount) {
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
       });
     }
 
-    // Create registration
-    const registration = await createRegistration({
-      confirmationId,
-      registrationType,
-      fullName,
-      mobile,
-      email,
-      clubName,
-      mealPreference,
-      amount,
-      transactionId,
-      paymentStatus: 'pending',
-      qrData,
-      manuallyAdded
-    });
-
-    console.log('✅ Registration created:', confirmationId);
-
-    return res.status(201).json({
-      success: true,
-      data: registration
-    });
-
-  } catch (error) {
-    console.error('❌ Registration creation error:', error);
-    
-    // Handle duplicate entry
-    if (error.message?.includes('duplicate key')) {
-      return res.status(409).json({
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
         success: false,
-        error: 'Registration already exists'
+        error: 'Invalid email format'
       });
     }
 
+    // Mobile validation
+    const mobileRegex = /^[6-9]\d{9}$/;
+    if (!mobileRegex.test(mobile)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid mobile number'
+      });
+    }
+
+    // Create registration
+    const result = await createRegistration({
+      name,
+      email,
+      mobile,
+      clubName,
+      registrationType,
+      amount,
+      mealPreference: mealPreference || 'Veg',
+      paymentStatus,
+      paymentMethod,
+      transactionId: transactionId || null
+    });
+    
+    // Create payment log if order ID provided
+    if (orderId && result.success) {
+      await createPaymentLog({
+        registrationId: result.registration.registration_id,
+        orderId,
+        amount,
+        paymentStatus,
+        paymentMethod
+      }).catch(err => console.error('Payment log error:', err));
+    }
+
+    return res.status(201).json({
+      success: true,
+      registration: result.registration,
+      message: 'Registration created successfully'
+    });
+
+  } catch (error) {
+    console.error('Error creating registration:', error);
     return res.status(500).json({
       success: false,
-      error: 'Internal server error'
+      error: 'Failed to create registration'
     });
   }
 };
