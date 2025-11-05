@@ -1,37 +1,31 @@
 // Cashfree Payment Gateway Configuration
 
 const cashfreeConfig = {
-  // Get credentials from Cashfree Dashboard → Developers → Credentials
-  // For production, update these in your deployment
-  appId: 'YOUR_CASHFREE_APP_ID',  // Replace with your App ID
-  secretKey: 'YOUR_CASHFREE_SECRET_KEY',  // Replace with your Secret Key
+  // Credentials (backend uses environment variables)
+  appId: 'TEST10864925b78bc58da644dfa2bc7152946801',
   
   // API URLs
-  apiUrl: 'https://sandbox.cashfree.com/pg', // Sandbox for testing
-  // apiUrl: 'https://api.cashfree.com/pg', // Production (use in Vercel)
+  apiUrl: 'https://sandbox.cashfree.com/pg',
   
-  // Callback URLs (update with your actual domain)
-  returnUrl: 'https://your-domain.vercel.app/payment-callback.html',
-  notifyUrl: 'https://your-domain.vercel.app/api/cashfree/webhook',
+  // Callback URLs (dynamically set)
+  returnUrl: window.location.origin + '/payment-callback.html',
+  notifyUrl: window.location.origin + '/api/cashfree/webhook',
   
-  // API version
-  apiVersion: '2023-08-01',
-  
-  // Payment options
+  // Payment configuration
   currency: 'INR',
-  
-  // Environment
-  environment: 'PRODUCTION', // or 'TEST' for sandbox
-  
-  // Payment modes (optional - leave empty to show all)
-  paymentModes: ['upi', 'netbanking', 'card', 'wallet'], // or [] for all
+  environment: 'TEST',
+  paymentModes: ['upi', 'nb', 'card', 'wallet'],
   
   // App details
   appName: 'SNEHA-SAURABHA 2025-26',
   appDescription: 'Rotary District Conference Registration'
 };
 
-// Export configuration
+// Auto-detect localhost for mock gateway
+const isLocalhost = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1';
+
+// Export for Node.js modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = cashfreeConfig;
 }
