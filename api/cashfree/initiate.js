@@ -30,6 +30,15 @@ module.exports = async (req, res) => {
       qrData
     } = req.body;
 
+    console.log('📥 Payment initiation request received:', {
+      orderId,
+      amount,
+      fullName,
+      mobile,
+      email,
+      registrationType
+    });
+
     // Validation
     if (!orderId || !amount || !fullName || !mobile || !email) {
       return res.status(400).json({
@@ -57,6 +66,7 @@ module.exports = async (req, res) => {
     }
 
     // Save registration to database (payment pending)
+    console.log('💾 Saving registration to database...');
     await createRegistration({
       confirmationId,
       registrationType,
@@ -71,8 +81,10 @@ module.exports = async (req, res) => {
       qrData,
       manuallyAdded: false
     });
+    console.log('✅ Registration saved successfully');
 
     // Initiate Cashfree payment
+    console.log('💳 Initiating Cashfree payment...');
     const cashfree = new CashfreeService();
     const paymentResponse = await cashfree.createOrder({
       orderId,
@@ -100,6 +112,11 @@ module.exports = async (req, res) => {
 
   } catch (error) {
     console.error('❌ Payment initiation error:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     
     if (error.message?.includes('duplicate key')) {
       return res.status(409).json({
@@ -110,7 +127,8 @@ module.exports = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      error: 'Payment initiation failed'
+      error: 'Payment initiation failed',
+      details: error.message // Add error message to response for debugging
     });
   }
 };
