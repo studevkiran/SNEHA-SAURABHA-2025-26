@@ -471,6 +471,13 @@ async function initiateCashfreePayment() {
             body: JSON.stringify(paymentData)
         });
         
+        // Check if response is OK before parsing JSON
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ API Error Response:', errorText);
+            throw new Error(`Server error: ${response.status}`);
+        }
+        
         const result = await response.json();
         console.log('✅ Cashfree response:', result);
         
@@ -493,11 +500,11 @@ async function initiateCashfreePayment() {
         
     } catch (error) {
         console.error('💥 Payment error:', error);
-        alert('An error occurred. Please try again.');
+        alert('Payment initiation failed. Please try again.\n\nError: ' + error.message);
         const payBtn = document.querySelector('#screen-payment .btn-primary');
         if (payBtn) {
             payBtn.disabled = false;
-            payBtn.innerHTML = 'Proceed to Payment';
+            payBtn.textContent = 'PAY NOW';
         }
     }
 }
