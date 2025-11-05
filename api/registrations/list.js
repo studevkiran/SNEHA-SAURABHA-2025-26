@@ -1,5 +1,5 @@
 // API: Get all registrations with pagination and filters
-const { getAllRegistrations } = require('../../lib/db');
+const { getAllRegistrations } = require('../../lib/db-functions');
 const { requireAuth } = require('../../lib/auth');
 
 module.exports = async (req, res) => {

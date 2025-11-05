@@ -1,6 +1,6 @@
 // API: Verify Cashfree payment status
 const CashfreeService = require('../../lib/cashfree');
-const { updatePaymentStatus } = require('../../lib/db');
+const { updatePaymentStatus } = require('../../lib/db-functions');
 
 module.exports = async (req, res) => {
   // Enable CORS

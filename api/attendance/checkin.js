@@ -1,5 +1,5 @@
 // API: Mark attendance (check-in) via QR code scan
-const { markAttendance, getRegistrationById } = require('../../lib/db');
+const { markAttendance, getRegistrationById } = require('../../lib/db-functions');
 const { requireAuth } = require('../../lib/auth');
 
 module.exports = async (req, res) => {

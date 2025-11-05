@@ -1,5 +1,5 @@
 // API: Get dashboard statistics
-const { getStatistics } = require('../../lib/db');
+const { getStatistics } = require('../../lib/db-functions');
 const { requireAuth } = require('../../lib/auth');
 
 module.exports = async (req, res) => {

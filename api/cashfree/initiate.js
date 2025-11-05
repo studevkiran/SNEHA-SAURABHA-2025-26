@@ -1,6 +1,6 @@
 // API: Initiate Cashfree payment
 const CashfreeService = require('../../lib/cashfree');
-const { createRegistration } = require('../../lib/db');
+const { createRegistration } = require('../../lib/db-functions');
 
 module.exports = async (req, res) => {
   // Enable CORS
