@@ -1,5 +1,5 @@
-// API: Handle PhonePe webhook callbacks
-const PhonePeService = require('../../lib/phonepe');
+// API: Handle Cashfree webhook callbacks
+const CashfreeService = require('../../lib/cashfree');
 const { updatePaymentStatus } = require('../../lib/db');
 
 module.exports = async (req, res) => {
@@ -17,10 +17,10 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { response } = req.body;
-    const xVerifyHeader = req.headers['x-verify'];
+    const payload = req.body;
+    const signature = req.headers['x-cashfree-signature'] || req.body.signature;
 
-    if (!response || !xVerifyHeader) {
+    if (!payload || !signature) {
       console.error('❌ Webhook missing data');
       return res.status(400).json({
         success: false,
@@ -29,8 +29,8 @@ module.exports = async (req, res) => {
     }
 
     // Verify and process webhook
-    const phonePe = new PhonePeService();
-    const webhookResult = await phonePe.handleWebhook(response, xVerifyHeader);
+    const cashfree = new CashfreeService();
+    const webhookResult = await cashfree.handleWebhook(payload, signature);
 
     if (!webhookResult.verified) {
       console.error('❌ Webhook verification failed');
@@ -40,40 +40,45 @@ module.exports = async (req, res) => {
       });
     }
 
-    const { transactionId, paymentSuccess, amount, upiId, paymentState } = webhookResult;
+    const { orderId, paymentSuccess, orderAmount, transactionId, orderStatus, paymentMethod } = webhookResult;
 
-    console.log(`📥 Webhook received: ${transactionId} - ${paymentState}`);
+    console.log(`📥 Webhook received: ${orderId} - ${orderStatus}`);
 
     if (paymentSuccess) {
       // Update database with payment success
       await updatePaymentStatus(
-        transactionId,
+        orderId,
         {
           paymentStatus: 'completed',
-          upiId: upiId || null,
-          gatewayResponse: response
+          upiId: paymentMethod || null,
+          gatewayResponse: JSON.stringify(payload)
         }
       );
 
-      console.log('✅ Payment webhook processed:', transactionId);
+      console.log('✅ Payment webhook processed:', orderId);
 
-      // Send WhatsApp confirmation (TODO: implement)
-      // await sendWhatsAppConfirmation(transactionId);
+      // TODO: Send WhatsApp confirmation
+      // await sendWhatsAppConfirmation(orderId);
+
+      // TODO: Send email confirmation
+      // await sendEmailConfirmation(orderId);
 
     } else {
       // Payment failed or pending
+      const status = orderStatus === 'ACTIVE' ? 'pending' : 'failed';
+      
       await updatePaymentStatus(
-        transactionId,
+        orderId,
         {
-          paymentStatus: paymentState === 'PAYMENT_PENDING' ? 'pending' : 'failed',
-          gatewayResponse: response
+          paymentStatus: status,
+          gatewayResponse: JSON.stringify(payload)
         }
       );
 
-      console.log(`⚠️ Payment ${paymentState}:`, transactionId);
+      console.log(`⚠️ Payment ${orderStatus}:`, orderId);
     }
 
-    // Always respond success to PhonePe (we processed the webhook)
+    // Always respond success to Cashfree (we processed the webhook)
     return res.status(200).json({
       success: true,
       message: 'Webhook processed'
@@ -82,7 +87,7 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error('❌ Webhook processing error:', error);
     
-    // Still return 200 to avoid PhonePe retries
+    // Still return 200 to avoid Cashfree retries
     return res.status(200).json({
       success: false,
       error: 'Webhook processing failed'

@@ -1,5 +1,5 @@
-// API: Initiate PhonePe payment
-const PhonePeService = require('../../lib/phonepe');
+// API: Initiate Cashfree payment
+const CashfreeService = require('../../lib/cashfree');
 const { createRegistration } = require('../../lib/db');
 
 module.exports = async (req, res) => {
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
   try {
     const {
       confirmationId,
-      transactionId,
+      orderId,
       amount,
       fullName,
       mobile,
@@ -31,10 +31,28 @@ module.exports = async (req, res) => {
     } = req.body;
 
     // Validation
-    if (!transactionId || !amount || !fullName || !mobile) {
+    if (!orderId || !amount || !fullName || !mobile || !email) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields'
+        error: 'Missing required fields: orderId, amount, fullName, mobile, email'
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid email format'
+      });
+    }
+
+    // Validate mobile format (10 digits)
+    const mobileRegex = /^[6-9]\d{9}$/;
+    if (!mobileRegex.test(mobile)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid mobile number. Must be 10 digits starting with 6-9'
       });
     }
 
@@ -48,29 +66,30 @@ module.exports = async (req, res) => {
       clubName,
       mealPreference,
       amount,
-      transactionId,
+      transactionId: orderId,
       paymentStatus: 'pending',
       qrData,
       manuallyAdded: false
     });
 
-    // Initiate PhonePe payment
-    const phonePe = new PhonePeService();
-    const paymentResponse = await phonePe.initiatePayment({
-      transactionId,
-      amount,
-      fullName,
-      mobile,
-      email
+    // Initiate Cashfree payment
+    const cashfree = new CashfreeService();
+    const paymentResponse = await cashfree.createOrder({
+      orderId,
+      orderAmount: amount,
+      customerName: fullName,
+      customerEmail: email,
+      customerPhone: mobile
     });
 
     if (paymentResponse.success) {
-      console.log('✅ PhonePe payment initiated:', transactionId);
+      console.log('✅ Cashfree payment initiated:', orderId);
       
       return res.status(200).json({
         success: true,
         paymentUrl: paymentResponse.paymentUrl,
-        transactionId: paymentResponse.transactionId
+        paymentSessionId: paymentResponse.paymentSessionId,
+        orderId: paymentResponse.orderId
       });
     } else {
       return res.status(400).json({
@@ -85,7 +104,7 @@ module.exports = async (req, res) => {
     if (error.message?.includes('duplicate key')) {
       return res.status(409).json({
         success: false,
-        error: 'Transaction already exists'
+        error: 'Order already exists'
       });
     }
 

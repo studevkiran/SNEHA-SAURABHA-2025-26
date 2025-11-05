@@ -13,12 +13,12 @@
 }
 
 .admin-screen.active {
-    display: block;
+    display: block !important;
 }
 
 /* Login Screen */
-#admin-login {
-    display: flex;
+#admin-login.active {
+    display: flex !important;
     align-items: center;
     justify-content: center;
     min-height: 100vh;

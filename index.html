@@ -12,9 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <!-- Instamojo Payment Gateway -->
-    <script src="config/instamojo-config.js"></script>
-    <script src="scripts/instamojo-service.js"></script>
+    <!-- Cashfree Payment Gateway -->
+    <script src="config/cashfree-config.js"></script>
+    <script src="scripts/cashfree-service.js"></script>
 </head>
 <body>
     <!-- WhatsApp Floating Button -->
@@ -170,7 +170,7 @@
                 </div>
             </div>
             <div style="display: flex; gap: 12px; flex-direction: column;">
-                <button class="btn-primary" onclick="initiateInstamojoPayment()" style="font-size: 18px; padding: 16px;">
+                <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 18px; padding: 16px;">
                     💳 PAY NOW
                 </button>
                 <button class="btn-secondary" onclick="showScreen('screen-personal-details')" style="background: #666;">
@@ -188,8 +188,8 @@
                 <div class="payment-summary">
                     <p class="payment-gateway-badge">
                         <svg style="height: 30px; vertical-align: middle;" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="200" height="50" fill="#FF6B35" rx="5"/>
-                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white" text-anchor="middle">Instamojo</text>
+                            <rect width="200" height="50" fill="#5C4EDB" rx="5"/>
+                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white" text-anchor="middle">Cashfree</text>
                         </svg>
                         <span style="margin-left: 8px;">Secure Payment Gateway</span>
                     </p>
@@ -202,19 +202,19 @@
                     <p>✓ Instant email & SMS confirmation</p>
                 </div>
                 <div class="payment-options">
-                    <button class="payment-btn instamojo-btn" onclick="initiateInstamojoPayment()">
+                    <button class="payment-btn cashfree-btn" onclick="initiateCashfreePayment()">
                         <svg style="height: 24px; margin-right: 8px;" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
                             <rect width="200" height="50" fill="white" rx="5"/>
-                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#FF6B35" text-anchor="middle">Instamojo</text>
+                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#5C4EDB" text-anchor="middle">Cashfree</text>
                         </svg>
-                        Pay with Instamojo
+                        Pay with Cashfree
                     </button>
                     <button class="payment-btn payment-btn-secondary" onclick="showScreen('screen-review')">
                         ← Back to Review
                     </button>
                 </div>
                 <p class="payment-note">
-                    <small>🔒 Powered by Instamojo | Test Mode Active</small>
+                    <small>🔒 Powered by Cashfree Payments | Secure & Fast</small>
                 </p>
                 </div>
             </div>

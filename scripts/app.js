@@ -392,8 +392,15 @@ function showReview() {
     document.getElementById('payment-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
 }
 
-// Initiate Instamojo payment
-async function initiateInstamojoPayment() {
+// Generate unique order ID for Cashfree
+function generateOrderId() {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `ORDER_${timestamp}_${random}`;
+}
+
+// Initiate Cashfree payment
+async function initiateCashfreePayment() {
     console.log('🚀 Payment button clicked!');
     console.log('📋 Registration data:', registrationData);
     
@@ -402,57 +409,84 @@ async function initiateInstamojoPayment() {
         const payBtn = event.target;
         const originalText = payBtn.innerHTML;
         payBtn.disabled = true;
-        payBtn.innerHTML = '⏳ Creating Payment Link...';
+        payBtn.innerHTML = '⏳ Creating Payment Order...';
         
-        console.log('💳 Starting payment process...');
+        console.log('💳 Starting Cashfree payment process...');
         
-        // Prepare registration data for payment
-        const paymentData = {
-            type: registrationData.typeName,
-            amount: registrationData.price,
-            fullName: registrationData.fullName,
-            email: registrationData.email,
-            mobile: registrationData.mobile
-        };
+        // Generate unique order ID
+        const orderId = generateOrderId();
+        registrationData.orderId = orderId;
         
-        console.log('📦 Payment data prepared:', paymentData);
+        console.log('📦 Order ID:', orderId);
         
-        // Create payment request with Instamojo
-        const paymentResponse = await instamojoService.createPaymentRequest(paymentData);
+        // Check if running on localhost
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1';
         
-        console.log('✅ Payment response received:', paymentResponse);
-        
-        if (paymentResponse.success) {
-            // Store transaction ID
-            registrationData.transactionId = paymentResponse.transactionId;
-            registrationData.paymentRequestId = paymentResponse.paymentRequestId;
+        if (isLocalhost) {
+            console.log('🧪 LOCALHOST MODE - Using mock payment gateway');
             
-            console.log('💰 Payment link created:', paymentResponse.paymentUrl);
-            console.log('🔢 Transaction ID:', paymentResponse.transactionId);
-            
-            // Store registration data in sessionStorage for payment callback
+            // Store data for mock gateway and callback
             sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
+            sessionStorage.setItem('cashfreeOrderId', orderId);
             
-            // Redirect to mock payment gateway page
-            const paymentUrl = `payment-gateway.html?` +
+            // Redirect to mock payment gateway
+            const mockPaymentUrl = `payment-gateway.html?` +
                 `purpose=${encodeURIComponent(registrationData.typeName)}` +
                 `&amount=${registrationData.price}` +
                 `&name=${encodeURIComponent(registrationData.fullName)}` +
                 `&email=${encodeURIComponent(registrationData.email)}` +
                 `&phone=${registrationData.mobile}` +
-                `&txn_id=${paymentResponse.transactionId}`;
+                `&order_id=${orderId}`;
             
-            console.log('� Redirecting to payment gateway...');
+            console.log('🔄 Redirecting to mock payment gateway...');
+            console.log('🔗 Payment URL:', mockPaymentUrl);
             
-            // In production, this would be:
-            // window.location.href = paymentResponse.paymentUrl;
+            window.location.href = mockPaymentUrl;
+            return;
+        }
+        
+        // PRODUCTION MODE - Use real Cashfree API
+        console.log('🌐 PRODUCTION MODE - Calling Cashfree API...');
+        
+        const paymentData = {
+            confirmationId: registrationData.confirmationId,
+            orderId: orderId,
+            amount: registrationData.price,
+            fullName: registrationData.fullName,
+            mobile: registrationData.mobile,
+            email: registrationData.email,
+            registrationType: registrationData.typeName,
+            clubName: registrationData.clubName || '',
+            mealPreference: registrationData.mealPreference,
+            qrData: registrationData.qrCode
+        };
+        
+        console.log('📦 Payment data:', paymentData);
+        
+        // Call Cashfree API
+        const response = await fetch('/api/cashfree/initiate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paymentData)
+        });
+        
+        const result = await response.json();
+        console.log('✅ Cashfree response:', result);
+        
+        if (result.success && result.paymentUrl) {
+            registrationData.paymentSessionId = result.paymentSessionId;
             
-            // For testing with mock gateway:
-            window.location.href = paymentUrl;
+            console.log('💰 Payment URL created:', result.paymentUrl);
             
+            sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
+            sessionStorage.setItem('cashfreeOrderId', result.orderId);
+            
+            console.log('🔄 Redirecting to Cashfree payment page...');
+            window.location.href = result.paymentUrl;
         } else {
-            console.error('❌ Payment failed:', paymentResponse.error);
-            alert('Payment initiation failed: ' + (paymentResponse.error || 'Unknown error'));
+            console.error('❌ Payment failed:', result.error);
+            alert('Payment initiation failed: ' + (result.error || 'Unknown error'));
             payBtn.disabled = false;
             payBtn.innerHTML = originalText;
         }
@@ -460,9 +494,17 @@ async function initiateInstamojoPayment() {
     } catch (error) {
         console.error('💥 Payment error:', error);
         alert('An error occurred. Please try again.');
-        event.target.disabled = false;
-        event.target.innerHTML = originalText;
+        const payBtn = document.querySelector('#screen-payment .btn-primary');
+        if (payBtn) {
+            payBtn.disabled = false;
+            payBtn.innerHTML = 'Proceed to Payment';
+        }
     }
+}
+
+// Legacy alias for compatibility
+async function initiateInstamojoPayment() {
+    return await initiateCashfreePayment();
 }
 
 // Process payment

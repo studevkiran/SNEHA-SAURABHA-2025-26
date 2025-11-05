@@ -1,5 +1,5 @@
-// API: Verify PhonePe payment status
-const PhonePeService = require('../../lib/phonepe');
+// API: Verify Cashfree payment status
+const CashfreeService = require('../../lib/cashfree');
 const { updatePaymentStatus } = require('../../lib/db');
 
 module.exports = async (req, res) => {
@@ -17,38 +17,40 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { transactionId } = req.query;
+    const { orderId } = req.query;
 
-    if (!transactionId) {
+    if (!orderId) {
       return res.status(400).json({
         success: false,
-        error: 'Transaction ID required'
+        error: 'Order ID required'
       });
     }
 
-    // Check payment status with PhonePe
-    const phonePe = new PhonePeService();
-    const statusResponse = await phonePe.checkPaymentStatus(transactionId);
+    // Check payment status with Cashfree
+    const cashfree = new CashfreeService();
+    const statusResponse = await cashfree.verifyPayment(orderId);
 
     if (statusResponse.success && statusResponse.paymentSuccess) {
       // Update database with payment success
       await updatePaymentStatus(
-        transactionId,
+        orderId,
         {
           paymentStatus: 'completed',
-          upiId: statusResponse.upiId || null,
+          upiId: statusResponse.paymentMethod || null,
           gatewayResponse: JSON.stringify(statusResponse.response)
         }
       );
 
-      console.log('✅ Payment verified and updated:', transactionId);
+      console.log('✅ Payment verified and updated:', orderId);
 
       return res.status(200).json({
         success: true,
         paymentSuccess: true,
-        transactionId,
-        amount: statusResponse.amount,
-        upiId: statusResponse.upiId
+        orderId,
+        amount: statusResponse.orderAmount,
+        transactionId: statusResponse.transactionId,
+        paymentMethod: statusResponse.paymentMethod,
+        paymentTime: statusResponse.paymentTime
       });
 
     } else if (statusResponse.success && !statusResponse.paymentSuccess) {
@@ -57,7 +59,7 @@ module.exports = async (req, res) => {
         success: true,
         paymentSuccess: false,
         status: statusResponse.status,
-        message: statusResponse.message
+        orderId
       });
 
     } else {
