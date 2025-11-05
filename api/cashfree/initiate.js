@@ -70,7 +70,7 @@ module.exports = async (req, res) => {
     await createRegistration({
       confirmationId,
       registrationType,
-      fullName,
+      name: fullName, // Map fullName to name for database
       mobile,
       email,
       clubName,
