@@ -1,0 +1,30 @@
+{
+  "name": "sneha-saurabha-2025-26",
+  "version": "1.0.0",
+  "description": "Rotary District 3181 Conference Registration System",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step needed'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "rotary",
+    "conference",
+    "registration",
+    "phonepe",
+    "vercel"
+  ],
+  "author": "Kiran",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/postgres": "^0.5.1",
+    "crypto-js": "^4.2.0",
+    "axios": "^1.6.0",
+    "exceljs": "^4.4.0",
+    "qrcode": "^1.5.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
