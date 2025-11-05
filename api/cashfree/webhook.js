@@ -1,6 +1,6 @@
 // API: Handle Cashfree webhook callbacks
 const CashfreeService = require('../../lib/cashfree');
-const { updatePaymentStatus } = require('../../lib/db-functions');
+const { updatePaymentStatus } = require('../../lib/db-neon');
 
 module.exports = async (req, res) => {
   // Enable CORS
