@@ -336,47 +336,38 @@
                     </div>
                     
                     <!-- Divider -->
-                    <div style="height: 1px; background: #ddd; margin: 12px 0;"></div>
+                    <div style="height: 1px; background: #ddd; margin: 8px 0;"></div>
                     
-                    <!-- Payment Info -->
-                    <div style="text-align: center; margin-bottom: 8px;">
-                        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f0fdf4; border-radius: 6px; border: 1px solid #22C55E;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span style="color: #22C55E; font-weight: 600; font-size: 13px;">Payment Successful</span>
-                        </div>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 6px;">
+                    <!-- Payment Details (No green box) -->
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 4px; margin-bottom: 8px;">
                         <div style="display: flex; justify-content: space-between; font-size: 13px;">
                             <span style="color: #666;">Amount:</span>
                             <span style="color: #22C55E; font-weight: 700; font-size: 14px;" id="ack-amount"></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 11px;">
-                            <span style="color: #666;">Cashfree Order ID:</span>
-                            <span style="color: var(--text-dark); font-weight: 500; font-family: 'Courier New', monospace; font-size: 10px;" id="ack-txn"></span>
+                            <span style="color: #666;">Order ID:</span>
+                            <span style="color: var(--text-dark); font-weight: 500; font-family: 'Courier New', monospace; font-size: 9px;" id="ack-txn"></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 11px;">
                             <span style="color: #666;">Date & Time:</span>
                             <span style="color: var(--text-dark); font-weight: 500;" id="ack-date"></span>
                         </div>
                     </div>
-                </div>
-
-                <!-- Thank You Message (Part of Receipt for PDF) -->
-                <div style="margin: 0 20px 20px; padding: 15px; background: linear-gradient(135deg, #FFF9E6 0%, #F9F3DC 100%); border-radius: 8px; border: 1px solid var(--primary-gold); text-align: center;">
-                    <p style="margin: 0; color: var(--text-dark); font-size: 14px; font-weight: 600;">🙏 Thank You!</p>
-                    <p style="margin: 5px 0 0; color: #8B7355; font-size: 12px; line-height: 1.5;">We look forward to seeing you at<br><strong>SNEHA SAURABHA 2025-26</strong></p>
+                    
+                    <!-- Thank You (compact, inside same box) -->
+                    <div style="padding-top: 8px; border-top: 1px dashed #ddd; text-align: center;">
+                        <p style="margin: 0; color: var(--text-dark); font-size: 13px; font-weight: 600;">🙏 Thank You!</p>
+                        <p style="margin: 3px 0 0; color: #8B7355; font-size: 11px;">See you at SNEHA SAURABHA 2025-26</p>
+                    </div>
                 </div>
 
             </div>
             
             <!-- Download & WhatsApp Section (NOT in PDF) -->
-            <div style="padding: 0 20px 20px; max-width: 600px; margin: 0 auto;">
+            <div style="padding: 0 20px 15px; max-width: 600px; margin: 0 auto;">
                 <!-- Download PDF Button -->
-                <button onclick="downloadReceiptPDF(event)" style="width: 100%; padding: 14px; background: var(--primary-gold); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button onclick="downloadReceiptPDF(event)" style="width: 100%; padding: 12px; background: var(--primary-gold); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 12px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -385,10 +376,10 @@
                 </button>
 
                 <!-- WhatsApp Confirmation Message -->
-                <div style="padding: 12px; background: #E8F5E9; border-radius: 8px; border-left: 3px solid #22C55E;">
-                    <p style="margin: 0; color: #2D5016; font-size: 12px; line-height: 1.6;">
-                        <strong>📱 Confirmation sent to your WhatsApp!</strong><br>
-                        You will receive detailed event information shortly.
+                <div style="padding: 10px; background: #E8F5E9; border-radius: 6px; border-left: 3px solid #22C55E;">
+                    <p style="margin: 0; color: #2D5016; font-size: 11px; line-height: 1.5;">
+                        <strong>📱 Confirmation sent to WhatsApp!</strong><br>
+                        Event details will arrive shortly.
                     </p>
                 </div>
             </div>
