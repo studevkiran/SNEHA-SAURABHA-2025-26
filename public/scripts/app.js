@@ -562,8 +562,13 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         // Call backend to verify payment
         const response = await fetch(`/api/cashfree/verify?orderId=${orderId}`);
         
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response OK:', response.ok);
+        
         if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
+            const errorText = await response.text();
+            console.error('❌ Server responded with error:', errorText);
+            throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
         
         const result = await response.json();
@@ -644,7 +649,10 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         
     } catch (error) {
         console.error('💥 Payment verification error:', error);
-        alert('Error verifying payment. Please contact support with your Order ID.');
+        console.error('💥 Error stack:', error.stack);
+        console.error('💥 Error message:', error.message);
+        
+        alert('Error verifying payment:\n\n' + error.message + '\n\nPlease contact support with your Order ID: ' + orderId);
         window.location.href = 'index.html';
     }
 }
