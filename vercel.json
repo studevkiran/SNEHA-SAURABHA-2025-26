@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "echo 'Building SNEHA SAURABHA 2025-26'",
   "headers": [
     {
       "source": "/api/(.*)",
