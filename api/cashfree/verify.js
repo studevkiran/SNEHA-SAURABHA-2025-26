@@ -17,12 +17,14 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { orderId } = req.query;
+    // Handle both orderId and order_id parameter names
+    const orderId = req.query.orderId || req.query.order_id;
 
     console.log('🔍 Verify payment request for:', orderId);
+    console.log('📋 Query params:', req.query);
 
     if (!orderId) {
-      console.error('❌ No orderId provided');
+      console.error('❌ No orderId provided in query params');
       return res.status(400).json({
         success: false,
         error: 'Order ID required'
