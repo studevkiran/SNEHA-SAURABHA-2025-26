@@ -177,23 +177,32 @@ let clubsList = [];
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    // Check for payment callback
+    // Check for payment callback from Cashfree
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('payment') === 'success') {
-        // Payment successful - restore registration data and show success
+    const paymentStatus = urlParams.get('payment');
+    const orderId = urlParams.get('order_id');
+    
+    console.log('🔍 Page loaded with params:', { paymentStatus, orderId });
+    
+    if (paymentStatus === 'success' || paymentStatus === 'pending') {
+        // Payment completed - verify with backend
         const pendingData = sessionStorage.getItem('pendingRegistration');
-        if (pendingData) {
-            registrationData = JSON.parse(pendingData);
-            sessionStorage.removeItem('pendingRegistration');
-            
-            // Process successful payment
-            console.log('💳 Payment callback received - Success!');
-            processPayment('success');
+        const cashfreeOrderId = sessionStorage.getItem('cashfreeOrderId');
+        
+        console.log('💳 Payment callback received:', { 
+            paymentStatus, 
+            orderId: orderId || cashfreeOrderId,
+            hasPendingData: !!pendingData 
+        });
+        
+        if (pendingData && (orderId || cashfreeOrderId)) {
+            // Verify payment with backend
+            verifyPaymentAndShowSuccess(orderId || cashfreeOrderId, pendingData);
             return; // Don't run other initialization
         }
-    } else if (urlParams.get('payment') === 'cancelled') {
-        // Payment cancelled
-        alert('Payment was cancelled. Please try again.');
+    } else if (paymentStatus === 'cancelled' || paymentStatus === 'failed') {
+        // Payment cancelled or failed
+        alert('Payment was ' + paymentStatus + '. Please try again.');
         showScreen('screen-payment');
     }
     
@@ -518,6 +527,57 @@ async function initiateCashfreePayment() {
             payBtn.disabled = false;
             payBtn.textContent = 'PAY NOW';
         }
+    }
+}
+
+// Verify payment with backend and show success
+async function verifyPaymentAndShowSuccess(orderId, pendingData) {
+    try {
+        console.log('🔄 Verifying payment with backend...', orderId);
+        
+        // Show loading state
+        showScreen('screen-banner');
+        const bannerContent = document.querySelector('.banner-content');
+        if (bannerContent) {
+            bannerContent.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #D4AF37; 
+                                border-radius: 50%; width: 60px; height: 60px; 
+                                animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                    <h2 style="color: #2C2416; margin-bottom: 10px;">Verifying Payment...</h2>
+                    <p style="color: #666;">Please wait while we confirm your payment</p>
+                </div>
+            `;
+        }
+        
+        // Call backend to verify payment
+        const response = await fetch(`/api/cashfree/verify?order_id=${orderId}`);
+        const result = await response.json();
+        
+        console.log('✅ Payment verification result:', result);
+        
+        if (result.success && result.paymentStatus === 'SUCCESS') {
+            // Payment successful - restore data and show success
+            registrationData = JSON.parse(pendingData);
+            registrationData.paymentStatus = 'Paid';
+            registrationData.transactionId = result.transactionId || orderId;
+            
+            sessionStorage.removeItem('pendingRegistration');
+            sessionStorage.removeItem('cashfreeOrderId');
+            
+            console.log('🎉 Payment verified! Showing success screen...');
+            processPayment('success');
+        } else {
+            // Payment not successful
+            console.error('❌ Payment verification failed:', result);
+            alert('Payment verification failed. Please contact support with Order ID: ' + orderId);
+            window.location.href = 'index.html';
+        }
+        
+    } catch (error) {
+        console.error('💥 Payment verification error:', error);
+        alert('Error verifying payment. Please contact support with your Order ID.');
+        window.location.href = 'index.html';
     }
 }
 
