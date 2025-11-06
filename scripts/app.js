@@ -200,6 +200,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load clubs
     loadClubs();
     
+    // Setup club search
+    setupClubSearch();
+    
     // Setup registration type selection
     setupRegistrationSelection();
     
@@ -240,6 +243,30 @@ async function loadClubs() {
         option.setAttribute('data-id', club.id);
         clubSelect.appendChild(option);
     });
+}
+
+// Add club search functionality
+function setupClubSearch() {
+    const searchInput = document.getElementById('club-search');
+    const clubSelect = document.getElementById('club-name');
+    
+    if (searchInput && clubSelect) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const options = Array.from(clubSelect.options);
+            
+            options.forEach(option => {
+                if (option.value === '') return; // Skip placeholder
+                
+                const text = option.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        });
+    }
 }
 
 // Setup registration type selection - simplified for compact design

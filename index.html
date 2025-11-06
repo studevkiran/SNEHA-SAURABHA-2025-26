@@ -36,7 +36,7 @@
             <!-- Main Event Info -->
             <div class="event-info">
                 <h2 class="subtitle">ROTARY DISTRICT CONFERENCE</h2>
-                <h1 class="main-title">Sneha Sourabha</h1>
+                <h1 class="main-title">SNEHA SAURABHA</h1>
                 <p class="slogan">Join the district's grand celebration — be part of the legacy.</p>
                 
                 <button class="btn-register" onclick="showScreen('screen-register-type')">Register Now</button>
@@ -144,7 +144,8 @@
                     <input type="email" id="email" required placeholder="Email Address">
                 </div>
                 <div class="form-row">
-                    <select id="club-name" required>
+                    <input type="text" id="club-search" placeholder="Search Club..." style="margin-bottom: 5px;">
+                    <select id="club-name" required size="5" style="width: 100%; max-height: 150px;">
                         <option value="">Select Your Club</option>
                     </select>
                 </div>
@@ -153,7 +154,6 @@
                     <div class="meal-buttons">
                         <button type="button" class="meal-btn-compact veg" data-meal="Veg">Veg</button>
                         <button type="button" class="meal-btn-compact non-veg" data-meal="Non-Veg">Non-Veg</button>
-                        <button type="button" class="meal-btn-compact jain" data-meal="Jain">Jain</button>
                     </div>
                 </div>
                 <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
