@@ -894,6 +894,12 @@ function processPayment(status) {
         // Show success screen
         showScreen('screen-success');
         
+        // Auto-download PDF after 2 seconds
+        setTimeout(() => {
+            console.log('🤖 Auto-downloading PDF...');
+            downloadReceiptPDF();
+        }, 2000);
+        
         // In real implementation:
         // 1. Send data to backend API
         // 2. Store in database
