@@ -144,11 +144,12 @@
                 <div class="form-row">
                     <input type="email" id="email" required placeholder="Email Address">
                 </div>
-                <div class="form-row">
-                    <input type="text" id="club-search" placeholder="Search Club..." style="margin-bottom: 5px;">
-                    <select id="club-name" required size="5" style="width: 100%; max-height: 150px;">
+                <div class="form-row club-dropdown-wrapper">
+                    <input type="text" id="club-search" placeholder="Search and Select Club..." autocomplete="off">
+                    <select id="club-name" required style="display: none;">
                         <option value="">Select Your Club</option>
                     </select>
+                    <div id="club-options" class="club-options-list"></div>
                 </div>
                 <div class="form-row meal-row">
                     <div class="meal-label-compact">Meal Preference</div>

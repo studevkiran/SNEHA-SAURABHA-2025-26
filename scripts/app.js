@@ -249,24 +249,65 @@ async function loadClubs() {
 function setupClubSearch() {
     const searchInput = document.getElementById('club-search');
     const clubSelect = document.getElementById('club-name');
+    const optionsList = document.getElementById('club-options');
     
-    if (searchInput && clubSelect) {
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const options = Array.from(clubSelect.options);
-            
-            options.forEach(option => {
-                if (option.value === '') return; // Skip placeholder
-                
-                const text = option.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    option.style.display = '';
-                } else {
-                    option.style.display = 'none';
-                }
-            });
+    if (!searchInput || !clubSelect || !optionsList) return;
+    
+    let allClubs = [];
+    
+    // Populate options list from select
+    function populateOptions(filter = '') {
+        const options = Array.from(clubSelect.options);
+        allClubs = options.filter(opt => opt.value !== '');
+        
+        optionsList.innerHTML = '';
+        
+        const filtered = allClubs.filter(opt => {
+            const text = opt.textContent.toLowerCase();
+            return text.includes(filter.toLowerCase());
         });
+        
+        if (filtered.length === 0) {
+            optionsList.innerHTML = '<div class="club-option" style="color: #999;">No clubs found</div>';
+        } else {
+            filtered.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'club-option';
+                div.textContent = opt.textContent;
+                div.setAttribute('data-value', opt.value);
+                div.addEventListener('click', () => selectClub(opt.value, opt.textContent));
+                optionsList.appendChild(div);
+            });
+        }
     }
+    
+    function selectClub(value, text) {
+        clubSelect.value = value;
+        searchInput.value = text;
+        optionsList.classList.remove('show');
+    }
+    
+    // Show dropdown on focus
+    searchInput.addEventListener('focus', () => {
+        populateOptions(searchInput.value);
+        optionsList.classList.add('show');
+    });
+    
+    // Filter on input
+    searchInput.addEventListener('input', () => {
+        populateOptions(searchInput.value);
+        optionsList.classList.add('show');
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !optionsList.contains(e.target)) {
+            optionsList.classList.remove('show');
+        }
+    });
+    
+    // Initial population after clubs are loaded
+    setTimeout(() => populateOptions(), 100);
 }
 
 // Setup registration type selection - simplified for compact design
