@@ -1070,13 +1070,26 @@ async function downloadReceiptPDF(event) {
         const pageHeight = 297; // A4 height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
-        // Add image to PDF
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        let heightLeft = imgHeight;
+        let position = 0;
+        
+        // Add first page
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        
+        // Add additional pages if content is longer than one page
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
         
         // Save PDF
         pdf.save(`SNEHA-SAURABHA-Receipt-${registrationData.confirmationId}.pdf`);
         
         console.log('✅ PDF downloaded successfully!');
+        console.log('📄 PDF pages:', pdf.internal.getNumberOfPages());
         
         // Restore button
         if (button) {
