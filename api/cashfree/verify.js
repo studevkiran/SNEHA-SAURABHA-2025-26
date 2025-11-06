@@ -19,7 +19,10 @@ module.exports = async (req, res) => {
   try {
     const { orderId } = req.query;
 
+    console.log('🔍 Verify payment request for:', orderId);
+
     if (!orderId) {
+      console.error('❌ No orderId provided');
       return res.status(400).json({
         success: false,
         error: 'Order ID required'
@@ -29,6 +32,8 @@ module.exports = async (req, res) => {
     // Check payment status with Cashfree
     const cashfree = new CashfreeService();
     const statusResponse = await cashfree.verifyPayment(orderId);
+
+    console.log('📦 Cashfree verification response:', JSON.stringify(statusResponse, null, 2));
 
     if (statusResponse.success && statusResponse.paymentSuccess) {
       // Update database with payment success
@@ -46,6 +51,7 @@ module.exports = async (req, res) => {
       return res.status(200).json({
         success: true,
         paymentSuccess: true,
+        paymentStatus: 'PAID',
         orderId,
         amount: statusResponse.orderAmount,
         transactionId: statusResponse.transactionId,
@@ -55,6 +61,7 @@ module.exports = async (req, res) => {
 
     } else if (statusResponse.success && !statusResponse.paymentSuccess) {
       // Payment pending or failed
+      console.log('⏳ Payment not yet successful. Status:', statusResponse.status);
       return res.status(200).json({
         success: true,
         paymentSuccess: false,
@@ -63,6 +70,7 @@ module.exports = async (req, res) => {
       });
 
     } else {
+      console.error('❌ Verification failed:', statusResponse.error);
       return res.status(400).json({
         success: false,
         error: statusResponse.error

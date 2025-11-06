@@ -552,6 +552,11 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         
         // Call backend to verify payment
         const response = await fetch(`/api/cashfree/verify?orderId=${orderId}`);
+        
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        
         const result = await response.json();
         
         console.log('✅ Payment verification result:', result);
@@ -561,17 +566,52 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
             registrationData = JSON.parse(pendingData);
             registrationData.paymentStatus = 'Paid';
             registrationData.transactionId = result.transactionId || orderId;
+            registrationData.orderId = orderId;
             
             sessionStorage.removeItem('pendingRegistration');
             sessionStorage.removeItem('cashfreeOrderId');
             
             console.log('🎉 Payment verified! Showing success screen...');
             processPayment('success');
+            
+        } else if (result.success && !result.paymentSuccess) {
+            // Payment still pending or failed
+            console.log('⏳ Payment status:', result.status);
+            
+            if (result.status === 'ACTIVE' || result.status === 'PENDING') {
+                // Payment is still processing
+                if (confirm('Payment is still processing. Would you like to check again?')) {
+                    // Retry verification after a delay
+                    setTimeout(() => {
+                        verifyPaymentAndShowSuccess(orderId, pendingData);
+                    }, 3000);
+                } else {
+                    alert('Your payment is being processed. Order ID: ' + orderId + '\n\nYou will receive confirmation via email/WhatsApp once payment is confirmed.');
+                    window.location.href = 'index.html';
+                }
+            } else {
+                // Payment failed
+                alert('Payment was not successful. Status: ' + result.status + '\n\nPlease try again or contact support.');
+                window.location.href = 'index.html';
+            }
+            
         } else {
-            // Payment not successful
-            console.error('❌ Payment verification failed:', result);
-            alert('Payment verification failed. Please contact support with Order ID: ' + orderId);
-            window.location.href = 'index.html';
+            // Verification failed
+            console.error('❌ Payment verification failed:', result.error);
+            
+            const retryMsg = 'Payment verification failed.\n\n' +
+                'Order ID: ' + orderId + '\n' +
+                'Error: ' + (result.error || 'Unknown error') + '\n\n' +
+                'Would you like to try verifying again?';
+            
+            if (confirm(retryMsg)) {
+                setTimeout(() => {
+                    verifyPaymentAndShowSuccess(orderId, pendingData);
+                }, 2000);
+            } else {
+                alert('Please contact support with your Order ID: ' + orderId);
+                window.location.href = 'index.html';
+            }
         }
         
     } catch (error) {
