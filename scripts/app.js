@@ -841,7 +841,8 @@ function processPayment(status) {
         // Format: XXCCM#### (e.g., RN15V1234) - No separators
         const confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
         
-        const transactionId = 'TXN' + Date.now().toString().slice(-10);
+        // Use actual Cashfree Order ID instead of fake transaction ID
+        const transactionId = registrationData.orderId || registrationData.transactionId || 'ORDER_' + Date.now();
         const paymentDate = new Date().toLocaleString('en-IN', {
             day: '2-digit',
             month: 'short',
@@ -855,7 +856,7 @@ function processPayment(status) {
         registrationData.paymentDate = paymentDate;
         
         console.log('🎫 Confirmation ID:', confirmationId);
-        console.log('🔢 Transaction ID:', transactionId);
+        console.log('🔢 Cashfree Order ID:', transactionId);
         
         // Populate refined acknowledgment page (with null checks)
         const setElementText = (id, text) => {
