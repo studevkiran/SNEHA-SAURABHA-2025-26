@@ -81,6 +81,11 @@ body {
     background: #FFFFFF;
 }
 
+#screen-banner {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .screen.active {
     opacity: 1;
     visibility: visible;
@@ -102,6 +107,8 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
 }
 
 .header-images {
@@ -121,12 +128,13 @@ body {
 .event-info {
     flex: 1;
     background: linear-gradient(135deg, var(--cream) 0%, var(--light-gold) 100%);
-    padding: 30px 20px;
+    padding: 30px 20px 40px 20px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    min-height: auto;
 }
 
 .subtitle {
