@@ -80,6 +80,11 @@ body {
     overflow: hidden;
 }
 
+#screen-banner {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .screen.active {
     opacity: 1;
     visibility: visible;
