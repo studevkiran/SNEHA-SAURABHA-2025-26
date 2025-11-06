@@ -81,25 +81,41 @@ This guide explains how to integrate WhatsApp confirmation messages for successf
 
 **Template Name:** `sneha_saurabha_confirmation`
 
-**Template Content:**
+**Template Content (Client Approved):**
 ```
-Dear {{1}},
+Hi {{1}},
 
-✅ Your registration for SNEHA SAURABHA 2025-26 is confirmed!
+🎯 Thank you for registering to SNEHA SAURABHA 2025-26, District Conference
+happening at Silent Shores, Mysore on 30th & 31st January & 01st February 2026
 
-📋 Confirmation ID: {{2}}
-💰 Amount Paid: ₹{{3}}
+We're thrilled to have you on board for this district event that celebrates knowledge, friendship and fellowship.
 
-📅 Event Date: 30-31 Jan & 1 Feb 2026
-📍 Venue: Silent Shores Resort, Mysore
+📋 Registration Details:
 
-Your detailed registration ticket will be sent shortly.
+✒️ Registration No.: {{2}}
+📄 Receipt No.: {{3}}
+👤 Name: {{4}}
+📞 Mobile: {{5}}
+📧 Email: {{6}}
+🍽️ Food Preference: {{7}}
 
-See you at Mysore! 🙏
+✅ Amount Paid: ₹ {{8}}
 
-- Team SNEHA SAURABHA
-Rotary District 3181
+Looking forward to an inspiring experience together!
+
+Warm regards,
+Team Sneha Saurabha 2025-26 – Rotary District Conference 3181
 ```
+
+**Template Parameters:**
+1. Name (First name or full name)
+2. Registration Number (e.g., SS0001)
+3. Receipt Number (e.g., 0001)
+4. Full Name
+5. Mobile Number
+6. Email Address
+7. Food Preference (Veg/Non-veg)
+8. Amount Paid (numeric value)
 
 ### Step 3: Get Template Approved
 
@@ -136,13 +152,16 @@ export default async function handler(req, res) {
   try {
     const { 
       mobile, 
-      name, 
-      confirmationId, 
+      name,
+      email,
+      registrationId, 
+      receiptNumber,
+      foodPreference,
       amount 
     } = req.body;
 
     // Validate required fields
-    if (!mobile || !name || !confirmationId || !amount) {
+    if (!mobile || !name || !registrationId || !amount) {
       return res.status(400).json({ 
         success: false, 
         error: 'Missing required fields' 
@@ -160,26 +179,35 @@ export default async function handler(req, res) {
       process.env.TWILIO_AUTH_TOKEN
     );
 
-    // Send WhatsApp message using approved template
+    // Get first name for greeting
+    const firstName = name.split(' ')[0];
+
+    // Send WhatsApp message using client-approved template
     const message = await client.messages.create({
       from: process.env.TWILIO_WHATSAPP_NUMBER,
       to: formattedMobile,
-      body: `Dear ${name},
+      body: `Hi ${firstName},
 
-✅ Your registration for SNEHA SAURABHA 2025-26 is confirmed!
+🎯 Thank you for registering to SNEHA SAURABHA 2025-26, District Conference
+happening at Silent Shores, Mysore on 30th & 31st January & 01st February 2026
 
-📋 Confirmation ID: ${confirmationId}
-💰 Amount Paid: ₹${amount.toLocaleString('en-IN')}
+We're thrilled to have you on board for this district event that celebrates knowledge, friendship and fellowship.
 
-📅 Event Date: 30-31 Jan & 1 Feb 2026
-📍 Venue: Silent Shores Resort, Mysore
+📋 Registration Details:
 
-Your detailed registration ticket will be sent shortly.
+✒️ Registration No.: ${registrationId}
+📄 Receipt No.: ${receiptNumber}
+👤 Name: ${name}
+📞 Mobile: ${mobile}
+📧 Email: ${email || 'Not provided'}
+🍽️ Food Preference: ${foodPreference}
 
-See you at Mysore! 🙏
+✅ Amount Paid: ₹ ${amount.toLocaleString('en-IN')}
 
-- Team SNEHA SAURABHA
-Rotary District 3181`
+Looking forward to an inspiring experience together!
+
+Warm regards,
+Team Sneha Saurabha 2025-26 – Rotary District Conference 3181`
     });
 
     console.log('✅ WhatsApp message sent:', message.sid);
@@ -208,7 +236,7 @@ Modify `/api/cashfree/verify.js` to send WhatsApp after successful payment:
 ```javascript
 // Add this after successful payment verification
 if (paymentSuccess && registration) {
-  // Send WhatsApp confirmation
+  // Send WhatsApp confirmation with all details
   try {
     const whatsappResponse = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/send-whatsapp-confirmation`, {
       method: 'POST',
@@ -216,7 +244,10 @@ if (paymentSuccess && registration) {
       body: JSON.stringify({
         mobile: registration.mobile,
         name: registration.name,
-        confirmationId: registration.confirmationId,
+        email: registration.email,
+        registrationId: registration.confirmationId,  // e.g., SS0001
+        receiptNumber: registration.confirmationId.replace('SS', ''),  // e.g., 0001
+        foodPreference: registration.mealPreference,
         amount: registration.amount
       })
     });
@@ -275,9 +306,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { mobile, name, confirmationId, amount } = req.body;
+    const { 
+      mobile, 
+      name, 
+      email,
+      registrationId, 
+      receiptNumber,
+      foodPreference,
+      amount 
+    } = req.body;
 
-    if (!mobile || !name || !confirmationId || !amount) {
+    if (!mobile || !name || !registrationId || !amount) {
       return res.status(400).json({ 
         success: false, 
         error: 'Missing required fields' 
@@ -285,6 +324,7 @@ export default async function handler(req, res) {
     }
 
     const formattedMobile = mobile.startsWith('91') ? mobile : `91${mobile}`;
+    const firstName = name.split(' ')[0];
 
     const response = await fetch('https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/', {
       method: 'POST',
@@ -308,9 +348,14 @@ export default async function handler(req, res) {
               {
                 type: 'body',
                 parameters: [
+                  { type: 'text', text: firstName },
+                  { type: 'text', text: registrationId },
+                  { type: 'text', text: receiptNumber },
                   { type: 'text', text: name },
-                  { type: 'text', text: confirmationId },
-                  { type: 'text', text: amount.toString() }
+                  { type: 'text', text: mobile },
+                  { type: 'text', text: email || 'Not provided' },
+                  { type: 'text', text: foodPreference },
+                  { type: 'text', text: amount.toLocaleString('en-IN') }
                 ]
               }
             ]

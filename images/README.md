@@ -1,5 +1,11 @@
 # Image Upload Instructions
 
+## ✅ Images Uploaded - Updated Nov 6, 2025
+
+All required images are now in place:
+- ✅ `header-left.jpg` - Rotary/District 3181 branding
+- ✅ `header-right.jpg` - SNEHA SAURABHA event logo
+
 ## Required Images
 
 Please upload the following images to complete the website:
