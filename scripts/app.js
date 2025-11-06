@@ -172,28 +172,60 @@ const registrationTypes = {
     }
 };
 
+// Registration Type Prefixes for unique IDs
+const registrationPrefixes = {
+    'rotarian': 'RN',
+    'rotarian-spouse': 'RS',
+    'ann': 'AN',
+    'annet': 'RT',  // Rotaractor
+    'guest': 'GT',
+    'silver-donor': 'SD',
+    'silver-sponsor': 'SS',
+    'gold-sponsor': 'GS',
+    'platinum-sponsor': 'PT',
+    'patron-sponsor': 'PS'
+};
+
 // Load clubs from JSON
 let clubsList = [];
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    // Check for payment callback
+    // Check for payment callback from Cashfree
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('payment') === 'success') {
-        // Payment successful - restore registration data and show success
+    const paymentStatus = urlParams.get('payment');
+    const orderId = urlParams.get('order_id');
+    
+    console.log('🔍 Page loaded with params:', { paymentStatus, orderId });
+    
+    if ((paymentStatus === 'success' || paymentStatus === 'pending') && orderId) {
+        // Payment completed - verify with backend
         const pendingData = sessionStorage.getItem('pendingRegistration');
-        if (pendingData) {
-            registrationData = JSON.parse(pendingData);
-            sessionStorage.removeItem('pendingRegistration');
-            
-            // Process successful payment
-            console.log('💳 Payment callback received - Success!');
-            processPayment('success');
-            return; // Don't run other initialization
-        }
-    } else if (urlParams.get('payment') === 'cancelled') {
-        // Payment cancelled
-        alert('Payment was cancelled. Please try again.');
+        const cashfreeOrderId = sessionStorage.getItem('cashfreeOrderId');
+        
+        console.log('💳 Payment callback received:', { 
+            paymentStatus, 
+            orderId: orderId || cashfreeOrderId,
+            hasPendingData: !!pendingData 
+        });
+        
+        // Create minimal pending data if not in session (e.g., page refresh)
+        const registrationDataToUse = pendingData || JSON.stringify({
+            fullName: 'Verifying...',
+            mobile: '',
+            email: '',
+            typeName: 'Registration',
+            price: 0,
+            mealPreference: 'Veg'
+        });
+        
+        // Verify payment with backend
+        verifyPaymentAndShowSuccess(orderId || cashfreeOrderId, registrationDataToUse);
+        return; // Don't run other initialization
+        
+    } else if (paymentStatus === 'cancelled' || paymentStatus === 'failed') {
+        // Payment cancelled or failed
+        alert('Payment was ' + paymentStatus + '. Please try again.');
         showScreen('screen-payment');
     }
     
@@ -250,6 +282,7 @@ function setupClubSearch() {
     const searchInput = document.getElementById('club-search');
     const clubSelect = document.getElementById('club-name');
     const optionsList = document.getElementById('club-options');
+    const clearBtn = document.getElementById('clear-club');
     
     if (!searchInput || !clubSelect || !optionsList) return;
     
@@ -275,16 +308,35 @@ function setupClubSearch() {
                 div.className = 'club-option';
                 div.textContent = opt.textContent;
                 div.setAttribute('data-value', opt.value);
-                div.addEventListener('click', () => selectClub(opt.value, opt.textContent));
+                div.setAttribute('data-id', opt.getAttribute('data-id')); // Preserve club ID
+                div.addEventListener('click', () => selectClub(opt.value, opt.textContent, opt.getAttribute('data-id')));
                 optionsList.appendChild(div);
             });
         }
     }
     
-    function selectClub(value, text) {
+    function selectClub(value, text, clubId) {
         clubSelect.value = value;
         searchInput.value = text;
+        
+        // Store club ID in a data attribute on the select element for easy retrieval
+        if (clubId) {
+            clubSelect.setAttribute('data-selected-club-id', clubId);
+        }
+        
         optionsList.classList.remove('show');
+        optionsList.style.display = 'none'; // Completely hide dropdown
+        if (clearBtn) clearBtn.style.display = 'block'; // Show X button
+    }
+        optionsList.style.display = 'none'; // Completely hide dropdown
+        if (clearBtn) clearBtn.style.display = 'block'; // Show X button
+    }
+    
+    // Toggle clear button visibility
+    function toggleClearButton() {
+        if (clearBtn) {
+            clearBtn.style.display = searchInput.value ? 'block' : 'none';
+        }
     }
     
     // Show dropdown on focus
@@ -297,6 +349,7 @@ function setupClubSearch() {
     searchInput.addEventListener('input', () => {
         populateOptions(searchInput.value);
         optionsList.classList.add('show');
+        toggleClearButton();
     });
     
     // Hide dropdown when clicking outside
@@ -307,7 +360,27 @@ function setupClubSearch() {
     });
     
     // Initial population after clubs are loaded
-    setTimeout(() => populateOptions(), 100);
+    setTimeout(() => {
+        populateOptions();
+        toggleClearButton();
+    }, 100);
+}
+
+// Clear club selection
+function clearClubSelection() {
+    const searchInput = document.getElementById('club-search');
+    const clubSelect = document.getElementById('club-name');
+    const clearBtn = document.getElementById('clear-club');
+    
+    if (searchInput) searchInput.value = '';
+    if (clubSelect) {
+        clubSelect.value = '';
+        clubSelect.removeAttribute('data-selected-club-id'); // Clear stored club ID
+    }
+    if (clearBtn) clearBtn.style.display = 'none';
+    
+    // Refocus on input
+    if (searchInput) searchInput.focus();
 }
 
 // Setup registration type selection - simplified for compact design
@@ -426,6 +499,20 @@ function showReview() {
     const clubName = document.getElementById('club-name').value;
     const mealPreference = registrationData.mealPreference;
     
+    // Get club ID from selected option
+    const clubSelect = document.getElementById('club-name');
+    const selectedOption = clubSelect.options[clubSelect.selectedIndex];
+    
+    // Try to get club ID from either the selected option's data-id or from the select element's stored ID
+    let clubId = selectedOption ? selectedOption.getAttribute('data-id') : null;
+    if (!clubId) {
+        clubId = clubSelect.getAttribute('data-selected-club-id');
+    }
+    
+    console.log('🏢 Selected club:', clubName);
+    console.log('🏢 Club ID from data-id:', clubId);
+    console.log('🏢 Selected option:', selectedOption);
+    
     // Validate all required fields (email is optional)
     if (!fullName || !mobile || !clubName || !mealPreference) {
         alert('Please fill in all required fields');
@@ -453,6 +540,7 @@ function showReview() {
     registrationData.mobile = mobile;
     registrationData.email = email || 'Not Provided';
     registrationData.clubName = clubName;
+    registrationData.clubId = clubId ? parseInt(clubId) : 0;
     
     // Populate review screen
     document.getElementById('review-type').textContent = registrationData.typeName;
@@ -551,19 +639,38 @@ async function initiateCashfreePayment() {
             body: JSON.stringify(paymentData)
         });
         
+        // Check if response is OK before parsing JSON
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ API Error Response:', errorText);
+            throw new Error(`Server error: ${response.status}`);
+        }
+        
         const result = await response.json();
         console.log('✅ Cashfree response:', result);
         
-        if (result.success && result.paymentUrl) {
+        if (result.success && result.paymentSessionId) {
             registrationData.paymentSessionId = result.paymentSessionId;
-            
-            console.log('💰 Payment URL created:', result.paymentUrl);
             
             sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
             sessionStorage.setItem('cashfreeOrderId', result.orderId);
             
-            console.log('🔄 Redirecting to Cashfree payment page...');
-            window.location.href = result.paymentUrl;
+            console.log('� Opening Cashfree checkout with payment session ID...');
+            
+            // Initialize Cashfree SDK
+            const cashfree = Cashfree({
+                mode: "sandbox" // Use "production" when going live
+            });
+            
+            // Open Cashfree checkout
+            let checkoutOptions = {
+                paymentSessionId: result.paymentSessionId,
+                redirectTarget: "_self" // Opens in same tab
+            };
+            
+            console.log('🔄 Opening Cashfree checkout...');
+            cashfree.checkout(checkoutOptions);
+            
         } else {
             console.error('❌ Payment failed:', result.error);
             alert('Payment initiation failed: ' + (result.error || 'Unknown error'));
@@ -573,12 +680,130 @@ async function initiateCashfreePayment() {
         
     } catch (error) {
         console.error('💥 Payment error:', error);
-        alert('An error occurred. Please try again.');
+        alert('Payment initiation failed. Please try again.\n\nError: ' + error.message);
         const payBtn = document.querySelector('#screen-payment .btn-primary');
         if (payBtn) {
             payBtn.disabled = false;
-            payBtn.innerHTML = 'Proceed to Payment';
+            payBtn.textContent = 'PAY NOW';
         }
+    }
+}
+
+// Verify payment with backend and show success
+async function verifyPaymentAndShowSuccess(orderId, pendingData) {
+    try {
+        console.log('🔄 Verifying payment with backend...', orderId);
+        
+        // Show loading state
+        showScreen('screen-banner');
+        const bannerContent = document.querySelector('.banner-content');
+        if (bannerContent) {
+            bannerContent.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #D4AF37; 
+                                border-radius: 50%; width: 60px; height: 60px; 
+                                animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                    <h2 style="color: #2C2416; margin-bottom: 10px;">Verifying Payment...</h2>
+                    <p style="color: #666;">Please wait while we confirm your payment</p>
+                </div>
+            `;
+        }
+        
+        // Call backend to verify payment
+        const response = await fetch(`/api/cashfree/verify?orderId=${orderId}`);
+        
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response OK:', response.ok);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Server responded with error:', errorText);
+            throw new Error(`Server error: ${response.status} - ${errorText}`);
+        }
+        
+        const result = await response.json();
+        
+        console.log('✅ Payment verification result:', result);
+        
+        if (result.success && result.paymentSuccess) {
+            // Payment successful - use data from API response or session
+            const parsedData = JSON.parse(pendingData);
+            
+            // Merge with registration data from database if available
+            if (result.registration) {
+                registrationData = {
+                    fullName: result.registration.name || parsedData.fullName,
+                    mobile: result.registration.mobile || parsedData.mobile,
+                    email: result.registration.email || parsedData.email,
+                    clubName: result.registration.clubName || parsedData.clubName,
+                    typeName: result.registration.registrationType || parsedData.typeName,
+                    price: result.registration.amount || parsedData.price,
+                    mealPreference: result.registration.mealPreference || parsedData.mealPreference,
+                    confirmationId: result.registration.confirmationId,
+                    paymentStatus: 'Paid',
+                    transactionId: result.transactionId || orderId,
+                    orderId: orderId
+                };
+            } else {
+                registrationData = parsedData;
+                registrationData.paymentStatus = 'Paid';
+                registrationData.transactionId = result.transactionId || orderId;
+                registrationData.orderId = orderId;
+            }
+            
+            sessionStorage.removeItem('pendingRegistration');
+            sessionStorage.removeItem('cashfreeOrderId');
+            
+            console.log('🎉 Payment verified! Showing success screen...');
+            processPayment('success');
+            
+        } else if (result.success && !result.paymentSuccess) {
+            // Payment still pending or failed
+            console.log('⏳ Payment status:', result.status);
+            
+            if (result.status === 'ACTIVE' || result.status === 'PENDING') {
+                // Payment is still processing
+                if (confirm('Payment is still processing. Would you like to check again?')) {
+                    // Retry verification after a delay
+                    setTimeout(() => {
+                        verifyPaymentAndShowSuccess(orderId, pendingData);
+                    }, 3000);
+                } else {
+                    alert('Your payment is being processed. Order ID: ' + orderId + '\n\nYou will receive confirmation via email/WhatsApp once payment is confirmed.');
+                    window.location.href = 'index.html';
+                }
+            } else {
+                // Payment failed
+                alert('Payment was not successful. Status: ' + result.status + '\n\nPlease try again or contact support.');
+                window.location.href = 'index.html';
+            }
+            
+        } else {
+            // Verification failed
+            console.error('❌ Payment verification failed:', result.error);
+            
+            const retryMsg = 'Payment verification failed.\n\n' +
+                'Order ID: ' + orderId + '\n' +
+                'Error: ' + (result.error || 'Unknown error') + '\n\n' +
+                'Would you like to try verifying again?';
+            
+            if (confirm(retryMsg)) {
+                setTimeout(() => {
+                    verifyPaymentAndShowSuccess(orderId, pendingData);
+                }, 2000);
+            } else {
+                alert('Please contact support with your Order ID: ' + orderId);
+                window.location.href = 'index.html';
+            }
+        }
+        
+    } catch (error) {
+        console.error('💥 Payment verification error:', error);
+        console.error('💥 Error stack:', error.stack);
+        console.error('💥 Error message:', error.message);
+        
+        alert('Error verifying payment:\n\n' + error.message + '\n\nPlease contact support with your Order ID: ' + orderId);
+        window.location.href = 'index.html';
     }
 }
 
@@ -594,8 +819,26 @@ function processPayment(status) {
     if (status === 'success') {
         console.log('✅ Payment successful! Generating confirmation...');
         
-        // Generate transaction details (simulate payment gateway response)
-        const confirmationId = 'SS' + Date.now().toString().slice(-8);
+        // Get registration type prefix
+        const typeKey = Object.keys(registrationTypes).find(
+            key => registrationTypes[key].name === registrationData.typeName
+        );
+        const prefix = registrationPrefixes[typeKey] || 'SS';
+        
+        // Get club number (2 digits, padded)
+        console.log('🏢 Club ID from registrationData:', registrationData.clubId);
+        const clubNumber = registrationData.clubId ? registrationData.clubId.toString().padStart(2, '0') : '00';
+        console.log('🔢 Formatted club number:', clubNumber);
+        
+        // Get meal specifier (V=Veg, N=Non-Veg)
+        const mealCode = registrationData.mealPreference === 'Veg' ? 'V' : 'N';
+        
+        // Generate 4-digit series number
+        const seriesNumber = Date.now().toString().slice(-4);
+        
+        // Format: XXCCM#### (e.g., RN15V1234) - No separators
+        const confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
+        
         const transactionId = 'TXN' + Date.now().toString().slice(-10);
         const paymentDate = new Date().toLocaleString('en-IN', {
             day: '2-digit',
@@ -612,10 +855,23 @@ function processPayment(status) {
         console.log('🎫 Confirmation ID:', confirmationId);
         console.log('🔢 Transaction ID:', transactionId);
         
-        // Populate simplified success screen
-        document.getElementById('confirmation-id-display').textContent = confirmationId;
+        // Populate refined acknowledgment page (with null checks)
+        const setElementText = (id, text) => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = text;
+        };
         
-        console.log('📝 Success screen populated with confirmation ID');
+        setElementText('confirmation-id-display', confirmationId);
+        setElementText('ack-name', registrationData.fullName);
+        setElementText('ack-type', registrationData.typeName);
+        setElementText('ack-mobile', registrationData.mobile);
+        setElementText('ack-club', registrationData.clubName || 'Not specified');
+        setElementText('ack-meal', registrationData.mealPreference);
+        setElementText('ack-amount', `₹${registrationData.price.toLocaleString('en-IN')}`);
+        setElementText('ack-txn', transactionId);
+        setElementText('ack-date', paymentDate); // Optional field
+        
+        console.log('📝 Acknowledgment page populated with all details');
         console.log('🎉 Showing success screen...');
         
         // Show success screen
@@ -729,6 +985,81 @@ function downloadAsImage() {
     } catch (error) {
         console.error('Image generation error:', error);
         alert('Unable to generate image. Please ensure you have internet connection for html2canvas library.');
+    }
+}
+
+// Download Registration Receipt as PDF using screenshot
+async function downloadReceiptPDF() {
+    console.log('📄 Download PDF clicked');
+    console.log('📋 Registration Data:', registrationData);
+    
+    if (!registrationData.confirmationId) {
+        alert('⚠️ Receipt not ready. Please complete payment first.');
+        return;
+    }
+    
+    try {
+        // Show loading message
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '⏳ Generating PDF...';
+        button.disabled = true;
+        
+        // Get the acknowledgment screen element
+        const receiptElement = document.getElementById('screen-acknowledgment');
+        
+        if (!receiptElement) {
+            throw new Error('Receipt element not found');
+        }
+        
+        // Use html2canvas to capture the screen
+        const canvas = await html2canvas(receiptElement, {
+            scale: 2, // Higher quality
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff',
+            windowWidth: receiptElement.scrollWidth,
+            windowHeight: receiptElement.scrollHeight
+        });
+        
+        // Convert canvas to image
+        const imgData = canvas.toDataURL('image/png');
+        
+        // Create PDF with jsPDF
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        // Calculate dimensions to fit A4
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Add image to PDF
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        
+        // Save PDF
+        pdf.save(`SNEHA-SAURABHA-Receipt-${registrationData.confirmationId}.pdf`);
+        
+        console.log('✅ PDF downloaded successfully!');
+        
+        // Restore button
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+    } catch (error) {
+        console.error('❌ PDF generation error:', error);
+        alert('⚠️ Failed to generate PDF. Please try again or take a screenshot.');
+        
+        // Restore button
+        const button = event.target.closest('button');
+        if (button) {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }
     }
 }
 

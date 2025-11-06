@@ -172,6 +172,20 @@ const registrationTypes = {
     }
 };
 
+// Registration Type Prefixes for unique IDs
+const registrationPrefixes = {
+    'rotarian': 'RN',
+    'rotarian-spouse': 'RS',
+    'ann': 'AN',
+    'annet': 'RT',  // Rotaractor
+    'guest': 'GT',
+    'silver-donor': 'SD',
+    'silver-sponsor': 'SS',
+    'gold-sponsor': 'GS',
+    'platinum-sponsor': 'PT',
+    'patron-sponsor': 'PS'
+};
+
 // Load clubs from JSON
 let clubsList = [];
 
@@ -194,6 +208,13 @@ document.addEventListener('DOMContentLoaded', function() {
             orderId: orderId || cashfreeOrderId,
             hasPendingData: !!pendingData 
         });
+        
+        // Debug: Log what's in sessionStorage
+        if (pendingData) {
+            const parsed = JSON.parse(pendingData);
+            console.log('📦 SessionStorage data:', parsed);
+            console.log('🏢 Club ID in session:', parsed.clubId);
+        }
         
         // Create minimal pending data if not in session (e.g., page refresh)
         const registrationDataToUse = pendingData || JSON.stringify({
@@ -268,6 +289,7 @@ function setupClubSearch() {
     const searchInput = document.getElementById('club-search');
     const clubSelect = document.getElementById('club-name');
     const optionsList = document.getElementById('club-options');
+    const clearBtn = document.getElementById('clear-club');
     
     if (!searchInput || !clubSelect || !optionsList) return;
     
@@ -293,16 +315,32 @@ function setupClubSearch() {
                 div.className = 'club-option';
                 div.textContent = opt.textContent;
                 div.setAttribute('data-value', opt.value);
-                div.addEventListener('click', () => selectClub(opt.value, opt.textContent));
+                div.setAttribute('data-id', opt.getAttribute('data-id')); // Preserve club ID
+                div.addEventListener('click', () => selectClub(opt.value, opt.textContent, opt.getAttribute('data-id')));
                 optionsList.appendChild(div);
             });
         }
     }
     
-    function selectClub(value, text) {
+    function selectClub(value, text, clubId) {
         clubSelect.value = value;
         searchInput.value = text;
+        
+        // Store club ID in a data attribute on the select element for easy retrieval
+        if (clubId) {
+            clubSelect.setAttribute('data-selected-club-id', clubId);
+        }
+        
         optionsList.classList.remove('show');
+        optionsList.style.display = 'none'; // Completely hide dropdown
+        if (clearBtn) clearBtn.style.display = 'block'; // Show X button
+    }
+    
+    // Toggle clear button visibility
+    function toggleClearButton() {
+        if (clearBtn) {
+            clearBtn.style.display = searchInput.value ? 'block' : 'none';
+        }
     }
     
     // Show dropdown on focus
@@ -315,6 +353,7 @@ function setupClubSearch() {
     searchInput.addEventListener('input', () => {
         populateOptions(searchInput.value);
         optionsList.classList.add('show');
+        toggleClearButton();
     });
     
     // Hide dropdown when clicking outside
@@ -325,7 +364,27 @@ function setupClubSearch() {
     });
     
     // Initial population after clubs are loaded
-    setTimeout(() => populateOptions(), 100);
+    setTimeout(() => {
+        populateOptions();
+        toggleClearButton();
+    }, 100);
+}
+
+// Clear club selection
+function clearClubSelection() {
+    const searchInput = document.getElementById('club-search');
+    const clubSelect = document.getElementById('club-name');
+    const clearBtn = document.getElementById('clear-club');
+    
+    if (searchInput) searchInput.value = '';
+    if (clubSelect) {
+        clubSelect.value = '';
+        clubSelect.removeAttribute('data-selected-club-id'); // Clear stored club ID
+    }
+    if (clearBtn) clearBtn.style.display = 'none';
+    
+    // Refocus on input
+    if (searchInput) searchInput.focus();
 }
 
 // Setup registration type selection - simplified for compact design
@@ -444,6 +503,20 @@ function showReview() {
     const clubName = document.getElementById('club-name').value;
     const mealPreference = registrationData.mealPreference;
     
+    // Get club ID from selected option
+    const clubSelect = document.getElementById('club-name');
+    const selectedOption = clubSelect.options[clubSelect.selectedIndex];
+    
+    // Try to get club ID from either the selected option's data-id or from the select element's stored ID
+    let clubId = selectedOption ? selectedOption.getAttribute('data-id') : null;
+    if (!clubId) {
+        clubId = clubSelect.getAttribute('data-selected-club-id');
+    }
+    
+    console.log('🏢 Selected club:', clubName);
+    console.log('🏢 Club ID from data-id:', clubId);
+    console.log('🏢 Selected option:', selectedOption);
+    
     // Validate all required fields (email is optional)
     if (!fullName || !mobile || !clubName || !mealPreference) {
         alert('Please fill in all required fields');
@@ -471,6 +544,7 @@ function showReview() {
     registrationData.mobile = mobile;
     registrationData.email = email || 'Not Provided';
     registrationData.clubName = clubName;
+    registrationData.clubId = clubId ? parseInt(clubId) : 0;
     
     // Populate review screen
     document.getElementById('review-type').textContent = registrationData.typeName;
@@ -546,6 +620,11 @@ async function initiateCashfreePayment() {
         
         // PRODUCTION MODE - Use real Cashfree API
         console.log('🌐 PRODUCTION MODE - Calling Cashfree API...');
+        
+        // IMPORTANT: Save registration data to sessionStorage before redirect
+        // This preserves clubId and other data across payment redirect
+        sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
+        sessionStorage.setItem('cashfreeOrderId', orderId);
         
         const paymentData = {
             confirmationId: registrationData.confirmationId,
@@ -657,23 +736,27 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         
         if (result.success && result.paymentSuccess) {
             // Payment successful - use data from API response or session
-            const parsedData = JSON.parse(pendingData);
+            const parsedData = pendingData ? JSON.parse(pendingData) : {};
             
             // Merge with registration data from database if available
             if (result.registration) {
                 registrationData = {
-                    fullName: result.registration.name || parsedData.fullName,
-                    mobile: result.registration.mobile || parsedData.mobile,
-                    email: result.registration.email || parsedData.email,
-                    clubName: result.registration.clubName || parsedData.clubName,
-                    typeName: result.registration.registrationType || parsedData.typeName,
-                    price: result.registration.amount || parsedData.price,
-                    mealPreference: result.registration.mealPreference || parsedData.mealPreference,
+                    fullName: result.registration.name || parsedData.fullName || 'Unknown',
+                    mobile: result.registration.mobile || parsedData.mobile || '',
+                    email: result.registration.email || parsedData.email || 'Not Provided',
+                    clubName: result.registration.clubName || parsedData.clubName || 'Not specified',
+                    clubId: result.registration.clubId || parsedData.clubId || 0, // IMPORTANT: Get from DB
+                    typeName: result.registration.registrationType || parsedData.typeName || 'Registration',
+                    price: result.registration.amount || parsedData.price || 0,
+                    mealPreference: result.registration.mealPreference || parsedData.mealPreference || 'Veg',
                     confirmationId: result.registration.confirmationId,
                     paymentStatus: 'Paid',
                     transactionId: result.transactionId || orderId,
                     orderId: orderId
                 };
+                
+                console.log('📦 Registration data from API:', result.registration);
+                console.log('🏢 Club ID from API:', result.registration.clubId);
             } else {
                 registrationData = parsedData;
                 registrationData.paymentStatus = 'Paid';
@@ -749,8 +832,26 @@ function processPayment(status) {
     if (status === 'success') {
         console.log('✅ Payment successful! Generating confirmation...');
         
-        // Generate transaction details (simulate payment gateway response)
-        const confirmationId = 'SS' + Date.now().toString().slice(-8);
+        // Get registration type prefix
+        const typeKey = Object.keys(registrationTypes).find(
+            key => registrationTypes[key].name === registrationData.typeName
+        );
+        const prefix = registrationPrefixes[typeKey] || 'SS';
+        
+        // Get club number (2 digits, padded)
+        console.log('🏢 Club ID from registrationData:', registrationData.clubId);
+        const clubNumber = registrationData.clubId ? registrationData.clubId.toString().padStart(2, '0') : '00';
+        console.log('🔢 Formatted club number:', clubNumber);
+        
+        // Get meal specifier (V=Veg, N=Non-Veg)
+        const mealCode = registrationData.mealPreference === 'Veg' ? 'V' : 'N';
+        
+        // Generate 4-digit series number
+        const seriesNumber = Date.now().toString().slice(-4);
+        
+        // Format: XXCCM#### (e.g., RN15V1234) - No separators
+        const confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
+        
         const transactionId = 'TXN' + Date.now().toString().slice(-10);
         const paymentDate = new Date().toLocaleString('en-IN', {
             day: '2-digit',
@@ -767,10 +868,24 @@ function processPayment(status) {
         console.log('🎫 Confirmation ID:', confirmationId);
         console.log('🔢 Transaction ID:', transactionId);
         
-        // Populate simplified success screen
-        document.getElementById('confirmation-id-display').textContent = confirmationId;
+        // Populate refined acknowledgment page (with null checks)
+        const setElementText = (id, text) => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = text;
+        };
         
-        console.log('📝 Success screen populated with confirmation ID');
+        setElementText('confirmation-id-display', confirmationId);
+        setElementText('ack-name', registrationData.fullName);
+        setElementText('ack-type', registrationData.typeName);
+        setElementText('ack-mobile', registrationData.mobile);
+        setElementText('ack-email', registrationData.email);
+        setElementText('ack-club', registrationData.clubName || 'Not specified');
+        setElementText('ack-meal', registrationData.mealPreference);
+        setElementText('ack-amount', `₹${registrationData.price.toLocaleString('en-IN')}`);
+        setElementText('ack-txn', transactionId);
+        setElementText('ack-date', paymentDate); // Optional field
+        
+        console.log('📝 Acknowledgment page populated with all details');
         console.log('🎉 Showing success screen...');
         
         // Show success screen
@@ -884,6 +999,91 @@ function downloadAsImage() {
     } catch (error) {
         console.error('Image generation error:', error);
         alert('Unable to generate image. Please ensure you have internet connection for html2canvas library.');
+    }
+}
+
+// Download Registration Receipt as PDF using screenshot
+async function downloadReceiptPDF(event) {
+    console.log('📄 Download PDF clicked');
+    console.log('📋 Registration Data:', registrationData);
+    
+    if (!registrationData.confirmationId) {
+        alert('⚠️ Receipt not ready. Please complete payment first.');
+        return;
+    }
+    
+    try {
+        // Show loading message
+        const button = event ? event.target.closest('button') : null;
+        const originalText = button ? button.innerHTML : '';
+        if (button) {
+            button.innerHTML = '⏳ Generating PDF...';
+            button.disabled = true;
+        }
+        
+        // Get the acknowledgment screen element
+        const receiptElement = document.getElementById('screen-acknowledgment');
+        
+        if (!receiptElement) {
+            throw new Error('Receipt element not found');
+        }
+        
+        console.log('📸 Capturing screenshot...');
+        
+        // Use html2canvas to capture the screen
+        const canvas = await html2canvas(receiptElement, {
+            scale: 2, // Higher quality
+            useCORS: true,
+            logging: true,
+            backgroundColor: '#ffffff',
+            windowWidth: receiptElement.scrollWidth,
+            windowHeight: receiptElement.scrollHeight
+        });
+        
+        console.log('✅ Screenshot captured, converting to PDF...');
+        
+        // Convert canvas to image
+        const imgData = canvas.toDataURL('image/png');
+        
+        // Create PDF with jsPDF
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        // Calculate dimensions to fit A4
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Add image to PDF
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        
+        // Save PDF
+        pdf.save(`SNEHA-SAURABHA-Receipt-${registrationData.confirmationId}.pdf`);
+        
+        console.log('✅ PDF downloaded successfully!');
+        
+        // Restore button
+        if (button) {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }
+        
+    } catch (error) {
+        console.error('❌ PDF generation error:', error);
+        alert('⚠️ Failed to generate PDF. Please try again or take a screenshot.');
+        
+        // Restore button
+        if (event) {
+            const button = event.target.closest('button');
+            if (button && originalText) {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
     }
 }
 

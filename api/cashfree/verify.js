@@ -67,6 +67,7 @@ module.exports = async (req, res) => {
           email: registration.email,
           mobile: registration.mobile,
           clubName: registration.club,
+          clubId: registration.club_id, // IMPORTANT: Return club ID
           registrationType: registration.registration_type,
           amount: registration.registration_amount,
           mealPreference: registration.meal_preference,
