@@ -364,37 +364,35 @@
                     </div>
                 </div>
 
-                <!-- Download PDF Button (First) -->
-                <div style="padding: 0 20px 15px;">
-                    <button onclick="downloadReceiptPDF(event)" style="width: 100%; padding: 14px; background: var(--primary-gold); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        Download Receipt PDF
-                    </button>
+                <!-- Thank You Message (Part of Receipt for PDF) -->
+                <div style="margin: 0 20px 20px; padding: 15px; background: linear-gradient(135deg, #FFF9E6 0%, #F9F3DC 100%); border-radius: 8px; border: 1px solid var(--primary-gold); text-align: center;">
+                    <p style="margin: 0; color: var(--text-dark); font-size: 14px; font-weight: 600;">🙏 Thank You!</p>
+                    <p style="margin: 5px 0 0; color: #8B7355; font-size: 12px; line-height: 1.5;">We look forward to seeing you at<br><strong>SNEHA SAURABHA 2025-26</strong></p>
                 </div>
 
-                <!-- Combined WhatsApp, Thank You & PDF Message -->
-                <div style="margin: 0 20px 20px; padding: 12px; background: #E8F5E9; border-radius: 8px; border-left: 3px solid #22C55E;">
+            </div>
+            
+            <!-- Download & WhatsApp Section (NOT in PDF) -->
+            <div style="padding: 0 20px 20px; max-width: 600px; margin: 0 auto;">
+                <!-- Download PDF Button -->
+                <button onclick="downloadReceiptPDF(event)" style="width: 100%; padding: 14px; background: var(--primary-gold); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Receipt PDF
+                </button>
+
+                <!-- WhatsApp Confirmation Message -->
+                <div style="padding: 12px; background: #E8F5E9; border-radius: 8px; border-left: 3px solid #22C55E;">
                     <p style="margin: 0; color: #2D5016; font-size: 12px; line-height: 1.6;">
                         <strong>📱 Confirmation sent to your WhatsApp!</strong><br>
-                        You will receive detailed event information shortly. Please download the PDF above for your records.<br><br>
-                        <strong>🙏 Thank you for registering!</strong><br>
-                        We look forward to seeing you at SNEHA SAURABHA 2025-26.
+                        You will receive detailed event information shortly.
                     </p>
                 </div>
+            </div>
 
-            </div>
-        </div>
-    </div>
-            </div>
-                        Download Receipt PDF
-                    </button>
-                </div>
-
-            </div>
         </div>
     </div>
 
