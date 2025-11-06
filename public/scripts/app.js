@@ -635,11 +635,13 @@ async function initiateCashfreePayment() {
             email: registrationData.email,
             registrationType: registrationData.typeName,
             clubName: registrationData.clubName || '',
+            clubId: registrationData.clubId || 0,
             mealPreference: registrationData.mealPreference,
             qrData: registrationData.qrCode
         };
         
         console.log('📦 Payment data:', paymentData);
+        console.log('🏢 Club ID being sent:', registrationData.clubId);
         
         // Call Cashfree API
         const response = await fetch('/api/cashfree/initiate', {
