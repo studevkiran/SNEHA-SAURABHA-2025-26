@@ -245,139 +245,44 @@
         </div>
     </div>
 
-    <!-- Screen 6: Success Acknowledgment - Registration Ticket -->
+    <!-- Screen 6: Success Message -->
     <div id="screen-success" class="screen">
-        <div class="screen-content">
-            <div class="ticket-container" id="registration-ticket">
-                <!-- Ticket Header with Logos -->
-                <div class="ticket-header">
-                    <div class="ticket-logos">
-                        <div class="logo-left">
-                            <img src="images/header-left.jpg" alt="Rotary Logo" onerror="this.style.display='none'">
-                        </div>
-                        <div class="ticket-title">
-                            <p class="ticket-subtitle">Rotary District 3181 Conference 2025-26</p>
-                            <h1>SNEHA-SAURABHA</h1>
-                        </div>
-                        <div class="logo-right">
-                            <img src="images/header-right.jpg" alt="Event Logo" onerror="this.style.display='none'">
-                        </div>
-                    </div>
-                    <div class="ticket-success-badge">✓ CONFIRMED</div>
+        <div class="screen-content" style="display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px 20px;">
+            <div class="success-message-container" style="max-width: 400px;">
+                <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
+                <h1 style="color: var(--primary-gold); font-size: 32px; margin-bottom: 15px;">Registration Successful!</h1>
+                <p style="font-size: 18px; color: var(--text-dark); margin-bottom: 20px; line-height: 1.6;">
+                    Thank you for registering for <strong>SNEHA SAURABHA 2025-26</strong>
+                </p>
+                
+                <div style="background: #f9f9f9; border-radius: 12px; padding: 20px; margin: 25px 0; border: 2px solid var(--primary-gold);">
+                    <p style="font-size: 14px; color: var(--text-dark); margin-bottom: 10px;">Your Confirmation ID</p>
+                    <p style="font-size: 28px; font-weight: 700; color: var(--primary-gold); letter-spacing: 2px;" id="confirmation-id-display"></p>
                 </div>
-
-                <div class="ticket-divider"></div>
-
-                <!-- Registration Type Section -->
-                <div class="ticket-section">
-                    <h3 class="section-title">Registration Details</h3>
-                    <div class="detail-row">
-                        <span class="detail-label">Confirmation ID:</span>
-                        <span class="detail-value" id="confirmation-id"></span>
-                    </div>
-                    <div class="detail-row highlight-row">
-                        <span class="detail-label">Registration Type:</span>
-                        <span class="detail-value" id="success-type"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Amount Paid:</span>
-                        <span class="detail-value amount" id="success-amount"></span>
-                    </div>
+                
+                <div style="background: linear-gradient(135deg, var(--light-gold) 0%, var(--cream) 100%); border-radius: 12px; padding: 25px; margin: 25px 0;">
+                    <p style="font-size: 16px; color: var(--text-dark); line-height: 1.8; margin: 0;">
+                        📱 <strong>Confirmation details have been sent to your WhatsApp</strong><br><br>
+                        You will receive your registration ticket and event details shortly.
+                    </p>
                 </div>
-
-                <div class="ticket-divider"></div>
-
-                <!-- Personal Details Section -->
-                <div class="ticket-section">
-                    <h3 class="section-title">Personal Information</h3>
-                    <div class="detail-row">
-                        <span class="detail-label">Name:</span>
-                        <span class="detail-value" id="success-name"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Mobile:</span>
-                        <span class="detail-value" id="success-mobile"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Email:</span>
-                        <span class="detail-value" id="success-email"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Club:</span>
-                        <span class="detail-value" id="success-club"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Meal Preference:</span>
-                        <span class="detail-value" id="success-meal"></span>
-                    </div>
+                
+                <div style="margin-top: 30px;">
+                    <p style="font-size: 15px; color: var(--text-dark); margin-bottom: 20px;">
+                        🙏 <strong>We look forward to seeing you at Mysore!</strong>
+                    </p>
+                    <p style="font-size: 13px; color: var(--text-light);">
+                        📅 30-31 Jan & 1 Feb 2026<br>
+                        📍 Silent Shores Resort, Mysore
+                    </p>
                 </div>
-
-                <div class="ticket-divider"></div>
-
-                <!-- Transaction Details Section -->
-                <div class="ticket-section">
-                    <h3 class="section-title">Payment Details</h3>
-                    <div class="detail-row">
-                        <span class="detail-label">Transaction ID:</span>
-                        <span class="detail-value" id="success-txn"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Payment Date:</span>
-                        <span class="detail-value" id="success-date"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Payment Status:</span>
-                        <span class="detail-value success-status">✓ SUCCESS</span>
-                    </div>
-                </div>
-
-                <div class="ticket-divider"></div>
-
-                <!-- QR Code for Check-in -->
-                <div class="ticket-qr-section">
-                    <div id="qr-code"></div>
-                    <p class="qr-instruction">Scan this QR code at venue for check-in</p>
-                </div>
-
-                <div class="ticket-divider"></div>
-
-                <!-- Event Details -->
-                <div class="ticket-section event-details">
-                    <h3 class="section-title">Event Information</h3>
-                    <div class="detail-row">
-                        <span class="detail-label">📅 Date:</span>
-                        <span class="detail-value">30-31 January & 1 February 2026</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">📍 Venue:</span>
-                        <span class="detail-value">Silent Shores Resort & Spa, Mysore</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">📞 Contact:</span>
-                        <span class="detail-value">+91 9980557785</span>
-                    </div>
-                </div>
-
-                <!-- Gratitude Message -->
-                <div class="ticket-gratitude">
-                    <p>🙏 Thank you for registering!</p>
-                    <p class="gratitude-text">We look forward to welcoming you at SNEHA-SAURABHA 2025-26. Your participation makes this conference special. See you in Mysore!</p>
-                </div>
-
-                <!-- Footer Note -->
-                <div class="ticket-footer">
-                    <p>Please save this ticket for your records. You will receive detailed event information via WhatsApp and email shortly.</p>
-                </div>
+                
+                <button class="btn-primary" style="margin-top: 35px; width: 100%;" onclick="resetForm()">
+                    Register Another Person
+                </button>
             </div>
-
-            <!-- Download Buttons -->
-            <div class="download-section">
-                <button class="btn-download" onclick="downloadAsPDF()">
-                    📄 Download as PDF
-                </button>
-                <button class="btn-download" onclick="downloadAsImage()">
-                    🖼️ Download as Image
-                </button>
+        </div>
+    </div>
             </div>
             
             <button class="btn-primary" onclick="resetForm()" style="margin-top: 20px;">Register Another Person</button>

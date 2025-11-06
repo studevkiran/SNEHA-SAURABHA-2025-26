@@ -767,24 +767,11 @@ function processPayment(status) {
         console.log('🎫 Confirmation ID:', confirmationId);
         console.log('🔢 Transaction ID:', transactionId);
         
-        // Populate ticket/success screen
-        document.getElementById('confirmation-id').textContent = confirmationId;
-        document.getElementById('success-name').textContent = registrationData.fullName;
-        document.getElementById('success-mobile').textContent = registrationData.mobile;
-        document.getElementById('success-email').textContent = registrationData.email;
-        document.getElementById('success-club').textContent = registrationData.clubName || 'Not specified';
-        document.getElementById('success-meal').textContent = registrationData.mealPreference;
-        document.getElementById('success-type').textContent = registrationData.typeName;
-        document.getElementById('success-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-        document.getElementById('success-txn').textContent = transactionId;
-        document.getElementById('success-date').textContent = paymentDate;
+        // Populate simplified success screen
+        document.getElementById('confirmation-id-display').textContent = confirmationId;
         
-        console.log('📝 Ticket populated with all details');
-        
-        // Generate QR Code
-        generateQRCode(confirmationId, registrationData.fullName, registrationData.typeName);
-        
-        console.log('🎉 Showing success ticket...');
+        console.log('📝 Success screen populated with confirmation ID');
+        console.log('🎉 Showing success screen...');
         
         // Show success screen
         showScreen('screen-success');
@@ -792,7 +779,7 @@ function processPayment(status) {
         // In real implementation:
         // 1. Send data to backend API
         // 2. Store in database
-        // 3. Trigger WhatsApp confirmation
+        // 3. Trigger WhatsApp confirmation (NEXT TO IMPLEMENT)
         // 4. Send email confirmation
         
         console.log('✨ Registration successful:', {
