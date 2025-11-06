@@ -31,20 +31,22 @@ module.exports = async (req, res) => {
     } = req.body;
 
     // Validation
-    if (!name || !email || !mobile || !clubName || !registrationType || !amount) {
+    if (!name || !mobile || !clubName || !registrationType || !amount) {
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
       });
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid email format'
-      });
+    // Email validation (only if provided)
+    if (email && email !== 'Not Provided') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid email format'
+        });
+      }
     }
 
     // Mobile validation

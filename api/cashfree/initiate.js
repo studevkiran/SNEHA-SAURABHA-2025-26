@@ -40,20 +40,22 @@ module.exports = async (req, res) => {
     });
 
     // Validation
-    if (!orderId || !amount || !fullName || !mobile || !email) {
+    if (!orderId || !amount || !fullName || !mobile) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: orderId, amount, fullName, mobile, email'
+        error: 'Missing required fields: orderId, amount, fullName, mobile'
       });
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid email format'
-      });
+    // Validate email format (only if provided)
+    if (email && email !== 'Not Provided') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid email format'
+        });
+      }
     }
 
     // Validate mobile format (10 digits)
