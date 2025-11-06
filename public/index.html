@@ -363,23 +363,12 @@
 
             </div>
             
-            <!-- Download & WhatsApp Section (NOT in PDF) -->
-            <div style="padding: 0 20px 15px; max-width: 600px; margin: 0 auto;">
-                <!-- Download PDF Button -->
-                <button onclick="downloadReceiptPDF(event)" style="width: 100%; padding: 12px; background: var(--primary-gold); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 12px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    Download Receipt PDF
-                </button>
-
-                <!-- WhatsApp Confirmation Message -->
-                <div style="padding: 10px; background: #E8F5E9; border-radius: 6px; border-left: 3px solid #22C55E;">
-                    <p style="margin: 0; color: #2D5016; font-size: 11px; line-height: 1.5;">
-                        <strong>📱 Confirmation sent to WhatsApp!</strong><br>
-                        Event details will arrive shortly.
+            <!-- Simple Footer Note (NOT in PDF) -->
+            <div style="padding: 0 20px 20px; max-width: 600px; margin: 0 auto;">
+                <div style="padding: 15px; background: #f9f9f9; border-radius: 8px; text-align: center; border: 1px solid #ddd;">
+                    <p style="margin: 0 0 8px; color: #666; font-size: 12px; line-height: 1.6;">
+                        📱 Confirmation & registration details will be sent through <strong>WhatsApp</strong>.<br>
+                        To download the receipt, <a href="#" onclick="downloadReceiptPDF(event); return false;" style="color: var(--primary-gold); font-weight: 600; text-decoration: underline;">click here</a>.
                     </p>
                 </div>
             </div>
