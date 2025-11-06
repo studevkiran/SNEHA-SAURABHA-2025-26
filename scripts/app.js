@@ -119,8 +119,8 @@ const registrationTypes = {
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
         price: 7500,
-        description: 'Admission with spouse + 2 children below 12 years, Food & 1 Memento',
-        inclusions: ['Admission for Rotarian and spouse', 'Admission for 2 children below 12 years', 'Food for all', '1 Memento']
+        description: 'Admission with spouse, Food & 1 Memento',
+        inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
     },
     'ann': {
         name: 'Ann',
@@ -129,8 +129,8 @@ const registrationTypes = {
         inclusions: ['Conference admission', 'Food for all sessions']
     },
     'annet': {
-        name: 'Annet',
-        price: 2000,
+        name: 'Rotaractor',
+        price: 2500,
         description: 'Admission & Food',
         inclusions: ['Conference admission', 'Food for all sessions']
     },
@@ -404,6 +404,16 @@ function showScreen(screenId) {
     // Show target screen
     setTimeout(() => {
         document.getElementById(screenId).classList.add('active');
+        
+        // If showing personal details, update selected type and price display
+        if (screenId === 'screen-personal-details') {
+            const typeDisplay = document.getElementById('selected-type-display');
+            const priceDisplay = document.getElementById('selected-price-display');
+            if (typeDisplay && priceDisplay && registrationData.typeName) {
+                typeDisplay.textContent = registrationData.typeName;
+                priceDisplay.textContent = registrationData.price.toLocaleString('en-IN');
+            }
+        }
     }, 50);
 }
 

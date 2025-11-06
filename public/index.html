@@ -45,7 +45,7 @@
                 <!-- Event Card -->
                 <div class="event-card">
                     <div class="event-detail">
-                        <div class="detail-icon">📅</div>
+                        <div class="detail-icon">�️</div>
                         <div class="detail-info">
                             <strong>Dates</strong>
                             <p>30–31 Jan & 1 Feb 2026</p>
@@ -91,9 +91,9 @@
                     <div class="card-name">Ann</div>
                     <div class="card-price">₹3,500</div>
                 </div>
-                <div class="selection-card" data-type="annet" data-price="2000">
-                    <div class="card-name">Annet</div>
-                    <div class="card-price">₹2,000</div>
+                <div class="selection-card" data-type="annet" data-price="2500">
+                    <div class="card-name">Rotaractor</div>
+                    <div class="card-price">₹2,500</div>
                 </div>
                 <div class="selection-card" data-type="guest" data-price="4500">
                     <div class="card-name">Guest</div>
@@ -133,6 +133,7 @@
     <!-- Screen 3: Personal Details -->
     <div id="screen-personal-details" class="screen">
         <div class="screen-content">
+            <button class="btn-back" onclick="showScreen('screen-register-type')">← Back</button>
             <h2>Your Details</h2>
             <form id="personal-form" class="compact-form">
                 <div class="form-row">
@@ -142,7 +143,7 @@
                     <input type="tel" id="mobile" required placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10">
                 </div>
                 <div class="form-row">
-                    <input type="email" id="email" required placeholder="Email Address">
+                    <input type="email" id="email" placeholder="Email Address (Optional)">
                 </div>
                 <div class="form-row club-dropdown-wrapper">
                     <input type="text" id="club-search" placeholder="Search and Select Club..." autocomplete="off">
@@ -158,6 +159,14 @@
                         <button type="button" class="meal-btn-compact non-veg" data-meal="Non-Veg">Non-Veg</button>
                     </div>
                 </div>
+                <div class="form-row" style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); margin: 15px 0;">
+                    <div style="font-size: 16px; font-weight: 600; color: var(--text-dark);">
+                        Selected: <span id="selected-type-display"></span>
+                    </div>
+                    <div style="font-size: 20px; font-weight: 700; color: var(--primary-gold); margin-top: 5px;">
+                        Amount: ₹<span id="selected-price-display"></span>
+                    </div>
+                </div>
                 <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
             </form>
         </div>
@@ -166,6 +175,7 @@
     <!-- Screen 4: Review -->
     <div id="screen-review" class="screen">
         <div class="screen-content">
+            <button class="btn-back" onclick="showScreen('screen-personal-details')">← Back</button>
             <h2>Review Details</h2>
             <div class="review-container">
                 <div class="review-section">
