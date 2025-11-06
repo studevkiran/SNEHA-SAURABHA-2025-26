@@ -26,6 +26,7 @@ module.exports = async (req, res) => {
       email,
       registrationType,
       clubName,
+      clubId,
       mealPreference,
       qrData
     } = req.body;
@@ -76,6 +77,7 @@ module.exports = async (req, res) => {
       mobile,
       email,
       clubName,
+      clubId,
       mealPreference,
       amount,
       transactionId: orderId,
