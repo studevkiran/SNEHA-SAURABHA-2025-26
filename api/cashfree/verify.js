@@ -1,6 +1,6 @@
 // API: Verify Cashfree payment status
 const CashfreeService = require('../../lib/cashfree');
-const { updatePaymentStatus } = require('../../lib/db-neon');
+const { updatePaymentStatus, getRegistrationByOrderId } = require('../../lib/db-neon');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -48,6 +48,9 @@ module.exports = async (req, res) => {
         }
       );
 
+      // Get registration data from database
+      const registration = await getRegistrationByOrderId(orderId);
+
       console.log('✅ Payment verified and updated:', orderId);
 
       return res.status(200).json({
@@ -58,7 +61,17 @@ module.exports = async (req, res) => {
         amount: statusResponse.orderAmount,
         transactionId: statusResponse.transactionId,
         paymentMethod: statusResponse.paymentMethod,
-        paymentTime: statusResponse.paymentTime
+        paymentTime: statusResponse.paymentTime,
+        registration: registration ? {
+          name: registration.name,
+          email: registration.email,
+          mobile: registration.mobile,
+          clubName: registration.club,
+          registrationType: registration.registration_type,
+          amount: registration.registration_amount,
+          mealPreference: registration.meal_preference,
+          confirmationId: registration.registration_id
+        } : null
       });
 
     } else if (statusResponse.success && !statusResponse.paymentSuccess) {

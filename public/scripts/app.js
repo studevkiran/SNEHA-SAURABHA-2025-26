@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('🔍 Page loaded with params:', { paymentStatus, orderId });
     
-    if (paymentStatus === 'success' || paymentStatus === 'pending') {
+    if ((paymentStatus === 'success' || paymentStatus === 'pending') && orderId) {
         // Payment completed - verify with backend
         const pendingData = sessionStorage.getItem('pendingRegistration');
         const cashfreeOrderId = sessionStorage.getItem('cashfreeOrderId');
@@ -195,11 +195,20 @@ document.addEventListener('DOMContentLoaded', function() {
             hasPendingData: !!pendingData 
         });
         
-        if (pendingData && (orderId || cashfreeOrderId)) {
-            // Verify payment with backend
-            verifyPaymentAndShowSuccess(orderId || cashfreeOrderId, pendingData);
-            return; // Don't run other initialization
-        }
+        // Create minimal pending data if not in session (e.g., page refresh)
+        const registrationDataToUse = pendingData || JSON.stringify({
+            fullName: 'Verifying...',
+            mobile: '',
+            email: '',
+            typeName: 'Registration',
+            price: 0,
+            mealPreference: 'Veg'
+        });
+        
+        // Verify payment with backend
+        verifyPaymentAndShowSuccess(orderId || cashfreeOrderId, registrationDataToUse);
+        return; // Don't run other initialization
+        
     } else if (paymentStatus === 'cancelled' || paymentStatus === 'failed') {
         // Payment cancelled or failed
         alert('Payment was ' + paymentStatus + '. Please try again.');
@@ -562,11 +571,30 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         console.log('✅ Payment verification result:', result);
         
         if (result.success && result.paymentSuccess) {
-            // Payment successful - restore data and show success
-            registrationData = JSON.parse(pendingData);
-            registrationData.paymentStatus = 'Paid';
-            registrationData.transactionId = result.transactionId || orderId;
-            registrationData.orderId = orderId;
+            // Payment successful - use data from API response or session
+            const parsedData = JSON.parse(pendingData);
+            
+            // Merge with registration data from database if available
+            if (result.registration) {
+                registrationData = {
+                    fullName: result.registration.name || parsedData.fullName,
+                    mobile: result.registration.mobile || parsedData.mobile,
+                    email: result.registration.email || parsedData.email,
+                    clubName: result.registration.clubName || parsedData.clubName,
+                    typeName: result.registration.registrationType || parsedData.typeName,
+                    price: result.registration.amount || parsedData.price,
+                    mealPreference: result.registration.mealPreference || parsedData.mealPreference,
+                    confirmationId: result.registration.confirmationId,
+                    paymentStatus: 'Paid',
+                    transactionId: result.transactionId || orderId,
+                    orderId: orderId
+                };
+            } else {
+                registrationData = parsedData;
+                registrationData.paymentStatus = 'Paid';
+                registrationData.transactionId = result.transactionId || orderId;
+                registrationData.orderId = orderId;
+            }
             
             sessionStorage.removeItem('pendingRegistration');
             sessionStorage.removeItem('cashfreeOrderId');
