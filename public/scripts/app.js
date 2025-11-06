@@ -444,17 +444,19 @@ function showReview() {
     const clubName = document.getElementById('club-name').value;
     const mealPreference = registrationData.mealPreference;
     
-    // Validate all fields
-    if (!fullName || !mobile || !email || !clubName || !mealPreference) {
-        alert('Please fill in all fields');
+    // Validate all required fields (email is optional)
+    if (!fullName || !mobile || !clubName || !mealPreference) {
+        alert('Please fill in all required fields');
         return;
     }
     
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address');
-        return;
+    // Email validation (only if provided)
+    if (email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address');
+            return;
+        }
     }
     
     // Phone validation (10 digits)
@@ -467,7 +469,7 @@ function showReview() {
     // Update registration data
     registrationData.fullName = fullName;
     registrationData.mobile = mobile;
-    registrationData.email = email;
+    registrationData.email = email || 'Not Provided';
     registrationData.clubName = clubName;
     
     // Populate review screen
