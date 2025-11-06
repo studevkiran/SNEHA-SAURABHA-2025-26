@@ -481,16 +481,28 @@ async function initiateCashfreePayment() {
         const result = await response.json();
         console.log('✅ Cashfree response:', result);
         
-        if (result.success && result.paymentUrl) {
+        if (result.success && result.paymentSessionId) {
             registrationData.paymentSessionId = result.paymentSessionId;
-            
-            console.log('💰 Payment URL created:', result.paymentUrl);
             
             sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
             sessionStorage.setItem('cashfreeOrderId', result.orderId);
             
-            console.log('🔄 Redirecting to Cashfree payment page...');
-            window.location.href = result.paymentUrl;
+            console.log('� Opening Cashfree checkout with payment session ID...');
+            
+            // Initialize Cashfree SDK
+            const cashfree = Cashfree({
+                mode: "sandbox" // Use "production" when going live
+            });
+            
+            // Open Cashfree checkout
+            let checkoutOptions = {
+                paymentSessionId: result.paymentSessionId,
+                redirectTarget: "_self" // Opens in same tab
+            };
+            
+            console.log('🔄 Opening Cashfree checkout...');
+            cashfree.checkout(checkoutOptions);
+            
         } else {
             console.error('❌ Payment failed:', result.error);
             alert('Payment initiation failed: ' + (result.error || 'Unknown error'));
