@@ -551,12 +551,12 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         }
         
         // Call backend to verify payment
-        const response = await fetch(`/api/cashfree/verify?order_id=${orderId}`);
+        const response = await fetch(`/api/cashfree/verify?orderId=${orderId}`);
         const result = await response.json();
         
         console.log('✅ Payment verification result:', result);
         
-        if (result.success && result.paymentStatus === 'SUCCESS') {
+        if (result.success && result.paymentSuccess) {
             // Payment successful - restore data and show success
             registrationData = JSON.parse(pendingData);
             registrationData.paymentStatus = 'Paid';

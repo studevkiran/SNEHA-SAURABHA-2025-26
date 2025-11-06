@@ -1191,3 +1191,9 @@ h3 {
         font-size: 12px;
     }
 }
+
+/* Loading Spinner Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
