@@ -1014,29 +1014,38 @@ async function downloadReceiptPDF(event) {
         return;
     }
     
+    let button = null;
+    let originalText = '';
+    
     try {
         // Show loading message
-        const button = event ? event.target.closest('button') : null;
-        const originalText = button ? button.innerHTML : '';
+        button = event ? event.target.closest('button') : null;
+        originalText = button ? button.innerHTML : '';
         if (button) {
             button.innerHTML = '⏳ Generating PDF...';
             button.disabled = true;
         }
         
-        // Get the acknowledgment screen element
-        const receiptElement = document.getElementById('screen-acknowledgment');
-        
+        // Get the acknowledgment screen element - try multiple IDs
+        let receiptElement = document.getElementById('receipt-container');
         if (!receiptElement) {
-            throw new Error('Receipt element not found');
+            receiptElement = document.getElementById('screen-success');
+        }
+        if (!receiptElement) {
+            receiptElement = document.querySelector('.acknowledgment-container');
         }
         
-        console.log('📸 Capturing screenshot...');
+        if (!receiptElement) {
+            throw new Error('Receipt element not found. Please ensure you are on the success page.');
+        }
+        
+        console.log('📸 Capturing screenshot of:', receiptElement.id || receiptElement.className);
         
         // Use html2canvas to capture the screen
         const canvas = await html2canvas(receiptElement, {
             scale: 2, // Higher quality
             useCORS: true,
-            logging: true,
+            logging: false,
             backgroundColor: '#ffffff',
             windowWidth: receiptElement.scrollWidth,
             windowHeight: receiptElement.scrollHeight
@@ -1076,15 +1085,12 @@ async function downloadReceiptPDF(event) {
         
     } catch (error) {
         console.error('❌ PDF generation error:', error);
-        alert('⚠️ Failed to generate PDF. Please try again or take a screenshot.');
+        alert('⚠️ Failed to generate PDF: ' + error.message);
         
         // Restore button
-        if (event) {
-            const button = event.target.closest('button');
-            if (button && originalText) {
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }
+        if (button && originalText) {
+            button.innerHTML = originalText;
+            button.disabled = false;
         }
     }
 }

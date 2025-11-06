@@ -1000,19 +1000,32 @@ async function downloadReceiptPDF() {
         return;
     }
     
+    let button = null;
+    let originalText = '';
+    
     try {
         // Show loading message
-        const button = event.target.closest('button');
-        const originalText = button.innerHTML;
-        button.innerHTML = '⏳ Generating PDF...';
-        button.disabled = true;
+        button = event ? event.target.closest('button') : null;
+        originalText = button ? button.innerHTML : '';
+        if (button) {
+            button.innerHTML = '⏳ Generating PDF...';
+            button.disabled = true;
+        }
         
-        // Get the acknowledgment screen element
-        const receiptElement = document.getElementById('screen-acknowledgment');
+        // Get the acknowledgment screen element - try multiple IDs
+        let receiptElement = document.getElementById('receipt-container');
+        if (!receiptElement) {
+            receiptElement = document.getElementById('screen-success');
+        }
+        if (!receiptElement) {
+            receiptElement = document.querySelector('.acknowledgment-container');
+        }
         
         if (!receiptElement) {
-            throw new Error('Receipt element not found');
+            throw new Error('Receipt element not found. Please ensure you are on the success page.');
         }
+        
+        console.log('📸 Capturing screenshot of:', receiptElement.id || receiptElement.className);
         
         // Use html2canvas to capture the screen
         const canvas = await html2canvas(receiptElement, {
@@ -1023,6 +1036,8 @@ async function downloadReceiptPDF() {
             windowWidth: receiptElement.scrollWidth,
             windowHeight: receiptElement.scrollHeight
         });
+        
+        console.log('✅ Screenshot captured, converting to PDF...');
         
         // Convert canvas to image
         const imgData = canvas.toDataURL('image/png');
@@ -1049,16 +1064,17 @@ async function downloadReceiptPDF() {
         console.log('✅ PDF downloaded successfully!');
         
         // Restore button
-        button.innerHTML = originalText;
-        button.disabled = false;
+        if (button) {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }
         
     } catch (error) {
         console.error('❌ PDF generation error:', error);
-        alert('⚠️ Failed to generate PDF. Please try again or take a screenshot.');
+        alert('⚠️ Failed to generate PDF: ' + error.message);
         
         // Restore button
-        const button = event.target.closest('button');
-        if (button) {
+        if (button && originalText) {
             button.innerHTML = originalText;
             button.disabled = false;
         }
