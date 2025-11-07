@@ -53,6 +53,37 @@ module.exports = async (req, res) => {
 
       console.log('✅ Payment verified and updated:', orderId);
 
+      // Send WhatsApp confirmation (asynchronously, don't wait for it)
+      if (registration && registration.mobile) {
+        console.log('📱 Sending WhatsApp confirmation to:', registration.mobile);
+        
+        // Call WhatsApp API asynchronously
+        fetch(`${process.env.VERCEL_URL || 'https://sneha2026.in'}/api/send-whatsapp-confirmation`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: registration.name,
+            mobile: registration.mobile,
+            email: registration.email,
+            registrationId: registration.registration_id,
+            receiptNo: registration.registration_id,
+            registrationType: registration.registration_type,
+            amount: registration.registration_amount,
+            mealPreference: registration.meal_preference
+          })
+        }).then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              console.log('✅ WhatsApp confirmation sent:', data.messageSid);
+            } else {
+              console.error('❌ WhatsApp send failed:', data.message);
+            }
+          })
+          .catch(error => {
+            console.error('❌ WhatsApp API error:', error.message);
+          });
+      }
+
       return res.status(200).json({
         success: true,
         paymentSuccess: true,

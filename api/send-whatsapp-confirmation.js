@@ -1,55 +1,57 @@
 // api/send-whatsapp-confirmation.js
-// WhatsApp Confirmation Message Sender for SNEHA SAURABHA 2025-26
+// Serverless function to send WhatsApp confirmation after successful payment
 
-const twilio = require('twilio');
+/**
+ * This function sends a WhatsApp confirmation message using Twilio
+ * Call this after payment verification is successful
+ * 
+ * Required Environment Variables:
+ * - TWILIO_ACCOUNT_SID
+ * - TWILIO_AUTH_TOKEN
+ * - TWILIO_WHATSAPP_NUMBER (format: whatsapp:+14155238886)
+ */
 
 export default async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ 
       success: false, 
-      error: 'Method not allowed' 
+      message: 'Method not allowed. Use POST.' 
     });
   }
 
   try {
-    const { 
-      mobile, 
+    const {
       name,
+      mobile,
       email,
-      registrationId,     // e.g., SS0001
-      receiptNumber,      // e.g., 0001
-      foodPreference,     // Veg/Non-veg
-      amount 
+      registrationId,
+      receiptNo,
+      registrationType,
+      amount,
+      mealPreference
     } = req.body;
 
     // Validate required fields
-    if (!mobile || !name || !registrationId || !amount) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Missing required fields: mobile, name, registrationId, amount' 
+    if (!name || !mobile || !registrationId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: name, mobile, or registrationId'
       });
     }
 
-    // Format mobile number for WhatsApp (must include country code)
-    const formattedMobile = mobile.startsWith('+91') 
-      ? `whatsapp:${mobile}` 
-      : `whatsapp:+91${mobile}`;
-
     // Initialize Twilio client
+    const twilio = require('twilio');
     const client = twilio(
       process.env.TWILIO_ACCOUNT_SID,
       process.env.TWILIO_AUTH_TOKEN
     );
 
-    // Get first name for personalized greeting
-    const firstName = name.split(' ')[0];
+    // Format phone number (ensure it has country code)
+    const toNumber = mobile.startsWith('+') ? mobile : `+91${mobile}`;
 
-    // Send WhatsApp message using client-approved template
-    const message = await client.messages.create({
-      from: process.env.TWILIO_WHATSAPP_NUMBER,
-      to: formattedMobile,
-      body: `Hi ${firstName},
+    // Construct WhatsApp message
+    const messageBody = `Hi ${name},
 
 🎯 Thank you for registering to SNEHA SAURABHA 2025-26, District Conference
 happening at Silent Shores, Mysore on 30th & 31st January & 01st February 2026
@@ -58,45 +60,44 @@ We're thrilled to have you on board for this district event that celebrates know
 
 📋 Registration Details:
 
-✒️ Registration No.: ${registrationId}
-📄 Receipt No.: ${receiptNumber || registrationId.replace('SS', '')}
+✒️Registration No.: ${registrationId}
+📄Receipt No.: ${receiptNo || registrationId}
 👤 Name: ${name}
 📞 Mobile: ${mobile}
-📧 Email: ${email || 'Not provided'}
-🍽️ Food Preference: ${foodPreference}
+📧 Email: ${email}
+🍽️ Food Preference: ${mealPreference}
 
-✅ Amount Paid: ₹ ${amount.toLocaleString('en-IN')}
+✅ Amount Paid: ₹${amount.toLocaleString('en-IN')}
 
 Looking forward to an inspiring experience together!
 
 Warm regards,
-Team Sneha Saurabha 2025-26 – Rotary District Conference 3181`
+Team Sneha Saurabha 2025-26 – Rotary District Conference 3181`;
+
+    // Send WhatsApp message
+    const message = await client.messages.create({
+      body: messageBody,
+      from: process.env.TWILIO_WHATSAPP_NUMBER,
+      to: `whatsapp:${toNumber}`
     });
 
-    console.log('✅ WhatsApp message sent:', message.sid);
-    console.log('📱 Sent to:', formattedMobile);
-    console.log('👤 Name:', name);
-    console.log('📋 Registration ID:', registrationId);
+    console.log('✅ WhatsApp message sent successfully:', message.sid);
 
+    // Return success response
     return res.status(200).json({
       success: true,
-      messageSid: message.sid,
       message: 'WhatsApp confirmation sent successfully',
-      sentTo: mobile
+      messageSid: message.sid,
+      status: message.status
     });
 
   } catch (error) {
-    console.error('❌ WhatsApp send error:', error);
-    console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      status: error.status
-    });
+    console.error('❌ Error sending WhatsApp message:', error);
     
     return res.status(500).json({
       success: false,
-      error: error.message || 'Failed to send WhatsApp message',
-      errorCode: error.code
+      message: 'Failed to send WhatsApp confirmation',
+      error: error.message
     });
   }
 }
