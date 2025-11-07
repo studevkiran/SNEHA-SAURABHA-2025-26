@@ -64,37 +64,47 @@ function populateRegistrationTypeFilter() {
 }
 
 // Handle login
-function handleLogin(event) {
+async function handleLogin(event) {
     console.log('🔐 Login function called');
     event.preventDefault();
     
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     
-    console.log('👤 Username entered:', username);
-    console.log('👤 Username trimmed:', username.trim());
-    console.log('🔑 Password entered:', password);
-    console.log('🔑 Password trimmed:', password.trim());
-    console.log('📏 Password length:', password.length);
+    if (!username || !password) {
+        alert('⚠️ Please enter both username and password');
+        return false;
+    }
     
-    // Trim whitespace
-    const usernameClean = username.trim();
-    const passwordClean = password.trim();
-    
-    console.log('🔍 Checking:', usernameClean === 'admin', passwordClean === 'admin123');
-    
-    // In production, verify credentials via API
-    // For now, simple check
-    if (usernameClean === 'admin' && passwordClean === 'admin123') {
-        console.log('✅ Login successful!');
-        isAuthenticated = true;
-        showDashboard();
-        loadRegistrations();
-    } else {
-        console.log('❌ Login failed - invalid credentials');
-        console.log('Expected: admin / admin123');
-        console.log('Got:', usernameClean, '/', passwordClean);
-        alert('Invalid credentials. Please try:\nUsername: admin\nPassword: admin123');
+    try {
+        // Call the login API
+        const response = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username.trim(),
+                password: password.trim()
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('✅ Login successful!');
+            // Store login state in session
+            sessionStorage.setItem('adminLoggedIn', 'true');
+            isAuthenticated = true;
+            showDashboard();
+            loadRegistrations();
+        } else {
+            console.log('❌ Login failed - invalid credentials');
+            alert('❌ ' + (data.error || 'Invalid username or password'));
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('❌ Login failed. Please try again.');
     }
     
     return false;
@@ -212,34 +222,64 @@ function updateDashboardStats() {
     document.getElementById('jain-count').textContent = jainCount;
 }
 
-// Render registrations table
+// Render registrations table (simplified - desktop compatible)
 function renderRegistrationsTable() {
     const tbody = document.getElementById('registrations-tbody');
+    if (!tbody) return;
+    
     tbody.innerHTML = '';
+    
+    if (registrations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #999;">No registrations found</td></tr>';
+        return;
+    }
     
     registrations.forEach(reg => {
         const row = document.createElement('tr');
         const typeName = registrationTypes[reg.type] ? registrationTypes[reg.type].name : reg.type;
+        const paymentStatus = reg.paymentStatus || 'pending';
+        const statusClass = paymentStatus === 'completed' ? 'status-paid' : 'status-pending';
+        const statusText = paymentStatus === 'completed' ? 'Paid' : 'Pending';
+        
         row.innerHTML = `
-            <td>${reg.id}</td>
+            <td><strong>${reg.id}</strong></td>
             <td>${reg.name}</td>
             <td>${reg.mobile}</td>
-            <td>${reg.email}</td>
-            <td>${reg.clubName}</td>
+            <td>${reg.email || 'Not Provided'}</td>
             <td>${typeName}</td>
-            <td>${formatIndianCurrency(reg.price)}</td>
-            <td>${reg.mealPreference}</td>
-            <td><span class="status-badge status-${reg.paymentStatus.toLowerCase()}">${reg.paymentStatus}</span></td>
-            <td><span class="status-badge ${reg.verificationStatus === 'Verified' ? 'status-paid' : 'status-pending'}">${reg.verificationStatus}</span></td>
+            <td style="font-weight: 600;">${formatIndianCurrency(reg.price)}</td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
             <td>${new Date(reg.registrationDate).toLocaleDateString('en-IN')}</td>
-            <td>
-                <button class="action-btn" onclick="viewDetails('${reg.id}')">View</button>
-                <button class="action-btn" onclick="editRegistration('${reg.id}')">Edit</button>
-                <button class="action-btn" onclick="resendConfirmation('${reg.id}')">Resend</button>
-            </td>
         `;
         tbody.appendChild(row);
     });
+}
+
+// Sort table by column
+let sortDirection = {};
+function sortTable(column) {
+    if (!sortDirection[column]) sortDirection[column] = 'asc';
+    else sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
+    
+    registrations.sort((a, b) => {
+        let aVal, bVal;
+        
+        switch(column) {
+            case 'id': aVal = a.id; bVal = b.id; break;
+            case 'name': aVal = a.name.toLowerCase(); bVal = b.name.toLowerCase(); break;
+            case 'mobile': aVal = a.mobile; bVal = b.mobile; break;
+            case 'type': aVal = a.type; bVal = b.type; break;
+            case 'price': aVal = a.price; bVal = b.price; break;
+            case 'date': aVal = new Date(a.registrationDate); bVal = new Date(b.registrationDate); break;
+            default: return 0;
+        }
+        
+        if (aVal < bVal) return sortDirection[column] === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDirection[column] === 'asc' ? 1 : -1;
+        return 0;
+    });
+    
+    renderRegistrationsTable();
 }
 
 // Filter registrations

@@ -12,21 +12,25 @@
     <div class="admin-container">
         <!-- Login Screen -->
         <div id="admin-login" class="admin-screen active">
-            <div class="login-card">
+                        <div class="login-card">
                 <h1>Admin Dashboard</h1>
                 <p>Sneha Sourabha 2025-26</p>
-                <form id="login-form" onsubmit="return handleLogin(event)">
+                <form id="login-form" onsubmit="return handleLogin(event)" autocomplete="off">
                     <div class="form-group">
-                        <input type="text" id="username" required placeholder=" ">
+                        <input type="text" id="username" required placeholder=" " autocomplete="off">
                         <label for="username">Username</label>
                     </div>
                     <div class="form-group">
-                        <input type="password" id="password" required placeholder=" ">
+                        <input type="password" id="password" required placeholder=" " autocomplete="new-password">
                         <label for="password">Password</label>
                     </div>
                     <button type="submit" class="btn-primary">Login</button>
                 </form>
+                <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196F3; border-radius: 4px; font-size: 12px;">
+                    <strong>🔐 Credentials from Vercel Environment:</strong> Login credentials are set via ADMIN_USERNAME and ADMIN_PASSWORD environment variables.
+                </div>
             </div>
+        </div>
         </div>
 
         <!-- Dashboard Screen -->
@@ -93,6 +97,7 @@
                     <h3>Registrations</h3>
                     <div class="actions">
                         <button onclick="showManualEntry()" class="btn-action">+ Manual Entry</button>
+                        <button onclick="loadRegistrations()" class="btn-action">🔄 Refresh</button>
                         <button onclick="exportData('csv')" class="btn-action">📊 Export CSV</button>
                         <button onclick="exportData('excel')" class="btn-action">📗 Export Excel</button>
                     </div>
@@ -106,9 +111,9 @@
                     </select>
                     <select id="filter-payment" onchange="filterRegistrations()">
                         <option value="">All Payment Status</option>
-                        <option value="Paid">Paid</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Failed">Failed</option>
+                        <option value="completed">Paid</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
                     </select>
                     <select id="filter-meal" onchange="filterRegistrations()">
                         <option value="">All Meals</option>
@@ -124,18 +129,14 @@
                     <table id="registrations-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Mobile</th>
+                                <th onclick="sortTable('id')" style="cursor: pointer;">ID ↕</th>
+                                <th onclick="sortTable('name')" style="cursor: pointer;">Name ↕</th>
+                                <th onclick="sortTable('mobile')" style="cursor: pointer;">Mobile ↕</th>
                                 <th>Email</th>
-                                <th>Club</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Meal</th>
-                                <th>Payment</th>
-                                <th>Verified</th>
-                                <th>Date</th>
-                                <th>Actions</th>
+                                <th onclick="sortTable('type')" style="cursor: pointer;">Type ↕</th>
+                                <th onclick="sortTable('price')" style="cursor: pointer;">Amount ↕</th>
+                                <th>Payment Status</th>
+                                <th onclick="sortTable('date')" style="cursor: pointer;">Date ↕</th>
                             </tr>
                         </thead>
                         <tbody id="registrations-tbody">
