@@ -1,5 +1,7 @@
 // API: Create new registration
 const { createRegistration, createPaymentLog } = require('../../lib/db-functions');
+const { addRegistrationToSheets } = require('../../lib/db-google-sheets');
+const { logRegistration } = require('../../lib/backup-logger');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -21,11 +23,13 @@ module.exports = async (req, res) => {
       email,
       mobile,
       clubName,
+      clubId,
       registrationType,
       amount,
       mealPreference,
       orderId,
       transactionId,
+      upiId,
       paymentStatus = 'Pending',
       paymentMethod = 'Cashfree'
     } = req.body;
@@ -58,24 +62,65 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Create registration
-    const result = await createRegistration({
+    // Prepare registration data
+    const registrationData = {
+      registration_id: `REG${Date.now()}`,
+      order_id: orderId || '',
       name,
-      email,
+      email: email || 'Not Provided',
       mobile,
-      clubName,
-      registrationType,
-      amount,
-      mealPreference: mealPreference || 'Veg',
-      paymentStatus,
-      paymentMethod,
-      transactionId: transactionId || null
-    });
-    
+      club: clubName,
+      club_id: clubId || '',
+      registration_type: registrationType,
+      registration_amount: amount,
+      meal_preference: mealPreference || 'Veg',
+      payment_status: paymentStatus.toLowerCase(),
+      payment_method: paymentMethod,
+      transaction_id: transactionId || '',
+      upi_id: upiId || '',
+      registration_status: paymentStatus.toLowerCase() === 'completed' ? 'verified' : 'pending',
+      verified: paymentStatus.toLowerCase() === 'completed',
+      manually_added: false
+    };
+
+    // 1. Save to PostgreSQL (if available)
+    try {
+      const result = await createRegistration({
+        name,
+        email,
+        mobile,
+        clubName,
+        registrationType,
+        amount,
+        mealPreference: mealPreference || 'Veg',
+        paymentStatus,
+        paymentMethod,
+        transactionId: transactionId || null
+      });
+      
+      if (result.success && result.registration) {
+        registrationData.registration_id = result.registration.registration_id;
+      }
+    } catch (pgError) {
+      console.warn('⚠️ PostgreSQL save failed, continuing with other methods:', pgError.message);
+    }
+
+    // 2. Save to Google Sheets (primary database)
+    const sheetsResult = await addRegistrationToSheets(registrationData);
+    if (!sheetsResult.success) {
+      console.error('❌ Google Sheets save failed:', sheetsResult.error);
+    }
+
+    // 3. Log to backup file (always, regardless of database success)
+    const logResult = logRegistration(registrationData);
+    if (!logResult.success) {
+      console.error('❌ Backup log failed:', logResult.error);
+    }
+
     // Create payment log if order ID provided
-    if (orderId && result.success) {
+    if (orderId && registrationData.registration_id) {
       await createPaymentLog({
-        registrationId: result.registration.registration_id,
+        registrationId: registrationData.registration_id,
         orderId,
         amount,
         paymentStatus,
@@ -85,8 +130,22 @@ module.exports = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      registration: result.registration,
-      message: 'Registration created successfully'
+      registration: {
+        registration_id: registrationData.registration_id,
+        name: registrationData.name,
+        mobile: registrationData.mobile,
+        email: registrationData.email,
+        club: registrationData.club,
+        registration_type: registrationData.registration_type,
+        registration_amount: registrationData.registration_amount,
+        meal_preference: registrationData.meal_preference,
+        payment_status: registrationData.payment_status
+      },
+      message: 'Registration created successfully',
+      saved_to: {
+        google_sheets: sheetsResult.success,
+        backup_log: logResult.success
+      }
     });
 
   } catch (error) {

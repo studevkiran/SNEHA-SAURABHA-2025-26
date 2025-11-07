@@ -1,6 +1,9 @@
 // API: Verify Cashfree payment status
 const CashfreeService = require('../../lib/cashfree');
-const { updatePaymentStatus, getRegistrationByOrderId } = require('../../lib/db-neon');
+const Cashfree = require('cashfree-pg-sdk-javascript');
+const { updatePaymentStatus, getRegistrationByOrderId } = require('../../lib/db-functions');
+const { updateRegistrationInSheets } = require('../../lib/db-google-sheets');
+const { logPaymentVerification, logWhatsAppSent } = require('../../lib/backup-logger');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -51,6 +54,22 @@ module.exports = async (req, res) => {
       // Get registration data from database
       const registration = await getRegistrationByOrderId(orderId);
 
+      // Update in Google Sheets
+      if (registration && registration.registration_id) {
+        await updateRegistrationInSheets(registration.registration_id, {
+          payment_status: 'completed',
+          transaction_id: orderId,
+          registration_status: 'verified'
+        });
+      }
+
+      // Log payment verification to backup
+      logPaymentVerification(orderId, 'SUCCESS', {
+        registration_id: registration?.registration_id,
+        amount: registration?.registration_amount,
+        payment_method: 'Cashfree'
+      });
+
       console.log('✅ Payment verified and updated:', orderId);
 
       // Send WhatsApp confirmation (asynchronously, don't wait for it)
@@ -75,8 +94,12 @@ module.exports = async (req, res) => {
           .then(data => {
             if (data.success) {
               console.log('✅ WhatsApp confirmation sent:', data.messageSid);
+              // Log WhatsApp send
+              logWhatsAppSent(registration.registration_id, registration.mobile, 'SUCCESS');
             } else {
               console.error('❌ WhatsApp send failed:', data.message);
+              // Log WhatsApp failure
+              logWhatsAppSent(registration.registration_id, registration.mobile, 'FAILED');
             }
           })
           .catch(error => {
