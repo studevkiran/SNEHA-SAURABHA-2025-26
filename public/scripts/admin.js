@@ -136,21 +136,56 @@ function logout() {
     document.getElementById('login-form').reset();
 }
 
-// Load registrations (in production, fetch from API)
+// Load registrations (fetch from API)
 async function loadRegistrations() {
-    // Sample data with all registration types - replace with API call
-    registrations = [
-        { id: 'SS00001', name: 'Rajesh Kumar', mobile: '9876543210', email: 'rajesh@example.com', clubName: 'Mysore', type: 'rotarian', price: 4500, mealPreference: 'Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1001', registrationDate: '2025-10-28' },
-        { id: 'SS00002', name: 'Amit & Priya Sharma', mobile: '9876543211', email: 'amit@example.com', clubName: 'Bangalore', type: 'rotarian-spouse', price: 7500, mealPreference: 'Non-Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1002', registrationDate: '2025-10-28' },
-        { id: 'SS00003', name: 'Sunita Reddy', mobile: '9876543212', email: 'sunita@example.com', clubName: 'Chennai', type: 'ann', price: 3500, mealPreference: 'Jain', paymentStatus: 'Pending', verificationStatus: 'Pending', transactionId: '', registrationDate: '2025-10-27' },
-        { id: 'SS00004', name: 'Kavita Menon', mobile: '9876543213', email: 'kavita@example.com', clubName: 'Kochi', type: 'annet', price: 2000, mealPreference: 'Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1003', registrationDate: '2025-10-27' },
-        { id: 'SS00005', name: 'Vikram Patel', mobile: '9876543214', email: 'vikram@example.com', clubName: 'Mumbai', type: 'guest', price: 4500, mealPreference: 'Non-Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1004', registrationDate: '2025-10-26' },
-        { id: 'SS00006', name: 'Dr. Suresh Iyer', mobile: '9876543215', email: 'suresh@example.com', clubName: 'Mysore West', type: 'silver-donor', price: 20000, mealPreference: 'Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1005', registrationDate: '2025-10-26' },
-        { id: 'SS00007', name: 'ABC Industries', mobile: '9876543216', email: 'abc@example.com', clubName: 'Mysore', type: 'silver-sponsor', price: 25000, mealPreference: 'Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1006', registrationDate: '2025-10-25' },
-        { id: 'SS00008', name: 'XYZ Corporation', mobile: '9876543217', email: 'xyz@example.com', clubName: 'Bangalore', type: 'gold-sponsor', price: 50000, mealPreference: 'Non-Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1007', registrationDate: '2025-10-25' },
-        { id: 'SS00009', name: 'Tech Solutions Pvt Ltd', mobile: '9876543218', email: 'tech@example.com', clubName: 'Pune', type: 'platinum-sponsor', price: 75000, mealPreference: 'Veg', paymentStatus: 'Pending', verificationStatus: 'Pending', transactionId: '', registrationDate: '2025-10-24' },
-        { id: 'SS00010', name: 'Global Enterprises', mobile: '9876543219', email: 'global@example.com', clubName: 'Delhi', type: 'patron-sponsor', price: 100000, mealPreference: 'Non-Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN1008', registrationDate: '2025-10-24' }
-    ];
+    try {
+        console.log('📡 Fetching registrations from API...');
+        
+        // Show loading state
+        const tableBody = document.querySelector('#registrations-table tbody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 20px;">Loading registrations...</td></tr>';
+        }
+        
+        // Fetch from API
+        const response = await fetch('/api/registrations/list');
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.registrations) {
+            registrations = data.registrations.map(reg => ({
+                id: reg.registration_id,
+                name: reg.name,
+                mobile: reg.mobile,
+                email: reg.email,
+                clubName: reg.club || 'N/A',
+                type: reg.registration_type,
+                price: reg.registration_amount,
+                mealPreference: reg.meal_preference,
+                paymentStatus: reg.payment_status,
+                verificationStatus: reg.registration_status || 'Pending',
+                transactionId: reg.transaction_id || 'N/A',
+                registrationDate: new Date(reg.created_at).toLocaleDateString('en-IN')
+            }));
+            
+            console.log(`✅ Loaded ${registrations.length} registrations from database`);
+        } else {
+            console.warn('⚠️ No registrations found');
+            registrations = [];
+        }
+    } catch (error) {
+        console.error('❌ Error loading registrations:', error);
+        alert('Failed to load registrations. Using demo data for now.');
+        
+        // Fallback to minimal demo data if API fails
+        registrations = [
+            { id: 'DEMO001', name: 'Demo User', mobile: '9876543210', email: 'demo@example.com', clubName: 'Mysore', type: 'rotarian', price: 4500, mealPreference: 'Veg', paymentStatus: 'Paid', verificationStatus: 'Verified', transactionId: 'TXN_DEMO', registrationDate: new Date().toLocaleDateString('en-IN') }
+        ];
+    }
     
     updateDashboardStats();
     renderRegistrationsTable();
