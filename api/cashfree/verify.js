@@ -66,7 +66,7 @@ module.exports = async (req, res) => {
             mobile: registration.mobile,
             email: registration.email,
             registrationId: registration.registration_id,
-            receiptNo: registration.registration_id,
+            receiptNo: orderId, // Pass the actual Cashfree Order ID
             registrationType: registration.registration_type,
             amount: registration.registration_amount,
             mealPreference: registration.meal_preference

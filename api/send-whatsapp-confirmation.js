@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     const toNumber = mobile.startsWith('+') ? mobile : `+91${mobile}`;
 
     // Construct WhatsApp message
-    const messageBody = `Hi ${name},
+    const messageBody = `${name},
 
 🎯 Thank you for registering to SNEHA SAURABHA 2025-26, District Conference
 happening at Silent Shores, Mysore on 30th & 31st January & 01st February 2026
@@ -61,7 +61,7 @@ We're thrilled to have you on board for this district event that celebrates know
 📋 Registration Details:
 
 ✒️Registration No.: ${registrationId}
-📄Receipt No.: ${receiptNo || registrationId}
+📄Order No.: ${receiptNo || registrationId}
 👤 Name: ${name}
 📞 Mobile: ${mobile}
 📧 Email: ${email}

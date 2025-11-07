@@ -46,7 +46,7 @@ Before going live, test it:
 ## Sandbox Testing Message Template
 
 ```
-Hi D Srinivasan,
+D Srinivasan,
 
 🎯 Thank you for registering to SNEHA SAURABHA 2025-26, District Conference
 happening at Silent Shores, Mysore on 30th & 31st January & 01st February 2026
@@ -56,7 +56,7 @@ We're thrilled to have you on board for this district event that celebrates know
 📋 Registration Details:
 
 ✒️Registration No.: SS0001
-📄Receipt No.: 0001
+📄Order No.: ORDER_1762457279672_488
 👤 Name: D Srinivasan
 📞 Mobile: 9980557785
 📧 Email: mallige@gmail.com
