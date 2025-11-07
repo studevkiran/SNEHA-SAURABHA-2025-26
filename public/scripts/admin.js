@@ -261,7 +261,8 @@ function sortTable(column) {
     if (!sortDirection[column]) sortDirection[column] = 'asc';
     else sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
     
-    registrations.sort((a, b) => {
+    // Sort the filtered registrations array
+    filteredRegistrations.sort((a, b) => {
         let aVal, bVal;
         
         switch(column) {

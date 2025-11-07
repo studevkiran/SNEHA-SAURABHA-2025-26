@@ -260,45 +260,23 @@ function renderRegistrationsTable() {
 }
 
 // Sort table by column
-const sortDirection = {};
+let sortDirection = {};
 function sortTable(column) {
-    // Toggle sort direction
-    if (!sortDirection[column]) {
-        sortDirection[column] = 'asc';
-    } else {
-        sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
-    }
+    if (!sortDirection[column]) sortDirection[column] = 'asc';
+    else sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
     
-    registrations.sort((a, b) => {
+    // Sort the filtered registrations array
+    filteredRegistrations.sort((a, b) => {
         let aVal, bVal;
         
         switch(column) {
-            case 'id':
-                aVal = a.id;
-                bVal = b.id;
-                break;
-            case 'name':
-                aVal = a.name.toLowerCase();
-                bVal = b.name.toLowerCase();
-                break;
-            case 'mobile':
-                aVal = a.mobile;
-                bVal = b.mobile;
-                break;
-            case 'type':
-                aVal = a.type;
-                bVal = b.type;
-                break;
-            case 'price':
-                aVal = a.price;
-                bVal = b.price;
-                break;
-            case 'date':
-                aVal = new Date(a.registrationDate);
-                bVal = new Date(b.registrationDate);
-                break;
-            default:
-                return 0;
+            case 'id': aVal = a.id; bVal = b.id; break;
+            case 'name': aVal = a.name.toLowerCase(); bVal = b.name.toLowerCase(); break;
+            case 'mobile': aVal = a.mobile; bVal = b.mobile; break;
+            case 'type': aVal = a.type; bVal = b.type; break;
+            case 'price': aVal = a.price; bVal = b.price; break;
+            case 'date': aVal = new Date(a.registrationDate); bVal = new Date(b.registrationDate); break;
+            default: return 0;
         }
         
         if (aVal < bVal) return sortDirection[column] === 'asc' ? -1 : 1;
@@ -306,8 +284,7 @@ function sortTable(column) {
         return 0;
     });
     
-    // Re-apply filters and render
-    filterRegistrations();
+    renderRegistrationsTable();
 }
 
 // Filter registrations
