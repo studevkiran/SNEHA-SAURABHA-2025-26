@@ -301,7 +301,12 @@ function setupClubSearch() {
         });
         
         if (filtered.length === 0) {
-            optionsList.innerHTML = '<div class="club-option" style="color: #999;">No clubs found</div>';
+            const noResultDiv = document.createElement('div');
+            noResultDiv.className = 'club-option';
+            noResultDiv.style.color = '#999';
+            noResultDiv.style.cursor = 'default';
+            noResultDiv.textContent = 'No clubs found. Clear search to see all.';
+            optionsList.appendChild(noResultDiv);
         } else {
             filtered.forEach(opt => {
                 const div = document.createElement('div');
@@ -343,12 +348,21 @@ function setupClubSearch() {
     searchInput.addEventListener('focus', () => {
         populateOptions(searchInput.value);
         optionsList.classList.add('show');
+        optionsList.style.display = 'block';
+    });
+    
+    // Show dropdown on click
+    searchInput.addEventListener('click', () => {
+        populateOptions(searchInput.value);
+        optionsList.classList.add('show');
+        optionsList.style.display = 'block';
     });
     
     // Filter on input
     searchInput.addEventListener('input', () => {
         populateOptions(searchInput.value);
         optionsList.classList.add('show');
+        optionsList.style.display = 'block';
         toggleClearButton();
     });
     
@@ -371,6 +385,7 @@ function clearClubSelection() {
     const searchInput = document.getElementById('club-search');
     const clubSelect = document.getElementById('club-name');
     const clearBtn = document.getElementById('clear-club');
+    const optionsList = document.getElementById('club-options');
     
     if (searchInput) searchInput.value = '';
     if (clubSelect) {
@@ -378,6 +393,13 @@ function clearClubSelection() {
         clubSelect.removeAttribute('data-selected-club-id'); // Clear stored club ID
     }
     if (clearBtn) clearBtn.style.display = 'none';
+    
+    // Show all clubs again
+    if (optionsList) {
+        setupClubSearch(); // Reinitialize to show all options
+        optionsList.classList.add('show');
+        optionsList.style.display = 'block';
+    }
     
     // Refocus on input
     if (searchInput) searchInput.focus();
