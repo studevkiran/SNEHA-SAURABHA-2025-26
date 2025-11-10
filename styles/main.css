@@ -1297,23 +1297,43 @@ h3 {
     }
 }
 
-/* Desktop compatibility - allow scrolling */
+/* Desktop compatibility - allow scrolling and center content */
 @media (min-width: 768px) {
     body {
         overflow: auto;
         position: relative;
         height: auto;
-        max-width: 800px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #FFF8DC 0%, #F4E4C1 100%);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
     }
     
     .screen {
         position: relative;
         height: auto;
-        min-height: 100vh;
+        min-height: calc(100vh - 40px);
         overflow: visible;
+        max-width: 600px;
+        width: 100%;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
     }
     
     #screen-banner {
         overflow: visible;
     }
+    
+    .banner-content {
+        border-radius: 12px;
+    }
+    
+    .screen-content {
+        max-width: 600px;
+        margin: 0 auto;
+    }
 }
+
