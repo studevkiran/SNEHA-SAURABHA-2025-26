@@ -169,6 +169,12 @@ const registrationTypes = {
         price: 100000,
         description: 'Admission with spouse + 2 children below 12 years, Food & special Memento, Suite Room at venue (no extra beds)',
         inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', 'Special Memento', 'Suite Room at venue (no extra beds)']
+    },
+    'tester': {
+        name: 'Tester',
+        price: 1,
+        description: 'Test registration for payment gateway testing only - ₹1 charge',
+        inclusions: ['Payment gateway test', 'Will be deleted after testing']
     }
 };
 
@@ -183,7 +189,8 @@ const registrationPrefixes = {
     'silver-sponsor': 'SS',
     'gold-sponsor': 'GS',
     'platinum-sponsor': 'PT',
-    'patron-sponsor': 'PS'
+    'patron-sponsor': 'PS',
+    'tester': 'TEST'
 };
 
 // Load clubs from JSON
@@ -580,6 +587,73 @@ function showReview() {
     // Also populate payment screen
     document.getElementById('payment-type').textContent = registrationData.typeName;
     document.getElementById('payment-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+
+    // Preserve original price for coupon/reset logic
+    if (!registrationData.originalPrice) registrationData.originalPrice = registrationData.price;
+
+    // Reset coupon UI
+    const couponMsgEl = document.getElementById('coupon-message');
+    if (couponMsgEl) {
+        couponMsgEl.style.display = 'none';
+        couponMsgEl.textContent = '';
+    }
+}
+
+// Apply coupon (testing only)
+function applyCoupon() {
+    const codeEl = document.getElementById('coupon-code');
+    const msgEl = document.getElementById('coupon-message');
+    if (!codeEl || !msgEl) return;
+
+    const code = (codeEl.value || '').trim().toUpperCase();
+    if (!code) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#b71c1c';
+        msgEl.textContent = 'Please enter a coupon code';
+        return;
+    }
+
+    // Known test coupon: TEST1 -> sets price to ₹1
+    let newPrice = registrationData.originalPrice || registrationData.price;
+    if (code === 'TEST1') {
+        newPrice = 1;
+        msgEl.style.color = '#2a7f2a';
+        msgEl.textContent = `Coupon applied: ${code} — Price set to ₹1 for testing`;
+    } else {
+        msgEl.style.color = '#b71c1c';
+        msgEl.textContent = 'Invalid coupon code';
+        msgEl.style.display = 'block';
+        return;
+    }
+
+    // Apply new price and update UI
+    registrationData.price = newPrice;
+    const reviewPriceEl = document.getElementById('review-price');
+    const paymentAmountEl = document.getElementById('payment-amount');
+    if (reviewPriceEl) reviewPriceEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+    if (paymentAmountEl) paymentAmountEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+    msgEl.style.display = 'block';
+
+    // Save applied coupon code for backend (optional)
+    registrationData.appliedCoupon = code;
+}
+
+function resetCoupon() {
+    const codeEl = document.getElementById('coupon-code');
+    const msgEl = document.getElementById('coupon-message');
+    if (codeEl) codeEl.value = '';
+    if (msgEl) {
+        msgEl.style.display = 'none';
+        msgEl.textContent = '';
+    }
+    if (registrationData.originalPrice) {
+        registrationData.price = registrationData.originalPrice;
+    }
+    const reviewPriceEl = document.getElementById('review-price');
+    const paymentAmountEl = document.getElementById('payment-amount');
+    if (reviewPriceEl) reviewPriceEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+    if (paymentAmountEl) paymentAmountEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+    delete registrationData.appliedCoupon;
 }
 
 // Generate unique order ID for Cashfree
@@ -1184,3 +1258,7 @@ document.addEventListener('touchend', function(e) {
     }
     lastTouchEnd = now;
 }, false);
+
+// Expose coupon functions for inline onclick handlers
+window.applyCoupon = applyCoupon;
+window.resetCoupon = resetCoupon;

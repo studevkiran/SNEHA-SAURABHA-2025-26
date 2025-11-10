@@ -3,6 +3,7 @@
 
 let isAuthenticated = false;
 let registrations = [];
+let filteredRegistrations = [];
 
 // Registration Types (synced from app.js)
 const registrationTypes = {
@@ -167,20 +168,32 @@ async function loadRegistrations() {
         const data = await response.json();
         
         if (data.success && data.registrations) {
-            registrations = data.registrations.map(reg => ({
-                id: reg.registration_id,
-                name: reg.name,
-                mobile: reg.mobile,
-                email: reg.email,
-                clubName: reg.club || 'N/A',
-                type: reg.registration_type,
-                price: reg.registration_amount,
-                mealPreference: reg.meal_preference,
-                paymentStatus: reg.payment_status,
-                verificationStatus: reg.registration_status || 'Pending',
-                transactionId: reg.transaction_id || 'N/A',
-                registrationDate: new Date(reg.created_at).toLocaleDateString('en-IN')
-            }));
+                registrations = data.registrations.map(reg => {
+                    // Normalize payment status
+                    let pStatus = (reg.payment_status || '').toString();
+                    pStatus = pStatus.toLowerCase();
+                    if (pStatus === 'completed' || pStatus === 'paid' || pStatus === 'success') pStatus = 'Paid';
+                    else if (pStatus === 'failed' || pStatus === 'cancelled') pStatus = 'Failed';
+                    else pStatus = 'Pending';
+
+                    return {
+                        id: reg.registration_id,
+                        name: reg.name,
+                        mobile: reg.mobile,
+                        email: reg.email,
+                        clubName: reg.club || 'N/A',
+                        type: reg.registration_type,
+                        price: Number(reg.registration_amount) || 0,
+                        mealPreference: reg.meal_preference,
+                        paymentStatus: pStatus,
+                        verificationStatus: reg.registration_status || 'Pending',
+                        transactionId: reg.transaction_id || 'N/A',
+                        registrationDate: reg.created_at ? new Date(reg.created_at).toLocaleString('en-IN') : new Date().toLocaleString('en-IN')
+                    };
+                });
+
+                // Initialize filtered registrations used for rendering, sorting and searching
+                filteredRegistrations = registrations.slice();
             
             console.log(`✅ Loaded ${registrations.length} registrations from database`);
         } else {
@@ -222,28 +235,24 @@ function updateDashboardStats() {
     document.getElementById('jain-count').textContent = jainCount;
 }
 
-// Render registrations table
+// Render registrations table (simplified - desktop compatible)
 function renderRegistrationsTable() {
     const tbody = document.getElementById('registrations-tbody');
     if (!tbody) return;
     
     tbody.innerHTML = '';
     
-    if (filteredRegistrations.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8">No registrations found</td></tr>';
+    if (!filteredRegistrations || filteredRegistrations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #999;">No registrations found</td></tr>';
         return;
     }
     
     filteredRegistrations.forEach(reg => {
         const row = document.createElement('tr');
-        
-        // Get type name
         const typeName = registrationTypes[reg.type] ? registrationTypes[reg.type].name : reg.type;
-        
-        // Payment status styling
-        const paymentStatus = reg.paymentStatus || 'pending';
-        const statusClass = paymentStatus === 'completed' ? 'status-paid' : 'status-pending';
-        const statusText = paymentStatus === 'completed' ? 'Paid' : 'Pending';
+        const paymentStatus = (reg.paymentStatus || 'Pending').toString();
+        const statusClass = (paymentStatus.toLowerCase() === 'paid') ? 'status-paid' : (paymentStatus.toLowerCase() === 'failed' ? 'status-failed' : 'status-pending');
+        const statusText = paymentStatus;
         
         row.innerHTML = `
             <td><strong>${reg.id}</strong></td>
@@ -253,7 +262,7 @@ function renderRegistrationsTable() {
             <td>${typeName}</td>
             <td style="font-weight: 600;">${formatIndianCurrency(reg.price)}</td>
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-            <td>${new Date(reg.registrationDate).toLocaleDateString('en-IN')}</td>
+            <td>${reg.registrationDate}</td>
         `;
         tbody.appendChild(row);
     });
@@ -262,8 +271,13 @@ function renderRegistrationsTable() {
 // Sort table by column
 let sortDirection = {};
 function sortTable(column) {
+    console.log('🔄 Sorting by:', column);
+    
     if (!sortDirection[column]) sortDirection[column] = 'asc';
     else sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
+    
+    console.log('📊 Sort direction:', sortDirection[column]);
+    console.log('📝 Sorting array with', filteredRegistrations.length, 'items');
     
     // Sort the filtered registrations array
     filteredRegistrations.sort((a, b) => {
@@ -284,6 +298,7 @@ function sortTable(column) {
         return 0;
     });
     
+    console.log('✅ Sorted! Re-rendering table...');
     renderRegistrationsTable();
 }
 
@@ -292,17 +307,34 @@ function filterRegistrations() {
     const typeFilter = document.getElementById('filter-type').value;
     const paymentFilter = document.getElementById('filter-payment').value;
     const mealFilter = document.getElementById('filter-meal').value;
-    
-    // In production, filter data or fetch from API with filters
-    console.log('Filtering by:', { typeFilter, paymentFilter, mealFilter });
+    const searchTerm = (document.getElementById('search-box').value || '').toLowerCase();
+
+    // Filter registrations based on selected filters and search
+    filteredRegistrations = registrations.filter(reg => {
+        if (typeFilter && reg.type !== typeFilter) return false;
+        if (paymentFilter) {
+            const pf = paymentFilter.toLowerCase();
+            if (pf === 'completed' && reg.paymentStatus.toLowerCase() !== 'paid') return false;
+            if (pf === 'pending' && reg.paymentStatus.toLowerCase() !== 'pending') return false;
+            if (pf === 'failed' && reg.paymentStatus.toLowerCase() !== 'failed') return false;
+        }
+        if (mealFilter && (!reg.mealPreference || reg.mealPreference.toLowerCase() !== mealFilter.toLowerCase())) return false;
+
+        if (searchTerm) {
+            const hay = `${reg.name} ${reg.mobile} ${reg.email}`.toLowerCase();
+            if (!hay.includes(searchTerm)) return false;
+        }
+
+        return true;
+    });
+
+    renderRegistrationsTable();
 }
 
 // Search registrations
 function searchRegistrations() {
-    const searchTerm = document.getElementById('search-box').value.toLowerCase();
-    
-    // In production, search through data or API
-    console.log('Searching for:', searchTerm);
+    // Delegate to filterRegistrations which also reads the search box
+    filterRegistrations();
 }
 
 // Show manual entry modal
@@ -359,6 +391,8 @@ window.exportData = exportData;
 window.viewDetails = viewDetails;
 window.editRegistration = editRegistration;
 window.resendConfirmation = resendConfirmation;
+window.sortTable = sortTable;
+window.loadRegistrations = loadRegistrations;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
