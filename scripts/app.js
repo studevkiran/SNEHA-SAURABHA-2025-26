@@ -757,7 +757,7 @@ async function initiateCashfreePayment() {
             
             // Initialize Cashfree SDK
             const cashfree = Cashfree({
-                mode: "sandbox" // Use "production" when going live
+                mode: "production" // Production mode for live payments
             });
             
             // Open Cashfree checkout
