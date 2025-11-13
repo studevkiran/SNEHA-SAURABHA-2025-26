@@ -171,27 +171,78 @@
             <button class="btn-back" onclick="showScreen('screen-register-type')">← Back</button>
             <h2>Your Details</h2>
             <form id="personal-form" class="compact-form">
-                <div class="form-row">
-                    <input type="text" id="full-name" required placeholder="Full Name">
-                </div>
-                <div class="form-row">
-                    <input type="tel" id="mobile" required placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10">
-                </div>
-                <div class="form-row">
-                    <input type="email" id="email" placeholder="Email Address (Optional)">
-                </div>
-                <div class="form-row club-dropdown-wrapper">
-                    <div style="position: relative;">
-                        <input type="text" id="club-search" placeholder="Search and Select Club..." autocomplete="off" style="padding-right: 35px;">
-                        <button type="button" id="clear-club" onclick="clearClubSelection()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
-                            ✕
-                        </button>
+                
+                <!-- Quick Registration Mode (for non-Rotaractor types) -->
+                <div id="quick-reg-mode" style="display: none;">
+                    <!-- Club Selection -->
+                    <div class="form-row">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your Club</label>
+                        <div style="position: relative;">
+                            <input type="text" id="club-search-quick" placeholder="Search and select your club..." autocomplete="off">
+                            <div id="club-dropdown-quick" class="dropdown-list" style="display: none;"></div>
+                        </div>
                     </div>
-                    <select id="club-name" required style="display: none;">
-                        <option value="">Select Your Club</option>
-                    </select>
-                    <div id="club-options" class="club-options-list"></div>
+                    
+                    <!-- Member Name Selection (shows after club selected) -->
+                    <div id="member-selection-wrapper" class="form-row" style="display: none;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your Name</label>
+                        <div style="position: relative;">
+                            <input type="text" id="member-search" placeholder="Search and select your name..." autocomplete="off">
+                            <div id="member-dropdown" class="dropdown-list" style="display: none;"></div>
+                        </div>
+                        <div style="margin-top: 10px; text-align: center;">
+                            <a href="#" id="name-not-found-link" onclick="switchToManualMode(); return false;" style="color: #D4A024; text-decoration: none; font-size: 14px;">
+                                🔍 Name not found? Click here to enter manually
+                            </a>
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Manual Registration Mode (for Rotaractor OR manual fallback) -->
+                <div id="manual-reg-mode" style="display: none;">
+                    <div class="form-row">
+                        <input type="text" id="full-name" required placeholder="Full Name">
+                    </div>
+                    <div class="form-row">
+                        <input type="email" id="email" placeholder="Email Address (Optional)">
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" id="mobile" required placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10">
+                    </div>
+                    
+                    <!-- Club dropdown for manual mode (Rotaractor and manual fallback) -->
+                    <div class="form-row club-dropdown-wrapper">
+                        <div style="position: relative;">
+                            <input type="text" id="club-search" placeholder="Search and Select Club..." autocomplete="off" style="padding-right: 35px;">
+                            <button type="button" id="clear-club" onclick="clearClubSelection()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
+                                ✕
+                            </button>
+                        </div>
+                        <select id="club-name" required style="display: none;">
+                            <option value="">Select Your Club</option>
+                        </select>
+                        <div id="club-options" class="club-options-list"></div>
+                    </div>
+                </div>
+                
+                <!-- Auto-filled details (shows when member selected in quick mode) -->
+                <div id="autofilled-details" style="display: none;">
+                    <div class="form-row" style="background: #f0f8f0; padding: 15px; border-radius: 8px; border: 1px solid #4CAF50;">
+                        <div style="margin-bottom: 10px; color: #2a7f2a; font-weight: 600;">✓ Member Found</div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>Name:</strong> <span id="autofilled-name"></span>
+                        </div>
+                        <div class="form-row">
+                            <input type="email" id="autofilled-email" placeholder="Email (editable)">
+                        </div>
+                        <div class="form-row">
+                            <input type="tel" id="autofilled-mobile" placeholder="Mobile (editable)" pattern="[0-9]{10}" maxlength="10">
+                        </div>
+                        <input type="hidden" id="selected-club-name">
+                    </div>
+                </div>
+                
+                <!-- Meal Preference (common for all modes) -->
                 <div class="form-row meal-row">
                     <div class="meal-label-compact">Meal Preference</div>
                     <div class="meal-buttons">
@@ -199,6 +250,8 @@
                         <button type="button" class="meal-btn-compact non-veg" data-meal="Non-Veg">Non-Veg</button>
                     </div>
                 </div>
+                
+                <!-- Selected Type Display -->
                 <div class="form-row" style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); margin: 15px 0;">
                     <div style="font-size: 16px; font-weight: 600; color: var(--text-dark);">
                         Selected: <span id="selected-type-display"></span>

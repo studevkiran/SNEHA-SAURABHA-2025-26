@@ -259,6 +259,15 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
     });
     
+    // Setup "name not found" link to switch to manual mode
+    const nameNotFoundLink = document.getElementById('name-not-found-link');
+    if (nameNotFoundLink) {
+        nameNotFoundLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchToManualMode();
+        });
+    }
+    
     // Add input validation
     setupFormValidation();
 });
@@ -518,32 +527,301 @@ function showScreen(screenId) {
                 typeDisplay.textContent = registrationData.typeName;
                 priceDisplay.textContent = registrationData.price.toLocaleString('en-IN');
             }
+            
+            // Initialize registration mode (quick vs manual)
+            initializeRegistrationMode();
         }
     }, 50);
 }
 
-// Show review screen with collected data
-function showReview() {
-    // Collect personal details
-    const fullName = document.getElementById('full-name').value.trim();
-    const mobile = document.getElementById('mobile').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const clubName = document.getElementById('club-name').value;
-    const mealPreference = registrationData.mealPreference;
+// Initialize registration mode based on type
+function initializeRegistrationMode() {
+    const quickMode = document.getElementById('quick-reg-mode');
+    const manualMode = document.getElementById('manual-reg-mode');
+    const autofilledDetails = document.getElementById('autofilled-details');
     
-    // Get club ID from selected option
-    const clubSelect = document.getElementById('club-name');
-    const selectedOption = clubSelect.options[clubSelect.selectedIndex];
+    // Rotaractor always uses manual mode
+    if (registrationData.typeName === 'Rotaractor') {
+        quickMode.style.display = 'none';
+        manualMode.style.display = 'block';
+        autofilledDetails.style.display = 'none';
+    } else {
+        // All other types start with quick mode
+        quickMode.style.display = 'block';
+        manualMode.style.display = 'none';
+        autofilledDetails.style.display = 'none';
+        
+        // Initialize club search
+        initializeClubSearch();
+    }
+}
+
+// Initialize club search functionality
+function initializeClubSearch() {
+    const clubSearch = document.getElementById('club-search-quick');
+    const clubDropdown = document.getElementById('club-dropdown-quick');
     
-    // Try to get club ID from either the selected option's data-id or from the select element's stored ID
-    let clubId = selectedOption ? selectedOption.getAttribute('data-id') : null;
-    if (!clubId) {
-        clubId = clubSelect.getAttribute('data-selected-club-id');
+    // Load clubs from the existing clubs data
+    fetch('data/clubs.json')
+        .then(response => response.json())
+        .then(clubs => {
+            // Store clubs globally for filtering
+            window.clubsList = clubs;
+            
+            // Filter on input
+            clubSearch.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = clubs.filter(club => 
+                    club.name.toLowerCase().includes(searchTerm)
+                );
+                renderClubDropdown(filtered);
+            });
+            
+            // Show all clubs on focus
+            clubSearch.addEventListener('focus', () => {
+                renderClubDropdown(clubs);
+            });
+        });
+    
+    // Handle club selection
+    clubDropdown.addEventListener('click', (e) => {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            const clubName = item.textContent.trim();
+            clubSearch.value = clubName;
+            clubDropdown.style.display = 'none';
+            
+            // Fetch members for selected club
+            fetchMembersByClub(clubName);
+        }
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!clubSearch.contains(e.target) && !clubDropdown.contains(e.target)) {
+            clubDropdown.style.display = 'none';
+        }
+    });
+}
+
+// Render club dropdown
+function renderClubDropdown(clubs) {
+    const clubDropdown = document.getElementById('club-dropdown-quick');
+    
+    if (clubs.length === 0) {
+        clubDropdown.style.display = 'none';
+        return;
     }
     
+    clubDropdown.innerHTML = clubs
+        .map(club => `<div class="dropdown-item" data-club-id="${club.id}">${club.name}</div>`)
+        .join('');
+    clubDropdown.style.display = 'block';
+}
+
+// Fetch members by club name
+async function fetchMembersByClub(clubName) {
+    const memberSearch = document.getElementById('member-search');
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    try {
+        memberSearch.value = '';
+        memberSearch.placeholder = 'Loading members...';
+        memberSearch.disabled = true;
+        
+        const response = await fetch(`/api/club-members?clubName=${encodeURIComponent(clubName)}`);
+        const data = await response.json();
+        
+        if (data.success && data.members.length > 0) {
+            // Store members globally for filtering
+            window.currentMembers = data.members;
+            
+            memberSearch.placeholder = 'Search member name...';
+            memberSearch.disabled = false;
+            memberSearch.focus();
+            
+            // Initialize member search
+            initializeMemberSearch();
+            
+            // Show all members initially
+            renderMemberDropdown(data.members);
+        } else {
+            memberSearch.placeholder = 'No members found';
+            memberSearch.disabled = true;
+            window.currentMembers = [];
+        }
+    } catch (error) {
+        console.error('Error fetching members:', error);
+        memberSearch.placeholder = 'Error loading members';
+        memberSearch.disabled = false;
+    }
+}
+
+// Initialize member search functionality
+function initializeMemberSearch() {
+    const memberSearch = document.getElementById('member-search');
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    // Remove any existing listeners by cloning
+    const newMemberSearch = memberSearch.cloneNode(true);
+    memberSearch.parentNode.replaceChild(newMemberSearch, memberSearch);
+    
+    const newMemberDropdown = memberDropdown.cloneNode(true);
+    memberDropdown.parentNode.replaceChild(newMemberDropdown, memberDropdown);
+    
+    // Re-get elements after cloning
+    const memberSearchEl = document.getElementById('member-search');
+    const memberDropdownEl = document.getElementById('member-dropdown');
+    
+    // Filter on input
+    memberSearchEl.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filtered = window.currentMembers.filter(member => 
+            member.name.toLowerCase().includes(searchTerm)
+        );
+        renderMemberDropdown(filtered);
+    });
+    
+    // Show all members on focus
+    memberSearchEl.addEventListener('focus', () => {
+        if (window.currentMembers && window.currentMembers.length > 0) {
+            renderMemberDropdown(window.currentMembers);
+        }
+    });
+    
+    // Handle member selection
+    memberDropdownEl.addEventListener('click', (e) => {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            const memberId = item.getAttribute('data-member-id');
+            const member = window.currentMembers.find(m => m.id == memberId);
+            if (member) {
+                handleMemberSelection(member);
+            }
+        }
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!memberSearchEl.contains(e.target) && !memberDropdownEl.contains(e.target)) {
+            memberDropdownEl.style.display = 'none';
+        }
+    });
+}
+
+// Render member dropdown
+function renderMemberDropdown(members) {
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    if (members.length === 0) {
+        memberDropdown.innerHTML = '<div class="dropdown-item" style="color: #999;">No members found</div>';
+        memberDropdown.style.display = 'block';
+        return;
+    }
+    
+    memberDropdown.innerHTML = members
+        .map(member => `<div class="dropdown-item" data-member-id="${member.id}">${member.name}</div>`)
+        .join('');
+    memberDropdown.style.display = 'block';
+}
+
+// Handle member selection - auto fill
+function handleMemberSelection(member) {
+    const quickMode = document.getElementById('quick-reg-mode');
+    const autofilledDetails = document.getElementById('autofilled-details');
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    // Hide dropdowns and quick mode
+    memberDropdown.style.display = 'none';
+    quickMode.style.display = 'none';
+    
+    // Show autofilled details
+    autofilledDetails.style.display = 'block';
+    
+    // Populate autofilled fields
+    document.getElementById('autofilled-name').textContent = member.name;
+    document.getElementById('autofilled-email').value = member.email || '';
+    document.getElementById('autofilled-mobile').value = member.mobile || '';
+    
+    // Store in registration data
+    registrationData.autofilledMember = member;
+    registrationData.clubName = document.getElementById('club-search-quick').value;
+}
+
+// Switch to manual mode
+function switchToManualMode() {
+    const quickMode = document.getElementById('quick-reg-mode');
+    const manualMode = document.getElementById('manual-reg-mode');
+    const autofilledDetails = document.getElementById('autofilled-details');
+    
+    quickMode.style.display = 'none';
+    manualMode.style.display = 'block';
+    autofilledDetails.style.display = 'none';
+    
+    // Pre-fill club if selected
+    const selectedClub = document.getElementById('club-search-quick').value;
+    if (selectedClub) {
+        const clubSelect = document.getElementById('club-name');
+        for (let i = 0; i < clubSelect.options.length; i++) {
+            if (clubSelect.options[i].text === selectedClub) {
+                clubSelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
+    
+    // Clear autofilled data
+    delete registrationData.autofilledMember;
+}
+
+// Show review screen with collected data
+function showReview() {
+    let fullName, mobile, email, clubName, clubId;
+    
+    // Check which mode is active
+    const autofilledDetails = document.getElementById('autofilled-details');
+    const manualMode = document.getElementById('manual-reg-mode');
+    
+    if (autofilledDetails && autofilledDetails.style.display !== 'none') {
+        // Quick mode - autofilled from member selection
+        if (!registrationData.autofilledMember) {
+            alert('Please select a member or switch to manual entry');
+            return;
+        }
+        
+        fullName = registrationData.autofilledMember.name;
+        email = document.getElementById('autofilled-email').value.trim();
+        mobile = document.getElementById('autofilled-mobile').value.trim();
+        clubName = registrationData.clubName;
+        
+        // Get club ID from stored clubs list
+        const club = window.clubsList?.find(c => c.name === clubName);
+        clubId = club ? club.id : 0;
+        
+    } else if (manualMode && manualMode.style.display !== 'none') {
+        // Manual mode - user typed everything
+        fullName = document.getElementById('full-name').value.trim();
+        mobile = document.getElementById('mobile').value.trim();
+        email = document.getElementById('email').value.trim();
+        clubName = document.getElementById('club-name').value;
+        
+        // Get club ID from selected option
+        const clubSelect = document.getElementById('club-name');
+        const selectedOption = clubSelect.options[clubSelect.selectedIndex];
+        clubId = selectedOption ? selectedOption.getAttribute('data-id') : null;
+        if (!clubId) {
+            clubId = clubSelect.getAttribute('data-selected-club-id');
+        }
+        
+    } else {
+        alert('Please complete the registration form');
+        return;
+    }
+    
+    const mealPreference = registrationData.mealPreference;
+    
     console.log('🏢 Selected club:', clubName);
-    console.log('🏢 Club ID from data-id:', clubId);
-    console.log('🏢 Selected option:', selectedOption);
+    console.log('🏢 Club ID:', clubId);
     
     // Validate all required fields (email is optional)
     if (!fullName || !mobile || !clubName || !mealPreference) {
