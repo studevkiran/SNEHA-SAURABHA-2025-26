@@ -112,33 +112,45 @@ const EMBEDDED_CLUBS = [
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: 4500,
+        price: 5000,
         description: 'Admission, Food & 1 Memento',
         inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: 7500,
+        price: 8000,
         description: 'Admission with spouse, Food & 1 Memento',
         inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
     },
     'ann': {
         name: 'Ann',
-        price: 3500,
+        price: 4000,
         description: 'Admission & Food',
         inclusions: ['Conference admission', 'Food for all sessions']
     },
     'annet': {
+        name: 'Annet',
+        price: 2000,
+        description: 'Admission & Food',
+        inclusions: ['Conference admission', 'Food for all sessions']
+    },
+    'innerwheel': {
+        name: 'Innerwheel Member',
+        price: 3500,
+        description: 'Admission, Food & 1 Memento',
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
+    },
+    'guest': {
+        name: 'Guest',
+        price: 5000,
+        description: 'Admission, Food & 1 Memento',
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
+    },
+    'rotaractor': {
         name: 'Rotaractor',
         price: 2500,
         description: 'Admission & Food',
         inclusions: ['Conference admission', 'Food for all sessions']
-    },
-    'guest': {
-        name: 'Guest',
-        price: 4500,
-        description: 'Admission, Food & 1 Memento',
-        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'silver-donor': {
         name: 'Silver Donor',
@@ -169,28 +181,22 @@ const registrationTypes = {
         price: 100000,
         description: 'Admission with spouse + 2 children below 12 years, Food & special Memento, Suite Room at venue (no extra beds)',
         inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', 'Special Memento', 'Suite Room at venue (no extra beds)']
-    },
-    'tester': {
-        name: 'Tester',
-        price: 1,
-        description: 'Test registration for payment gateway testing only - ₹1 charge',
-        inclusions: ['Payment gateway test', 'Will be deleted after testing']
     }
 };
 
 // Registration Type Prefixes for unique IDs
 const registrationPrefixes = {
-    'rotarian': 'RN',
+    'rotarian': 'ROT',
     'rotarian-spouse': 'RS',
-    'ann': 'AN',
-    'annet': 'RT',  // Rotaractor
-    'guest': 'GT',
+    'ann': 'ANN',
+    'annet': 'ANT',
+    'guest': 'GST',
+    'rotaractor': 'RAC',
     'silver-donor': 'SD',
     'silver-sponsor': 'SS',
     'gold-sponsor': 'GS',
-    'platinum-sponsor': 'PT',
-    'patron-sponsor': 'PS',
-    'tester': 'TEST'
+    'platinum-sponsor': 'PS',
+    'patron-sponsor': 'PAT'
 };
 
 // Load clubs from JSON
@@ -252,6 +258,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('personal-form').addEventListener('submit', function(e) {
         e.preventDefault();
     });
+    
+    // Setup "name not found" link to switch to manual mode
+    const nameNotFoundLink = document.getElementById('name-not-found-link');
+    if (nameNotFoundLink) {
+        nameNotFoundLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchToManualMode();
+        });
+    }
     
     // Add input validation
     setupFormValidation();
@@ -337,9 +352,6 @@ function setupClubSearch() {
         }
         
         optionsList.classList.remove('show');
-        optionsList.style.display = 'none'; // Completely hide dropdown
-        if (clearBtn) clearBtn.style.display = 'block'; // Show X button
-    }
         optionsList.style.display = 'none'; // Completely hide dropdown
         if (clearBtn) clearBtn.style.display = 'block'; // Show X button
     }
@@ -515,32 +527,301 @@ function showScreen(screenId) {
                 typeDisplay.textContent = registrationData.typeName;
                 priceDisplay.textContent = registrationData.price.toLocaleString('en-IN');
             }
+            
+            // Initialize registration mode (quick vs manual)
+            initializeRegistrationMode();
         }
     }, 50);
 }
 
-// Show review screen with collected data
-function showReview() {
-    // Collect personal details
-    const fullName = document.getElementById('full-name').value.trim();
-    const mobile = document.getElementById('mobile').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const clubName = document.getElementById('club-name').value;
-    const mealPreference = registrationData.mealPreference;
+// Initialize registration mode based on type
+function initializeRegistrationMode() {
+    const quickMode = document.getElementById('quick-reg-mode');
+    const manualMode = document.getElementById('manual-reg-mode');
+    const autofilledDetails = document.getElementById('autofilled-details');
     
-    // Get club ID from selected option
-    const clubSelect = document.getElementById('club-name');
-    const selectedOption = clubSelect.options[clubSelect.selectedIndex];
+    // Rotaractor always uses manual mode
+    if (registrationData.typeName === 'Rotaractor') {
+        quickMode.style.display = 'none';
+        manualMode.style.display = 'block';
+        autofilledDetails.style.display = 'none';
+    } else {
+        // All other types start with quick mode
+        quickMode.style.display = 'block';
+        manualMode.style.display = 'none';
+        autofilledDetails.style.display = 'none';
+        
+        // Initialize club search
+        initializeClubSearch();
+    }
+}
+
+// Initialize club search functionality
+function initializeClubSearch() {
+    const clubSearch = document.getElementById('club-search-quick');
+    const clubDropdown = document.getElementById('club-dropdown-quick');
     
-    // Try to get club ID from either the selected option's data-id or from the select element's stored ID
-    let clubId = selectedOption ? selectedOption.getAttribute('data-id') : null;
-    if (!clubId) {
-        clubId = clubSelect.getAttribute('data-selected-club-id');
+    // Load clubs from the existing clubs data
+    fetch('data/clubs.json')
+        .then(response => response.json())
+        .then(clubs => {
+            // Store clubs globally for filtering
+            window.clubsList = clubs;
+            
+            // Filter on input
+            clubSearch.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = clubs.filter(club => 
+                    club.name.toLowerCase().includes(searchTerm)
+                );
+                renderClubDropdown(filtered);
+            });
+            
+            // Show all clubs on focus
+            clubSearch.addEventListener('focus', () => {
+                renderClubDropdown(clubs);
+            });
+        });
+    
+    // Handle club selection
+    clubDropdown.addEventListener('click', (e) => {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            const clubName = item.textContent.trim();
+            clubSearch.value = clubName;
+            clubDropdown.style.display = 'none';
+            
+            // Fetch members for selected club
+            fetchMembersByClub(clubName);
+        }
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!clubSearch.contains(e.target) && !clubDropdown.contains(e.target)) {
+            clubDropdown.style.display = 'none';
+        }
+    });
+}
+
+// Render club dropdown
+function renderClubDropdown(clubs) {
+    const clubDropdown = document.getElementById('club-dropdown-quick');
+    
+    if (clubs.length === 0) {
+        clubDropdown.style.display = 'none';
+        return;
     }
     
+    clubDropdown.innerHTML = clubs
+        .map(club => `<div class="dropdown-item" data-club-id="${club.id}">${club.name}</div>`)
+        .join('');
+    clubDropdown.style.display = 'block';
+}
+
+// Fetch members by club name
+async function fetchMembersByClub(clubName) {
+    const memberSearch = document.getElementById('member-search');
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    try {
+        memberSearch.value = '';
+        memberSearch.placeholder = 'Loading members...';
+        memberSearch.disabled = true;
+        
+        const response = await fetch(`/api/club-members?clubName=${encodeURIComponent(clubName)}`);
+        const data = await response.json();
+        
+        if (data.success && data.members.length > 0) {
+            // Store members globally for filtering
+            window.currentMembers = data.members;
+            
+            memberSearch.placeholder = 'Search member name...';
+            memberSearch.disabled = false;
+            memberSearch.focus();
+            
+            // Initialize member search
+            initializeMemberSearch();
+            
+            // Show all members initially
+            renderMemberDropdown(data.members);
+        } else {
+            memberSearch.placeholder = 'No members found';
+            memberSearch.disabled = true;
+            window.currentMembers = [];
+        }
+    } catch (error) {
+        console.error('Error fetching members:', error);
+        memberSearch.placeholder = 'Error loading members';
+        memberSearch.disabled = false;
+    }
+}
+
+// Initialize member search functionality
+function initializeMemberSearch() {
+    const memberSearch = document.getElementById('member-search');
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    // Remove any existing listeners by cloning
+    const newMemberSearch = memberSearch.cloneNode(true);
+    memberSearch.parentNode.replaceChild(newMemberSearch, memberSearch);
+    
+    const newMemberDropdown = memberDropdown.cloneNode(true);
+    memberDropdown.parentNode.replaceChild(newMemberDropdown, memberDropdown);
+    
+    // Re-get elements after cloning
+    const memberSearchEl = document.getElementById('member-search');
+    const memberDropdownEl = document.getElementById('member-dropdown');
+    
+    // Filter on input
+    memberSearchEl.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filtered = window.currentMembers.filter(member => 
+            member.name.toLowerCase().includes(searchTerm)
+        );
+        renderMemberDropdown(filtered);
+    });
+    
+    // Show all members on focus
+    memberSearchEl.addEventListener('focus', () => {
+        if (window.currentMembers && window.currentMembers.length > 0) {
+            renderMemberDropdown(window.currentMembers);
+        }
+    });
+    
+    // Handle member selection
+    memberDropdownEl.addEventListener('click', (e) => {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            const memberId = item.getAttribute('data-member-id');
+            const member = window.currentMembers.find(m => m.id == memberId);
+            if (member) {
+                handleMemberSelection(member);
+            }
+        }
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!memberSearchEl.contains(e.target) && !memberDropdownEl.contains(e.target)) {
+            memberDropdownEl.style.display = 'none';
+        }
+    });
+}
+
+// Render member dropdown
+function renderMemberDropdown(members) {
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    if (members.length === 0) {
+        memberDropdown.innerHTML = '<div class="dropdown-item" style="color: #999;">No members found</div>';
+        memberDropdown.style.display = 'block';
+        return;
+    }
+    
+    memberDropdown.innerHTML = members
+        .map(member => `<div class="dropdown-item" data-member-id="${member.id}">${member.name}</div>`)
+        .join('');
+    memberDropdown.style.display = 'block';
+}
+
+// Handle member selection - auto fill
+function handleMemberSelection(member) {
+    const quickMode = document.getElementById('quick-reg-mode');
+    const autofilledDetails = document.getElementById('autofilled-details');
+    const memberDropdown = document.getElementById('member-dropdown');
+    
+    // Hide dropdowns and quick mode
+    memberDropdown.style.display = 'none';
+    quickMode.style.display = 'none';
+    
+    // Show autofilled details
+    autofilledDetails.style.display = 'block';
+    
+    // Populate autofilled fields
+    document.getElementById('autofilled-name').textContent = member.name;
+    document.getElementById('autofilled-email').value = member.email || '';
+    document.getElementById('autofilled-mobile').value = member.mobile || '';
+    
+    // Store in registration data
+    registrationData.autofilledMember = member;
+    registrationData.clubName = document.getElementById('club-search-quick').value;
+}
+
+// Switch to manual mode
+function switchToManualMode() {
+    const quickMode = document.getElementById('quick-reg-mode');
+    const manualMode = document.getElementById('manual-reg-mode');
+    const autofilledDetails = document.getElementById('autofilled-details');
+    
+    quickMode.style.display = 'none';
+    manualMode.style.display = 'block';
+    autofilledDetails.style.display = 'none';
+    
+    // Pre-fill club if selected
+    const selectedClub = document.getElementById('club-search-quick').value;
+    if (selectedClub) {
+        const clubSelect = document.getElementById('club-name');
+        for (let i = 0; i < clubSelect.options.length; i++) {
+            if (clubSelect.options[i].text === selectedClub) {
+                clubSelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
+    
+    // Clear autofilled data
+    delete registrationData.autofilledMember;
+}
+
+// Show review screen with collected data
+function showReview() {
+    let fullName, mobile, email, clubName, clubId;
+    
+    // Check which mode is active
+    const autofilledDetails = document.getElementById('autofilled-details');
+    const manualMode = document.getElementById('manual-reg-mode');
+    
+    if (autofilledDetails && autofilledDetails.style.display !== 'none') {
+        // Quick mode - autofilled from member selection
+        if (!registrationData.autofilledMember) {
+            alert('Please select a member or switch to manual entry');
+            return;
+        }
+        
+        fullName = registrationData.autofilledMember.name;
+        email = document.getElementById('autofilled-email').value.trim();
+        mobile = document.getElementById('autofilled-mobile').value.trim();
+        clubName = registrationData.clubName;
+        
+        // Get club ID from stored clubs list
+        const club = window.clubsList?.find(c => c.name === clubName);
+        clubId = club ? club.id : 0;
+        
+    } else if (manualMode && manualMode.style.display !== 'none') {
+        // Manual mode - user typed everything
+        fullName = document.getElementById('full-name').value.trim();
+        mobile = document.getElementById('mobile').value.trim();
+        email = document.getElementById('email').value.trim();
+        clubName = document.getElementById('club-name').value;
+        
+        // Get club ID from selected option
+        const clubSelect = document.getElementById('club-name');
+        const selectedOption = clubSelect.options[clubSelect.selectedIndex];
+        clubId = selectedOption ? selectedOption.getAttribute('data-id') : null;
+        if (!clubId) {
+            clubId = clubSelect.getAttribute('data-selected-club-id');
+        }
+        
+    } else {
+        alert('Please complete the registration form');
+        return;
+    }
+    
+    const mealPreference = registrationData.mealPreference;
+    
     console.log('🏢 Selected club:', clubName);
-    console.log('🏢 Club ID from data-id:', clubId);
-    console.log('🏢 Selected option:', selectedOption);
+    console.log('🏢 Club ID:', clubId);
     
     // Validate all required fields (email is optional)
     if (!fullName || !mobile || !clubName || !mealPreference) {
@@ -824,34 +1105,51 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         console.log('✅ Payment verification result:', result);
         
         if (result.success && result.paymentSuccess) {
-            // Payment successful - use data from API response or session
-            const parsedData = JSON.parse(pendingData);
+            // Payment successful - update registrationData with backend response
+            const parsedData = pendingData ? JSON.parse(pendingData) : {};
             
-            // Merge with registration data from database if available
+            // Use data from backend if available, fallback to session storage
             if (result.registration) {
+                console.log('✅ Using registration data from backend:', result.registration);
+                const backendAmount = result.registration.amount || result.amount || 0;
                 registrationData = {
-                    fullName: result.registration.name || parsedData.fullName,
-                    mobile: result.registration.mobile || parsedData.mobile,
-                    email: result.registration.email || parsedData.email,
-                    clubName: result.registration.clubName || parsedData.clubName,
-                    typeName: result.registration.registrationType || parsedData.typeName,
-                    price: result.registration.amount || parsedData.price,
-                    mealPreference: result.registration.mealPreference || parsedData.mealPreference,
+                    fullName: result.registration.name,
+                    mobile: result.registration.mobile,
+                    email: result.registration.email || 'Not Provided',
+                    clubName: result.registration.clubName || 'Not specified',
+                    clubId: result.registration.clubId,
+                    typeName: result.registration.registrationType,
+                    price: backendAmount,
+                    amount: backendAmount, // Alias for consistency
+                    mealPreference: result.registration.mealPreference,
                     confirmationId: result.registration.confirmationId,
                     paymentStatus: 'Paid',
                     transactionId: result.transactionId || orderId,
-                    orderId: orderId
+                    orderId: orderId,
+                    type: parsedData.type // Keep original type key for prefix lookup
                 };
             } else {
+                console.log('⚠️ No registration data from backend, using session data');
                 registrationData = parsedData;
                 registrationData.paymentStatus = 'Paid';
                 registrationData.transactionId = result.transactionId || orderId;
                 registrationData.orderId = orderId;
+                
+                // Safeguard: If session data is also empty/invalid, show error
+                if (!registrationData.fullName || !registrationData.price) {
+                    console.error('❌ No valid registration data available');
+                    alert(`Payment successful but registration data not found.\n\nOrder ID: ${orderId}\n\nPlease contact support with this Order ID to complete your registration.`);
+                    window.location.href = 'contact.html';
+                    return;
+                }
             }
             
+            // Store updated data
+            sessionStorage.setItem('registrationData', JSON.stringify(registrationData));
             sessionStorage.removeItem('pendingRegistration');
             sessionStorage.removeItem('cashfreeOrderId');
             
+            console.log('🎉 Updated registration data:', registrationData);
             console.log('🎉 Payment verified! Showing success screen...');
             processPayment('success');
             
@@ -861,18 +1159,43 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
             
             if (result.status === 'ACTIVE' || result.status === 'PENDING') {
                 // Payment is still processing
-                if (confirm('Payment is still processing. Would you like to check again?')) {
+                const processingMsg = '⏳ PAYMENT PROCESSING\n\n' +
+                    'Your payment is being verified by the payment gateway.\n\n' +
+                    'Order ID: ' + orderId + '\n\n' +
+                    '✅ Once payment is confirmed, you will:\n' +
+                    '• Receive your Registration ID\n' +
+                    '• Get WhatsApp/Email confirmation\n\n' +
+                    '⏱️ This usually takes a few seconds.\n\n' +
+                    'Would you like to check again?';
+                    
+                if (confirm(processingMsg)) {
                     // Retry verification after a delay
                     setTimeout(() => {
                         verifyPaymentAndShowSuccess(orderId, pendingData);
                     }, 3000);
                 } else {
-                    alert('Your payment is being processed. Order ID: ' + orderId + '\n\nYou will receive confirmation via email/WhatsApp once payment is confirmed.');
+                    alert('No worries! Your registration will be confirmed once payment is verified.\n\n' +
+                          'Order ID: ' + orderId + '\n\n' +
+                          'You will receive confirmation via WhatsApp: +91 99805 57785');
                     window.location.href = 'index.html';
                 }
             } else {
                 // Payment failed
-                alert('Payment was not successful. Status: ' + result.status + '\n\nPlease try again or contact support.');
+                const failureMsg = '❌ PAYMENT NOT SUCCESSFUL\n\n' +
+                    '⚠️ Your payment could not be completed.\n\n' +
+                    'Order ID: ' + orderId + '\n\n' +
+                    '✅ WHAT TO DO:\n' +
+                    '1. If money was deducted from your account:\n' +
+                    '   • Take screenshot of payment confirmation\n' +
+                    '   • WhatsApp to: +91 99805 57785\n' +
+                    '   • Include Order ID: ' + orderId + '\n' +
+                    '   • We will verify and confirm manually\n\n' +
+                    '2. If no money was deducted:\n' +
+                    '   • You can try registering again\n' +
+                    '   • Use the same details\n\n' +
+                    '💡 Note: Registration ID will be generated only after successful payment verification.';
+                
+                alert(failureMsg);
                 window.location.href = 'index.html';
             }
             
@@ -880,17 +1203,26 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
             // Verification failed
             console.error('❌ Payment verification failed:', result.error);
             
-            const retryMsg = 'Payment verification failed.\n\n' +
-                'Order ID: ' + orderId + '\n' +
-                'Error: ' + (result.error || 'Unknown error') + '\n\n' +
-                'Would you like to try verifying again?';
+            const retryMsg = '⚠️ VERIFICATION ISSUE\n\n' +
+                'We could not verify your payment status automatically.\n\n' +
+                'Order ID: ' + orderId + '\n\n' +
+                '✅ WHAT TO DO:\n' +
+                '1. Try verifying again (click OK below)\n\n' +
+                '2. If retry fails, WhatsApp to: +91 99805 57785\n' +
+                '   • Order ID: ' + orderId + '\n' +
+                '   • Screenshot of payment\n' +
+                '   • UPI Transaction ID (if available)\n\n' +
+                '💡 Your registration will be confirmed once payment is verified.\n' +
+                'Registration ID will be generated after confirmation.\n\n' +
+                'Would you like to retry verification now?';
             
             if (confirm(retryMsg)) {
                 setTimeout(() => {
                     verifyPaymentAndShowSuccess(orderId, pendingData);
                 }, 2000);
             } else {
-                alert('Please contact support with your Order ID: ' + orderId);
+                alert('No problem! WhatsApp your payment details to +91 99805 57785\n\n' +
+                      'Include Order ID: ' + orderId);
                 window.location.href = 'index.html';
             }
         }
@@ -900,7 +1232,22 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         console.error('💥 Error stack:', error.stack);
         console.error('💥 Error message:', error.message);
         
-        alert('Error verifying payment:\n\n' + error.message + '\n\nPlease contact support with your Order ID: ' + orderId);
+        const errorMsg = '⚠️ VERIFICATION ERROR\n\n' +
+            'Technical error while verifying payment.\n\n' +
+            'Order ID: ' + orderId + '\n' +
+            'Error: ' + error.message + '\n\n' +
+            '✅ WHAT TO DO:\n' +
+            'WhatsApp to: +91 99805 57785\n\n' +
+            'Send:\n' +
+            '• Order ID: ' + orderId + '\n' +
+            '• Payment screenshot\n' +
+            '• Mention: "Verification error"\n\n' +
+            '💡 If payment was successful, we will:\n' +
+            '• Verify your payment manually\n' +
+            '• Generate your Registration ID\n' +
+            '• Send confirmation within 24 hours';
+        
+        alert(errorMsg);
         window.location.href = 'index.html';
     }
 }
@@ -917,27 +1264,32 @@ function processPayment(status) {
     if (status === 'success') {
         console.log('✅ Payment successful! Generating confirmation...');
         
-        // Get registration type prefix
-        const typeKey = Object.keys(registrationTypes).find(
-            key => registrationTypes[key].name === registrationData.typeName
-        );
-        const prefix = registrationPrefixes[typeKey] || 'SS';
+        // Use confirmation ID from backend if available, otherwise generate
+        let confirmationId = registrationData.confirmationId;
         
-        // Get club number (2 digits, padded)
-        console.log('🏢 Club ID from registrationData:', registrationData.clubId);
-        const clubNumber = registrationData.clubId ? registrationData.clubId.toString().padStart(2, '0') : '00';
-        console.log('🔢 Formatted club number:', clubNumber);
+        if (!confirmationId) {
+            console.log('⚠️ No confirmation ID from backend, generating new one');
+            // Get registration type prefix
+            const typeKey = Object.keys(registrationTypes).find(
+                key => registrationTypes[key].name === registrationData.typeName
+            );
+            const prefix = registrationPrefixes[typeKey] || 'SS';
+            
+            // Get club number (2 digits, padded)
+            const clubNumber = registrationData.clubId ? registrationData.clubId.toString().padStart(2, '0') : '00';
+            
+            // Get meal specifier (V=Veg, N=Non-Veg)
+            const mealCode = registrationData.mealPreference === 'Veg' ? 'V' : 'N';
+            
+            // Generate 4-digit series number
+            const seriesNumber = Date.now().toString().slice(-4);
+            
+            // Format: XXCCM#### (e.g., RN15V1234)
+            confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
+            registrationData.confirmationId = confirmationId;
+        }
         
-        // Get meal specifier (V=Veg, N=Non-Veg)
-        const mealCode = registrationData.mealPreference === 'Veg' ? 'V' : 'N';
-        
-        // Generate 4-digit series number
-        const seriesNumber = Date.now().toString().slice(-4);
-        
-        // Format: XXCCM#### (e.g., RN15V1234) - No separators
-        const confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
-        
-        // Use actual Cashfree Order ID instead of fake transaction ID
+        // Use actual Cashfree Order ID
         const transactionId = registrationData.orderId || registrationData.transactionId || 'ORDER_' + Date.now();
         const paymentDate = new Date().toLocaleString('en-IN', {
             day: '2-digit',
@@ -948,16 +1300,16 @@ function processPayment(status) {
         });
         
         registrationData.transactionId = transactionId;
-        registrationData.confirmationId = confirmationId;
         registrationData.paymentDate = paymentDate;
         
         console.log('🎫 Confirmation ID:', confirmationId);
         console.log('🔢 Cashfree Order ID:', transactionId);
+        console.log('📋 Final registration data:', registrationData);
         
         // Populate refined acknowledgment page (with null checks)
         const setElementText = (id, text) => {
             const element = document.getElementById(id);
-            if (element) element.textContent = text;
+            if (element) element.textContent = text || 'Not Provided';
         };
         
         setElementText('confirmation-id-display', confirmationId);
@@ -966,7 +1318,11 @@ function processPayment(status) {
         setElementText('ack-mobile', registrationData.mobile);
         setElementText('ack-club', registrationData.clubName || 'Not specified');
         setElementText('ack-meal', registrationData.mealPreference);
-        setElementText('ack-amount', `₹${registrationData.price.toLocaleString('en-IN')}`);
+        
+        // Safe amount display with null check
+        const amount = registrationData.price || registrationData.amount || 0;
+        setElementText('ack-amount', `₹${amount.toLocaleString('en-IN')}`);
+        
         setElementText('ack-txn', transactionId);
         setElementText('ack-date', paymentDate); // Optional field
         

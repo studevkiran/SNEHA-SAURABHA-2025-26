@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test WhatsApp - SNEHA SAURABHA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        .result.info {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            color: #0c5460;
+        }
+        .loading {
+            text-align: center;
+            display: none;
+            margin: 20px 0;
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .note {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .note strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test WhatsApp Integration</h1>
+        <p>Test the Infobip WhatsApp confirmation without making a payment</p>
+
+        <div class="note">
+            <strong>⚠️ Important - Free Trial Limitations:</strong>
+            In Infobip free trial, you can only send to verified recipient: <strong>919902772262</strong><br>
+            Using approved template: <em>test_whatsapp_template_en</em><br>
+            100 free messages available.
+        </div>
+
+        <form id="testForm">
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="name" value="Kiran" required>
+            </div>
+
+            <div class="form-group">
+                <label>WhatsApp Number (MUST be 9902772262 in trial)</label>
+                <input type="tel" id="mobile" value="9902772262" pattern="[0-9]{10}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email (optional)</label>
+                <input type="email" id="email" value="test@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Registration Type</label>
+                <select id="type" required>
+                    <option value="Rotarian">Rotarian</option>
+                    <option value="Rotarian with Spouse">Rotarian with Spouse</option>
+                    <option value="Ann">Ann</option>
+                    <option value="Annet">Annet</option>
+                    <option value="Guest">Guest</option>
+                    <option value="Rotaractor">Rotaractor</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Meal Preference</label>
+                <select id="meal" required>
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Club Name</label>
+                <input type="text" id="club" value="Mangalore">
+            </div>
+
+            <button type="submit">📱 Send Test WhatsApp Message</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Sending WhatsApp message...</p>
+        </div>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const button = e.target.querySelector('button');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+
+            // Disable form
+            button.disabled = true;
+            loading.style.display = 'block';
+            result.style.display = 'none';
+
+            try {
+                const formData = {
+                    name: document.getElementById('name').value,
+                    mobile: document.getElementById('mobile').value,
+                    email: document.getElementById('email').value,
+                    registrationId: 'TEST' + Date.now(),
+                    registrationType: document.getElementById('type').value,
+                    amount: 5000,
+                    mealPreference: document.getElementById('meal').value,
+                    clubName: document.getElementById('club').value
+                };
+
+                console.log('Sending test WhatsApp:', formData);
+
+                const response = await fetch('/api/send-whatsapp-template', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                console.log('Response:', data);
+
+                loading.style.display = 'none';
+                result.style.display = 'block';
+
+                if (data.success) {
+                    result.className = 'result success';
+                    result.innerHTML = `
+                        <strong>✅ Success!</strong><br>
+                        WhatsApp message sent to ${formData.mobile}<br>
+                        Message ID: ${data.messageId || 'N/A'}<br>
+                        Status: ${data.status || 'Sent'}<br><br>
+                        Check your WhatsApp for the confirmation message!
+                    `;
+                } else if (data.disabled) {
+                    result.className = 'result info';
+                    result.innerHTML = `
+                        <strong>⚠️ WhatsApp Not Configured</strong><br>
+                        ${data.message}<br><br>
+                        Please add these environment variables in Vercel:<br>
+                        • INFOBIP_API_KEY<br>
+                        • INFOBIP_BASE_URL<br>
+                        • INFOBIP_WHATSAPP_NUMBER
+                    `;
+                } else {
+                    result.className = 'result error';
+                    result.innerHTML = `
+                        <strong>❌ Error</strong><br>
+                        ${data.message}<br>
+                        ${data.error ? '<br>Details: ' + JSON.stringify(data.error) : ''}
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                loading.style.display = 'none';
+                result.style.display = 'block';
+                result.className = 'result error';
+                result.innerHTML = `
+                    <strong>❌ Network Error</strong><br>
+                    ${error.message}
+                `;
+            } finally {
+                button.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

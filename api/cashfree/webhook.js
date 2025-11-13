@@ -1,6 +1,10 @@
 // API: Handle Cashfree webhook callbacks
 const CashfreeService = require('../../lib/cashfree');
-const { updatePaymentStatus } = require('../../lib/db-neon');
+const { 
+  getPaymentAttempt,
+  createConfirmedRegistration,
+  updatePaymentAttemptStatus 
+} = require('../../lib/db-neon');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -45,17 +49,25 @@ module.exports = async (req, res) => {
     console.log(`📥 Webhook received: ${orderId} - ${orderStatus}`);
 
     if (paymentSuccess) {
-      // Update database with payment success
-      await updatePaymentStatus(
-        orderId,
-        {
-          paymentStatus: 'completed',
-          upiId: paymentMethod || null,
-          gatewayResponse: JSON.stringify(payload)
-        }
-      );
-
-      console.log('✅ Payment webhook processed:', orderId);
+      console.log('✅ Payment successful via webhook');
+      
+      // Check if already processed
+      const attempt = await getPaymentAttempt(orderId);
+      
+      if (!attempt) {
+        console.error('❌ Payment attempt not found:', orderId);
+        return res.status(200).json({ success: true, message: 'Attempt not found' });
+      }
+      
+      if (attempt.payment_status === 'SUCCESS') {
+        console.log('⚠️ Payment already processed, skipping');
+        return res.status(200).json({ success: true, message: 'Already processed' });
+      }
+      
+      // Create confirmed registration (generates registration ID)
+      console.log('🎫 Creating confirmed registration via webhook...');
+      await createConfirmedRegistration(orderId, transactionId);
+      console.log('✅ Webhook: Confirmed registration created');
 
       // TODO: Send WhatsApp confirmation
       // await sendWhatsAppConfirmation(orderId);
@@ -63,19 +75,15 @@ module.exports = async (req, res) => {
       // TODO: Send email confirmation
       // await sendEmailConfirmation(orderId);
 
-    } else {
-      // Payment failed or pending
-      const status = orderStatus === 'ACTIVE' ? 'pending' : 'failed';
+    } else if (orderStatus === 'FAILED' || orderStatus === 'CANCELLED') {
+      // Payment failed
+      console.log(`❌ Payment ${orderStatus}, marking as FAILED`);
+      await updatePaymentAttemptStatus(orderId, 'FAILED', `Payment ${orderStatus}`);
+      console.log(`✅ Payment attempt marked as FAILED:`, orderId);
       
-      await updatePaymentStatus(
-        orderId,
-        {
-          paymentStatus: status,
-          gatewayResponse: JSON.stringify(payload)
-        }
-      );
-
-      console.log(`⚠️ Payment ${orderStatus}:`, orderId);
+    } else {
+      // Still pending
+      console.log(`⏳ Payment ${orderStatus}, keeping as Pending`);
     }
 
     // Always respond success to Cashfree (we processed the webhook)

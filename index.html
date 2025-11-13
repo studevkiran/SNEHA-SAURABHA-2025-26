@@ -16,7 +16,6 @@
     <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
     <script src="config/cashfree-config.js"></script>
     <script src="scripts/cashfree-service.js"></script>
-    <script src="scripts/app.js"></script>
 </head>
 <body>
     <!-- WhatsApp Floating Button -->
@@ -107,25 +106,33 @@
             <button class="btn-back" onclick="showScreen('screen-banner')">← Back to Home</button>
             <h2>Select Registration Type</h2>
             <div class="selection-group">
-                <div class="selection-card" data-type="rotarian" data-price="4500">
+                <div class="selection-card" data-type="rotarian" data-price="5000">
                     <div class="card-name">Rotarian</div>
-                    <div class="card-price">₹4,500</div>
+                    <div class="card-price">₹5,000</div>
                 </div>
-                <div class="selection-card" data-type="rotarian-spouse" data-price="7500">
+                <div class="selection-card" data-type="rotarian-spouse" data-price="8000">
                     <div class="card-name">Rotarian + Spouse</div>
-                    <div class="card-price">₹7,500</div>
+                    <div class="card-price">₹8,000</div>
                 </div>
-                <div class="selection-card" data-type="ann" data-price="3500">
+                <div class="selection-card" data-type="ann" data-price="4000">
                     <div class="card-name">Ann</div>
+                    <div class="card-price">₹4,000</div>
+                </div>
+                <div class="selection-card" data-type="annet" data-price="2000">
+                    <div class="card-name">Annet</div>
+                    <div class="card-price">₹2,000</div>
+                </div>
+                <div class="selection-card" data-type="innerwheel" data-price="3500">
+                    <div class="card-name">Innerwheel Member</div>
                     <div class="card-price">₹3,500</div>
                 </div>
-                <div class="selection-card" data-type="annet" data-price="2500">
+                <div class="selection-card" data-type="guest" data-price="5000">
+                    <div class="card-name">Guest</div>
+                    <div class="card-price">₹5,000</div>
+                </div>
+                <div class="selection-card" data-type="rotaractor" data-price="2500">
                     <div class="card-name">Rotaractor</div>
                     <div class="card-price">₹2,500</div>
-                </div>
-                <div class="selection-card" data-type="guest" data-price="4500">
-                    <div class="card-name">Guest</div>
-                    <div class="card-price">₹4,500</div>
                 </div>
                 <div class="selection-card" data-type="silver-donor" data-price="20000">
                     <div class="card-name">Silver Donor</div>
@@ -164,27 +171,78 @@
             <button class="btn-back" onclick="showScreen('screen-register-type')">← Back</button>
             <h2>Your Details</h2>
             <form id="personal-form" class="compact-form">
-                <div class="form-row">
-                    <input type="text" id="full-name" required placeholder="Full Name">
-                </div>
-                <div class="form-row">
-                    <input type="tel" id="mobile" required placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10">
-                </div>
-                <div class="form-row">
-                    <input type="email" id="email" placeholder="Email Address (Optional)">
-                </div>
-                <div class="form-row club-dropdown-wrapper">
-                    <div style="position: relative;">
-                        <input type="text" id="club-search" placeholder="Search and Select Club..." autocomplete="off" style="padding-right: 35px;">
-                        <button type="button" id="clear-club" onclick="clearClubSelection()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
-                            ✕
-                        </button>
+                
+                <!-- Quick Registration Mode (for non-Rotaractor types) -->
+                <div id="quick-reg-mode" style="display: none;">
+                    <!-- Club Selection -->
+                    <div class="form-row">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your Club</label>
+                        <div style="position: relative;">
+                            <input type="text" id="club-search-quick" placeholder="Search and select your club..." autocomplete="off">
+                            <div id="club-dropdown-quick" class="dropdown-list" style="display: none;"></div>
+                        </div>
                     </div>
-                    <select id="club-name" required style="display: none;">
-                        <option value="">Select Your Club</option>
-                    </select>
-                    <div id="club-options" class="club-options-list"></div>
-```                </div>
+                    
+                    <!-- Member Name Selection (shows after club selected) -->
+                    <div id="member-selection-wrapper" class="form-row" style="display: none;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your Name</label>
+                        <div style="position: relative;">
+                            <input type="text" id="member-search" placeholder="Search and select your name..." autocomplete="off">
+                            <div id="member-dropdown" class="dropdown-list" style="display: none;"></div>
+                        </div>
+                        <div style="margin-top: 10px; text-align: center;">
+                            <a href="#" id="name-not-found-link" onclick="switchToManualMode(); return false;" style="color: #D4A024; text-decoration: none; font-size: 14px;">
+                                🔍 Name not found? Click here to enter manually
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manual Registration Mode (for Rotaractor OR manual fallback) -->
+                <div id="manual-reg-mode" style="display: none;">
+                    <div class="form-row">
+                        <input type="text" id="full-name" required placeholder="Full Name">
+                    </div>
+                    <div class="form-row">
+                        <input type="email" id="email" placeholder="Email Address (Optional)">
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" id="mobile" required placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10">
+                    </div>
+                    
+                    <!-- Club dropdown for manual mode (Rotaractor and manual fallback) -->
+                    <div class="form-row club-dropdown-wrapper">
+                        <div style="position: relative;">
+                            <input type="text" id="club-search" placeholder="Search and Select Club..." autocomplete="off" style="padding-right: 35px;">
+                            <button type="button" id="clear-club" onclick="clearClubSelection()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
+                                ✕
+                            </button>
+                        </div>
+                        <select id="club-name" required style="display: none;">
+                            <option value="">Select Your Club</option>
+                        </select>
+                        <div id="club-options" class="club-options-list"></div>
+                    </div>
+                </div>
+                
+                <!-- Auto-filled details (shows when member selected in quick mode) -->
+                <div id="autofilled-details" style="display: none;">
+                    <div class="form-row" style="background: #f0f8f0; padding: 15px; border-radius: 8px; border: 1px solid #4CAF50;">
+                        <div style="margin-bottom: 10px; color: #2a7f2a; font-weight: 600;">✓ Member Found</div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>Name:</strong> <span id="autofilled-name"></span>
+                        </div>
+                        <div class="form-row">
+                            <input type="email" id="email-quick" placeholder="Email (editable)">
+                        </div>
+                        <div class="form-row">
+                            <input type="tel" id="mobile-quick" placeholder="Mobile (editable)" pattern="[0-9]{10}" maxlength="10">
+                        </div>
+                        <input type="hidden" id="selected-club-name">
+                    </div>
+                </div>
+                
+                <!-- Meal Preference (common for all modes) -->
                 <div class="form-row meal-row">
                     <div class="meal-label-compact">Meal Preference</div>
                     <div class="meal-buttons">
@@ -192,6 +250,8 @@
                         <button type="button" class="meal-btn-compact non-veg" data-meal="Non-Veg">Non-Veg</button>
                     </div>
                 </div>
+                
+                <!-- Selected Type Display -->
                 <div class="form-row" style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); margin: 15px 0;">
                     <div style="font-size: 16px; font-weight: 600; color: var(--text-dark);">
                         Selected: <span id="selected-type-display"></span>
@@ -200,6 +260,7 @@
                         Amount: ₹<span id="selected-price-display"></span>
                     </div>
                 </div>
+                
                 <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
             </form>
         </div>
@@ -339,7 +400,11 @@
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 13px;">
                             <span style="color: #666;">Meal:</span>
-                            <span style="color: var(--text-dark); font-weight: 600;" id="ack-meal"></span>                    <!-- Divider -->
+                            <span style="color: var(--text-dark); font-weight: 600;" id="ack-meal"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Divider -->
                     <div style="height: 1px; background: #ddd; margin: 8px 0;"></div>
                     
                     <!-- Payment Details (No green box) -->
@@ -397,16 +462,16 @@
     </div>
 
     <!-- Footer with Legal Links -->
-    <footer style="background: #2c2c2c; color: #fff; padding: 30px 20px; margin-top: 50px; text-align: center;">
+    <footer style="background: #2c2c2c; color: #fff; padding: 20px; margin-top: 20px; text-align: center;">
         <div style="max-width: 900px; margin: 0 auto;">
-            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 20px;">
-                <a href="terms-and-conditions.html" style="color: #D4A024; text-decoration: none;">Terms & Conditions</a>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 15px;">
+                <a href="terms-and-conditions.html" style="color: #D4A024; text-decoration: none; font-size: 13px;">Terms & Conditions</a>
                 <span style="color: #666;">|</span>
-                <a href="refund-policy.html" style="color: #D4A024; text-decoration: none;">Refund & Cancellation Policy</a>
+                <a href="refund-policy.html" style="color: #D4A024; text-decoration: none; font-size: 13px;">Refund & Cancellation Policy</a>
                 <span style="color: #666;">|</span>
-                <a href="contact.html" style="color: #D4A024; text-decoration: none;">Contact Us</a>
+                <a href="contact.html" style="color: #D4A024; text-decoration: none; font-size: 13px;">Contact Us</a>
             </div>
-            <p style="margin: 10px 0; color: #999; font-size: 14px;">
+            <p style="margin: 8px 0; color: #999; font-size: 13px;">
                 SNEHA-SAURABHA 2025-26 | Rotary District 3181<br>
                 January 30-31 & February 1, 2026 | Silent Shores Resort, Mysore
             </p>

@@ -1,6 +1,12 @@
 // API: Initiate Cashfree payment
 const CashfreeService = require('../../lib/cashfree');
-const { createRegistration } = require('../../lib/db-neon');
+const { createPaymentAttempt } = require('../../lib/db-neon');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -68,24 +74,60 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Save registration to database (payment pending)
-    console.log('💾 Saving registration to database...');
-    await createRegistration({
-      confirmationId,
-      registrationType,
-      name: fullName, // Map fullName to name for database
+    // Generate confirmation ID with proper prefix
+    const typePrefixes = {
+      'rotarian': 'ROT',
+      'rotarian-spouse': 'RS',
+      'ann': 'ANN',
+      'annet': 'ANT',
+      'guest': 'GST',
+      'rotaractor': 'ANT',
+      'silver-donor': 'SD',
+      'silver-sponsor': 'SS',
+      'gold-sponsor': 'GS',
+      'platinum-sponsor': 'PS',
+      'patron-sponsor': 'PAT'
+    };
+    
+    // Normalize registration type to lowercase for matching
+    const normalizedType = (registrationType || '').toLowerCase().replace(/\s+/g, '-');
+    const prefix = typePrefixes[normalizedType] || 'SS';
+    
+    console.log('🎫 Registration Type:', registrationType, '→ Normalized:', normalizedType, '→ Prefix:', prefix);
+
+    // Check if this Order ID already exists (retry scenario)
+    console.log('🔍 Checking if Order ID already exists:', orderId);
+    
+    // Create payment attempt (or check if exists)
+    const attemptResult = await createPaymentAttempt({
+      orderId,
+      name: fullName,
       mobile,
-      email,
+      email: email || 'Not Provided',
       clubName,
       clubId,
-      mealPreference,
+      registrationType,
       amount,
-      transactionId: orderId,
-      paymentStatus: 'pending',
-      qrData,
-      manuallyAdded: false
+      mealPreference
     });
-    console.log('✅ Registration saved successfully');
+    
+    if (!attemptResult.success) {
+      if (attemptResult.error === 'ALREADY_PAID') {
+        console.log('✅ This order was already paid successfully');
+        return res.status(200).json({
+          success: true,
+          alreadyPaid: true,
+          message: attemptResult.message
+        });
+      }
+      throw new Error(attemptResult.error);
+    }
+    
+    if (attemptResult.retry) {
+      console.log('♻️ Allowing retry for existing failed/pending order');
+    } else {
+      console.log('✅ Payment attempt created:', orderId);
+    }
 
     // Initiate Cashfree payment
     console.log('💳 Initiating Cashfree payment...');

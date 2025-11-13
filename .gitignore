@@ -50,3 +50,4 @@ tmp/
 # Testing
 coverage/
 .nyc_output/
+.env*.local

@@ -112,33 +112,45 @@ const EMBEDDED_CLUBS = [
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: 4500,
+        price: 5000,
         description: 'Admission, Food & 1 Memento',
         inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: 7500,
+        price: 8000,
         description: 'Admission with spouse, Food & 1 Memento',
         inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
     },
     'ann': {
         name: 'Ann',
-        price: 3500,
+        price: 4000,
         description: 'Admission & Food',
         inclusions: ['Conference admission', 'Food for all sessions']
     },
     'annet': {
+        name: 'Annet',
+        price: 2000,
+        description: 'Admission & Food',
+        inclusions: ['Conference admission', 'Food for all sessions']
+    },
+    'innerwheel': {
+        name: 'Innerwheel Member',
+        price: 3500,
+        description: 'Admission, Food & 1 Memento',
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
+    },
+    'guest': {
+        name: 'Guest',
+        price: 5000,
+        description: 'Admission, Food & 1 Memento',
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
+    },
+    'rotaractor': {
         name: 'Rotaractor',
         price: 2500,
         description: 'Admission & Food',
         inclusions: ['Conference admission', 'Food for all sessions']
-    },
-    'guest': {
-        name: 'Guest',
-        price: 4500,
-        description: 'Admission, Food & 1 Memento',
-        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'silver-donor': {
         name: 'Silver Donor',
@@ -169,28 +181,22 @@ const registrationTypes = {
         price: 100000,
         description: 'Admission with spouse + 2 children below 12 years, Food & special Memento, Suite Room at venue (no extra beds)',
         inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', 'Special Memento', 'Suite Room at venue (no extra beds)']
-    },
-    'tester': {
-        name: 'Tester',
-        price: 1,
-        description: 'Test registration for payment gateway testing only - ₹1 charge',
-        inclusions: ['Payment gateway test', 'Will be deleted after testing']
     }
 };
 
 // Registration Type Prefixes for unique IDs
 const registrationPrefixes = {
-    'rotarian': 'RN',
+    'rotarian': 'ROT',
     'rotarian-spouse': 'RS',
-    'ann': 'AN',
-    'annet': 'RT',  // Rotaractor
-    'guest': 'GT',
+    'ann': 'ANN',
+    'annet': 'ANT',
+    'guest': 'GST',
+    'rotaractor': 'RAC',
     'silver-donor': 'SD',
     'silver-sponsor': 'SS',
     'gold-sponsor': 'GS',
-    'platinum-sponsor': 'PT',
-    'patron-sponsor': 'PS',
-    'tester': 'TEST'
+    'platinum-sponsor': 'PS',
+    'patron-sponsor': 'PAT'
 };
 
 // Load clubs from JSON
@@ -215,13 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
             orderId: orderId || cashfreeOrderId,
             hasPendingData: !!pendingData 
         });
-        
-        // Debug: Log what's in sessionStorage
-        if (pendingData) {
-            const parsed = JSON.parse(pendingData);
-            console.log('📦 SessionStorage data:', parsed);
-            console.log('🏢 Club ID in session:', parsed.clubId);
-        }
         
         // Create minimal pending data if not in session (e.g., page refresh)
         const registrationDataToUse = pendingData || JSON.stringify({
@@ -717,11 +716,6 @@ async function initiateCashfreePayment() {
         // PRODUCTION MODE - Use real Cashfree API
         console.log('🌐 PRODUCTION MODE - Calling Cashfree API...');
         
-        // IMPORTANT: Save registration data to sessionStorage before redirect
-        // This preserves clubId and other data across payment redirect
-        sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
-        sessionStorage.setItem('cashfreeOrderId', orderId);
-        
         const paymentData = {
             confirmationId: registrationData.confirmationId,
             orderId: orderId,
@@ -833,38 +827,51 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         console.log('✅ Payment verification result:', result);
         
         if (result.success && result.paymentSuccess) {
-            // Payment successful - use data from API response or session
+            // Payment successful - update registrationData with backend response
             const parsedData = pendingData ? JSON.parse(pendingData) : {};
             
-            // Merge with registration data from database if available
+            // Use data from backend if available, fallback to session storage
             if (result.registration) {
+                console.log('✅ Using registration data from backend:', result.registration);
+                const backendAmount = result.registration.amount || result.amount || 0;
                 registrationData = {
-                    fullName: result.registration.name || parsedData.fullName || 'Unknown',
-                    mobile: result.registration.mobile || parsedData.mobile || '',
-                    email: result.registration.email || parsedData.email || 'Not Provided',
-                    clubName: result.registration.clubName || parsedData.clubName || 'Not specified',
-                    clubId: result.registration.clubId || parsedData.clubId || 0, // IMPORTANT: Get from DB
-                    typeName: result.registration.registrationType || parsedData.typeName || 'Registration',
-                    price: result.registration.amount || parsedData.price || 0,
-                    mealPreference: result.registration.mealPreference || parsedData.mealPreference || 'Veg',
+                    fullName: result.registration.name,
+                    mobile: result.registration.mobile,
+                    email: result.registration.email || 'Not Provided',
+                    clubName: result.registration.clubName || 'Not specified',
+                    clubId: result.registration.clubId,
+                    typeName: result.registration.registrationType,
+                    price: backendAmount,
+                    amount: backendAmount, // Alias for consistency
+                    mealPreference: result.registration.mealPreference,
                     confirmationId: result.registration.confirmationId,
                     paymentStatus: 'Paid',
                     transactionId: result.transactionId || orderId,
-                    orderId: orderId
+                    orderId: orderId,
+                    type: parsedData.type // Keep original type key for prefix lookup
                 };
-                
-                console.log('📦 Registration data from API:', result.registration);
-                console.log('🏢 Club ID from API:', result.registration.clubId);
             } else {
+                console.log('⚠️ No registration data from backend, using session data');
                 registrationData = parsedData;
                 registrationData.paymentStatus = 'Paid';
                 registrationData.transactionId = result.transactionId || orderId;
                 registrationData.orderId = orderId;
+                
+                // Safeguard: If session data is also empty/invalid, show error
+                if (!registrationData.fullName || !registrationData.price) {
+                    console.error('❌ No valid registration data available');
+                    alert(`Payment successful but registration data not found.\n\nOrder ID: ${orderId}\n\nPlease contact support with this Order ID to complete your registration.`);
+                    window.location.href = 'contact.html';
+                    return;
+                }
             }
             
+            // Store updated data
+            sessionStorage.setItem('registrationData', JSON.stringify(registrationData));
             sessionStorage.removeItem('pendingRegistration');
             sessionStorage.removeItem('cashfreeOrderId');
             
+            console.log('🎉 Updated registration data:', registrationData);
             console.log('🎉 Payment verified! Showing success screen...');
             processPayment('success');
             
@@ -874,18 +881,43 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
             
             if (result.status === 'ACTIVE' || result.status === 'PENDING') {
                 // Payment is still processing
-                if (confirm('Payment is still processing. Would you like to check again?')) {
+                const processingMsg = '⏳ PAYMENT PROCESSING\n\n' +
+                    'Your payment is being verified by the payment gateway.\n\n' +
+                    'Order ID: ' + orderId + '\n\n' +
+                    '✅ Once payment is confirmed, you will:\n' +
+                    '• Receive your Registration ID\n' +
+                    '• Get WhatsApp/Email confirmation\n\n' +
+                    '⏱️ This usually takes a few seconds.\n\n' +
+                    'Would you like to check again?';
+                    
+                if (confirm(processingMsg)) {
                     // Retry verification after a delay
                     setTimeout(() => {
                         verifyPaymentAndShowSuccess(orderId, pendingData);
                     }, 3000);
                 } else {
-                    alert('Your payment is being processed. Order ID: ' + orderId + '\n\nYou will receive confirmation via email/WhatsApp once payment is confirmed.');
+                    alert('No worries! Your registration will be confirmed once payment is verified.\n\n' +
+                          'Order ID: ' + orderId + '\n\n' +
+                          'You will receive confirmation via WhatsApp: +91 99805 57785');
                     window.location.href = 'index.html';
                 }
             } else {
                 // Payment failed
-                alert('Payment was not successful. Status: ' + result.status + '\n\nPlease try again or contact support.');
+                const failureMsg = '❌ PAYMENT NOT SUCCESSFUL\n\n' +
+                    '⚠️ Your payment could not be completed.\n\n' +
+                    'Order ID: ' + orderId + '\n\n' +
+                    '✅ WHAT TO DO:\n' +
+                    '1. If money was deducted from your account:\n' +
+                    '   • Take screenshot of payment confirmation\n' +
+                    '   • WhatsApp to: +91 99805 57785\n' +
+                    '   • Include Order ID: ' + orderId + '\n' +
+                    '   • We will verify and confirm manually\n\n' +
+                    '2. If no money was deducted:\n' +
+                    '   • You can try registering again\n' +
+                    '   • Use the same details\n\n' +
+                    '💡 Note: Registration ID will be generated only after successful payment verification.';
+                
+                alert(failureMsg);
                 window.location.href = 'index.html';
             }
             
@@ -893,17 +925,26 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
             // Verification failed
             console.error('❌ Payment verification failed:', result.error);
             
-            const retryMsg = 'Payment verification failed.\n\n' +
-                'Order ID: ' + orderId + '\n' +
-                'Error: ' + (result.error || 'Unknown error') + '\n\n' +
-                'Would you like to try verifying again?';
+            const retryMsg = '⚠️ VERIFICATION ISSUE\n\n' +
+                'We could not verify your payment status automatically.\n\n' +
+                'Order ID: ' + orderId + '\n\n' +
+                '✅ WHAT TO DO:\n' +
+                '1. Try verifying again (click OK below)\n\n' +
+                '2. If retry fails, WhatsApp to: +91 99805 57785\n' +
+                '   • Order ID: ' + orderId + '\n' +
+                '   • Screenshot of payment\n' +
+                '   • UPI Transaction ID (if available)\n\n' +
+                '💡 Your registration will be confirmed once payment is verified.\n' +
+                'Registration ID will be generated after confirmation.\n\n' +
+                'Would you like to retry verification now?';
             
             if (confirm(retryMsg)) {
                 setTimeout(() => {
                     verifyPaymentAndShowSuccess(orderId, pendingData);
                 }, 2000);
             } else {
-                alert('Please contact support with your Order ID: ' + orderId);
+                alert('No problem! WhatsApp your payment details to +91 99805 57785\n\n' +
+                      'Include Order ID: ' + orderId);
                 window.location.href = 'index.html';
             }
         }
@@ -913,7 +954,22 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         console.error('💥 Error stack:', error.stack);
         console.error('💥 Error message:', error.message);
         
-        alert('Error verifying payment:\n\n' + error.message + '\n\nPlease contact support with your Order ID: ' + orderId);
+        const errorMsg = '⚠️ VERIFICATION ERROR\n\n' +
+            'Technical error while verifying payment.\n\n' +
+            'Order ID: ' + orderId + '\n' +
+            'Error: ' + error.message + '\n\n' +
+            '✅ WHAT TO DO:\n' +
+            'WhatsApp to: +91 99805 57785\n\n' +
+            'Send:\n' +
+            '• Order ID: ' + orderId + '\n' +
+            '• Payment screenshot\n' +
+            '• Mention: "Verification error"\n\n' +
+            '💡 If payment was successful, we will:\n' +
+            '• Verify your payment manually\n' +
+            '• Generate your Registration ID\n' +
+            '• Send confirmation within 24 hours';
+        
+        alert(errorMsg);
         window.location.href = 'index.html';
     }
 }
@@ -930,27 +986,32 @@ function processPayment(status) {
     if (status === 'success') {
         console.log('✅ Payment successful! Generating confirmation...');
         
-        // Get registration type prefix
-        const typeKey = Object.keys(registrationTypes).find(
-            key => registrationTypes[key].name === registrationData.typeName
-        );
-        const prefix = registrationPrefixes[typeKey] || 'SS';
+        // Use confirmation ID from backend if available, otherwise generate
+        let confirmationId = registrationData.confirmationId;
         
-        // Get club number (2 digits, padded)
-        console.log('🏢 Club ID from registrationData:', registrationData.clubId);
-        const clubNumber = registrationData.clubId ? registrationData.clubId.toString().padStart(2, '0') : '00';
-        console.log('🔢 Formatted club number:', clubNumber);
+        if (!confirmationId) {
+            console.log('⚠️ No confirmation ID from backend, generating new one');
+            // Get registration type prefix
+            const typeKey = Object.keys(registrationTypes).find(
+                key => registrationTypes[key].name === registrationData.typeName
+            );
+            const prefix = registrationPrefixes[typeKey] || 'SS';
+            
+            // Get club number (2 digits, padded)
+            const clubNumber = registrationData.clubId ? registrationData.clubId.toString().padStart(2, '0') : '00';
+            
+            // Get meal specifier (V=Veg, N=Non-Veg)
+            const mealCode = registrationData.mealPreference === 'Veg' ? 'V' : 'N';
+            
+            // Generate 4-digit series number
+            const seriesNumber = Date.now().toString().slice(-4);
+            
+            // Format: XXCCM#### (e.g., RN15V1234)
+            confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
+            registrationData.confirmationId = confirmationId;
+        }
         
-        // Get meal specifier (V=Veg, N=Non-Veg)
-        const mealCode = registrationData.mealPreference === 'Veg' ? 'V' : 'N';
-        
-        // Generate 4-digit series number
-        const seriesNumber = Date.now().toString().slice(-4);
-        
-        // Format: XXCCM#### (e.g., RN15V1234) - No separators
-        const confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
-        
-        // Use actual Cashfree Order ID instead of fake transaction ID
+        // Use actual Cashfree Order ID
         const transactionId = registrationData.orderId || registrationData.transactionId || 'ORDER_' + Date.now();
         const paymentDate = new Date().toLocaleString('en-IN', {
             day: '2-digit',
@@ -961,26 +1022,29 @@ function processPayment(status) {
         });
         
         registrationData.transactionId = transactionId;
-        registrationData.confirmationId = confirmationId;
         registrationData.paymentDate = paymentDate;
         
         console.log('🎫 Confirmation ID:', confirmationId);
         console.log('🔢 Cashfree Order ID:', transactionId);
+        console.log('📋 Final registration data:', registrationData);
         
         // Populate refined acknowledgment page (with null checks)
         const setElementText = (id, text) => {
             const element = document.getElementById(id);
-            if (element) element.textContent = text;
+            if (element) element.textContent = text || 'Not Provided';
         };
         
         setElementText('confirmation-id-display', confirmationId);
         setElementText('ack-name', registrationData.fullName);
         setElementText('ack-type', registrationData.typeName);
         setElementText('ack-mobile', registrationData.mobile);
-        setElementText('ack-email', registrationData.email);
         setElementText('ack-club', registrationData.clubName || 'Not specified');
         setElementText('ack-meal', registrationData.mealPreference);
-        setElementText('ack-amount', `₹${registrationData.price.toLocaleString('en-IN')}`);
+        
+        // Safe amount display with null check
+        const amount = registrationData.price || registrationData.amount || 0;
+        setElementText('ack-amount', `₹${amount.toLocaleString('en-IN')}`);
+        
         setElementText('ack-txn', transactionId);
         setElementText('ack-date', paymentDate); // Optional field
         
@@ -1108,7 +1172,7 @@ function downloadAsImage() {
 }
 
 // Download Registration Receipt as PDF using screenshot
-async function downloadReceiptPDF(event) {
+async function downloadReceiptPDF() {
     console.log('📄 Download PDF clicked');
     console.log('📋 Registration Data:', registrationData);
     

@@ -1,10 +1,14 @@
 /**
  * API: Get all registrations
- * Reads from Google Sheets as primary source, falls back to PostgreSQL
+ * Uses Neon PostgreSQL - queries registrations table (SUCCESS only)
  */
 
-const { getAllRegistrations } = require('../../lib/db-neon');
-const { getAllRegistrationsFromSheets } = require('../../lib/db-google-sheets');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -21,88 +25,85 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // TODO: Re-enable authentication with proper JWT tokens
-    // Check authentication
-    // const auth = requireAuth(req);
-    // if (!auth.authenticated) {
-    //   return res.status(401).json({
-    //     success: false,
-    //     error: auth.error
-    //   });
-    // }
-
     // Get query parameters
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 50;
     const search = req.query.search || '';
-    const paymentStatus = req.query.paymentStatus || '';
     const registrationType = req.query.registrationType || '';
+    const mealPreference = req.query.mealPreference || '';
+    const clubId = req.query.clubId || '';
+    const registrationSource = req.query.registrationSource || '';
 
-    // Build filters
-    const filters = {};
-    if (search) filters.search = search;
-    if (paymentStatus) filters.paymentStatus = paymentStatus;
-    if (registrationType) filters.registrationType = registrationType;
-
-    // Try Google Sheets first (primary database)
-    let registrations = [];
-    try {
-      console.log('📊 Fetching from Google Sheets...');
-      registrations = await getAllRegistrationsFromSheets();
-      
-      if (registrations && registrations.length > 0) {
-        console.log(`✅ Loaded ${registrations.length} registrations from Google Sheets`);
-      }
-    } catch (sheetsError) {
-      console.warn('⚠️ Google Sheets fetch failed:', sheetsError.message);
+    console.log('📊 Fetching confirmed registrations from Neon PostgreSQL...');
+    
+    // Query only registrations table (all are SUCCESS by definition)
+    let query = 'SELECT * FROM registrations';
+    const conditions = [];
+    const values = [];
+    let paramIndex = 1;
+    
+    // Build WHERE conditions
+    if (search) {
+      conditions.push(`(
+        LOWER(name) LIKE $${paramIndex} OR 
+        mobile LIKE $${paramIndex} OR 
+        LOWER(email) LIKE $${paramIndex} OR 
+        LOWER(registration_id) LIKE $${paramIndex}
+      )`);
+      values.push(`%${search.toLowerCase()}%`);
+      paramIndex++;
     }
-
-    // Fallback to PostgreSQL if Google Sheets failed or returned no data
-    if (!registrations || registrations.length === 0) {
-      console.log('📊 Fetching from PostgreSQL (fallback)...');
-      registrations = await getAllRegistrations(filters);
-      console.log(`✅ Loaded ${registrations.length} registrations from PostgreSQL`);
+    
+    if (registrationType) {
+      conditions.push(`registration_type = $${paramIndex}`);
+      values.push(registrationType);
+      paramIndex++;
     }
-
-    // Apply filters if using Google Sheets data
-    if (registrations.length > 0) {
-      if (search) {
-        const searchLower = search.toLowerCase();
-        registrations = registrations.filter(reg =>
-          (reg.name && reg.name.toLowerCase().includes(searchLower)) ||
-          (reg.mobile && reg.mobile.includes(searchLower)) ||
-          (reg.email && reg.email.toLowerCase().includes(searchLower)) ||
-          (reg.registration_id && reg.registration_id.toLowerCase().includes(searchLower))
-        );
-      }
-      
-      if (paymentStatus) {
-        registrations = registrations.filter(reg => 
-          reg.payment_status === paymentStatus.toLowerCase()
-        );
-      }
-      
-      if (registrationType) {
-        registrations = registrations.filter(reg => 
-          reg.registration_type === registrationType
-        );
-      }
+    
+    if (mealPreference) {
+      conditions.push(`meal_preference = $${paramIndex}`);
+      values.push(mealPreference);
+      paramIndex++;
     }
+    
+    if (clubId) {
+      conditions.push(`club_id = $${paramIndex}`);
+      values.push(parseInt(clubId));
+      paramIndex++;
+    }
+    
+    if (registrationSource) {
+      conditions.push(`registration_source = $${paramIndex}`);
+      values.push(registrationSource);
+      paramIndex++;
+    }
+    
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ');
+    }
+    
+    query += ' ORDER BY created_at DESC';
+    
+    const result = await pool.query(query, values);
+    const registrations = result.rows;
+    
+    console.log(`✅ Loaded ${registrations.length} confirmed registrations`);
 
     return res.status(200).json({
       success: true,
-      registrations: registrations,
-      total: registrations.length,
-      page: page,
-      limit: limit,
-      source: registrations.length > 0 && registrations[0].manually_added !== undefined ? 'google_sheets' : 'postgresql'
+      data: {
+        registrations: registrations,
+        total: registrations.length,
+        page: page
+      }
     });
 
   } catch (error) {
     console.error('❌ List registrations error:', error);
     return res.status(500).json({
       success: false,
-      error: 'Internal server error'
+      error: 'Internal server error',
+      details: error.message
     });
   }
 };
