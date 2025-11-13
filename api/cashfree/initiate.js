@@ -34,6 +34,7 @@ module.exports = async (req, res) => {
       clubName,
       clubId,
       mealPreference,
+      tshirtSize,
       qrData
     } = req.body;
 
@@ -108,7 +109,8 @@ module.exports = async (req, res) => {
       clubId,
       registrationType,
       amount,
-      mealPreference
+      mealPreference,
+      tshirtSize
     });
     
     if (!attemptResult.success) {
