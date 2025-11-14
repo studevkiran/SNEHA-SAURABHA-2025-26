@@ -1,6 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "echo 'Building SNEHA SAURABHA 2025-26'",
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/r",
+      "destination": "/api/r/index.js"
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",

@@ -1,5 +1,6 @@
 // api/send-manual-confirmations.js
-// Send WhatsApp confirmations to manually imported registrations
+// Combined API: Preview + Send WhatsApp confirmations
+// POST /api/send-manual-confirmations?action=preview (default: send)
 // Use this for 680 imported records or bulk resends
 
 import { neon } from '@neondatabase/serverless';
@@ -13,6 +14,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    const { action = 'send' } = req.query;
     const {
       mode,           // 'single', 'selected', 'all', 'sponsors'
       registrationIds, // array of registration IDs (for 'selected' mode)
