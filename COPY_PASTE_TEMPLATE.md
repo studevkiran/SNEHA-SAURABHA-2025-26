@@ -2,7 +2,7 @@
 
 **Footer**: +91 9845912101 ✅ (CORRECTED)  
 **Bold Formatting**: ✅ Added with `*text*` syntax  
-**Variables**: 8  
+**Variables**: 9 (following v2 pattern - name used twice)  
 **Updated**: November 14, 2025
 
 ---
@@ -10,23 +10,23 @@
 ## 📝 TEMPLATE BODY (COPY THIS EXACTLY)
 
 ```
-Hi,
+Hi {{1}},
 
 🎯 Thank you for registering to *SNEHA SAURABHA 2025-26*, District Conference happening at *Silent Shores, Mysore* on *30th, 31st Jan & 01st Feb 2026*
 
 📋 *Registration Details:*
 
-👤 *Name:* {{1}}
-📞 *Mobile:* {{2}}
-📧 *Email:* {{3}}
-🗂️ *Registration Category:* {{4}}
-🍽️ *Food Preference:* {{5}}
-👕 *T-Shirt Size:* {{6}}
+👤 *Name:* {{2}}
+📞 *Mobile:* {{3}}
+📧 *Email:* {{4}}
+🗂️ *Registration Category:* {{5}}
+🍽️ *Food Preference:* {{6}}
+👕 *T-Shirt Size:* {{7}}
 
-✅ *Amount Paid:* ₹ {{7}}
+✅ *Amount Paid:* ₹ {{8}}
 
 🔗 View complete details:
-{{8}}
+{{9}}
 
 Looking forward to an inspiring experience together!
 
@@ -49,14 +49,15 @@ For queries: +91 9845912101
 
 When Infobip asks for sample values, enter these:
 
-**Variable 1**: `vidyadhar v`  
-**Variable 2**: `919902772262`  
-**Variable 3**: `new@reform.hange`  
-**Variable 4**: `Gold Sponsor`  
-**Variable 5**: `Veg`  
-**Variable 6**: `XXL`  
-**Variable 7**: `1,00,000`  
-**Variable 8**: `https://sneha2026.in/r.html?id=ANT05V6006`
+**Variable 1**: `vidyadhar v` (greeting)  
+**Variable 2**: `vidyadhar v` (name in details)  
+**Variable 3**: `919902772262`  
+**Variable 4**: `new@reform.hange`  
+**Variable 5**: `Gold Sponsor`  
+**Variable 6**: `Veg`  
+**Variable 7**: `XXL`  
+**Variable 8**: `1,00,000`  
+**Variable 9**: `https://sneha2026.in/r.html?id=ANT05V6006`
 
 ---
 
@@ -104,7 +105,8 @@ Before clicking "Submit for Approval":
 - [ ] Category: UTILITY
 - [ ] Language: English
 - [ ] Body includes all asterisks for bold
-- [ ] All 8 variables present ({{1}} through {{8}})
+- [ ] All 9 variables present ({{1}} through {{9}})
+- [ ] {{1}} used for greeting, {{2}} used for name in details
 - [ ] Footer shows: `+91 9845912101` ✅
 - [ ] All emojis included
 - [ ] Line breaks preserved

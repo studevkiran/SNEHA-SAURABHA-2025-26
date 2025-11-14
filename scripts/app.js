@@ -289,12 +289,15 @@ async function loadClubs() {
         clubsList = EMBEDDED_CLUBS.slice();
     }
 
-    // Populate club dropdown
+    // Sort clubs alphabetically by name
+    clubsList.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Populate club dropdown (sorted alphabetically, no numbering)
     clubsList.forEach(club => {
         const option = document.createElement('option');
         option.value = club.name;
-        option.textContent = `${club.id}. ${club.name}`;
-        option.setAttribute('data-id', club.id);
+        option.textContent = club.name; // Just the name, no ID prefix
+        option.setAttribute('data-id', club.id); // Keep original ID for database
         clubSelect.appendChild(option);
     });
 }
