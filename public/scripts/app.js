@@ -623,6 +623,12 @@ function renderClubDropdown(clubs) {
 async function fetchMembersByClub(clubName) {
     const memberSearch = document.getElementById('member-search');
     const memberDropdown = document.getElementById('member-dropdown');
+    const memberWrapper = document.getElementById('member-selection-wrapper');
+    
+    // Show the member selection section
+    if (memberWrapper) {
+        memberWrapper.style.display = 'block';
+    }
     
     try {
         memberSearch.value = '';
@@ -819,13 +825,14 @@ function showReview() {
     }
     
     const mealPreference = registrationData.mealPreference;
+    const tshirtSize = document.getElementById('tshirt-size').value;
     
     console.log('🏢 Selected club:', clubName);
     console.log('🏢 Club ID:', clubId);
     
     // Validate all required fields (email is optional)
-    if (!fullName || !mobile || !clubName || !mealPreference) {
-        alert('Please fill in all required fields');
+    if (!fullName || !mobile || !clubName || !mealPreference || !tshirtSize) {
+        alert('Please fill in all required fields including T-Shirt size');
         return;
     }
     
@@ -848,6 +855,7 @@ function showReview() {
     // Update registration data
     registrationData.fullName = fullName;
     registrationData.mobile = mobile;
+    registrationData.tshirtSize = tshirtSize;
     registrationData.email = email || 'Not Provided';
     registrationData.clubName = clubName;
     registrationData.clubId = clubId ? parseInt(clubId) : 0;
@@ -861,6 +869,7 @@ function showReview() {
     document.getElementById('review-email').textContent = email;
     document.getElementById('review-club').textContent = clubName;
     document.getElementById('review-meal').textContent = mealPreference;
+    document.getElementById('review-tshirt').textContent = tshirtSize;
     
     // Show review screen
     showScreen('screen-review');

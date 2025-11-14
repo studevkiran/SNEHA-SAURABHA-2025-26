@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send WhatsApp Confirmations - Admin</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      padding: 30px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .mode-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .mode-card {
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .mode-card:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    .mode-card.selected {
+      border-color: #667eea;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+    .mode-card h3 {
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .mode-card p {
+      color: #666;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .mode-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .options-section {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .options-section.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .preview-section {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .preview-section.active {
+      display: block;
+    }
+    .preview-section h3 {
+      color: #856404;
+      margin-bottom: 15px;
+    }
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .preview-table th, .preview-table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .preview-table th {
+      background: #f8f9fa;
+      font-weight: 600;
+    }
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    .btn-warning {
+      background: #ffc107;
+      color: #333;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .alert {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .alert.active {
+      display: block;
+    }
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .alert-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 30px;
+      background: #e0e0e0;
+      border-radius: 15px;
+      overflow: hidden;
+      margin-top: 15px;
+      display: none;
+    }
+    .progress-bar.active {
+      display: block;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .results-section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      display: none;
+    }
+    .results-section.active {
+      display: block;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+    .stat-label {
+      color: #666;
+      font-size: 13px;
+    }
+    .error-list {
+      max-height: 300px;
+      overflow-y: auto;
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .error-item {
+      padding: 10px;
+      background: white;
+      border-left: 3px solid #dc3545;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span>📱</span>
+      Send WhatsApp Confirmations
+    </h1>
+    <p class="subtitle">Send WhatsApp confirmations to manually imported registrations or resend to existing users</p>
+
+    <!-- Alert Messages -->
+    <div id="alertBox" class="alert"></div>
+
+    <!-- Mode Selection -->
+    <div class="mode-selector">
+      <div class="mode-card" data-mode="sponsors">
+        <div class="mode-icon">🏆</div>
+        <h3>VIP Sponsors</h3>
+        <p>Send to all Patron, Platinum, Gold, and Silver sponsors</p>
+      </div>
+
+      <div class="mode-card" data-mode="selected">
+        <div class="mode-icon">✅</div>
+        <h3>Selected IDs</h3>
+        <p>Send to specific registration IDs (paste list)</p>
+      </div>
+
+      <div class="mode-card" data-mode="all">
+        <div class="mode-icon">📋</div>
+        <h3>All with Filters</h3>
+        <p>Send to all registrations with optional filters</p>
+      </div>
+
+      <div class="mode-card" data-mode="single">
+        <div class="mode-icon">👤</div>
+        <h3>Single User</h3>
+        <p>Send or resend to one specific registration</p>
+      </div>
+    </div>
+
+    <!-- Options for Selected Mode -->
+    <div id="selectedOptions" class="options-section">
+      <h3>📝 Enter Registration IDs</h3>
+      <div class="form-group">
+        <label>Registration IDs (one per line or comma-separated)</label>
+        <textarea id="registrationIds" placeholder="ANT05V6006&#10;2026RTY0001&#10;2026RTY0002"></textarea>
+      </div>
+    </div>
+
+    <!-- Options for All Mode -->
+    <div id="allOptions" class="options-section">
+      <h3>🔍 Filters (Optional)</h3>
+      <div class="form-group">
+        <label>Registration Type</label>
+        <select id="filterType">
+          <option value="">All Types</option>
+          <option value="Rotarian">Rotarian</option>
+          <option value="Rotarian with Spouse">Rotarian with Spouse</option>
+          <option value="Ann">Ann</option>
+          <option value="Annet">Annet</option>
+          <option value="Guest">Guest</option>
+          <option value="Rotaractor">Rotaractor</option>
+          <option value="Silver Sponsor">Silver Sponsor</option>
+          <option value="Gold Sponsor">Gold Sponsor</option>
+          <option value="Platinum Sponsor">Platinum Sponsor</option>
+          <option value="Patron Sponsor">Patron Sponsor</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Minimum Amount (₹)</label>
+        <input type="number" id="filterAmount" placeholder="e.g., 25000 for sponsors">
+      </div>
+    </div>
+
+    <!-- Options for Single Mode -->
+    <div id="singleOptions" class="options-section">
+      <h3>👤 Single Registration</h3>
+      <div class="form-group">
+        <label>Registration ID</label>
+        <input type="text" id="singleId" placeholder="ANT05V6006">
+      </div>
+    </div>
+
+    <!-- Preview Section -->
+    <div id="previewSection" class="preview-section">
+      <h3>⚠️ Preview: About to send WhatsApp to <span id="previewCount">0</span> registrations</h3>
+      <div id="previewContent"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="previewBtn" class="btn btn-warning" disabled>
+        <span>👁️</span> Preview Recipients
+      </button>
+      <button id="sendBtn" class="btn btn-primary" disabled>
+        <span>📤</span> Send WhatsApp Confirmations
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div id="progressBar" class="progress-bar">
+      <div id="progressFill" class="progress-fill">0%</div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="results-section">
+      <h3>📊 Send Results</h3>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total Attempted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statSent" style="color: #28a745;">0</div>
+          <div class="stat-label">Successfully Sent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statFailed" style="color: #dc3545;">0</div>
+          <div class="stat-label">Failed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statRate">0%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+      </div>
+      <div id="errorsList"></div>
+    </div>
+  </div>
+
+  <script>
+    let selectedMode = null;
+
+    // Mode selection
+    document.querySelectorAll('.mode-card').forEach(card => {
+      card.addEventListener('click', () => {
+        // Deselect all
+        document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('.options-section').forEach(s => s.classList.remove('active'));
+        
+        // Select this one
+        card.classList.add('selected');
+        selectedMode = card.dataset.mode;
+        
+        // Show relevant options
+        if (selectedMode === 'selected') {
+          document.getElementById('selectedOptions').classList.add('active');
+        } else if (selectedMode === 'all') {
+          document.getElementById('allOptions').classList.add('active');
+        } else if (selectedMode === 'single') {
+          document.getElementById('singleOptions').classList.add('active');
+        }
+        
+        // Enable preview button
+        document.getElementById('previewBtn').disabled = false;
+        
+        // Hide previous results
+        document.getElementById('previewSection').classList.remove('active');
+        document.getElementById('resultsSection').classList.remove('active');
+        showAlert('', '', false);
+      });
+    });
+
+    // Preview button
+    document.getElementById('previewBtn').addEventListener('click', async () => {
+      if (!selectedMode) {
+        showAlert('Please select a send mode', 'error');
+        return;
+      }
+
+      showAlert('Loading preview...', 'info');
+      
+      try {
+        const payload = buildPayload(true); // preview mode
+        const response = await fetch('/api/preview-recipients', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          displayPreview(result.recipients);
+          document.getElementById('sendBtn').disabled = false;
+          showAlert('', '', false);
+        } else {
+          showAlert(result.message, 'error');
+        }
+      } catch (error) {
+        showAlert('Failed to load preview: ' + error.message, 'error');
+      }
+    });
+
+    // Send button
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+      if (!confirm(`Are you sure you want to send WhatsApp confirmations to ${document.getElementById('previewCount').textContent} registrations?`)) {
+        return;
+      }
+
+      showAlert('Sending WhatsApp confirmations...', 'info');
+      document.getElementById('progressBar').classList.add('active');
+      document.getElementById('sendBtn').disabled = true;
+      
+      try {
+        const payload = buildPayload(false);
+        const response = await fetch('/api/send-manual-confirmations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          displayResults(result.results);
+          showAlert(`Successfully sent ${result.results.sent} of ${result.results.total} WhatsApp confirmations`, 'success');
+        } else {
+          showAlert(result.message, 'error');
+        }
+      } catch (error) {
+        showAlert('Failed to send confirmations: ' + error.message, 'error');
+      } finally {
+        document.getElementById('progressBar').classList.remove('active');
+        document.getElementById('sendBtn').disabled = false;
+      }
+    });
+
+    function buildPayload(preview = false) {
+      const payload = { mode: selectedMode };
+
+      if (selectedMode === 'selected') {
+        const ids = document.getElementById('registrationIds').value
+          .split(/[\n,]/)
+          .map(id => id.trim())
+          .filter(id => id.length > 0);
+        payload.registrationIds = ids;
+      } else if (selectedMode === 'single') {
+        const id = document.getElementById('singleId').value.trim();
+        payload.registrationIds = [id];
+      } else if (selectedMode === 'all') {
+        payload.filters = {};
+        const type = document.getElementById('filterType').value;
+        const amount = document.getElementById('filterAmount').value;
+        if (type) payload.filters.type = type;
+        if (amount) payload.filters.minAmount = parseInt(amount);
+      }
+
+      return payload;
+    }
+
+    function displayPreview(recipients) {
+      const section = document.getElementById('previewSection');
+      const content = document.getElementById('previewContent');
+      const count = document.getElementById('previewCount');
+      
+      count.textContent = recipients.length;
+      
+      let html = '<table class="preview-table"><thead><tr>' +
+        '<th>Registration ID</th><th>Name</th><th>Mobile</th><th>Type</th><th>Amount</th>' +
+        '</tr></thead><tbody>';
+      
+      recipients.slice(0, 20).forEach(r => {
+        html += `<tr>
+          <td>${r.registration_id}</td>
+          <td>${r.name}</td>
+          <td>${r.mobile}</td>
+          <td>${r.registration_type}</td>
+          <td>₹${r.registration_amount.toLocaleString('en-IN')}</td>
+        </tr>`;
+      });
+      
+      if (recipients.length > 20) {
+        html += `<tr><td colspan="5" style="text-align:center;color:#666;">... and ${recipients.length - 20} more</td></tr>`;
+      }
+      
+      html += '</tbody></table>';
+      content.innerHTML = html;
+      section.classList.add('active');
+    }
+
+    function displayResults(results) {
+      document.getElementById('statTotal').textContent = results.total;
+      document.getElementById('statSent').textContent = results.sent;
+      document.getElementById('statFailed').textContent = results.failed;
+      
+      const rate = results.total > 0 ? Math.round((results.sent / results.total) * 100) : 0;
+      document.getElementById('statRate').textContent = rate + '%';
+      
+      const errorsList = document.getElementById('errorsList');
+      if (results.errors && results.errors.length > 0) {
+        let html = '<h4 style="margin-bottom:10px;color:#dc3545;">❌ Failed Sends:</h4><div class="error-list">';
+        results.errors.forEach(err => {
+          html += `<div class="error-item">
+            <strong>${err.name}</strong> (${err.registrationId})<br>
+            Mobile: ${err.mobile}<br>
+            Error: ${err.error}
+          </div>`;
+        });
+        html += '</div>';
+        errorsList.innerHTML = html;
+      } else {
+        errorsList.innerHTML = '<p style="color:#28a745;">✅ All messages sent successfully!</p>';
+      }
+      
+      document.getElementById('resultsSection').classList.add('active');
+    }
+
+    function showAlert(message, type, show = true) {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.className = 'alert';
+      if (show) {
+        alertBox.classList.add('active', `alert-${type}`);
+        alertBox.textContent = message;
+      }
+    }
+  </script>
+</body>
+</html>

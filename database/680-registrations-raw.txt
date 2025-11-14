@@ -1,0 +1,10 @@
+2026RTY0001|24-01-2025|Mysore Midtown|Rtn. Ramakrishna Kannan|ROTARIAN
+2026RTY0002|24-01-2025|Mangalore South|Rtn. Satish Bolar|ROTARIAN
+2026RTY0003|24-01-2025|Mysore North|Rtn. Yashawini Somashekhar S|ROTARIAN
+2026RTY0004|24-01-2025|Vijayanagara Mysore|Rtn. H.M. Harish|ROTARIAN
+2026RTY0005|24-01-2025|Mangalore Hillside|Rtn. Ranganath Kini|ROTARIAN
+2026RTY0006|24-01-2025|Mysore Midtown|Rtn. Ranganatha Rao|SILVER SPONSOR
+2026RTY0007|25-01-2025|Mysore Midtown|Rtn. Prahlad Bayari|SILVER SPONSOR
+2026RTY0008|25-01-2025|Sullia|Rtn. P. Ganesh Bhat|ROTARIAN
+2026RTY0009|25-01-2025|Sullia|Rtn. Sanjeeva Kudpaje|ROTARIAN WITH SPOUSE
+2026RTY0010|25-01-2025|Heritage Mysuru|Rtn. Sundararaja B.C|ROTARIAN WITH SPOUSE

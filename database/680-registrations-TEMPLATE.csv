@@ -1,0 +1,11 @@
+registration_id,order_id,name,mobile,email,club,club_id,registration_type,registration_amount,meal_preference,payment_status,payment_method,transaction_id,payment_date,registration_source,added_by,created_at,updated_at
+2026RTY0001,MANUAL_REG_001,Rtn. Ramakrishna Kannan,0000000000,noreply@sneha2026.in,Mysore Midtown,59,Rotarian,7500,Veg,SUCCESS,Manual,2026RTY0001,2025-01-24,Manual,Admin Import,2025-01-24,2025-01-24
+2026RTY0002,MANUAL_REG_002,Rtn. Satish Bolar,0000000000,noreply@sneha2026.in,Mangalore South,47,Rotarian,7500,Veg,SUCCESS,Manual,2026RTY0002,2025-01-24,Manual,Admin Import,2025-01-24,2025-01-24
+2026RTY0003,MANUAL_REG_003,Rtn. Yashawini Somashekhar S,0000000000,noreply@sneha2026.in,Mysore North,62,Rotarian,7500,Veg,SUCCESS,Manual,2026RTY0003,2025-01-24,Manual,Admin Import,2025-01-24,2025-01-24
+2026RTY0004,MANUAL_REG_004,Rtn. H.M. Harish,0000000000,noreply@sneha2026.in,Vijayanagara Mysore,88,Rotarian,7500,Veg,SUCCESS,Manual,2026RTY0004,2025-01-24,Manual,Admin Import,2025-01-24,2025-01-24
+2026RTY0005,MANUAL_REG_005,Rtn. Ranganath Kini,0000000000,noreply@sneha2026.in,Mangalore Hillside,40,Rotarian,7500,Veg,SUCCESS,Manual,2026RTY0005,2025-01-24,Manual,Admin Import,2025-01-24,2025-01-24
+2026RTY0006,MANUAL_REG_006,Rtn. Ranganatha Rao,0000000000,noreply@sneha2026.in,Mysore Midtown,59,Silver Sponsor,25000,Veg,SUCCESS,Manual,2026RTY0006,2025-01-24,Manual,Admin Import,2025-01-24,2025-01-24
+2026RTY0007,MANUAL_REG_007,Rtn. Prahlad Bayari,0000000000,noreply@sneha2026.in,Mysore Midtown,59,Silver Sponsor,25000,Veg,SUCCESS,Manual,2026RTY0007,2025-01-25,Manual,Admin Import,2025-01-25,2025-01-25
+2026RTY0008,MANUAL_REG_008,Rtn. P. Ganesh Bhat,0000000000,noreply@sneha2026.in,Sullia,80,Rotarian,7500,Veg,SUCCESS,Manual,2026RTY0008,2025-01-25,Manual,Admin Import,2025-01-25,2025-01-25
+2026RTY0009,MANUAL_REG_009,Rtn. Sanjeeva Kudpaje,0000000000,noreply@sneha2026.in,Sullia,80,Rotarian with Spouse,14000,Veg,SUCCESS,Manual,2026RTY0009,2025-01-25,Manual,Admin Import,2025-01-25,2025-01-25
+2026RTY0010,MANUAL_REG_010,Rtn. Sundararaja B.C,0000000000,noreply@sneha2026.in,Heritage Mysuru,27,Rotarian with Spouse,14000,Veg,SUCCESS,Manual,2026RTY0010,2025-01-25,Manual,Admin Import,2025-01-25,2025-01-25
