@@ -1792,37 +1792,75 @@ async function verifyBypassCode() {
         return;
     }
     
+    // Validate bypass code (client-side)
+    const BYPASS_CODES = {
+        'mallige2830': 'manual-S',
+        'asha1990': 'manual-B',
+        'prahlad1966': 'manual-P'
+    };
+    
+    if (!BYPASS_CODES[code]) {
+        error.textContent = 'Invalid bypass code';
+        return;
+    }
+    
+    const paymentStatus = BYPASS_CODES[code];
+    
     try {
-        // Send to backend for validation
-        const response = await fetch('/api/registrations/verify-bypass-code', {
+        // Close modal
+        closeBypassCodeModal();
+        
+        // Show loading
+        alert('Processing manual registration...');
+        
+        // Create registration with manual payment status
+        const response = await fetch('/api/registrations/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                code: code,
-                utr: utr,
-                registrationData: registrationData
+            body: JSON.stringify({
+                name: registrationData.fullName,
+                email: registrationData.email || 'Not Provided',
+                mobile: registrationData.mobile,
+                clubName: registrationData.clubName,
+                registrationType: registrationData.typeName,
+                amount: registrationData.price,
+                mealPreference: registrationData.mealPreference,
+                tshirtSize: registrationData.tshirtSize,
+                orderId: utr, // Store UTR as order ID
+                transactionId: `MANUAL-${code}-${Date.now()}`,
+                paymentStatus: paymentStatus, // manual-S, manual-B, or manual-P
+                paymentMethod: 'Manual Registration'
             })
         });
         
         const result = await response.json();
         
         if (result.success) {
-            // Close modal
-            closeBypassCodeModal();
-            
-            // Store payment status from backend
-            registrationData.paymentStatus = result.paymentStatus; // manual-S, manual-B, or manual-P
+            // Store registration ID
+            registrationData.registrationId = result.registrationId;
+            registrationData.paymentStatus = paymentStatus;
             registrationData.utrNumber = utr;
-            registrationData.bypassCode = code;
             
-            // Process as successful payment
-            await processManualRegistration(result);
+            // Show success screen
+            document.getElementById('success-name').textContent = registrationData.fullName;
+            document.getElementById('success-reg-id').textContent = result.registrationId;
+            document.getElementById('success-type').textContent = registrationData.typeName;
+            document.getElementById('success-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+            document.getElementById('success-club').textContent = registrationData.clubName;
+            document.getElementById('success-meal').textContent = registrationData.mealPreference;
+            document.getElementById('success-mobile').textContent = registrationData.mobile;
+            document.getElementById('success-email').textContent = registrationData.email || 'N/A';
+            
+            showScreen('screen-success');
+            
+            console.log('✅ Manual registration completed:', result.registrationId);
         } else {
-            error.textContent = result.message || 'Invalid code';
+            error.textContent = result.error || 'Registration failed';
+            alert('Registration failed: ' + (result.error || 'Unknown error'));
         }
     } catch (err) {
         console.error('Bypass code error:', err);
-        error.textContent = 'Error verifying code. Please try again.';
+        alert('Error processing manual registration. Please try again.');
     }
 }
 
