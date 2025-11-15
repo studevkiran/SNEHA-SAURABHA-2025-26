@@ -83,7 +83,8 @@ module.exports = async (req, res) => {
       manually_added: false
     };
 
-    // 1. Save to PostgreSQL (if available)
+    // 1. Save to PostgreSQL (primary - MUST succeed)
+    let savedRegistration = null;
     try {
       const result = await createRegistration({
         orderId: orderId || `ORDER_${Date.now()}`,
@@ -103,52 +104,65 @@ module.exports = async (req, res) => {
       
       if (result.success && result.registration) {
         registrationData.registration_id = result.registration.registration_id;
+        savedRegistration = result.registration;
+      } else {
+        throw new Error('PostgreSQL save failed');
       }
     } catch (pgError) {
-      console.warn('⚠️ PostgreSQL save failed, continuing with other methods:', pgError.message);
+      console.error('❌ PostgreSQL save failed:', pgError.message);
+      return res.status(500).json({
+        success: false,
+        error: 'Database error: Could not save registration'
+      });
     }
 
-    // 2. Save to Google Sheets (primary database)
-    const sheetsResult = await addRegistrationToSheets(registrationData);
-    if (!sheetsResult.success) {
-      console.error('❌ Google Sheets save failed:', sheetsResult.error);
-    }
+    // 2. Save to Google Sheets (async, don't wait)
+    addRegistrationToSheets(registrationData)
+      .then(result => {
+        if (result.success) {
+          console.log('✅ Google Sheets backup completed');
+        } else {
+          console.error('⚠️ Google Sheets backup failed:', result.error);
+        }
+      })
+      .catch(err => console.error('⚠️ Google Sheets error:', err.message));
 
-    // 3. Log to backup file (always, regardless of database success)
-    const logResult = logRegistration(registrationData);
-    if (!logResult.success) {
-      console.error('❌ Backup log failed:', logResult.error);
-    }
+    // 3. Log to backup file (async, don't wait)
+    setImmediate(() => {
+      try {
+        logRegistration(registrationData);
+        console.log('✅ Backup log completed');
+      } catch (err) {
+        console.error('⚠️ Backup log failed:', err.message);
+      }
+    });
 
-    // Create payment log if order ID provided
+    // 4. Create payment log (async, don't wait)
     if (orderId && registrationData.registration_id) {
-      await createPaymentLog({
+      createPaymentLog({
         registrationId: registrationData.registration_id,
         orderId,
         amount,
         paymentStatus,
         paymentMethod
-      }).catch(err => console.error('Payment log error:', err));
+      }).catch(err => console.error('⚠️ Payment log error:', err.message));
     }
 
+    // Return success immediately after PostgreSQL save
     return res.status(201).json({
       success: true,
       registration: {
-        registration_id: registrationData.registration_id,
-        name: registrationData.name,
-        mobile: registrationData.mobile,
-        email: registrationData.email,
-        club: registrationData.club,
-        registration_type: registrationData.registration_type,
-        registration_amount: registrationData.registration_amount,
-        meal_preference: registrationData.meal_preference,
-        payment_status: registrationData.payment_status
+        registration_id: savedRegistration.registration_id,
+        name: savedRegistration.name,
+        mobile: savedRegistration.mobile,
+        email: savedRegistration.email || 'Not Provided',
+        club: savedRegistration.club,
+        registration_type: savedRegistration.registration_type,
+        registration_amount: savedRegistration.registration_amount,
+        meal_preference: savedRegistration.meal_preference,
+        payment_status: savedRegistration.payment_status
       },
-      message: 'Registration created successfully',
-      saved_to: {
-        google_sheets: sheetsResult.success,
-        backup_log: logResult.success
-      }
+      message: 'Registration created successfully'
     });
 
   } catch (error) {
