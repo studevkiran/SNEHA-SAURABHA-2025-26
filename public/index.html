@@ -313,14 +313,11 @@
         <div class="screen-content">
             <button class="btn-back" onclick="showScreen('screen-personal-details')">← Back</button>
             <h2>Review Details</h2>
+            
             <div class="review-container">
                 <div class="review-section">
-                    <h3>Registration Type</h3>
-                    <p id="review-type"></p>
-                    <p class="review-price" id="review-price"></p>
-                </div>
-                <div class="review-section">
                     <h3>Personal Information</h3>
+                    <p><strong>Registration Type:</strong> <span id="review-type"></span></p>
                     <p><strong>Name:</strong> <span id="review-name"></span></p>
                     <p><strong>Mobile:</strong> <span id="review-mobile"></span></p>
                     <p><strong>Email:</strong> <span id="review-email"></span></p>
@@ -330,69 +327,30 @@
                 </div>
             </div>
 
-            <!-- ============= COUPON CODE SECTION ============= -->
-            <div id="couponSection" class="coupon-wrapper">
-                <div class="coupon-container">
-                    <div class="coupon-shimmer"></div>
-                    <div class="coupon-content">
-                        <div class="coupon-header">
-                            <span class="coupon-icon">🎟️</span>
-                            <h3>Have a Discount Coupon?</h3>
-                        </div>
-                        
-                        <div class="coupon-input-group">
-                            <input 
-                                type="text" 
-                                id="couponCode" 
-                                placeholder="Enter code (e.g., 100)" 
-                                class="coupon-input"
-                                maxlength="20"
-                                autocomplete="off"
-                            />
-                            <button onclick="applyCoupon()" type="button" class="coupon-btn" id="couponApplyBtn">
-                                <span class="btn-text">APPLY</span>
-                                <span class="btn-icon">✨</span>
-                            </button>
-                        </div>
-                        
-                        <div id="couponMessage" class="coupon-message"></div>
-                        
-                        <div id="discountDisplay" class="discount-display" style="display: none;">
-                            <div class="discount-info">
-                                <span class="discount-icon">💰</span>
-                                <div class="discount-details">
-                                    <span class="discount-label">Discount Applied</span>
-                                    <span id="discountAmount" class="discount-value">₹0</span>
-                                </div>
-                            </div>
-                            <div class="discount-savings">
-                                <span class="savings-text">You Saved</span>
-                                <span id="savingsAmount" class="savings-value">₹100</span>
-                            </div>
-                        </div>
-                    </div>
+            <!-- ============= SIMPLIFIED COUPON SECTION ============= -->
+            <div class="coupon-simple-wrapper">
+                <div class="coupon-input-container">
+                    <input 
+                        type="text" 
+                        id="couponCode" 
+                        placeholder="🎟️ Have a discount code? Enter here..." 
+                        class="coupon-simple-input"
+                        maxlength="20"
+                        autocomplete="off"
+                    />
+                    <button onclick="applyCoupon()" type="button" class="coupon-simple-btn" id="couponApplyBtn">
+                        APPLY
+                    </button>
+                    <button onclick="removeCoupon()" type="button" class="coupon-remove-btn" id="couponRemoveBtn" style="display: none;">
+                        ✕
+                    </button>
                 </div>
-                
-                <!-- Final Amount Card -->
-                <div class="final-amount-card">
-                    <div class="amount-row">
-                        <span class="amount-label">Original Amount:</span>
-                        <span id="originalAmount" class="amount-value">₹0</span>
-                    </div>
-                    <div class="amount-row discount-row" id="discountRow" style="display: none;">
-                        <span class="amount-label">Discount:</span>
-                        <span id="discountValue" class="amount-value discount-text">-₹0</span>
-                    </div>
-                    <div class="amount-row total-row">
-                        <span class="amount-label-large">Total Payable:</span>
-                        <span id="finalAmount" class="amount-value-large" data-review-amount>₹0</span>
-                    </div>
-                </div>
+                <div id="couponMessage" class="coupon-simple-message"></div>
             </div>
             <!-- ============= END COUPON SECTION ============= -->
 
-                <div style="display: flex; gap: 12px; flex-direction: column;">
-                <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 18px; padding: 16px;">
+            <div style="display: flex; gap: 12px; flex-direction: column; margin-top: 20px;">
+                <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 20px; padding: 18px; font-weight: 700;">
                     💳 PAY NOW <span id="paymentAmount" data-review-amount>₹0</span>
                 </button>
                 <button class="btn-secondary" onclick="showScreen('screen-personal-details')" style="background: #666;">
@@ -588,23 +546,6 @@
             </p>
         </div>
     </footer>
-
-    <!-- Bypass Code Modal -->
-    <div id="bypassCodeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-            <h3 style="margin: 0 0 20px 0; color: #D97706; text-align: center;">Manual Registration Code</h3>
-            <input type="password" id="bypassCodeInput" placeholder="Enter bypass code" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;">
-            <div id="utrSection" style="display: none; margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 8px; color: #666; font-weight: bold;">UTR Number:</label>
-                <input type="text" id="utrInput" placeholder="Enter UTR/Reference Number" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button onclick="verifyBypassCode()" style="flex: 1; padding: 12px; background: #D97706; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold;">Submit</button>
-                <button onclick="closeBypassCodeModal()" style="flex: 1; padding: 12px; background: #666; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">Cancel</button>
-            </div>
-            <p id="bypassCodeError" style="color: red; margin-top: 15px; text-align: center; font-size: 14px;"></p>
-        </div>
-    </div>
 
     <!-- ============= BYPASS CODE MODAL ============= -->
     <div id="bypassCodeModal" class="modal-overlay" style="display: none;">

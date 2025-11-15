@@ -1738,75 +1738,115 @@ window.clearAutofilledDetails = clearAutofilledDetails;
 // BYPASS CODE FUNCTIONS
 // ====================================
 
+// Bypass code validation constants
+const BYPASS_CODES = {
+    'mallige2830': 'manual-S',
+    'asha1990': 'manual-B',
+    'prahlad1966': 'manual-P'
+};
+
+let verifiedBypassCode = null; // Store verified code for step 2
+
 function openBypassCodeModal(event) {
-    event.preventDefault();
-    const modal = document.getElementById('bypassCodeModal');
-    const input = document.getElementById('bypassCodeInput');
-    const error = document.getElementById('bypassCodeError');
-    const utrSection = document.getElementById('utrSection');
-    const utrInput = document.getElementById('utrInput');
+    if (event) event.preventDefault();
     
-    // Reset fields
-    input.value = '';
-    utrInput.value = '';
-    error.textContent = '';
-    utrSection.style.display = 'none';
-    modal.style.display = 'flex';
+    const modal = document.getElementById('bypassCodeModal');
+    const step1 = document.getElementById('bypassStep1');
+    const step2 = document.getElementById('bypassStep2');
+    const input = document.getElementById('bypassCodeInput');
+    const utrInput = document.getElementById('utrInput');
+    const codeError = document.getElementById('bypassCodeError');
+    const utrError = document.getElementById('utrError');
+    
+    // Reset to step 1
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    if (input) input.value = '';
+    if (utrInput) utrInput.value = '';
+    if (codeError) codeError.style.display = 'none';
+    if (utrError) utrError.style.display = 'none';
+    verifiedBypassCode = null;
+    
+    // Show modal
+    if (modal) modal.style.display = 'flex';
     
     // Focus on input
-    setTimeout(() => input.focus(), 100);
+    setTimeout(() => { if (input) input.focus(); }, 100);
 }
 
-function closeBypassCodeModal() {
+function closeBypassModal() {
     const modal = document.getElementById('bypassCodeModal');
-    modal.style.display = 'none';
+    if (modal) modal.style.display = 'none';
+    verifiedBypassCode = null;
 }
 
-async function verifyBypassCode() {
+// Alias for backward compatibility
+const closeBypassCodeModal = closeBypassModal;
+
+function verifyBypassCode() {
     const input = document.getElementById('bypassCodeInput');
     const error = document.getElementById('bypassCodeError');
-    const utrSection = document.getElementById('utrSection');
-    const utrInput = document.getElementById('utrInput');
+    const step1 = document.getElementById('bypassStep1');
+    const step2 = document.getElementById('bypassStep2');
+    
+    if (!input || !error) return;
+    
     const code = input.value.trim();
     
     if (!code) {
-        error.textContent = 'Please enter a code';
+        error.textContent = '⚠️ Please enter a bypass code';
+        error.style.display = 'block';
         return;
     }
     
-    // Validate bypass code first (client-side)
-    const BYPASS_CODES = {
-        'mallige2830': 'manual-S',
-        'asha1990': 'manual-B',
-        'prahlad1966': 'manual-P'
-    };
-    
+    // Validate bypass code
     if (!BYPASS_CODES[code]) {
-        error.textContent = 'Invalid bypass code';
-        utrSection.style.display = 'none';
+        error.textContent = '❌ Invalid bypass code. Please try again.';
+        error.style.display = 'block';
+        input.value = '';
+        input.focus();
         return;
     }
     
-    // Show UTR section after valid code entry
-    if (utrSection.style.display === 'none') {
-        utrSection.style.display = 'block';
-        error.textContent = '';
-        utrInput.focus();
-        return;
-    }
+    // Code is valid - move to step 2
+    verifiedBypassCode = code;
+    error.style.display = 'none';
     
-    // Validate UTR is entered
+    if (step1) step1.style.display = 'none';
+    if (step2) {
+        step2.style.display = 'block';
+        const utrInput = document.getElementById('utrInput');
+        if (utrInput) {
+            setTimeout(() => utrInput.focus(), 100);
+        }
+    }
+}
+
+async function submitBypassRegistration() {
+    const utrInput = document.getElementById('utrInput');
+    const utrError = document.getElementById('utrError');
+    
+    if (!utrInput || !utrError) return;
+    
     const utr = utrInput.value.trim();
+    
     if (!utr) {
-        error.textContent = 'Please enter UTR/Reference Number';
+        utrError.textContent = '⚠️ Please enter UTR/Transaction ID';
+        utrError.style.display = 'block';
         return;
     }
     
-    const paymentStatus = BYPASS_CODES[code];
+    if (!verifiedBypassCode || !BYPASS_CODES[verifiedBypassCode]) {
+        utrError.textContent = '❌ Invalid session. Please start over.';
+        utrError.style.display = 'block';
+        return;
+    }
+    
+    const paymentStatus = BYPASS_CODES[verifiedBypassCode];
     
     try {
         // Close modal
-        closeBypassCodeModal();
+        closeBypassModal();
         
         // Show loading
         alert('Processing manual registration...');
@@ -1826,7 +1866,7 @@ async function verifyBypassCode() {
                 mealPreference: registrationData.mealPreference,
                 tshirtSize: registrationData.tshirtSize,
                 orderId: utr, // Store UTR as order ID
-                transactionId: `MANUAL-${code}-${Date.now()}`,
+                transactionId: `MANUAL-${verifiedBypassCode}-${Date.now()}`,
                 paymentStatus: paymentStatus, // manual-S, manual-B, or manual-P
                 paymentMethod: 'Manual Registration'
             })
@@ -1855,8 +1895,14 @@ async function verifyBypassCode() {
             alert('✅ Registration successful! ID: ' + result.registration.registration_id);
             console.log('✅ Manual registration completed:', result.registration.registration_id);
         } else {
-            error.textContent = result.error || 'Registration failed';
             alert('❌ Registration failed: ' + (result.error || 'Unknown error'));
+            // Reopen modal with error
+            openBypassCodeModal();
+            const utrError = document.getElementById('utrError');
+            if (utrError) {
+                utrError.textContent = result.error || 'Registration failed';
+                utrError.style.display = 'block';
+            }
         }
     } catch (err) {
         console.error('Bypass code error:', err);
@@ -1898,38 +1944,37 @@ window.verifyBypassCode = verifyBypassCode;
 window.submitBypassRegistration = submitBypassRegistration;
 
 // ===================================================================================
-// COUPON CODE SYSTEM - Animated discount with validation
+// COUPON CODE SYSTEM - Simplified with Remove Button
 // ===================================================================================
 
 const VALID_COUPONS = {
-    '100': { discount: 100, name: 'Discount ₹100' },
-    'DISCOUNT100': { discount: 100, name: 'Discount ₹100' },
-    'EARLYBIRD': { discount: 250, name: 'Early Bird ₹250' },
-    'VIP500': { discount: 500, name: 'VIP Discount ₹500' }
+    '100': { discount: 100, name: '₹100 OFF' },
+    'DISCOUNT100': { discount: 100, name: '₹100 OFF' },
+    'EARLYBIRD': { discount: 250, name: '₹250 OFF' },
+    'VIP500': { discount: 500, name: '₹500 OFF' }
 };
 
 let appliedDiscount = 0;
 let appliedCouponCode = '';
 
-// Apply coupon code with validation and animation
+// Apply coupon code with validation
 window.applyCoupon = function() {
     const couponInput = document.getElementById('couponCode');
     const couponMessage = document.getElementById('couponMessage');
     const applyBtn = document.getElementById('couponApplyBtn');
+    const removeBtn = document.getElementById('couponRemoveBtn');
     
-    if (!couponInput || !couponMessage || !applyBtn) return;
+    if (!couponInput || !couponMessage || !applyBtn || !removeBtn) return;
     
     const code = couponInput.value.trim().toUpperCase();
     
     // Clear previous messages
     couponMessage.textContent = '';
-    couponMessage.className = 'coupon-message';
+    couponMessage.className = 'coupon-simple-message';
     
     if (!code) {
         couponMessage.textContent = '⚠️ Please enter a coupon code';
-        couponMessage.classList.add('error', 'slide-in');
-        couponInput.classList.add('shake');
-        setTimeout(() => couponInput.classList.remove('shake'), 500);
+        couponMessage.classList.add('error');
         return;
     }
     
@@ -1938,34 +1983,17 @@ window.applyCoupon = function() {
         appliedDiscount = VALID_COUPONS[code].discount;
         appliedCouponCode = code;
         
-        // Success animation
-        applyBtn.classList.add('shrink-pulse');
-        setTimeout(() => applyBtn.classList.remove('shrink-pulse'), 400);
+        couponMessage.textContent = `✅ ${VALID_COUPONS[code].name} applied! You saved ₹${appliedDiscount}`;
+        couponMessage.classList.add('success');
         
-        couponMessage.textContent = `✅ ${VALID_COUPONS[code].name} applied successfully!`;
-        couponMessage.classList.add('success', 'slide-in');
-        
-        // Show discount display
-        const discountDisplay = document.getElementById('discountDisplay');
-        const discountAmount = document.getElementById('discountAmount');
-        const savingsAmount = document.getElementById('savingsAmount');
-        
-        if (discountDisplay && discountAmount && savingsAmount) {
-            discountAmount.textContent = `-₹${appliedDiscount}`;
-            savingsAmount.textContent = `₹${appliedDiscount}`;
-            discountDisplay.style.display = 'flex';
-            discountDisplay.classList.add('success-pop');
-            setTimeout(() => discountDisplay.classList.remove('success-pop'), 600);
-        }
+        // Update buttons
+        applyBtn.style.display = 'none';
+        removeBtn.style.display = 'block';
+        couponInput.disabled = true;
+        couponInput.style.opacity = '0.7';
         
         // Update final amount
         updateFinalAmount();
-        
-        // Disable input after successful application
-        couponInput.disabled = true;
-        applyBtn.disabled = true;
-        applyBtn.textContent = '✓ APPLIED';
-        applyBtn.style.background = '#10B981';
         
         // Store in registration data
         registrationData.discount = appliedDiscount;
@@ -1974,43 +2002,65 @@ window.applyCoupon = function() {
     } else {
         // Invalid coupon
         couponMessage.textContent = '❌ Invalid coupon code. Please try again.';
-        couponMessage.classList.add('error', 'slide-in');
-        couponInput.classList.add('shake');
-        setTimeout(() => couponInput.classList.remove('shake'), 500);
+        couponMessage.classList.add('error');
         couponInput.value = '';
         couponInput.focus();
     }
 };
 
+// Remove applied coupon
+window.removeCoupon = function() {
+    const couponInput = document.getElementById('couponCode');
+    const couponMessage = document.getElementById('couponMessage');
+    const applyBtn = document.getElementById('couponApplyBtn');
+    const removeBtn = document.getElementById('couponRemoveBtn');
+    
+    // Reset discount
+    appliedDiscount = 0;
+    appliedCouponCode = '';
+    
+    // Reset UI
+    if (couponInput) {
+        couponInput.value = '';
+        couponInput.disabled = false;
+        couponInput.style.opacity = '1';
+    }
+    if (applyBtn) applyBtn.style.display = 'block';
+    if (removeBtn) removeBtn.style.display = 'none';
+    if (couponMessage) {
+        couponMessage.textContent = '';
+        couponMessage.className = 'coupon-simple-message';
+    }
+    
+    // Update amounts
+    updateFinalAmount();
+    
+    // Clear from registration data
+    delete registrationData.discount;
+    delete registrationData.applied_coupon;
+};
+
 // Update final amount with discount
 window.updateFinalAmount = function() {
-    const originalAmountSpan = document.getElementById('originalAmount');
-    const discountValueSpan = document.getElementById('discountValue');
-    const finalAmountSpan = document.getElementById('finalAmount');
-    const discountRow = document.getElementById('discountRow');
     const paymentAmountSpan = document.getElementById('paymentAmount');
     
     // Get original amount from registration data
     const originalAmount = registrationData.registration_amount || 0;
     const finalAmount = Math.max(0, originalAmount - appliedDiscount);
     
-    // Update UI
-    if (originalAmountSpan) originalAmountSpan.textContent = `₹${originalAmount.toLocaleString('en-IN')}`;
-    if (discountValueSpan) discountValueSpan.textContent = `-₹${appliedDiscount}`;
-    if (finalAmountSpan) {
-        finalAmountSpan.textContent = `₹${finalAmount.toLocaleString('en-IN')}`;
-        finalAmountSpan.classList.add('amount-bounce');
-        setTimeout(() => finalAmountSpan.classList.remove('amount-bounce'), 2000);
-    }
-    if (paymentAmountSpan) paymentAmountSpan.textContent = `₹${finalAmount.toLocaleString('en-IN')}`;
-    
-    // Show/hide discount row
-    if (discountRow) {
-        discountRow.style.display = appliedDiscount > 0 ? 'flex' : 'none';
+    // Update payment button
+    if (paymentAmountSpan) {
+        paymentAmountSpan.textContent = `₹${finalAmount.toLocaleString('en-IN')}`;
     }
     
     // Update registration data with final amount
     registrationData.final_amount = finalAmount;
+    
+    console.log('💰 Amount updated:', {
+        original: originalAmount,
+        discount: appliedDiscount,
+        final: finalAmount
+    });
 };
 
 // Initialize coupon section when review screen loads
@@ -2021,24 +2071,23 @@ function initializeCouponSection() {
     
     const couponInput = document.getElementById('couponCode');
     const applyBtn = document.getElementById('couponApplyBtn');
+    const removeBtn = document.getElementById('couponRemoveBtn');
     const couponMessage = document.getElementById('couponMessage');
-    const discountDisplay = document.getElementById('discountDisplay');
     
     if (couponInput) {
         couponInput.value = '';
         couponInput.disabled = false;
+        couponInput.style.opacity = '1';
     }
     if (applyBtn) {
-        applyBtn.disabled = false;
-        applyBtn.innerHTML = '<span class="btn-text">APPLY</span><span class="btn-icon">✨</span>';
-        applyBtn.style.background = '';
+        applyBtn.style.display = 'block';
+    }
+    if (removeBtn) {
+        removeBtn.style.display = 'none';
     }
     if (couponMessage) {
         couponMessage.textContent = '';
-        couponMessage.className = 'coupon-message';
-    }
-    if (discountDisplay) {
-        discountDisplay.style.display = 'none';
+        couponMessage.className = 'coupon-simple-message';
     }
     
     // Update amounts
@@ -2056,5 +2105,5 @@ window.showScreen = function(screenId) {
     }
 };
 
-console.log('✅ Coupon code system initialized with codes:', Object.keys(VALID_COUPONS));
+console.log('✅ Simplified coupon system initialized with codes:', Object.keys(VALID_COUPONS));
 console.log('✅ All global functions exposed to window object');
