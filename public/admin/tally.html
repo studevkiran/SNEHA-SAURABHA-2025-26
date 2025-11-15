@@ -719,7 +719,8 @@
             // Sort clubs by count (descending) for ranking
             const sortedClubs = Object.entries(clubCounts).sort((a, b) => b[1] - a[1]);
             
-            // Find max count for bar graph scaling
+            // Calculate total registrations in this zone
+            const total = zoneRegs.length;
             const maxCount = sortedClubs.length > 0 ? sortedClubs[0][1] : 1;
             
             // Build bar graph with rankings
@@ -729,7 +730,10 @@
             
             sortedClubs.forEach(([club, count], index) => {
                 const rank = index + 1;
-                const percentage = (count / maxCount) * 100;
+                // Percentage of ZONE TOTAL (not relative to max club)
+                const percentageOfZone = (count / total) * 100;
+                // Bar width based on max club count for visual scaling
+                const barWidth = (count / maxCount) * 100;
                 
                 // Badge styling based on rank
                 let badge = '';
@@ -749,19 +753,19 @@
                             ${badge}
                             <div style="flex: 1;">
                                 <strong style="font-size: 14px;">${club}</strong>
+                                <span style="font-size: 12px; color: #666; margin-left: 8px;">${percentageOfZone.toFixed(1)}% of zone</span>
                             </div>
                             <span style="background: #D97706; color: white; padding: 4px 12px; border-radius: 12px; font-weight: bold; font-size: 14px;">${count}</span>
                         </div>
                         <div style="background: #e5e7eb; height: 24px; border-radius: 12px; overflow: hidden; position: relative;">
-                            <div style="background: linear-gradient(90deg, #D97706, #F59E0B); height: 100%; width: ${percentage}%; border-radius: 12px; transition: width 0.3s ease; display: flex; align-items: center; padding-left: 10px;">
-                                <span style="color: white; font-size: 12px; font-weight: bold;">${percentage.toFixed(0)}%</span>
+                            <div style="background: linear-gradient(90deg, #D97706, #F59E0B); height: 100%; width: ${barWidth}%; border-radius: 12px; transition: width 0.3s ease; display: flex; align-items: center; padding-left: 10px;">
+                                <span style="color: white; font-size: 12px; font-weight: bold;">${count} registrations</span>
                             </div>
                         </div>
                     </div>
                 `;
             });
             
-            const total = zoneRegs.length;
             html += `
                 </div>
                 <div style="margin-top: 20px; padding: 15px; background: #FEF3C7; border-radius: 8px; text-align: center;">

@@ -1834,15 +1834,15 @@ async function verifyBypassCode() {
         
         const result = await response.json();
         
-        if (result.success) {
+        if (result.success && result.registration) {
             // Store registration ID
-            registrationData.registrationId = result.registrationId;
+            registrationData.registrationId = result.registration.registration_id;
             registrationData.paymentStatus = paymentStatus;
             registrationData.utrNumber = utr;
             
             // Show success screen
             document.getElementById('success-name').textContent = registrationData.fullName;
-            document.getElementById('success-reg-id').textContent = result.registrationId;
+            document.getElementById('success-reg-id').textContent = result.registration.registration_id;
             document.getElementById('success-type').textContent = registrationData.typeName;
             document.getElementById('success-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
             document.getElementById('success-club').textContent = registrationData.clubName;
@@ -1852,10 +1852,11 @@ async function verifyBypassCode() {
             
             showScreen('screen-success');
             
-            console.log('✅ Manual registration completed:', result.registrationId);
+            alert('✅ Registration successful! ID: ' + result.registration.registration_id);
+            console.log('✅ Manual registration completed:', result.registration.registration_id);
         } else {
             error.textContent = result.error || 'Registration failed';
-            alert('Registration failed: ' + (result.error || 'Unknown error'));
+            alert('❌ Registration failed: ' + (result.error || 'Unknown error'));
         }
     } catch (err) {
         console.error('Bypass code error:', err);
