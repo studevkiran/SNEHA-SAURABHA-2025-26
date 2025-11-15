@@ -615,10 +615,10 @@
             const uniqueZones = new Set();
             
             allRegistrations.forEach(reg => {
-                if (reg.zone) uniqueZones.add(reg.zone);
+                if (reg.zone_id) uniqueZones.add(reg.zone_id);
                 
-                if (reg.payment_status !== 'test' && reg.zone) {
-                    const zone = reg.zone.toString();
+                if (reg.payment_status !== 'test' && reg.zone_id) {
+                    const zone = reg.zone_id.toString();
                     if (zoneCounts.hasOwnProperty(zone)) {
                         zoneCounts[zone]++;
                     } else {
@@ -704,9 +704,9 @@
             const title = document.getElementById('zoneModalTitle');
             const content = document.getElementById('zoneModalContent');
             
-            // Filter registrations by zone (exclude test)
+            // Filter registrations by zone_id (exclude test)
             const zoneRegs = allRegistrations.filter(reg => 
-                reg.zone == zoneNumber && reg.payment_status !== 'test'
+                reg.zone_id == zoneNumber && reg.payment_status !== 'test'
             );
             
             // Count by club
