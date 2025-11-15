@@ -652,42 +652,60 @@
                 clubCounts[club] = (clubCounts[club] || 0) + 1;
             });
             
-            // Sort clubs alphabetically
-            const sortedClubs = Object.entries(clubCounts).sort((a, b) => a[0].localeCompare(b[0]));
+            // Sort clubs by count (descending) for ranking
+            const sortedClubs = Object.entries(clubCounts).sort((a, b) => b[1] - a[1]);
             
-            // Build table
+            // Find max count for bar graph scaling
+            const maxCount = sortedClubs.length > 0 ? sortedClubs[0][1] : 1;
+            
+            // Build bar graph with rankings
             let html = `
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #D97706; color: white;">
-                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Club Name</th>
-                            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Registrations</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div style="max-height: 60vh; overflow-y: auto;">
             `;
             
             sortedClubs.forEach(([club, count], index) => {
-                const bgColor = index % 2 === 0 ? '#f9f9f9' : 'white';
+                const rank = index + 1;
+                const percentage = (count / maxCount) * 100;
+                
+                // Badge styling based on rank
+                let badge = '';
+                if (rank === 1) {
+                    badge = '<span style="background: #FFD700; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; margin-right: 10px;">🥇 1st</span>';
+                } else if (rank === 2) {
+                    badge = '<span style="background: #C0C0C0; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; margin-right: 10px;">🥈 2nd</span>';
+                } else if (rank === 3) {
+                    badge = '<span style="background: #CD7F32; color: #fff; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; margin-right: 10px;">🥉 3rd</span>';
+                } else {
+                    badge = `<span style="color: #999; padding: 4px 10px; font-weight: bold; font-size: 12px; margin-right: 10px;">#${rank}</span>`;
+                }
+                
                 html += `
-                    <tr style="background: ${bgColor};">
-                        <td style="padding: 10px; border: 1px solid #ddd;">${club}</td>
-                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: bold;">${count}</td>
-                    </tr>
+                    <div style="margin-bottom: 15px; padding: 10px; background: ${index % 2 === 0 ? '#f9f9f9' : 'white'}; border-radius: 6px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                            ${badge}
+                            <div style="flex: 1;">
+                                <strong style="font-size: 14px;">${club}</strong>
+                            </div>
+                            <span style="background: #D97706; color: white; padding: 4px 12px; border-radius: 12px; font-weight: bold; font-size: 14px;">${count}</span>
+                        </div>
+                        <div style="background: #e5e7eb; height: 24px; border-radius: 12px; overflow: hidden; position: relative;">
+                            <div style="background: linear-gradient(90deg, #D97706, #F59E0B); height: 100%; width: ${percentage}%; border-radius: 12px; transition: width 0.3s ease; display: flex; align-items: center; padding-left: 10px;">
+                                <span style="color: white; font-size: 12px; font-weight: bold;">${percentage.toFixed(0)}%</span>
+                            </div>
+                        </div>
+                    </div>
                 `;
             });
             
             const total = zoneRegs.length;
             html += `
-                    <tr style="background: #FEF3C7; font-weight: bold;">
-                        <td style="padding: 12px; border: 1px solid #ddd;">Total</td>
-                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd;">${total}</td>
-                    </tr>
-                </tbody>
-            </table>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #FEF3C7; border-radius: 8px; text-align: center;">
+                    <strong style="font-size: 16px; color: #D97706;">Total Registrations: ${total}</strong>
+                </div>
             `;
             
-            title.textContent = `Zone ${zoneNumber} - Club-wise Breakdown`;
+            title.textContent = `Zone ${zoneNumber} - Club Rankings`;
             content.innerHTML = html;
             modal.style.display = 'flex';
         }
