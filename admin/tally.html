@@ -366,33 +366,45 @@
         
         async function fetchRegistrations() {
             try {
+                console.log('🔄 Fetching registrations from /api/registrations/list');
+                
                 // Use the correct serverless function endpoint
                 const response = await fetch('/api/registrations/list');
                 
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ API Response Error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log('API Response:', data);
+                console.log('✅ API Response:', data);
+                console.log('📊 Total registrations:', data?.data?.total || 0);
                 
                 // API returns {success: true, data: {registrations: [...], total: ...}}
                 if (data.success && data.data && data.data.registrations) {
                     allRegistrations = data.data.registrations || [];
+                    console.log('📋 Loaded registrations:', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
+                    
+                    if (allRegistrations.length === 0) {
+                        console.warn('⚠️ No registrations in database');
+                    }
                 } else if (data.success && data.registrations) {
                     // Fallback if structure is different
                     allRegistrations = data.registrations || [];
+                    console.log('📋 Loaded registrations (fallback):', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
                 } else {
+                    console.warn('⚠️ API returned success but no data');
                     showError('No registrations found');
                 }
             } catch (error) {
-                console.error('Error fetching registrations:', error);
+                console.error('❌ Error fetching registrations:', error);
                 showError('Error loading data: ' + error.message);
             }
         }
