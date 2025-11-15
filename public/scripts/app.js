@@ -981,63 +981,6 @@ function showReview() {
     }
 }
 
-// Apply coupon (testing only)
-function applyCoupon() {
-    const codeEl = document.getElementById('coupon-code');
-    const msgEl = document.getElementById('coupon-message');
-    if (!codeEl || !msgEl) return;
-
-    const code = (codeEl.value || '').trim().toUpperCase();
-    if (!code) {
-        msgEl.style.display = 'block';
-        msgEl.style.color = '#b71c1c';
-        msgEl.textContent = 'Please enter a coupon code';
-        return;
-    }
-
-    // Known test coupon: TEST1 -> sets price to ₹1
-    let newPrice = registrationData.originalPrice || registrationData.price;
-    if (code === 'TEST1') {
-        newPrice = 1;
-        msgEl.style.color = '#2a7f2a';
-        msgEl.textContent = `Coupon applied: ${code} — Price set to ₹1 for testing`;
-    } else {
-        msgEl.style.color = '#b71c1c';
-        msgEl.textContent = 'Invalid coupon code';
-        msgEl.style.display = 'block';
-        return;
-    }
-
-    // Apply new price and update UI
-    registrationData.price = newPrice;
-    const reviewPriceEl = document.getElementById('review-price');
-    const paymentAmountEl = document.getElementById('payment-amount');
-    if (reviewPriceEl) reviewPriceEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-    if (paymentAmountEl) paymentAmountEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-    msgEl.style.display = 'block';
-
-    // Save applied coupon code for backend (optional)
-    registrationData.appliedCoupon = code;
-}
-
-function resetCoupon() {
-    const codeEl = document.getElementById('coupon-code');
-    const msgEl = document.getElementById('coupon-message');
-    if (codeEl) codeEl.value = '';
-    if (msgEl) {
-        msgEl.style.display = 'none';
-        msgEl.textContent = '';
-    }
-    if (registrationData.originalPrice) {
-        registrationData.price = registrationData.originalPrice;
-    }
-    const reviewPriceEl = document.getElementById('review-price');
-    const paymentAmountEl = document.getElementById('payment-amount');
-    if (reviewPriceEl) reviewPriceEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-    if (paymentAmountEl) paymentAmountEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-    delete registrationData.appliedCoupon;
-}
-
 // Generate unique order ID for Cashfree
 function generateOrderId() {
     const timestamp = Date.now();
