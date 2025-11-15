@@ -1737,3 +1737,119 @@ function clearAutofilledDetails() {
 }
 
 window.clearAutofilledDetails = clearAutofilledDetails;
+
+// ====================================
+// BYPASS CODE FUNCTIONS
+// ====================================
+
+function openBypassCodeModal(event) {
+    event.preventDefault();
+    const modal = document.getElementById('bypassCodeModal');
+    const input = document.getElementById('bypassCodeInput');
+    const error = document.getElementById('bypassCodeError');
+    const utrSection = document.getElementById('utrSection');
+    const utrInput = document.getElementById('utrInput');
+    
+    // Reset fields
+    input.value = '';
+    utrInput.value = '';
+    error.textContent = '';
+    utrSection.style.display = 'none';
+    modal.style.display = 'flex';
+    
+    // Focus on input
+    setTimeout(() => input.focus(), 100);
+}
+
+function closeBypassCodeModal() {
+    const modal = document.getElementById('bypassCodeModal');
+    modal.style.display = 'none';
+}
+
+async function verifyBypassCode() {
+    const input = document.getElementById('bypassCodeInput');
+    const error = document.getElementById('bypassCodeError');
+    const utrSection = document.getElementById('utrSection');
+    const utrInput = document.getElementById('utrInput');
+    const code = input.value.trim();
+    
+    if (!code) {
+        error.textContent = 'Please enter a code';
+        return;
+    }
+    
+    // Show UTR section after valid code entry
+    if (code && utrSection.style.display === 'none') {
+        utrSection.style.display = 'block';
+        error.textContent = '';
+        return;
+    }
+    
+    // Validate UTR is entered
+    const utr = utrInput.value.trim();
+    if (!utr) {
+        error.textContent = 'Please enter UTR/Reference Number';
+        return;
+    }
+    
+    try {
+        // Send to backend for validation
+        const response = await fetch('/api/registrations/verify-bypass-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                code: code,
+                utr: utr,
+                registrationData: registrationData
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Close modal
+            closeBypassCodeModal();
+            
+            // Store payment status from backend
+            registrationData.paymentStatus = result.paymentStatus; // manual-S, manual-B, or manual-P
+            registrationData.utrNumber = utr;
+            registrationData.bypassCode = code;
+            
+            // Process as successful payment
+            await processManualRegistration(result);
+        } else {
+            error.textContent = result.message || 'Invalid code';
+        }
+    } catch (err) {
+        console.error('Bypass code error:', err);
+        error.textContent = 'Error verifying code. Please try again.';
+    }
+}
+
+async function processManualRegistration(result) {
+    try {
+        // Show success screen with registration details
+        document.getElementById('success-name').textContent = result.registration.name;
+        document.getElementById('success-reg-id').textContent = result.registration.registration_id;
+        document.getElementById('success-type').textContent = result.registration.registration_type;
+        document.getElementById('success-amount').textContent = `₹${result.registration.registration_amount.toLocaleString('en-IN')}`;
+        document.getElementById('success-club').textContent = result.registration.club;
+        document.getElementById('success-meal').textContent = result.registration.meal_preference;
+        document.getElementById('success-mobile').textContent = result.registration.mobile;
+        document.getElementById('success-email').textContent = result.registration.email || 'N/A';
+        
+        // Show success screen
+        showScreen('screen-success');
+        
+        // Trigger WhatsApp confirmation (handled by backend)
+        console.log('Manual registration completed:', result.registration.registration_id);
+    } catch (err) {
+        console.error('Error processing manual registration:', err);
+        alert('Registration saved but there was an error displaying the confirmation. Please contact support.');
+    }
+}
+
+window.openBypassCodeModal = openBypassCodeModal;
+window.closeBypassCodeModal = closeBypassCodeModal;
+window.verifyBypassCode = verifyBypassCode;
+

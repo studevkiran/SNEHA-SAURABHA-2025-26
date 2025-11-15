@@ -337,6 +337,13 @@
                     ← Back to Edit
                 </button>
             </div>
+            
+            <!-- Footer with bypass code link -->
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                <a href="#" onclick="openBypassCodeModal(event)" style="color: #D97706; font-size: 12px; text-decoration: none; opacity: 0.7;">
+                    SNEHA SAURABHA
+                </a>
+            </div>
         </div>
     </div>
 
@@ -519,6 +526,23 @@
             </p>
         </div>
     </footer>
+
+    <!-- Bypass Code Modal -->
+    <div id="bypassCodeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <h3 style="margin: 0 0 20px 0; color: #D97706; text-align: center;">Manual Registration Code</h3>
+            <input type="password" id="bypassCodeInput" placeholder="Enter bypass code" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;">
+            <div id="utrSection" style="display: none; margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; color: #666; font-weight: bold;">UTR Number:</label>
+                <input type="text" id="utrInput" placeholder="Enter UTR/Reference Number" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="verifyBypassCode()" style="flex: 1; padding: 12px; background: #D97706; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold;">Submit</button>
+                <button onclick="closeBypassCodeModal()" style="flex: 1; padding: 12px; background: #666; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">Cancel</button>
+            </div>
+            <p id="bypassCodeError" style="color: red; margin-top: 15px; text-align: center; font-size: 14px;"></p>
+        </div>
+    </div>
 
     <script src="scripts/app.js"></script>
 </body>

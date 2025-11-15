@@ -293,7 +293,36 @@
                 <div><strong>Gold Sponsor:</strong> <span id="count-gold-sponsor">0</span></div>
                 <div><strong>Platinum Sponsor:</strong> <span id="count-platinum-sponsor">0</span></div>
                 <div><strong>Patron Sponsor:</strong> <span id="count-patron-sponsor">0</span></div>
-                <div style="color: #DC2626;"><strong>De-registered (Test):</strong> <span id="count-deregistered">0</span></div>
+                <div style="color: #DC2626;"><strong>De-registered:</strong> <span id="count-deregistered">0</span></div>
+            </div>
+        </div>
+
+        <!-- Zone-wise Breakdown -->
+        <div class="stats-box" style="margin-top: 20px;">
+            <h3 style="margin-bottom: 15px; color: #D97706;">Zone-wise Registrations</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 14px;">
+                <div style="cursor: pointer;" onclick="showZoneDetails(1)"><strong>Zone 1:</strong> <span id="count-zone-1">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(2)"><strong>Zone 2:</strong> <span id="count-zone-2">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(3)"><strong>Zone 3:</strong> <span id="count-zone-3">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(4)"><strong>Zone 4:</strong> <span id="count-zone-4">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(5)"><strong>Zone 5:</strong> <span id="count-zone-5">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(6)"><strong>Zone 6:</strong> <span id="count-zone-6">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(7)"><strong>Zone 7:</strong> <span id="count-zone-7">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(8)"><strong>Zone 8:</strong> <span id="count-zone-8">0</span></div>
+                <div style="cursor: pointer;" onclick="showZoneDetails(9)"><strong>Zone 9:</strong> <span id="count-zone-9">0</span></div>
+            </div>
+        </div>
+        
+        <!-- Zone Details Modal -->
+        <div id="zoneModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 30px; border-radius: 12px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; color: #D97706;" id="zoneModalTitle">Zone Details</h3>
+                    <button onclick="closeZoneModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+                </div>
+                <div id="zoneModalContent" style="overflow-x: auto;">
+                    <!-- Club breakdown table will be inserted here -->
+                </div>
             </div>
         </div>
         
@@ -475,10 +504,11 @@
         }
         
         function updateStats(registrations) {
-            const totalCount = registrations.length;
-            document.getElementById('total-count').textContent = totalCount;
+            // Count only non-test registrations for total
+            const nonTestCount = registrations.filter(r => r.payment_status !== 'test').length;
+            document.getElementById('total-count').textContent = nonTestCount;
             
-            // Count registration types
+            // Count registration types from ALL registrations (not filtered)
             const typeCounts = {
                 'Rotarian': 0,
                 'Rotary Ann': 0,
@@ -494,7 +524,7 @@
                 'deregistered': 0
             };
             
-            // Count all registrations
+            // Always count from allRegistrations (not filtered ones)
             allRegistrations.forEach(reg => {
                 if (reg.payment_status === 'test') {
                     typeCounts['deregistered']++;
@@ -506,7 +536,7 @@
                 }
             });
             
-            // Update DOM elements
+            // Update registration type DOM elements
             document.getElementById('count-rotarian').textContent = typeCounts['Rotarian'];
             document.getElementById('count-ann').textContent = typeCounts['Rotary Ann'];
             document.getElementById('count-annet').textContent = typeCounts['Rotary Annet'];
@@ -519,6 +549,26 @@
             document.getElementById('count-platinum-sponsor').textContent = typeCounts['Platinum Sponsor'];
             document.getElementById('count-patron-sponsor').textContent = typeCounts['Patron Sponsor'];
             document.getElementById('count-deregistered').textContent = typeCounts['deregistered'];
+            
+            // Count zone-wise registrations (exclude test entries)
+            const zoneCounts = {
+                '1': 0, '2': 0, '3': 0, '4': 0, '5': 0,
+                '6': 0, '7': 0, '8': 0, '9': 0
+            };
+            
+            allRegistrations.forEach(reg => {
+                if (reg.payment_status !== 'test' && reg.zone) {
+                    const zone = reg.zone.toString();
+                    if (zoneCounts.hasOwnProperty(zone)) {
+                        zoneCounts[zone]++;
+                    }
+                }
+            });
+            
+            // Update zone DOM elements
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById(`count-zone-${i}`).textContent = zoneCounts[i.toString()];
+            }
         }
         
         function showError(message) {
@@ -582,6 +632,76 @@
             XLSX.writeFile(wb, filename);
             console.log('✅ Excel exported:', filename);
         }
+        
+        // Zone Details Modal Functions
+        function showZoneDetails(zoneNumber) {
+            const modal = document.getElementById('zoneModal');
+            const title = document.getElementById('zoneModalTitle');
+            const content = document.getElementById('zoneModalContent');
+            
+            // Filter registrations by zone (exclude test)
+            const zoneRegs = allRegistrations.filter(reg => 
+                reg.zone == zoneNumber && reg.payment_status !== 'test'
+            );
+            
+            // Count by club
+            const clubCounts = {};
+            zoneRegs.forEach(reg => {
+                const club = reg.club || 'Unknown';
+                clubCounts[club] = (clubCounts[club] || 0) + 1;
+            });
+            
+            // Sort clubs alphabetically
+            const sortedClubs = Object.entries(clubCounts).sort((a, b) => a[0].localeCompare(b[0]));
+            
+            // Build table
+            let html = `
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #D97706; color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Club Name</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Registrations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            sortedClubs.forEach(([club, count], index) => {
+                const bgColor = index % 2 === 0 ? '#f9f9f9' : 'white';
+                html += `
+                    <tr style="background: ${bgColor};">
+                        <td style="padding: 10px; border: 1px solid #ddd;">${club}</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: bold;">${count}</td>
+                    </tr>
+                `;
+            });
+            
+            const total = zoneRegs.length;
+            html += `
+                    <tr style="background: #FEF3C7; font-weight: bold;">
+                        <td style="padding: 12px; border: 1px solid #ddd;">Total</td>
+                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd;">${total}</td>
+                    </tr>
+                </tbody>
+            </table>
+            `;
+            
+            title.textContent = `Zone ${zoneNumber} - Club-wise Breakdown`;
+            content.innerHTML = html;
+            modal.style.display = 'flex';
+        }
+        
+        function closeZoneModal() {
+            const modal = document.getElementById('zoneModal');
+            modal.style.display = 'none';
+        }
+        
+        // Close modal on background click
+        document.getElementById('zoneModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeZoneModal();
+            }
+        });
         
     </script>
 </body>
