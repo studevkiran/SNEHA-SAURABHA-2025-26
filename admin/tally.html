@@ -304,11 +304,11 @@
                     <tr>
                         <td>${reg.registration_id}</td>
                         <td>${date}</td>
-                        <td>${reg.full_name}</td>
+                        <td>${reg.name}</td>
                         <td>${reg.mobile}</td>
                         <td>${reg.email || 'N/A'}</td>
                         <td>${reg.registration_type}</td>
-                        <td>${reg.club_name || 'N/A'}</td>
+                        <td>${reg.club || 'N/A'}</td>
                         <td class="${mealClass}">${reg.meal_preference}</td>
                         <td>${reg.tshirt_size || 'N/A'}</td>
                         <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
@@ -343,11 +343,11 @@
             const excelData = allRegistrations.map(reg => ({
                 'Registration ID': reg.registration_id,
                 'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
-                'Name': reg.full_name,
+                'Name': reg.name,
                 'Mobile': reg.mobile,
                 'Email': reg.email || 'N/A',
                 'Type': reg.registration_type,
-                'Club': reg.club_name || 'N/A',
+                'Club': reg.club || 'N/A',
                 'Meal Preference': reg.meal_preference,
                 'T-Shirt Size': reg.tshirt_size || 'N/A',
                 'Amount': reg.registration_amount || 0,
