@@ -2044,8 +2044,8 @@ window.removeCoupon = function() {
 window.updateFinalAmount = function() {
     const paymentAmountSpan = document.getElementById('paymentAmount');
     
-    // Get original amount from registration data
-    const originalAmount = registrationData.registration_amount || 0;
+    // Get original amount from registration data (use 'price' not 'registration_amount')
+    const originalAmount = registrationData.price || 0;
     const finalAmount = Math.max(0, originalAmount - appliedDiscount);
     
     // Update payment button
