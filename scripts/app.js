@@ -1774,21 +1774,7 @@ async function verifyBypassCode() {
         return;
     }
     
-    // Show UTR section after valid code entry
-    if (code && utrSection.style.display === 'none') {
-        utrSection.style.display = 'block';
-        error.textContent = '';
-        return;
-    }
-    
-    // Validate UTR is entered
-    const utr = utrInput.value.trim();
-    if (!utr) {
-        error.textContent = 'Please enter UTR/Reference Number';
-        return;
-    }
-    
-    // Validate bypass code (client-side)
+    // Validate bypass code first (client-side)
     const BYPASS_CODES = {
         'mallige2830': 'manual-S',
         'asha1990': 'manual-B',
@@ -1797,6 +1783,22 @@ async function verifyBypassCode() {
     
     if (!BYPASS_CODES[code]) {
         error.textContent = 'Invalid bypass code';
+        utrSection.style.display = 'none';
+        return;
+    }
+    
+    // Show UTR section after valid code entry
+    if (utrSection.style.display === 'none') {
+        utrSection.style.display = 'block';
+        error.textContent = '';
+        utrInput.focus();
+        return;
+    }
+    
+    // Validate UTR is entered
+    const utr = utrInput.value.trim();
+    if (!utr) {
+        error.textContent = 'Please enter UTR/Reference Number';
         return;
     }
     
