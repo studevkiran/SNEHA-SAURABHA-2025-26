@@ -276,11 +276,24 @@
             <div class="stat-item">
                 <strong id="total-count">0</strong> Total Registrations
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
-                <select id="zone-select" class="export-btn" style="padding: 12px 16px; cursor: pointer;">
-                    <option value="">📍 Zone-Wise Download</option>
-                </select>
+            <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
+        </div>
+        
+        <!-- Registration Type Breakdown -->
+        <div style="background: #FFF8E7; border: 2px solid #D4A024; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; font-size: 14px;">
+                <div><strong>Rotarian:</strong> <span id="count-rotarian">0</span></div>
+                <div><strong>Rotary Ann:</strong> <span id="count-ann">0</span></div>
+                <div><strong>Rotary Annet:</strong> <span id="count-annet">0</span></div>
+                <div><strong>Rotarian with Spouse:</strong> <span id="count-spouse">0</span></div>
+                <div><strong>Guest:</strong> <span id="count-guest">0</span></div>
+                <div><strong>Rotaractor:</strong> <span id="count-rotaractor">0</span></div>
+                <div><strong>Silver Donor:</strong> <span id="count-silver-donor">0</span></div>
+                <div><strong>Silver Sponsor:</strong> <span id="count-silver-sponsor">0</span></div>
+                <div><strong>Gold Sponsor:</strong> <span id="count-gold-sponsor">0</span></div>
+                <div><strong>Platinum Sponsor:</strong> <span id="count-platinum-sponsor">0</span></div>
+                <div><strong>Patron Sponsor:</strong> <span id="count-patron-sponsor">0</span></div>
+                <div style="color: #DC2626;"><strong>De-registered (Test):</strong> <span id="count-deregistered">0</span></div>
             </div>
         </div>
         
@@ -339,14 +352,12 @@
                     filteredRegistrations = [...allRegistrations];
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
-                    populateZoneDropdown();
                 } else if (data.success && data.registrations) {
                     // Fallback if structure is different
                     allRegistrations = data.registrations || [];
                     filteredRegistrations = [...allRegistrations];
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
-                    populateZoneDropdown();
                 } else {
                     showError('No registrations found');
                 }
@@ -354,54 +365,6 @@
                 console.error('Error fetching registrations:', error);
                 showError('Error loading data: ' + error.message);
             }
-        }
-        
-        function populateZoneDropdown() {
-            const select = document.getElementById('zone-select');
-            select.innerHTML = '<option value="">📍 Zone-Wise Download</option>';
-            
-            // Get unique zones from registrations with zone_id
-            const zones = new Map(); // zone_id -> label
-            
-            allRegistrations.forEach(reg => {
-                if (reg.zone_id) {
-                    const zoneLabel = reg.zone_ag_name ? 
-                        `Zone ${reg.zone_id} - ${reg.zone_ag_name}` : 
-                        `Zone ${reg.zone_id}`;
-                    zones.set(reg.zone_id, zoneLabel);
-                }
-            });
-            
-            // Sort by zone_id and add to dropdown
-            Array.from(zones.entries())
-                .sort((a, b) => a[0] - b[0])
-                .forEach(([zoneId, label]) => {
-                    const option = document.createElement('option');
-                    option.value = zoneId;
-                    option.textContent = label;
-                    select.appendChild(option);
-                });
-            
-            // Add unmapped zone option if there are unmapped registrations
-            const unmappedCount = allRegistrations.filter(r => !r.zone_id).length;
-            if (unmappedCount > 0) {
-                const option = document.createElement('option');
-                option.value = 'unmapped';
-                option.textContent = `Unmapped Clubs (${unmappedCount})`;
-                select.appendChild(option);
-            }
-            
-            select.onchange = function() {
-                if (this.value) {
-                    exportZoneWise(this.value);
-                    this.value = ''; // Reset selection
-                }
-            };
-        }
-        
-        function getZoneForClub(club) {
-            // Not needed anymore - using zone_id from database
-            return null;
         }
         
         function searchTable() {
@@ -514,6 +477,48 @@
         function updateStats(registrations) {
             const totalCount = registrations.length;
             document.getElementById('total-count').textContent = totalCount;
+            
+            // Count registration types
+            const typeCounts = {
+                'Rotarian': 0,
+                'Rotary Ann': 0,
+                'Rotary Annet': 0,
+                'Rotarian with Spouse': 0,
+                'Guest': 0,
+                'Rotaractor': 0,
+                'Silver Donor': 0,
+                'Silver Sponsor': 0,
+                'Gold Sponsor': 0,
+                'Platinum Sponsor': 0,
+                'Patron Sponsor': 0,
+                'deregistered': 0
+            };
+            
+            // Count all registrations
+            allRegistrations.forEach(reg => {
+                if (reg.payment_status === 'test') {
+                    typeCounts['deregistered']++;
+                } else {
+                    const type = reg.registration_type || 'Unknown';
+                    if (typeCounts.hasOwnProperty(type)) {
+                        typeCounts[type]++;
+                    }
+                }
+            });
+            
+            // Update DOM elements
+            document.getElementById('count-rotarian').textContent = typeCounts['Rotarian'];
+            document.getElementById('count-ann').textContent = typeCounts['Rotary Ann'];
+            document.getElementById('count-annet').textContent = typeCounts['Rotary Annet'];
+            document.getElementById('count-spouse').textContent = typeCounts['Rotarian with Spouse'];
+            document.getElementById('count-guest').textContent = typeCounts['Guest'];
+            document.getElementById('count-rotaractor').textContent = typeCounts['Rotaractor'];
+            document.getElementById('count-silver-donor').textContent = typeCounts['Silver Donor'];
+            document.getElementById('count-silver-sponsor').textContent = typeCounts['Silver Sponsor'];
+            document.getElementById('count-gold-sponsor').textContent = typeCounts['Gold Sponsor'];
+            document.getElementById('count-platinum-sponsor').textContent = typeCounts['Platinum Sponsor'];
+            document.getElementById('count-patron-sponsor').textContent = typeCounts['Patron Sponsor'];
+            document.getElementById('count-deregistered').textContent = typeCounts['deregistered'];
         }
         
         function showError(message) {
@@ -578,74 +583,6 @@
             console.log('✅ Excel exported:', filename);
         }
         
-        function exportZoneWise(zoneValue) {
-            // Filter by zone_id or unmapped
-            let zoneRegistrations;
-            let zoneName;
-            
-            if (zoneValue === 'unmapped') {
-                zoneRegistrations = allRegistrations.filter(reg => !reg.zone_id);
-                zoneName = 'Unmapped Clubs';
-            } else {
-                const zoneId = parseInt(zoneValue);
-                zoneRegistrations = allRegistrations.filter(reg => reg.zone_id === zoneId);
-                
-                // Get zone name from first registration
-                if (zoneRegistrations.length > 0 && zoneRegistrations[0].zone_ag_name) {
-                    zoneName = `Zone ${zoneId} - ${zoneRegistrations[0].zone_ag_name}`;
-                } else {
-                    zoneName = `Zone ${zoneId}`;
-                }
-            }
-            
-            if (zoneRegistrations.length === 0) {
-                alert(`No registrations found for ${zoneName}`);
-                return;
-            }
-            
-            // Prepare data for Excel
-            const excelData = zoneRegistrations.map(reg => ({
-                'Registration ID': reg.registration_id,
-                'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
-                'Name': reg.name,
-                'Mobile': reg.mobile,
-                'Email': reg.email || 'N/A',
-                'Type': reg.registration_type,
-                'Club': reg.club || 'N/A',
-                'Zone': reg.zone_id ? `Zone ${reg.zone_id}` : 'Unmapped',
-                'AG Name': reg.zone_ag_name || 'N/A',
-                'AG Mobile': reg.zone_ag_mobile || 'N/A',
-                'Meal Preference': reg.meal_preference,
-                'T-Shirt Size': reg.tshirt_size || 'N/A',
-                'Amount': reg.registration_amount || 0,
-                'Payment Status': reg.payment_status || 'pending',
-                'Order ID': reg.order_id || 'N/A'
-            }));
-            
-            // Create workbook
-            const ws = XLSX.utils.json_to_sheet(excelData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, zoneName.substring(0, 30)); // Excel sheet name limit
-            
-            // Auto-size columns
-            const colWidths = [
-                { wch: 12 }, { wch: 12 }, { wch: 30 }, { wch: 15 },
-                { wch: 30 }, { wch: 22 }, { wch: 30 }, { wch: 10 },
-                { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 12 },
-                { wch: 12 }, { wch: 15 }, { wch: 30 }
-            ];
-            ws['!cols'] = colWidths;
-            
-            // Generate filename
-            const timestamp = new Date().toISOString().split('T')[0];
-            const zoneShort = zoneName.replace(/ /g, '-').replace(/\./g, '');
-            const filename = `SNEHA-SAURABHA-${zoneShort}-${timestamp}.xlsx`;
-            
-            // Download
-            XLSX.writeFile(wb, filename);
-            console.log(`✅ Zone export: ${zoneName} (${zoneRegistrations.length} registrations)`);
-            alert(`Downloaded ${zoneRegistrations.length} registrations for ${zoneName}`);
-        }
     </script>
 </body>
 </html>
