@@ -204,7 +204,7 @@
                     </div>
                 </div>
                 
-                <!-- Guest Registration Mode (plain input boxes, club is "Guest") -->
+                <!-- Guest Registration Mode (club mandatory) -->
                 <div id="guest-reg-mode" style="display: none;">
                     <div class="form-row">
                         <input type="text" id="guest-name" required placeholder="Full Name">
@@ -217,8 +217,8 @@
                         <small style="display: block; margin-top: 4px; color: #666; font-size: 12px;">10-digit mobile number</small>
                     </div>
                     <div class="form-row">
-                        <input type="text" id="guest-club" placeholder="Organization/Club Name (Optional)">
-                        <small style="display: block; margin-top: 4px; color: #666; font-size: 12px;">Leave blank if not applicable</small>
+                        <input type="text" id="guest-club" required placeholder="Club Name *">
+                        <small style="display: block; margin-top: 4px; color: #666; font-size: 12px;">Enter your organization or club name</small>
                     </div>
                 </div>
                 
@@ -252,7 +252,10 @@
                 
                 <!-- Auto-filled details (shows when member selected in quick mode) -->
                 <div id="autofilled-details" style="display: none;">
-                    <div class="form-row" style="background: #f0f8f0; padding: 15px; border-radius: 8px; border: 1px solid #4CAF50;">
+                    <div class="form-row" style="background: #f0f8f0; padding: 15px; border-radius: 8px; border: 1px solid #4CAF50; position: relative;">
+                        <button type="button" onclick="clearAutofilledDetails()" style="position: absolute; top: 10px; right: 10px; background: #dc2626; color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;">
+                            ✕ Clear & Select Again
+                        </button>
                         <div style="margin-bottom: 10px; color: #2a7f2a; font-weight: 600;">✓ Member Found</div>
                         <div style="margin-bottom: 8px;">
                             <strong>Name:</strong> <span id="autofilled-name"></span>

@@ -258,13 +258,14 @@
         async function fetchRegistrations() {
             try {
                 // Use the correct serverless function endpoint
-                const response = await fetch('/api/registrations');
+                const response = await fetch('/api/registrations/list');
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const data = await response.json();
+                console.log('API Response:', data);
                 
                 if (data.success && data.registrations) {
                     allRegistrations = data.registrations || [];
@@ -275,7 +276,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching registrations:', error);
-                showError('Error loading data: ' + error.message + '. Please check your connection.');
+                showError('Error loading data: ' + error.message + '. Check console for details.');
             }
         }
         

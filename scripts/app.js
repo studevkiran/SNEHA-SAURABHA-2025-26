@@ -840,12 +840,18 @@ function showReview() {
     const manualMode = document.getElementById('manual-reg-mode');
     
     if (guestMode && guestMode.style.display !== 'none') {
-        // Guest mode - with optional club input
+        // Guest mode - club is now mandatory
         fullName = document.getElementById('guest-name').value.trim();
         mobile = document.getElementById('guest-mobile').value.trim();
         email = document.getElementById('guest-email').value.trim();
         const guestClubInput = document.getElementById('guest-club').value.trim();
-        clubName = guestClubInput || 'Guest (No Club)';
+        
+        if (!guestClubInput) {
+            alert('Please enter your club or organization name');
+            return;
+        }
+        
+        clubName = guestClubInput;
         clubId = 0;
         
     } else if (autofilledDetails && autofilledDetails.style.display !== 'none') {
@@ -1745,3 +1751,30 @@ function clearMemberSelection() {
 window.clearClubSelection = clearClubSelection;
 window.clearClubSelectionQuick = clearClubSelectionQuick;
 window.clearMemberSelection = clearMemberSelection;
+
+// Clear autofilled details and go back to member selection
+function clearAutofilledDetails() {
+    const quickMode = document.getElementById('quick-reg-mode');
+    const autofilledDetails = document.getElementById('autofilled-details');
+    const memberSearch = document.getElementById('member-search');
+    const clubSearchQuick = document.getElementById('club-search-quick');
+    
+    // Hide autofilled, show quick mode back
+    if (autofilledDetails) autofilledDetails.style.display = 'none';
+    if (quickMode) quickMode.style.display = 'block';
+    
+    // Clear the member search input
+    if (memberSearch) memberSearch.value = '';
+    
+    // Show member selection wrapper again
+    const memberWrapper = document.getElementById('member-selection-wrapper');
+    if (memberWrapper) memberWrapper.style.display = 'block';
+    
+    // Clear registration data
+    delete registrationData.autofilledMember;
+    
+    // Focus back on member search
+    if (memberSearch) memberSearch.focus();
+}
+
+window.clearAutofilledDetails = clearAutofilledDetails;
