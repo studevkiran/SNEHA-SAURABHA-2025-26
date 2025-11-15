@@ -29,10 +29,25 @@
         }
         
         header {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 2px solid #D4AF37;
+            gap: 20px;
+        }
+        
+        .header-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        
+        .header-center {
+            flex: 1;
+            text-align: center;
         }
         
         header h1 {
@@ -214,6 +229,16 @@
                 padding: 20px;
             }
             
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-logo {
+                width: 80px;
+                height: 80px;
+            }
+            
             header h1 {
                 font-size: 24px;
             }
@@ -221,11 +246,6 @@
             .controls {
                 flex-direction: column;
                 align-items: stretch;
-            }
-            
-            .stats {
-                flex-direction: column;
-                align-items: flex-start;
             }
             
             table {
@@ -241,8 +261,12 @@
 <body>
     <div class="container">
         <header>
-            <h1>📊 Registration Tally</h1>
-            <p>SNEHA SAURABHA 2025-26 - District Conference</p>
+            <img src="../images/header-left.jpg" alt="Left Logo" class="header-logo">
+            <div class="header-center">
+                <h1>📊 Registration Tally</h1>
+                <p>SNEHA SAURABHA 2025-26 - District Conference</p>
+            </div>
+            <img src="../images/header-right.jpg" alt="Right Logo" class="header-logo">
         </header>
         
         <div class="controls">
