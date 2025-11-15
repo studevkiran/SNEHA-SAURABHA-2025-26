@@ -1895,15 +1895,24 @@ async function submitBypassRegistration() {
             registrationData.paymentStatus = paymentStatus;
             registrationData.utrNumber = utr;
             
-            // Show success screen
-            document.getElementById('success-name').textContent = registrationData.fullName;
-            document.getElementById('success-reg-id').textContent = result.registration.registration_id;
-            document.getElementById('success-type').textContent = registrationData.typeName;
-            document.getElementById('success-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-            document.getElementById('success-club').textContent = registrationData.clubName;
-            document.getElementById('success-meal').textContent = registrationData.mealPreference;
-            document.getElementById('success-mobile').textContent = registrationData.mobile;
-            document.getElementById('success-email').textContent = registrationData.email || 'N/A';
+            // Show success screen with null checks
+            const successName = document.getElementById('success-name');
+            const successRegId = document.getElementById('success-reg-id');
+            const successType = document.getElementById('success-type');
+            const successAmount = document.getElementById('success-amount');
+            const successClub = document.getElementById('success-club');
+            const successMeal = document.getElementById('success-meal');
+            const successMobile = document.getElementById('success-mobile');
+            const successEmail = document.getElementById('success-email');
+            
+            if (successName) successName.textContent = registrationData.fullName;
+            if (successRegId) successRegId.textContent = result.registration.registration_id;
+            if (successType) successType.textContent = registrationData.typeName;
+            if (successAmount) successAmount.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+            if (successClub) successClub.textContent = registrationData.clubName;
+            if (successMeal) successMeal.textContent = registrationData.mealPreference;
+            if (successMobile) successMobile.textContent = registrationData.mobile;
+            if (successEmail) successEmail.textContent = registrationData.email || 'N/A';
             
             showScreen('screen-success');
             

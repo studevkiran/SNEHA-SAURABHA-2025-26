@@ -59,6 +59,7 @@ body {
     color: var(--text-dark);
     margin: 0;
     padding: 0;
+    min-height: 100vh;
 }
 
 /* Mobile: fixed height to prevent scroll */
@@ -69,6 +70,14 @@ body {
         width: 100%;
         height: 100vh;
         height: 100dvh;
+    }
+}
+
+/* Desktop: natural flow */
+@media (min-width: 768px) {
+    body {
+        overflow-y: auto;
+        position: relative;
     }
 }
 
@@ -88,13 +97,16 @@ body {
     overflow: hidden;
 }
 
-/* Desktop: allow natural scrolling */
+/* Desktop: allow natural scrolling, fit content */
 @media (min-width: 768px) {
     .screen {
         position: relative;
         height: auto;
         min-height: 100vh;
-        overflow-y: auto;
+        overflow-y: visible;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
     }
 }
 
@@ -2037,6 +2049,15 @@ h3 {
     padding: 0;
 }
 
+.coupon-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #92400E;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
 .coupon-input-container {
     position: relative;
     display: flex;
@@ -2045,7 +2066,7 @@ h3 {
     background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
     border: 3px solid #F59E0B;
     border-radius: 12px;
-    padding: 4px;
+    padding: 8px;
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
     animation: pulseBorder 3s ease-in-out infinite;
     transition: all 0.3s ease;
@@ -2090,10 +2111,10 @@ h3 {
 
 .coupon-simple-input {
     flex: 1;
-    padding: 14px 16px;
+    padding: 16px 18px;
     border: none;
     background: transparent;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     color: #92400E;
     outline: none;
