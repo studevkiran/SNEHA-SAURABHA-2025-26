@@ -917,14 +917,29 @@ function showReview() {
     // For guest mode, club is not required
     const isGuestMode = guestMode && guestMode.style.display !== 'none';
     
-    // Validate all required fields (email is optional, club optional for guest)
-    if (!fullName || !mobile || !mealPreference || !tshirtSize) {
-        alert('Please fill in all required fields including T-Shirt size');
+    // Validate all required fields with specific error messages
+    if (!fullName) {
+        alert('❌ Please enter your full name');
+        return;
+    }
+    
+    if (!mobile) {
+        alert('❌ Please enter your mobile number');
+        return;
+    }
+    
+    if (!mealPreference) {
+        alert('❌ Please select your meal preference');
+        return;
+    }
+    
+    if (!tshirtSize) {
+        alert('❌ Please select your T-Shirt size');
         return;
     }
     
     if (!isGuestMode && !clubName) {
-        alert('Please select your club');
+        alert('❌ Please select your club');
         return;
     }
     
@@ -932,7 +947,7 @@ function showReview() {
     if (email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            alert('Please enter a valid email address');
+            alert('❌ Please enter a valid email address');
             return;
         }
     }
@@ -940,7 +955,7 @@ function showReview() {
     // Phone validation (10 digits)
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(mobile)) {
-        alert('Please enter a valid 10-digit mobile number');
+        alert('❌ Please enter a valid 10-digit mobile number');
         return;
     }
     
