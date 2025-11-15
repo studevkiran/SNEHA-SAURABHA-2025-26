@@ -316,16 +316,6 @@
         let filteredRegistrations = [];
         let currentSort = { column: null, direction: 'asc' };
         
-        // Zone mapping for clubs
-        const zoneMapping = {
-            'Zone 1 - Mysore City': ['Mysore', 'Central Mysore', 'Mysore Midtown', 'Mysore Metro', 'Mysore North', 'Mysore East', 'Mysore West', 'Mysore SouthEast', 'Mysore Ambari', 'Mysore Royal', 'Mysore Brindavan', 'Mysore Elite', 'Mysore Jayaprakash Nagar', 'Mysore Sreegandha', 'Mysore Stars', 'Mysuru Diamond', 'Heritage Mysuru', 'Vijayanagara Mysore', 'Krishnaraja', 'E Club of Mysore Center', 'Ivory City', 'Panchasheel'],
-            'Zone 2 - Mysore District': ['H D Kote', 'Hunsur', 'Krishnarajanagara', 'Nanjangud', 'Periyapatna Midtown', 'Periyapatna Icons', 'Siddakatte', 'Bannur', 'Shanivarashanthe'],
-            'Zone 3 - Chamarajanagar': ['Chamarajanagara', 'Chamarajanagara Silk City', 'Kollegala', 'Kollegala Midtown', 'Yelandur Greenway'],
-            'Zone 4 - Kodagu': ['Madikeri', 'Misty Hills Madikeri', 'Gonikoppal', 'Virajpete', 'Kushalnagara', 'Somarpete Hills', 'Hemavathi Kodlipete'],
-            'Zone 5 - Mangalore City': ['Mangalore', 'Mangalore Central', 'Mangalore City', 'Mangalore Coastal', 'Mangalore Down Town', 'Mangalore East', 'Mangalore Hillside', 'Mangalore Metro', 'Mangalore Midtown', 'Mangalore North', 'Mangalore Port Town', 'Mangalore Seaside', 'Mangalore South', 'Mangalore Sunrise'],
-            'Zone 6 - DK District': ['Bantwal', 'Bantwal Town', 'Bantwal Loretto Hills', 'Belthangady', 'B C Road City', 'Baikampady', 'Deralakatte', 'Moodabidri', 'Moodabidri Temple Town', 'Mulki', 'Surathkal', 'Puttur', 'Puttur Central', 'Puttur City', 'Puttur East', 'Puttur Elite', 'Puttur Swarna', 'Puttur Yuva', 'Birumale Hills Puttur', 'Sullia', 'Sullia City', 'Uppinangdi', 'Subramanya', 'Vittal', 'Modankap', 'Madhyanthar']
-        };
-        
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function() {
             fetchRegistrations();
@@ -370,12 +360,36 @@
             const select = document.getElementById('zone-select');
             select.innerHTML = '<option value="">📍 Zone-Wise Download</option>';
             
-            Object.keys(zoneMapping).forEach(zone => {
-                const option = document.createElement('option');
-                option.value = zone;
-                option.textContent = zone;
-                select.appendChild(option);
+            // Get unique zones from registrations with zone_id
+            const zones = new Map(); // zone_id -> label
+            
+            allRegistrations.forEach(reg => {
+                if (reg.zone_id) {
+                    const zoneLabel = reg.zone_ag_name ? 
+                        `Zone ${reg.zone_id} - ${reg.zone_ag_name}` : 
+                        `Zone ${reg.zone_id}`;
+                    zones.set(reg.zone_id, zoneLabel);
+                }
             });
+            
+            // Sort by zone_id and add to dropdown
+            Array.from(zones.entries())
+                .sort((a, b) => a[0] - b[0])
+                .forEach(([zoneId, label]) => {
+                    const option = document.createElement('option');
+                    option.value = zoneId;
+                    option.textContent = label;
+                    select.appendChild(option);
+                });
+            
+            // Add unmapped zone option if there are unmapped registrations
+            const unmappedCount = allRegistrations.filter(r => !r.zone_id).length;
+            if (unmappedCount > 0) {
+                const option = document.createElement('option');
+                option.value = 'unmapped';
+                option.textContent = `Unmapped Clubs (${unmappedCount})`;
+                select.appendChild(option);
+            }
             
             select.onchange = function() {
                 if (this.value) {
@@ -386,12 +400,8 @@
         }
         
         function getZoneForClub(club) {
-            for (const [zone, clubs] of Object.entries(zoneMapping)) {
-                if (clubs.includes(club)) {
-                    return zone;
-                }
-            }
-            return 'Unassigned';
+            // Not needed anymore - using zone_id from database
+            return null;
         }
         
         function searchTable() {
@@ -518,7 +528,7 @@
             }
             
             // Prepare data for Excel
-            const excelData = allRegistrations.map(reg => ({
+            const excelData = filteredRegistrations.map(reg => ({
                 'Registration ID': reg.registration_id,
                 'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
                 'Name': reg.name,
@@ -526,15 +536,15 @@
                 'Email': reg.email || 'N/A',
                 'Type': reg.registration_type,
                 'Club': reg.club || 'N/A',
-                'Zone': getZoneForClub(reg.club),
+                'Zone': reg.zone_id ? `Zone ${reg.zone_id}` : 'Unmapped',
+                'AG Name': reg.zone_ag_name || 'N/A',
+                'AG Mobile': reg.zone_ag_mobile || 'N/A',
                 'Meal Preference': reg.meal_preference,
                 'T-Shirt Size': reg.tshirt_size || 'N/A',
                 'Amount': reg.registration_amount || 0,
                 'Payment Status': reg.payment_status || 'pending',
                 'Order ID': reg.order_id || 'N/A'
-            }));
-            
-            // Create workbook
+            }));            // Create workbook
             const ws = XLSX.utils.json_to_sheet(excelData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
@@ -548,7 +558,9 @@
                 { wch: 30 }, // Email
                 { wch: 22 }, // Type
                 { wch: 30 }, // Club
-                { wch: 25 }, // Zone
+                { wch: 10 }, // Zone
+                { wch: 25 }, // AG Name
+                { wch: 15 }, // AG Mobile
                 { wch: 15 }, // Meal
                 { wch: 12 }, // T-Shirt
                 { wch: 12 }, // Amount
@@ -566,11 +578,25 @@
             console.log('✅ Excel exported:', filename);
         }
         
-        function exportZoneWise(zoneName) {
-            const zoneClubs = zoneMapping[zoneName];
-            const zoneRegistrations = allRegistrations.filter(reg => 
-                zoneClubs.includes(reg.club)
-            );
+        function exportZoneWise(zoneValue) {
+            // Filter by zone_id or unmapped
+            let zoneRegistrations;
+            let zoneName;
+            
+            if (zoneValue === 'unmapped') {
+                zoneRegistrations = allRegistrations.filter(reg => !reg.zone_id);
+                zoneName = 'Unmapped Clubs';
+            } else {
+                const zoneId = parseInt(zoneValue);
+                zoneRegistrations = allRegistrations.filter(reg => reg.zone_id === zoneId);
+                
+                // Get zone name from first registration
+                if (zoneRegistrations.length > 0 && zoneRegistrations[0].zone_ag_name) {
+                    zoneName = `Zone ${zoneId} - ${zoneRegistrations[0].zone_ag_name}`;
+                } else {
+                    zoneName = `Zone ${zoneId}`;
+                }
+            }
             
             if (zoneRegistrations.length === 0) {
                 alert(`No registrations found for ${zoneName}`);
@@ -586,6 +612,9 @@
                 'Email': reg.email || 'N/A',
                 'Type': reg.registration_type,
                 'Club': reg.club || 'N/A',
+                'Zone': reg.zone_id ? `Zone ${reg.zone_id}` : 'Unmapped',
+                'AG Name': reg.zone_ag_name || 'N/A',
+                'AG Mobile': reg.zone_ag_mobile || 'N/A',
                 'Meal Preference': reg.meal_preference,
                 'T-Shirt Size': reg.tshirt_size || 'N/A',
                 'Amount': reg.registration_amount || 0,
@@ -601,14 +630,15 @@
             // Auto-size columns
             const colWidths = [
                 { wch: 12 }, { wch: 12 }, { wch: 30 }, { wch: 15 },
-                { wch: 30 }, { wch: 22 }, { wch: 30 }, { wch: 15 },
-                { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 30 }
+                { wch: 30 }, { wch: 22 }, { wch: 30 }, { wch: 10 },
+                { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 12 },
+                { wch: 12 }, { wch: 15 }, { wch: 30 }
             ];
             ws['!cols'] = colWidths;
             
             // Generate filename
             const timestamp = new Date().toISOString().split('T')[0];
-            const zoneShort = zoneName.replace(/ /g, '-');
+            const zoneShort = zoneName.replace(/ /g, '-').replace(/\./g, '');
             const filename = `SNEHA-SAURABHA-${zoneShort}-${timestamp}.xlsx`;
             
             // Download
