@@ -147,9 +147,9 @@ async function sendViaInfobip(registrationData) {
   // Infobip WhatsApp Template API
   const infobipUrl = `https://${process.env.INFOBIP_BASE_URL}/whatsapp/1/message/template`;
 
-  // Confirmation page URL: use short redirect URL (sneha2026.in/r.html?id=ANN04V6567)
-  const baseUrl = process.env.SITE_BASE_URL || 'https://sneha2026.in';
-  const confirmationLink = `${baseUrl}/r.html?id=${registrationId}`;
+  // Confirmation page URL: use payment callback format instead of r.html
+  const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://sneha2026.vercel.app';
+  const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registrationId}`;
 
   // Receipt number: prefer caller-provided receiptNo, else fall back to full registrationId
   const receiptNo = providedReceipt || registrationId;

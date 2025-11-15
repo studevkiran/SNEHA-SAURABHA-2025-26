@@ -100,10 +100,10 @@ module.exports = async (req, res) => {
           phoneNumber = '91' + phoneNumber;
         }
         
-        // Use canonical domain for short URL redirect
-        const baseUrl = process.env.SITE_BASE_URL || 'https://sneha2026.in';
-        // Short URL: sneha2026.in/r.html?id=ANN04V6567 (redirects to confirmation page)
-        const confirmationLink = `${baseUrl}/r.html?id=${registration.registration_id}`;
+        // Use Vercel URL for payment callback format
+        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://sneha2026.vercel.app';
+        // Use payment callback URL format instead of r.html
+        const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registration.registration_id}`;
         // Use Cashfree transaction ID as receipt number (unique payment identifier)
         const receiptNo = statusResponse.transactionId || registration.registration_id;
         
