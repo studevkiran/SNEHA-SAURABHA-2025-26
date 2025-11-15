@@ -1820,6 +1820,7 @@ async function verifyBypassCode() {
                 email: registrationData.email || 'Not Provided',
                 mobile: registrationData.mobile,
                 clubName: registrationData.clubName,
+                clubId: registrationData.clubId || 0,
                 registrationType: registrationData.typeName,
                 amount: registrationData.price,
                 mealPreference: registrationData.mealPreference,

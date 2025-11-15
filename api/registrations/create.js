@@ -86,16 +86,19 @@ module.exports = async (req, res) => {
     // 1. Save to PostgreSQL (if available)
     try {
       const result = await createRegistration({
+        orderId: orderId || `ORDER_${Date.now()}`,
         name,
-        email,
+        email: email || 'Not Provided',
         mobile,
         clubName,
+        clubId: clubId || 0,
         registrationType,
         amount,
         mealPreference: mealPreference || 'Veg',
-        paymentStatus,
-        paymentMethod,
-        transactionId: transactionId || null
+        paymentStatus: paymentStatus || 'Pending',
+        paymentMethod: paymentMethod || 'Cashfree',
+        transactionId: transactionId || null,
+        upiId: upiId || null
       });
       
       if (result.success && result.registration) {
