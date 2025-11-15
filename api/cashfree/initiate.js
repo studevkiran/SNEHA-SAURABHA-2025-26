@@ -8,6 +8,39 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// Helper function to generate a unique confirmation ID
+function generateConfirmationId(prefix = 'REG', clubId = 0) {
+    const timestamp = Date.now().toString(); // Ensures uniqueness over time
+    const randomPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); // Prevents collisions in the same millisecond
+    const clubPart = (clubId || 0).toString().padStart(2, '0'); // Adds context
+
+    // Format: PREFIX + CLUB_ID + last 6 digits of timestamp + 3 random digits (e.g., ROT01123456789)
+    return `${prefix}${clubPart}${timestamp.slice(-6)}${randomPart}`;
+}
+
+const registrationPrices = {
+    'rotarian': 5000,
+    'rotarian-spouse': 8000,
+    'ann': 4000,
+    'annet': 2000,
+    'innerwheel': 3500,
+    'guest': 5000,
+    'rotaractor': 2500,
+    'silver-donor': 20000,
+    'silver-sponsor': 25000,
+    'gold-sponsor': 50000,
+    'platinum-sponsor': 75000,
+    'patron-sponsor': 100000
+};
+
+const VALID_COUPONS = {
+    'TEST1': {
+        type: 'fixed',
+        value: 1,
+        description: 'Sets the price to ₹1 for testing purposes.'
+    }
+};
+
 module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,23 +57,20 @@ module.exports = async (req, res) => {
 
   try {
     const {
-      confirmationId,
       orderId,
-      amount,
       fullName,
       mobile,
       email,
       registrationType,
+      couponCode,
       clubName,
       clubId,
       mealPreference,
-      tshirtSize,
-      qrData
+      tshirtSize
     } = req.body;
 
     console.log('📥 Payment initiation request received:', {
       orderId,
-      amount,
       fullName,
       mobile,
       email,
@@ -48,11 +78,27 @@ module.exports = async (req, res) => {
     });
 
     // Validation
-    if (!orderId || !amount || !fullName || !mobile) {
+    if (!orderId || !fullName || !mobile) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: orderId, amount, fullName, mobile'
+        error: 'Missing required fields: orderId, fullName, mobile'
       });
+    }
+
+    // Price calculation
+    const normalizedRegType = (registrationType || '').toLowerCase().replace(/\s+/g, '-');
+    let amount = registrationPrices[normalizedRegType];
+
+    if (amount === undefined) {
+        return res.status(400).json({ success: false, error: 'Invalid registration type provided.' });
+    }
+
+    if (couponCode) {
+        const coupon = VALID_COUPONS[couponCode.toUpperCase()];
+        if (coupon) {
+            amount = coupon.value;
+            console.log(`Applied coupon ${couponCode}, new price: ${amount}`);
+        }
     }
 
     // Validate email format (only if provided)
@@ -82,7 +128,7 @@ module.exports = async (req, res) => {
       'ann': 'ANN',
       'annet': 'ANT',
       'guest': 'GST',
-      'rotaractor': 'ANT',
+      'rotaractor': 'RAC', // Corrected prefix
       'silver-donor': 'SD',
       'silver-sponsor': 'SS',
       'gold-sponsor': 'GS',
@@ -94,7 +140,15 @@ module.exports = async (req, res) => {
     const normalizedType = (registrationType || '').toLowerCase().replace(/\s+/g, '-');
     const prefix = typePrefixes[normalizedType] || 'SS';
     
-    console.log('🎫 Registration Type:', registrationType, '→ Normalized:', normalizedType, '→ Prefix:', prefix);
+    const confirmationId = generateConfirmationId(prefix, clubId);
+    const qrData = JSON.stringify({
+        id: confirmationId,
+        name: fullName,
+        type: registrationType,
+        mobile: mobile
+    });
+
+    console.log('🎫 Generated Confirmation ID:', confirmationId);
 
     // Check if this Order ID already exists (retry scenario)
     console.log('🔍 Checking if Order ID already exists:', orderId);
@@ -102,6 +156,7 @@ module.exports = async (req, res) => {
     // Create payment attempt (or check if exists)
     const attemptResult = await createPaymentAttempt({
       orderId,
+      confirmationId, // Store the generated ID
       name: fullName,
       mobile,
       email: email || 'Not Provided',
@@ -110,7 +165,8 @@ module.exports = async (req, res) => {
       registrationType,
       amount,
       mealPreference,
-      tshirtSize
+      tshirtSize,
+      qrData // Store the generated QR data
     });
     
     if (!attemptResult.success) {

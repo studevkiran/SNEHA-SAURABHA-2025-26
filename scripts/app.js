@@ -284,6 +284,12 @@ document.addEventListener('DOMContentLoaded', function() {
             nameInput.focus();
         });
     }
+
+    // Update WhatsApp link with the support phone number from the config
+    const whatsappLink = document.getElementById('whatsapp-link');
+    if (whatsappLink) {
+        whatsappLink.href = `https://wa.me/91${config.supportPhoneNumber}`;
+    }
 });
 
 // Load clubs from JSON file
@@ -906,10 +912,12 @@ function showReview() {
     }
 }
 
-// Apply coupon (testing only)
-function applyCoupon() {
+// Apply coupon
+async function applyCoupon() {
     const codeEl = document.getElementById('coupon-code');
     const msgEl = document.getElementById('coupon-message');
+    const applyBtn = event.target;
+
     if (!codeEl || !msgEl) return;
 
     const code = (codeEl.value || '').trim().toUpperCase();
@@ -920,29 +928,46 @@ function applyCoupon() {
         return;
     }
 
-    // Known test coupon: TEST1 -> sets price to ₹1
-    let newPrice = registrationData.originalPrice || registrationData.price;
-    if (code === 'TEST1') {
-        newPrice = 1;
-        msgEl.style.color = '#2a7f2a';
-        msgEl.textContent = `Coupon applied: ${code} — Price set to ₹1 for testing`;
-    } else {
+    applyBtn.disabled = true;
+    applyBtn.textContent = 'Validating...';
+
+    try {
+        const response = await fetch('/api/validate-coupon', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                couponCode: code,
+                registrationType: registrationData.type
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            registrationData.price = result.newPrice;
+            msgEl.style.color = '#2a7f2a';
+            msgEl.textContent = `Coupon applied: ${result.message}`;
+            registrationData.appliedCoupon = code;
+        } else {
+            msgEl.style.color = '#b71c1c';
+            msgEl.textContent = result.error || 'Invalid coupon code';
+            resetCoupon(); // Reset to original price
+        }
+
+    } catch (error) {
         msgEl.style.color = '#b71c1c';
-        msgEl.textContent = 'Invalid coupon code';
+        msgEl.textContent = 'Could not validate coupon. Please try again.';
+    } finally {
+        // Update UI
+        const reviewPriceEl = document.getElementById('review-price');
+        const paymentAmountEl = document.getElementById('payment-amount');
+        if (reviewPriceEl) reviewPriceEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+        if (paymentAmountEl) paymentAmountEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
         msgEl.style.display = 'block';
-        return;
+
+        applyBtn.disabled = false;
+        applyBtn.textContent = 'Apply';
     }
-
-    // Apply new price and update UI
-    registrationData.price = newPrice;
-    const reviewPriceEl = document.getElementById('review-price');
-    const paymentAmountEl = document.getElementById('payment-amount');
-    if (reviewPriceEl) reviewPriceEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-    if (paymentAmountEl) paymentAmountEl.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-    msgEl.style.display = 'block';
-
-    // Save applied coupon code for backend (optional)
-    registrationData.appliedCoupon = code;
 }
 
 function resetCoupon() {
@@ -1202,7 +1227,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                 } else {
                     alert('No worries! Your registration will be confirmed once payment is verified.\n\n' +
                           'Order ID: ' + orderId + '\n\n' +
-                          'You will receive confirmation via WhatsApp: +91 99805 57785');
+                          `You will receive confirmation via WhatsApp: +91 ${config.supportPhoneNumber}`);
                     window.location.href = 'index.html';
                 }
             } else {
@@ -1213,7 +1238,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                     '✅ WHAT TO DO:\n' +
                     '1. If money was deducted from your account:\n' +
                     '   • Take screenshot of payment confirmation\n' +
-                    '   • WhatsApp to: +91 99805 57785\n' +
+                    `   • WhatsApp to: +91 ${config.supportPhoneNumber}\n` +
                     '   • Include Order ID: ' + orderId + '\n' +
                     '   • We will verify and confirm manually\n\n' +
                     '2. If no money was deducted:\n' +
@@ -1234,7 +1259,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                 'Order ID: ' + orderId + '\n\n' +
                 '✅ WHAT TO DO:\n' +
                 '1. Try verifying again (click OK below)\n\n' +
-                '2. If retry fails, WhatsApp to: +91 99805 57785\n' +
+                `2. If retry fails, WhatsApp to: +91 ${config.supportPhoneNumber}\n` +
                 '   • Order ID: ' + orderId + '\n' +
                 '   • Screenshot of payment\n' +
                 '   • UPI Transaction ID (if available)\n\n' +
@@ -1247,7 +1272,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                     verifyPaymentAndShowSuccess(orderId, pendingData);
                 }, 2000);
             } else {
-                alert('No problem! WhatsApp your payment details to +91 99805 57785\n\n' +
+                alert(`No problem! WhatsApp your payment details to +91 ${config.supportPhoneNumber}\n\n` +
                       'Include Order ID: ' + orderId);
                 window.location.href = 'index.html';
             }
@@ -1263,7 +1288,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
             'Order ID: ' + orderId + '\n' +
             'Error: ' + error.message + '\n\n' +
             '✅ WHAT TO DO:\n' +
-            'WhatsApp to: +91 99805 57785\n\n' +
+            `WhatsApp to: +91 ${config.supportPhoneNumber}\n\n` +
             'Send:\n' +
             '• Order ID: ' + orderId + '\n' +
             '• Payment screenshot\n' +
