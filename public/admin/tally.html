@@ -517,6 +517,8 @@
         }
         
         function updateStats(registrations) {
+            console.log('🔢 Updating stats for', registrations.length, 'registrations');
+            
             // Count only non-test registrations for total
             const nonTestCount = registrations.filter(r => r.payment_status !== 'test').length;
             document.getElementById('total-count').textContent = nonTestCount;
@@ -537,17 +539,27 @@
                 'deregistered': 0
             };
             
+            // Debug: Check what registration types exist in data
+            const uniqueTypes = new Set();
+            
             // Always count from allRegistrations (not filtered ones)
             allRegistrations.forEach(reg => {
+                uniqueTypes.add(reg.registration_type);
+                
                 if (reg.payment_status === 'test') {
                     typeCounts['deregistered']++;
                 } else {
                     const type = reg.registration_type || 'Unknown';
                     if (typeCounts.hasOwnProperty(type)) {
                         typeCounts[type]++;
+                    } else {
+                        console.warn('⚠️ Unknown registration type:', type);
                     }
                 }
             });
+            
+            console.log('📋 Unique registration types in data:', Array.from(uniqueTypes));
+            console.log('📊 Type counts:', typeCounts);
             
             // Update registration type DOM elements
             document.getElementById('count-rotarian').textContent = typeCounts['Rotarian'];
@@ -569,14 +581,24 @@
                 '6': 0, '7': 0, '8': 0, '9': 0
             };
             
+            // Debug: Check zone values
+            const uniqueZones = new Set();
+            
             allRegistrations.forEach(reg => {
+                if (reg.zone) uniqueZones.add(reg.zone);
+                
                 if (reg.payment_status !== 'test' && reg.zone) {
                     const zone = reg.zone.toString();
                     if (zoneCounts.hasOwnProperty(zone)) {
                         zoneCounts[zone]++;
+                    } else {
+                        console.warn('⚠️ Invalid zone:', zone);
                     }
                 }
             });
+            
+            console.log('🗺️ Unique zones in data:', Array.from(uniqueZones));
+            console.log('📍 Zone counts:', zoneCounts);
             
             // Update zone DOM elements
             for (let i = 1; i <= 9; i++) {
