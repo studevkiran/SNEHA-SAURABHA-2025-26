@@ -1,7 +1,5 @@
 // API: Create new registration
 const { createRegistration, createPaymentLog } = require('../../lib/db-functions');
-const { addRegistrationToSheets } = require('../../lib/db-google-sheets');
-const { logRegistration } = require('../../lib/backup-logger');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -116,28 +114,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    // 2. Save to Google Sheets (async, don't wait)
-    addRegistrationToSheets(registrationData)
-      .then(result => {
-        if (result.success) {
-          console.log('✅ Google Sheets backup completed');
-        } else {
-          console.error('⚠️ Google Sheets backup failed:', result.error);
-        }
-      })
-      .catch(err => console.error('⚠️ Google Sheets error:', err.message));
-
-    // 3. Log to backup file (async, don't wait)
-    setImmediate(() => {
-      try {
-        logRegistration(registrationData);
-        console.log('✅ Backup log completed');
-      } catch (err) {
-        console.error('⚠️ Backup log failed:', err.message);
-      }
-    });
-
-    // 4. Create payment log (async, don't wait)
+    // 2. Create payment log (async, don't wait)
     if (orderId && registrationData.registration_id) {
       createPaymentLog({
         registrationId: registrationData.registration_id,
