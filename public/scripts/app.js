@@ -1887,7 +1887,174 @@ async function processManualRegistration(result) {
     }
 }
 
-window.openBypassCodeModal = openBypassCodeModal;
-window.closeBypassCodeModal = closeBypassCodeModal;
-window.verifyBypassCode = verifyBypassCode;
+// ===================================================================================
+// GLOBAL SCOPE EXPOSURE - All onclick handlers must be on window object
+// ===================================================================================
 
+// Existing bypass code functions
+window.openBypassCodeModal = openBypassCodeModal;
+window.closeBypassModal = closeBypassCodeModal;
+window.verifyBypassCode = verifyBypassCode;
+window.submitBypassRegistration = submitBypassRegistration;
+
+// ===================================================================================
+// COUPON CODE SYSTEM - Animated discount with validation
+// ===================================================================================
+
+const VALID_COUPONS = {
+    '100': { discount: 100, name: 'Discount ₹100' },
+    'DISCOUNT100': { discount: 100, name: 'Discount ₹100' },
+    'EARLYBIRD': { discount: 250, name: 'Early Bird ₹250' },
+    'VIP500': { discount: 500, name: 'VIP Discount ₹500' }
+};
+
+let appliedDiscount = 0;
+let appliedCouponCode = '';
+
+// Apply coupon code with validation and animation
+window.applyCoupon = function() {
+    const couponInput = document.getElementById('couponCode');
+    const couponMessage = document.getElementById('couponMessage');
+    const applyBtn = document.getElementById('couponApplyBtn');
+    
+    if (!couponInput || !couponMessage || !applyBtn) return;
+    
+    const code = couponInput.value.trim().toUpperCase();
+    
+    // Clear previous messages
+    couponMessage.textContent = '';
+    couponMessage.className = 'coupon-message';
+    
+    if (!code) {
+        couponMessage.textContent = '⚠️ Please enter a coupon code';
+        couponMessage.classList.add('error', 'slide-in');
+        couponInput.classList.add('shake');
+        setTimeout(() => couponInput.classList.remove('shake'), 500);
+        return;
+    }
+    
+    // Check if valid coupon
+    if (VALID_COUPONS[code]) {
+        appliedDiscount = VALID_COUPONS[code].discount;
+        appliedCouponCode = code;
+        
+        // Success animation
+        applyBtn.classList.add('shrink-pulse');
+        setTimeout(() => applyBtn.classList.remove('shrink-pulse'), 400);
+        
+        couponMessage.textContent = `✅ ${VALID_COUPONS[code].name} applied successfully!`;
+        couponMessage.classList.add('success', 'slide-in');
+        
+        // Show discount display
+        const discountDisplay = document.getElementById('discountDisplay');
+        const discountAmount = document.getElementById('discountAmount');
+        const savingsAmount = document.getElementById('savingsAmount');
+        
+        if (discountDisplay && discountAmount && savingsAmount) {
+            discountAmount.textContent = `-₹${appliedDiscount}`;
+            savingsAmount.textContent = `₹${appliedDiscount}`;
+            discountDisplay.style.display = 'flex';
+            discountDisplay.classList.add('success-pop');
+            setTimeout(() => discountDisplay.classList.remove('success-pop'), 600);
+        }
+        
+        // Update final amount
+        updateFinalAmount();
+        
+        // Disable input after successful application
+        couponInput.disabled = true;
+        applyBtn.disabled = true;
+        applyBtn.textContent = '✓ APPLIED';
+        applyBtn.style.background = '#10B981';
+        
+        // Store in registration data
+        registrationData.discount = appliedDiscount;
+        registrationData.applied_coupon = appliedCouponCode;
+        
+    } else {
+        // Invalid coupon
+        couponMessage.textContent = '❌ Invalid coupon code. Please try again.';
+        couponMessage.classList.add('error', 'slide-in');
+        couponInput.classList.add('shake');
+        setTimeout(() => couponInput.classList.remove('shake'), 500);
+        couponInput.value = '';
+        couponInput.focus();
+    }
+};
+
+// Update final amount with discount
+window.updateFinalAmount = function() {
+    const originalAmountSpan = document.getElementById('originalAmount');
+    const discountValueSpan = document.getElementById('discountValue');
+    const finalAmountSpan = document.getElementById('finalAmount');
+    const discountRow = document.getElementById('discountRow');
+    const paymentAmountSpan = document.getElementById('paymentAmount');
+    
+    // Get original amount from registration data
+    const originalAmount = registrationData.registration_amount || 0;
+    const finalAmount = Math.max(0, originalAmount - appliedDiscount);
+    
+    // Update UI
+    if (originalAmountSpan) originalAmountSpan.textContent = `₹${originalAmount.toLocaleString('en-IN')}`;
+    if (discountValueSpan) discountValueSpan.textContent = `-₹${appliedDiscount}`;
+    if (finalAmountSpan) {
+        finalAmountSpan.textContent = `₹${finalAmount.toLocaleString('en-IN')}`;
+        finalAmountSpan.classList.add('amount-bounce');
+        setTimeout(() => finalAmountSpan.classList.remove('amount-bounce'), 2000);
+    }
+    if (paymentAmountSpan) paymentAmountSpan.textContent = `₹${finalAmount.toLocaleString('en-IN')}`;
+    
+    // Show/hide discount row
+    if (discountRow) {
+        discountRow.style.display = appliedDiscount > 0 ? 'flex' : 'none';
+    }
+    
+    // Update registration data with final amount
+    registrationData.final_amount = finalAmount;
+};
+
+// Initialize coupon section when review screen loads
+function initializeCouponSection() {
+    // Reset coupon state
+    appliedDiscount = 0;
+    appliedCouponCode = '';
+    
+    const couponInput = document.getElementById('couponCode');
+    const applyBtn = document.getElementById('couponApplyBtn');
+    const couponMessage = document.getElementById('couponMessage');
+    const discountDisplay = document.getElementById('discountDisplay');
+    
+    if (couponInput) {
+        couponInput.value = '';
+        couponInput.disabled = false;
+    }
+    if (applyBtn) {
+        applyBtn.disabled = false;
+        applyBtn.innerHTML = '<span class="btn-text">APPLY</span><span class="btn-icon">✨</span>';
+        applyBtn.style.background = '';
+    }
+    if (couponMessage) {
+        couponMessage.textContent = '';
+        couponMessage.className = 'coupon-message';
+    }
+    if (discountDisplay) {
+        discountDisplay.style.display = 'none';
+    }
+    
+    // Update amounts
+    updateFinalAmount();
+}
+
+// Hook into existing showScreen function to initialize coupon section
+const originalShowScreen = window.showScreen;
+window.showScreen = function(screenId) {
+    originalShowScreen(screenId);
+    
+    if (screenId === 'screen-review') {
+        // Small delay to ensure DOM is ready
+        setTimeout(initializeCouponSection, 100);
+    }
+};
+
+console.log('✅ Coupon code system initialized with codes:', Object.keys(VALID_COUPONS));
+console.log('✅ All global functions exposed to window object');
