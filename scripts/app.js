@@ -790,10 +790,14 @@ function handleMemberSelection(member) {
     // Show autofilled details
     autofilledDetails.style.display = 'block';
     
-    // Populate autofilled fields
-    document.getElementById('autofilled-name').textContent = member.name;
-    document.getElementById('autofilled-email').value = member.email || '';
-    document.getElementById('autofilled-mobile').value = member.mobile || '';
+    // Populate autofilled fields - use correct IDs
+    const nameElement = document.getElementById('autofilled-name');
+    const emailElement = document.getElementById('email-quick');
+    const mobileElement = document.getElementById('mobile-quick');
+    
+    if (nameElement) nameElement.textContent = member.name;
+    if (emailElement) emailElement.value = member.email || '';
+    if (mobileElement) mobileElement.value = member.mobile || '';
     
     // Store in registration data
     registrationData.autofilledMember = member;
@@ -836,23 +840,26 @@ function showReview() {
     const manualMode = document.getElementById('manual-reg-mode');
     
     if (guestMode && guestMode.style.display !== 'none') {
-        // Guest mode - no club dropdown
+        // Guest mode - with optional club input
         fullName = document.getElementById('guest-name').value.trim();
         mobile = document.getElementById('guest-mobile').value.trim();
         email = document.getElementById('guest-email').value.trim();
-        clubName = 'Guest (No Club)';
+        const guestClubInput = document.getElementById('guest-club').value.trim();
+        clubName = guestClubInput || 'Guest (No Club)';
         clubId = 0;
         
     } else if (autofilledDetails && autofilledDetails.style.display !== 'none') {
-        // Quick mode - autofilled from member selection
+        // Quick mode - autofilled from member selection - use correct IDs
         if (!registrationData.autofilledMember) {
             alert('Please select a member or switch to manual entry');
             return;
         }
         
         fullName = registrationData.autofilledMember.name;
-        email = document.getElementById('autofilled-email').value.trim();
-        mobile = document.getElementById('autofilled-mobile').value.trim();
+        const emailInput = document.getElementById('email-quick');
+        const mobileInput = document.getElementById('mobile-quick');
+        email = emailInput ? emailInput.value.trim() : '';
+        mobile = mobileInput ? mobileInput.value.trim() : '';
         clubName = registrationData.clubName;
         
         // Get club ID from stored clubs list

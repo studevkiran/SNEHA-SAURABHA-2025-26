@@ -257,19 +257,25 @@
         
         async function fetchRegistrations() {
             try {
-                const response = await fetch('/api/registrations/all');
+                // Use the correct serverless function endpoint
+                const response = await fetch('/api/registrations');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
                 
-                if (data.success) {
+                if (data.success && data.registrations) {
                     allRegistrations = data.registrations || [];
                     displayRegistrations(allRegistrations);
                     updateStats(allRegistrations);
                 } else {
-                    showError('Failed to load registrations');
+                    showError('No registrations found or failed to load');
                 }
             } catch (error) {
                 console.error('Error fetching registrations:', error);
-                showError('Error loading data. Please refresh the page.');
+                showError('Error loading data: ' + error.message + '. Please check your connection.');
             }
         }
         
