@@ -270,6 +270,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add input validation
     setupFormValidation();
+
+    // Setup clear button for name
+    const nameInput = document.getElementById('full-name');
+    const clearNameBtn = document.getElementById('clear-name');
+    if (nameInput && clearNameBtn) {
+        nameInput.addEventListener('input', function() {
+            clearNameBtn.style.display = this.value ? 'block' : 'none';
+        });
+        clearNameBtn.addEventListener('click', function() {
+            nameInput.value = '';
+            clearNameBtn.style.display = 'none';
+            nameInput.focus();
+        });
+    }
 });
 
 // Load clubs from JSON file
