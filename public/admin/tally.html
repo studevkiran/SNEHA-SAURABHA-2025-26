@@ -539,21 +539,51 @@
                 'deregistered': 0
             };
             
+            // Helper function to convert database format to expected format
+            const normalizeType = (dbType) => {
+                if (!dbType) return 'Unknown';
+                
+                // Convert to lowercase, then title case each word
+                const titleCase = dbType.toLowerCase()
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                
+                // Handle special cases
+                const typeMap = {
+                    'Rotarian': 'Rotarian',
+                    'Rotarian With Spouse': 'Rotarian with Spouse',
+                    'Rotary Anne': 'Rotary Ann',
+                    'Rotary Ann': 'Rotary Ann',
+                    'Rotary Annet': 'Rotary Annet',
+                    'Guest': 'Guest',
+                    'Rotaractor': 'Rotaractor',
+                    'Silver Donor': 'Silver Donor',
+                    'Silver Sponsor': 'Silver Sponsor',
+                    'Gold Sponsor': 'Gold Sponsor',
+                    'Platinum Sponsor': 'Platinum Sponsor',
+                    'Patron Sponsor': 'Patron Sponsor'
+                };
+                
+                return typeMap[titleCase] || titleCase;
+            };
+            
             // Debug: Check what registration types exist in data
             const uniqueTypes = new Set();
             
             // Always count from allRegistrations (not filtered ones)
             allRegistrations.forEach(reg => {
-                uniqueTypes.add(reg.registration_type);
+                const rawType = reg.registration_type;
+                uniqueTypes.add(rawType);
                 
                 if (reg.payment_status === 'test') {
                     typeCounts['deregistered']++;
                 } else {
-                    const type = reg.registration_type || 'Unknown';
+                    const type = normalizeType(rawType);
                     if (typeCounts.hasOwnProperty(type)) {
                         typeCounts[type]++;
                     } else {
-                        console.warn('⚠️ Unknown registration type:', type);
+                        console.warn('⚠️ Unknown registration type:', rawType, '→', type);
                     }
                 }
             });
