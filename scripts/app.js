@@ -745,6 +745,14 @@ function initializeMemberSearch() {
     memberDropdownEl.addEventListener('click', (e) => {
         const item = e.target.closest('.dropdown-item');
         if (item) {
+            // Check if manual entry option clicked
+            if (item.getAttribute('data-manual-entry') === 'true') {
+                switchToManualMode();
+                memberDropdownEl.style.display = 'none';
+                return;
+            }
+            
+            // Normal member selection
             const memberId = item.getAttribute('data-member-id');
             const member = window.currentMembers.find(m => m.id == memberId);
             if (member) {
@@ -765,15 +773,23 @@ function initializeMemberSearch() {
 function renderMemberDropdown(members) {
     const memberDropdown = document.getElementById('member-dropdown');
     
-    if (members.length === 0) {
-        memberDropdown.innerHTML = '<div class="dropdown-item" style="color: #999;">No members found</div>';
-        memberDropdown.style.display = 'block';
-        return;
+    let dropdownHTML = '';
+    
+    // Add member options
+    if (members.length > 0) {
+        dropdownHTML = members
+            .map(member => `<div class="dropdown-item" data-member-id="${member.id}">${member.name}</div>`)
+            .join('');
     }
     
-    memberDropdown.innerHTML = members
-        .map(member => `<div class="dropdown-item" data-member-id="${member.id}">${member.name}</div>`)
-        .join('');
+    // Always add "No Member Found" option at the bottom
+    dropdownHTML += `
+        <div class="dropdown-item" data-manual-entry="true" style="border-top: 1px solid #e5e7eb; margin-top: 8px; padding-top: 12px; color: #D4A024; font-weight: 600;">
+            🔍 No Member Found? Click here to enter manually
+        </div>
+    `;
+    
+    memberDropdown.innerHTML = dropdownHTML;
     memberDropdown.style.display = 'block';
 }
 
