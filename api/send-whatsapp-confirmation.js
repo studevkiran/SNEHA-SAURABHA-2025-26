@@ -170,11 +170,10 @@ async function sendViaInfobip(registrationData) {
         to: phoneNumber,
         messageId: `reg-${registrationId}-${Date.now()}`,
         content: {
-          templateName: 'registration_confirmation_v2', // Approved v2 template
+          templateName: 'registration_confirmation_v4', // v4 template APPROVED
           templateData: {
             header: {
               type: 'IMAGE',
-              // NEW IMAGE: Testing v3 header with v2 template
               mediaUrl: process.env.EVENT_LOGO_URL || 'https://res.cloudinary.com/dnai1dz03/image/upload/v1763028752/WhatsApp_Image_2025-11-13_at_09.00.02_ny0cn9.jpg'
             },
             body: {
