@@ -199,6 +199,36 @@ const registrationPrefixes = {
     'patron-sponsor': 'PAT'
 };
 
+// Setup clear button visibility
+function setupClearButtons() {
+    // Club search in manual mode
+    const clubSearch = document.getElementById('club-search');
+    const clearClub = document.getElementById('clear-club');
+    if (clubSearch && clearClub) {
+        clubSearch.addEventListener('input', function() {
+            clearClub.style.display = this.value ? 'block' : 'none';
+        });
+    }
+    
+    // Club search in quick mode
+    const clubSearchQuick = document.getElementById('club-search-quick');
+    const clearClubQuick = document.getElementById('clear-club-quick');
+    if (clubSearchQuick && clearClubQuick) {
+        clubSearchQuick.addEventListener('input', function() {
+            clearClubQuick.style.display = this.value ? 'block' : 'none';
+        });
+    }
+    
+    // Member search in quick mode
+    const memberSearch = document.getElementById('member-search');
+    const clearMember = document.getElementById('clear-member');
+    if (memberSearch && clearMember) {
+        memberSearch.addEventListener('input', function() {
+            clearMember.style.display = this.value ? 'block' : 'none';
+        });
+    }
+}
+
 // Load clubs from JSON
 let clubsList = [];
 
@@ -270,6 +300,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add input validation
     setupFormValidation();
+    
+    // Setup clear button visibility for all search inputs
+    setupClearButtons();
 });
 
 // Load clubs from JSON file
@@ -541,17 +574,27 @@ function showScreen(screenId) {
 function initializeRegistrationMode() {
     const quickMode = document.getElementById('quick-reg-mode');
     const manualMode = document.getElementById('manual-reg-mode');
+    const guestMode = document.getElementById('guest-reg-mode');
     const autofilledDetails = document.getElementById('autofilled-details');
     
-    // Rotaractor always uses manual mode
-    if (registrationData.typeName === 'Rotaractor') {
+    // Guest uses simple input mode (no club dropdown)
+    if (registrationData.typeName === 'Guest') {
+        quickMode.style.display = 'none';
+        manualMode.style.display = 'none';
+        guestMode.style.display = 'block';
+        autofilledDetails.style.display = 'none';
+    }
+    // Rotaractor uses manual mode (with club dropdown)
+    else if (registrationData.typeName === 'Rotaractor') {
         quickMode.style.display = 'none';
         manualMode.style.display = 'block';
+        guestMode.style.display = 'none';
         autofilledDetails.style.display = 'none';
     } else {
         // All other types start with quick mode
         quickMode.style.display = 'block';
         manualMode.style.display = 'none';
+        guestMode.style.display = 'none';
         autofilledDetails.style.display = 'none';
         
         // Initialize club search
@@ -788,10 +831,19 @@ function showReview() {
     let fullName, mobile, email, clubName, clubId;
     
     // Check which mode is active
+    const guestMode = document.getElementById('guest-reg-mode');
     const autofilledDetails = document.getElementById('autofilled-details');
     const manualMode = document.getElementById('manual-reg-mode');
     
-    if (autofilledDetails && autofilledDetails.style.display !== 'none') {
+    if (guestMode && guestMode.style.display !== 'none') {
+        // Guest mode - no club dropdown
+        fullName = document.getElementById('guest-name').value.trim();
+        mobile = document.getElementById('guest-mobile').value.trim();
+        email = document.getElementById('guest-email').value.trim();
+        clubName = 'Guest (No Club)';
+        clubId = 0;
+        
+    } else if (autofilledDetails && autofilledDetails.style.display !== 'none') {
         // Quick mode - autofilled from member selection
         if (!registrationData.autofilledMember) {
             alert('Please select a member or switch to manual entry');
@@ -833,9 +885,17 @@ function showReview() {
     console.log('🏢 Selected club:', clubName);
     console.log('🏢 Club ID:', clubId);
     
-    // Validate all required fields (email is optional)
-    if (!fullName || !mobile || !clubName || !mealPreference || !tshirtSize) {
+    // For guest mode, club is not required
+    const isGuestMode = guestMode && guestMode.style.display !== 'none';
+    
+    // Validate all required fields (email is optional, club optional for guest)
+    if (!fullName || !mobile || !mealPreference || !tshirtSize) {
         alert('Please fill in all required fields including T-Shirt size');
+        return;
+    }
+    
+    if (!isGuestMode && !clubName) {
+        alert('Please select your club');
         return;
     }
     
@@ -1630,3 +1690,51 @@ document.addEventListener('touchend', function(e) {
 // Expose coupon functions for inline onclick handlers
 window.applyCoupon = applyCoupon;
 window.resetCoupon = resetCoupon;
+
+// Clear club selection in manual mode
+function clearClubSelection() {
+    const clubSearchInput = document.getElementById('club-search');
+    const clearButton = document.getElementById('clear-club');
+    const clubOptions = document.getElementById('club-options');
+    
+    if (clubSearchInput) {
+        clubSearchInput.value = '';
+        clearButton.style.display = 'none';
+        if (clubOptions) clubOptions.style.display = 'none';
+    }
+}
+
+// Clear club selection in quick mode
+function clearClubSelectionQuick() {
+    const clubSearchInput = document.getElementById('club-search-quick');
+    const clearButton = document.getElementById('clear-club-quick');
+    const clubDropdown = document.getElementById('club-dropdown-quick');
+    const memberWrapper = document.getElementById('member-selection-wrapper');
+    
+    if (clubSearchInput) {
+        clubSearchInput.value = '';
+        clearButton.style.display = 'none';
+        if (clubDropdown) clubDropdown.style.display = 'none';
+        if (memberWrapper) memberWrapper.style.display = 'none';
+    }
+}
+
+// Clear member selection in quick mode
+function clearMemberSelection() {
+    const memberSearchInput = document.getElementById('member-search');
+    const clearButton = document.getElementById('clear-member');
+    const memberDropdown = document.getElementById('member-dropdown');
+    const autofilledDetails = document.getElementById('autofilled-details');
+    
+    if (memberSearchInput) {
+        memberSearchInput.value = '';
+        clearButton.style.display = 'none';
+        if (memberDropdown) memberDropdown.style.display = 'none';
+        if (autofilledDetails) autofilledDetails.style.display = 'none';
+    }
+}
+
+// Expose clear functions globally
+window.clearClubSelection = clearClubSelection;
+window.clearClubSelectionQuick = clearClubSelectionQuick;
+window.clearMemberSelection = clearMemberSelection;

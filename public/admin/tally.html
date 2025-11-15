@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Tally - SNEHA SAURABHA 2025-26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #D4AF37;
+        }
+        
+        header h1 {
+            color: #D4AF37;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .stat-item {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .stat-item strong {
+            color: #D4AF37;
+            font-size: 18px;
+            margin-right: 5px;
+        }
+        
+        .export-btn {
+            background: #22C55E;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .export-btn:hover {
+            background: #16A34A;
+            transform: translateY(-2px);
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        thead {
+            background: #F9FAFB;
+            position: sticky;
+            top: 0;
+        }
+        
+        th {
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #E5E7EB;
+            white-space: nowrap;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #F3F4F6;
+            color: #4B5563;
+        }
+        
+        tbody tr:hover {
+            background: #F9FAFB;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-paid {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        
+        .status-pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        
+        .meal-veg {
+            color: #16A34A;
+            font-weight: 600;
+        }
+        
+        .meal-non-veg {
+            color: #DC2626;
+            font-weight: 600;
+        }
+        
+        .meal-jain {
+            color: #D97706;
+            font-weight: 600;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #9CA3AF;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 60px;
+            color: #DC2626;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 24px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Registration Tally</h1>
+            <p>SNEHA SAURABHA 2025-26 - District Conference</p>
+        </header>
+        
+        <div class="controls">
+            <div class="stats">
+                <div class="stat-item">
+                    <strong id="total-count">0</strong> Total Registrations
+                </div>
+                <div class="stat-item">
+                    <strong id="revenue">₹0</strong> Total Revenue
+                </div>
+            </div>
+            <button class="export-btn" onclick="exportToExcel()">📥 Download Excel</button>
+        </div>
+        
+        <div class="table-wrapper">
+            <table id="registrations-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                        <th>Club</th>
+                        <th>Meal</th>
+                        <th>T-Shirt</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="registrations-body">
+                    <tr>
+                        <td colspan="11" class="loading">Loading registrations...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let allRegistrations = [];
+        
+        // Fetch registrations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchRegistrations();
+        });
+        
+        async function fetchRegistrations() {
+            try {
+                const response = await fetch('/api/registrations/all');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allRegistrations = data.registrations || [];
+                    displayRegistrations(allRegistrations);
+                    updateStats(allRegistrations);
+                } else {
+                    showError('Failed to load registrations');
+                }
+            } catch (error) {
+                console.error('Error fetching registrations:', error);
+                showError('Error loading data. Please refresh the page.');
+            }
+        }
+        
+        function displayRegistrations(registrations) {
+            const tbody = document.getElementById('registrations-body');
+            
+            if (registrations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = registrations.map(reg => {
+                const date = new Date(reg.created_at).toLocaleDateString('en-IN');
+                const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' : 
+                                 reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
+                const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
+                
+                return `
+                    <tr>
+                        <td>${reg.registration_id}</td>
+                        <td>${date}</td>
+                        <td>${reg.full_name}</td>
+                        <td>${reg.mobile}</td>
+                        <td>${reg.email || 'N/A'}</td>
+                        <td>${reg.registration_type}</td>
+                        <td>${reg.club_name || 'N/A'}</td>
+                        <td class="${mealClass}">${reg.meal_preference}</td>
+                        <td>${reg.tshirt_size || 'N/A'}</td>
+                        <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
+                        <td><span class="status-badge ${statusClass}">${reg.payment_status || 'pending'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        function updateStats(registrations) {
+            const totalCount = registrations.length;
+            const totalRevenue = registrations
+                .filter(r => r.payment_status === 'paid')
+                .reduce((sum, r) => sum + (r.registration_amount || 0), 0);
+            
+            document.getElementById('total-count').textContent = totalCount;
+            document.getElementById('revenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+        }
+        
+        function showError(message) {
+            const tbody = document.getElementById('registrations-body');
+            tbody.innerHTML = `<tr><td colspan="11" class="error">${message}</td></tr>`;
+        }
+        
+        function exportToExcel() {
+            if (allRegistrations.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            // Prepare data for Excel
+            const excelData = allRegistrations.map(reg => ({
+                'Registration ID': reg.registration_id,
+                'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
+                'Name': reg.full_name,
+                'Mobile': reg.mobile,
+                'Email': reg.email || 'N/A',
+                'Type': reg.registration_type,
+                'Club': reg.club_name || 'N/A',
+                'Meal Preference': reg.meal_preference,
+                'T-Shirt Size': reg.tshirt_size || 'N/A',
+                'Amount': reg.registration_amount || 0,
+                'Payment Status': reg.payment_status || 'pending',
+                'Order ID': reg.order_id || 'N/A'
+            }));
+            
+            // Create workbook
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Registrations');
+            
+            // Auto-size columns
+            const colWidths = [
+                { wch: 12 }, // Registration ID
+                { wch: 12 }, // Date
+                { wch: 25 }, // Name
+                { wch: 15 }, // Mobile
+                { wch: 30 }, // Email
+                { wch: 20 }, // Type
+                { wch: 25 }, // Club
+                { wch: 15 }, // Meal
+                { wch: 12 }, // T-Shirt
+                { wch: 12 }, // Amount
+                { wch: 15 }, // Status
+                { wch: 30 }  // Order ID
+            ];
+            ws['!cols'] = colWidths;
+            
+            // Generate filename with timestamp
+            const timestamp = new Date().toISOString().split('T')[0];
+            const filename = `SNEHA-SAURABHA-Registrations-${timestamp}.xlsx`;
+            
+            // Download
+            XLSX.writeFile(wb, filename);
+            console.log('✅ Excel exported:', filename);
+        }
+    </script>
+</body>
+</html>
