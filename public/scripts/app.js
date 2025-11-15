@@ -1659,10 +1659,6 @@ document.addEventListener('touchend', function(e) {
     lastTouchEnd = now;
 }, false);
 
-// Expose coupon functions for inline onclick handlers
-window.applyCoupon = applyCoupon;
-window.resetCoupon = resetCoupon;
-
 // Clear club selection in manual mode
 function clearClubSelection() {
     const clubSearchInput = document.getElementById('club-search');
