@@ -954,7 +954,7 @@ function showReview() {
     
     // Populate review screen
     document.getElementById('review-type').textContent = registrationData.typeName;
-    document.getElementById('review-price').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
+    // review-price removed - amount shown in pay button only
     
     document.getElementById('review-name').textContent = fullName;
     document.getElementById('review-mobile').textContent = mobile;
