@@ -26,6 +26,7 @@ export default async function handler(req, res) {
       registrationType,
       amount,
       mealPreference,
+      tshirtSize,
       clubName,
       receiptNo // optional: allow caller to specify a receipt number
     } = req.body;
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
     const provider = process.env.WHATSAPP_PROVIDER || 'infobip';
     
     if (provider === 'gupshup') {
-      return await sendViaGupshup(res, { name, mobile, email, registrationId, registrationType, amount, mealPreference, clubName });
+      return await sendViaGupshup(res, { name, mobile, email, registrationId, registrationType, amount, mealPreference, tshirtSize, clubName });
     } else {
       // Call Infobip with all required data
       const result = await sendViaInfobip({
@@ -52,6 +53,7 @@ export default async function handler(req, res) {
         type: registrationType,
         amount: amount || 0,
         meal: mealPreference || 'Veg',
+        tshirtSize: tshirtSize || 'N/A',
         club: clubName || 'Not specified',
         receiptNo: receiptNo || null
       });
@@ -78,7 +80,7 @@ export default async function handler(req, res) {
 
 // Gupshup Implementation
 async function sendViaGupshup(res, data) {
-  const { name, mobile, email, registrationId, registrationType, amount, mealPreference, clubName } = data;
+  const { name, mobile, email, registrationId, registrationType, amount, mealPreference, tshirtSize, clubName } = data;
   
   if (!process.env.GUPSHUP_API_KEY || !process.env.GUPSHUP_APP_NAME) {
     return res.status(200).json({ success: false, message: 'Gupshup not configured', disabled: true });
@@ -139,10 +141,10 @@ async function sendViaGupshup(res, data) {
 
 // Infobip Implementation (Template API for trial)
 async function sendViaInfobip(registrationData) {
-  const { name, mobile, email, registrationId, type, amount, meal, club, receiptNo: providedReceipt } = registrationData;
+  const { name, mobile, email, registrationId, type, amount, meal, tshirtSize, club, receiptNo: providedReceipt } = registrationData;
 
   console.log('📱 Infobip: Sending WhatsApp to', mobile);
-  console.log('📋 Registration Data:', { name, registrationId, type, amount, meal, club });
+  console.log('📋 Registration Data:', { name, registrationId, type, amount, meal, tshirtSize, club });
 
   // Infobip WhatsApp Template API
   const infobipUrl = `https://${process.env.INFOBIP_BASE_URL}/whatsapp/1/message/template`;
@@ -179,18 +181,16 @@ async function sendViaInfobip(registrationData) {
             body: {
               placeholders: [
                 name,                             // {{1}} Name
-                registrationId,                   // {{2}} Registration ID
-                type || registrationType || 'Participant', // {{3}} Registration Type
-                meal || 'Veg',                    // {{4}} Meal Preference
-                `₹${amount.toLocaleString('en-IN')}` // {{5}} Amount with rupee symbol
+                name,                             // {{2}} Name (repeated for greeting)
+                mobile,                           // {{3}} Mobile
+                email || 'Not Provided',          // {{4}} Email
+                type || registrationType || 'Participant', // {{5}} Registration Category
+                meal || 'Veg',                    // {{6}} Food Preference
+                tshirtSize || 'N/A',              // {{7}} T-Shirt Size
+                `₹${amount.toLocaleString('en-IN')}`, // {{8}} Amount
+                confirmationLink                  // {{9}} View complete details link
               ]
-            },
-            buttons: [
-              {
-                type: 'URL',
-                parameter: registrationId  // {{1}} in button URL - appends to template URL
-              }
-            ]
+            }
           },
           language: 'en'
         }
