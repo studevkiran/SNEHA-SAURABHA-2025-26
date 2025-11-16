@@ -97,16 +97,17 @@ body {
     overflow: hidden;
 }
 
-/* Desktop: allow natural scrolling, fit content */
+/* Desktop: allow natural scrolling, fit content, no white space */
 @media (min-width: 768px) {
     .screen {
         position: relative;
         height: auto;
-        min-height: 100vh;
+        min-height: 0;
         overflow-y: visible;
         max-width: 800px;
         margin: 0 auto;
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+        padding-top: 0;
     }
 }
 
@@ -2187,7 +2188,8 @@ h3 {
 }
 
 .coupon-simple-message {
-    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-top: 0;
     padding: 12px 16px;
     border-radius: 8px;
     font-size: 14px;

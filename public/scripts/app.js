@@ -546,6 +546,11 @@ function validateInput(input) {
 
 // Show specific screen
 function showScreen(screenId) {
+    // Scroll to top on desktop
+    if (window.innerWidth >= 768) {
+        window.scrollTo(0, 0);
+    }
+    
     // Hide all screens
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
