@@ -66,14 +66,82 @@ module.exports = async (req, res) => {
       
       // Create confirmed registration (generates registration ID)
       console.log('🎫 Creating confirmed registration via webhook...');
-      await createConfirmedRegistration(orderId, transactionId);
+      const confirmResult = await createConfirmedRegistration(orderId, transactionId);
       console.log('✅ Webhook: Confirmed registration created');
 
-      // TODO: Send WhatsApp confirmation
-      // await sendWhatsAppConfirmation(orderId);
-
-      // TODO: Send email confirmation
-      // await sendEmailConfirmation(orderId);
+      // Send WhatsApp confirmation via Infobip
+      if (confirmResult && confirmResult.success && confirmResult.registration) {
+        try {
+          const registration = confirmResult.registration;
+          console.log('📱 Preparing WhatsApp message for:', registration.mobile);
+          
+          // Format phone number
+          let phoneNumber = registration.mobile.toString().replace(/\D/g, '');
+          if (!phoneNumber.startsWith('91')) {
+            phoneNumber = '91' + phoneNumber;
+          }
+          
+          // Use Vercel URL for payment callback format
+          const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://sneha2026.in';
+          const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registration.registration_id}`;
+          const receiptNo = transactionId || registration.registration_id;
+          
+          const messageData = {
+            messages: [{
+              from: process.env.INFOBIP_WHATSAPP_NUMBER || '917892045223',
+              to: phoneNumber,
+              messageId: `reg-${registration.registration_id}-${Date.now()}`,
+              content: {
+                templateName: 'registration_confirmation_v2',
+                templateData: {
+                  header: {
+                    type: 'IMAGE',
+                    mediaUrl: 'https://res.cloudinary.com/dnai1dz03/image/upload/v1763028752/WhatsApp_Image_2025-11-13_at_09.00.02_ny0cn9.jpg'
+                  },
+                  body: {
+                    placeholders: [
+                      registration.name,
+                      registration.registration_id,
+                      receiptNo,
+                      registration.name,
+                      phoneNumber,
+                      registration.email || 'Not Provided',
+                      registration.meal_preference || 'Veg',
+                      registration.registration_amount ? registration.registration_amount.toLocaleString('en-IN') : '0',
+                      confirmationLink
+                    ]
+                  }
+                },
+                language: 'en'
+              }
+            }]
+          };
+          
+          console.log('📤 Sending WhatsApp to:', phoneNumber);
+          
+          const whatsappResponse = await fetch(`https://${process.env.INFOBIP_BASE_URL}/whatsapp/1/message/template`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `App ${process.env.INFOBIP_API_KEY}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(messageData)
+          });
+          
+          const whatsappResult = await whatsappResponse.json();
+          console.log('📥 WhatsApp Response:', whatsappResponse.status, JSON.stringify(whatsappResult, null, 2));
+          
+          if (whatsappResponse.ok) {
+            console.log('✅ WhatsApp sent successfully via webhook!');
+          } else {
+            console.error('❌ WhatsApp failed:', whatsappResult);
+          }
+          
+        } catch (whatsappError) {
+          console.error('❌ WhatsApp error in webhook:', whatsappError.message);
+        }
+      }
 
     } else if (orderStatus === 'FAILED' || orderStatus === 'CANCELLED') {
       // Payment failed
