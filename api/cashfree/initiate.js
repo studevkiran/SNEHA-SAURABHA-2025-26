@@ -102,6 +102,7 @@ module.exports = async (req, res) => {
     
     // Get zone from club name
     const zone = getZoneForClub(clubName);
+    console.log(`🗺️ Zone Mapping: ${clubName} → ${zone}`);
     
     // Create payment attempt (or check if exists)
     const attemptResult = await createPaymentAttempt({
