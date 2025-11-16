@@ -1897,10 +1897,12 @@ async function submitBypassRegistration() {
         const result = await response.json();
         
         if (result.success && result.registration) {
-            // Store registration ID
+            // Store registration ID and confirmation data
             registrationData.registrationId = result.registration.registration_id;
+            registrationData.confirmationId = result.registration.registration_id; // For PDF generation
             registrationData.paymentStatus = paymentStatus;
             registrationData.utrNumber = utr;
+            registrationData.transactionId = `MANUAL-${verifiedBypassCode}-${Date.now()}`;
             
             // Populate success screen using same format as Cashfree payment
             const setElementText = (id, text) => {
@@ -1928,11 +1930,22 @@ async function submitBypassRegistration() {
             setElementText('ack-date', currentDate);
             
             console.log('📝 Manual registration acknowledgment page populated');
+            console.log('📋 Registration data ready for PDF:', registrationData);
             
             // Show success screen
             showScreen('screen-success');
             
-            alert('✅ Registration successful! ID: ' + result.registration.registration_id);
+            // Auto-trigger PDF download after 1 second (gives time for screen to render)
+            console.log('📄 Auto-downloading receipt PDF...');
+            setTimeout(() => {
+                try {
+                    downloadReceiptPDF();
+                } catch (pdfError) {
+                    console.error('❌ PDF download failed:', pdfError);
+                }
+            }, 1000);
+            
+            alert('✅ Registration successful! ID: ' + result.registration.registration_id + '\n\n📥 Receipt will download automatically.');
             console.log('✅ Manual registration completed:', result.registration.registration_id);
         } else {
             alert('❌ Registration failed: ' + (result.error || 'Unknown error'));
