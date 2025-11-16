@@ -4,6 +4,9 @@
   "functions": {
     "api/**/*.js": {
       "maxDuration": 10
+    },
+    "api/admin/update-zones.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
