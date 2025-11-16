@@ -1035,6 +1035,9 @@ async function initiateCashfreePayment() {
         if (isLocalhost) {
             console.log('🧪 LOCALHOST MODE - Using mock payment gateway');
             
+            // Use final_amount (after discount) if available, otherwise original price
+            const paymentAmount = registrationData.final_amount || registrationData.price;
+            
             // Store data for mock gateway and callback
             sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
             sessionStorage.setItem('cashfreeOrderId', orderId);
@@ -1042,7 +1045,7 @@ async function initiateCashfreePayment() {
             // Redirect to mock payment gateway
             const mockPaymentUrl = `payment-gateway.html?` +
                 `purpose=${encodeURIComponent(registrationData.typeName)}` +
-                `&amount=${registrationData.price}` +
+                `&amount=${paymentAmount}` +
                 `&name=${encodeURIComponent(registrationData.fullName)}` +
                 `&email=${encodeURIComponent(registrationData.email)}` +
                 `&phone=${registrationData.mobile}` +
@@ -1058,10 +1061,13 @@ async function initiateCashfreePayment() {
         // PRODUCTION MODE - Use real Cashfree API
         console.log('🌐 PRODUCTION MODE - Calling Cashfree API...');
         
+        // Use final_amount (after discount) if available, otherwise original price
+        const paymentAmount = registrationData.final_amount || registrationData.price;
+        
         const paymentData = {
             confirmationId: registrationData.confirmationId,
             orderId: orderId,
-            amount: registrationData.price,
+            amount: paymentAmount,
             fullName: registrationData.fullName,
             mobile: registrationData.mobile,
             email: registrationData.email,
