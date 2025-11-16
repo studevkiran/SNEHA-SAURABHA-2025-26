@@ -1070,6 +1070,7 @@ async function initiateCashfreePayment() {
             clubName: registrationData.clubName || '',
             clubId: registrationData.clubId || 0,
             mealPreference: registrationData.mealPreference,
+            tshirtSize: registrationData.tshirtSize,
             qrData: registrationData.qrCode
         };
         
