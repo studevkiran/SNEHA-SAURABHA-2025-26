@@ -8,6 +8,10 @@
   },
   "rewrites": [
     {
+      "source": "/tally",
+      "destination": "/admin/tally.html"
+    },
+    {
       "source": "/api/r",
       "destination": "/api/r/index.js"
     }
