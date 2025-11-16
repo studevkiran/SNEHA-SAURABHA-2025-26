@@ -1,6 +1,7 @@
 // API: Initiate Cashfree payment
 const CashfreeService = require('../../lib/cashfree');
 const { createPaymentAttempt } = require('../../lib/db-neon');
+const { getZoneForClub } = require('../../lib/zone-mapping');
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -99,6 +100,9 @@ module.exports = async (req, res) => {
     // Check if this Order ID already exists (retry scenario)
     console.log('🔍 Checking if Order ID already exists:', orderId);
     
+    // Get zone from club name
+    const zone = getZoneForClub(clubName);
+    
     // Create payment attempt (or check if exists)
     const attemptResult = await createPaymentAttempt({
       orderId,
@@ -107,6 +111,7 @@ module.exports = async (req, res) => {
       email: email || 'Not Provided',
       clubName,
       clubId,
+      zone,
       registrationType,
       amount,
       mealPreference,
