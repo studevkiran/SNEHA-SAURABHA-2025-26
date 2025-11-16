@@ -118,21 +118,6 @@
             background: #16A34A;
             transform: translateY(-2px);
         }
-        .refresh-btn {
-            background: #2563EB;
-            color: #fff;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .refresh-btn:hover {
-            background: #1D4ED8;
-            transform: translateY(-2px);
-        }
         
         .table-wrapper {
             overflow-x: auto;
@@ -293,7 +278,6 @@
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
             <button class="export-btn" style="background: #2563EB;" onclick="exportZoneWise()">📊 Zone-wise Excel</button>
-            <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh Full Data</button>
         </div>
         
         <!-- Registration Type Breakdown - Single Line Format -->
@@ -315,35 +299,7 @@
             </div>
         </div>
 
-        <!-- Zone-wise Breakdown - Simple Display (Excel has details) -->
-        <div style="background: #FFF8E7; border: 2px solid #D4A024; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-            <h3 style="margin: 0 0 15px 0; color: #D97706; font-size: 18px;">ZONE-WISE BREAKDOWN (Download Excel for club details)</h3>
-            <div style="font-size: 15px; line-height: 1.8;">
-                <strong>Zone 1:</strong> <span id="count-zone-1">0</span> | 
-                <strong>Zone 2:</strong> <span id="count-zone-2">0</span> | 
-                <strong>Zone 3:</strong> <span id="count-zone-3">0</span> | 
-                <strong>Zone 4:</strong> <span id="count-zone-4">0</span> | 
-                <strong>Zone 5:</strong> <span id="count-zone-5">0</span> | 
-                <strong>Zone 6:</strong> <span id="count-zone-6">0</span> | 
-                <strong>Zone 7:</strong> <span id="count-zone-7">0</span> | 
-                <strong>Zone 8:</strong> <span id="count-zone-8">0</span> | 
-                <strong>Zone 9:</strong> <span id="count-zone-9">0</span>
-            </div>
-            <div style="margin-top:8px;font-size:12px;color:#555">Last updated: <span id="last-updated">--:--:--</span> (auto-refresh every 60s)</div>
-        </div>
-        
-        <!-- Zone Details Modal -->
-        <div id="zoneModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
-            <div style="background: white; padding: 30px; border-radius: 12px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0; color: #D97706;" id="zoneModalTitle">Zone Details</h3>
-                    <button onclick="closeZoneModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
-                </div>
-                <div id="zoneModalContent" style="overflow-x: auto;">
-                    <!-- Club breakdown table will be inserted here -->
-                </div>
-            </div>
-        </div>
+
         
         <div class="table-wrapper">
             <table id="registrations-table">
