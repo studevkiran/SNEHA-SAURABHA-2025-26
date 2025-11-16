@@ -1987,9 +1987,6 @@ window.submitBypassRegistration = submitBypassRegistration;
 
 const VALID_COUPONS = {
     '100': { discount: 100, name: '₹100 OFF' },
-    'DISCOUNT100': { discount: 100, name: '₹100 OFF' },
-    'EARLYBIRD': { discount: 250, name: '₹250 OFF' },
-    'VIP500': { discount: 500, name: '₹500 OFF' },
     'TESTER9919': { discount: 'FULL-1', name: 'TEST MODE - ₹1 ONLY' }
 };
 
