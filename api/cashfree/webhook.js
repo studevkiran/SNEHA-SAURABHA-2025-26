@@ -92,7 +92,7 @@ module.exports = async (req, res) => {
               to: phoneNumber,
               messageId: `reg-${registration.registration_id}-${Date.now()}`,
               content: {
-                templateName: 'registration_confirmation_v2',
+                templateName: 'registration_confirmation_v4',
                 templateData: {
                   header: {
                     type: 'IMAGE',
@@ -101,12 +101,12 @@ module.exports = async (req, res) => {
                   body: {
                     placeholders: [
                       registration.name,
-                      registration.registration_id,
-                      receiptNo,
                       registration.name,
                       phoneNumber,
                       registration.email || 'Not Provided',
+                      registration.registration_type || 'Registration',
                       registration.meal_preference || 'Veg',
+                      registration.tshirt_size || 'N/A',
                       registration.registration_amount ? registration.registration_amount.toLocaleString('en-IN') : '0',
                       confirmationLink
                     ]
