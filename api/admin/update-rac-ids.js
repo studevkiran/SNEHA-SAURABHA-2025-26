@@ -29,39 +29,47 @@ module.exports = async (req, res) => {
 
     console.log('🔄 Updating 3 RAC registration IDs to new 2026RTY format...');
     
-    // Update in the correct order to maintain sequence
-    const updates = [
-      { old: 'RAC54V0692', new: '2026RTY0689' },
-      { old: 'RAC54V0691', new: '2026RTY0690' },
-      { old: 'RAC54V0690', new: '2026RTY0691' }
+    // Step 1: Move to temporary IDs to avoid conflicts
+    console.log('Step 1: Moving to temporary IDs...');
+    const tempUpdates = [
+      { old: 'RAC54V0692', temp: 'TEMP_0001' },
+      { old: 'RAC54V0691', temp: 'TEMP_0002' },
+      { old: 'RAC54V0690', temp: 'TEMP_0003' }
+    ];
+    
+    for (const update of tempUpdates) {
+      await pool.query(
+        `UPDATE registrations SET registration_id = $1 WHERE registration_id = $2`,
+        [update.temp, update.old]
+      );
+      console.log(`  Moved ${update.old} → ${update.temp}`);
+    }
+    
+    // Step 2: Update to final IDs
+    console.log('Step 2: Updating to final 2026RTY IDs...');
+    const finalUpdates = [
+      { temp: 'TEMP_0001', new: '2026RTY0689' },
+      { temp: 'TEMP_0002', new: '2026RTY0690' },
+      { temp: 'TEMP_0003', new: '2026RTY0691' }
     ];
     
     const results = [];
     
-    for (const update of updates) {
+    for (const update of finalUpdates) {
       const result = await pool.query(
         `UPDATE registrations 
          SET registration_id = $1 
          WHERE registration_id = $2
          RETURNING registration_id, name, club, registration_type`,
-        [update.new, update.old]
+        [update.new, update.temp]
       );
       
       if (result.rows.length > 0) {
-        console.log(`✅ Updated: ${update.old} → ${update.new}`);
+        console.log(`✅ Updated: ${update.temp} → ${update.new}`);
         results.push({
           success: true,
-          old: update.old,
           new: update.new,
           data: result.rows[0]
-        });
-      } else {
-        console.log(`❌ Not found: ${update.old}`);
-        results.push({
-          success: false,
-          old: update.old,
-          new: update.new,
-          error: 'Registration not found'
         });
       }
     }
@@ -70,7 +78,7 @@ module.exports = async (req, res) => {
     
     return res.status(200).json({
       success: true,
-      message: `Updated ${successCount} of ${updates.length} registrations`,
+      message: `Updated ${successCount} of ${finalUpdates.length} registrations`,
       results: results
     });
     
