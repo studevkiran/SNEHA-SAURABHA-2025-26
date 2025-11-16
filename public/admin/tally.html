@@ -780,7 +780,6 @@
             const zoneData = [
                 ['SNEHA SAURABHA 2025-26 - ZONE-WISE CLUB SUMMARY'],
                 ['Generated on:', new Date().toLocaleString('en-IN')],
-                ['Total Registrations:', validRegs.length],
                 [''],
                 ['Zone', 'Rank', 'Club Name', 'Registrations', 'Percentage']
             ];
@@ -863,7 +862,7 @@
             ];
             
             // Add autofilter
-            ws['!autofilter'] = { ref: 'A5:E5' };
+            ws['!autofilter'] = { ref: 'A4:E4' };
             
             XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
             
