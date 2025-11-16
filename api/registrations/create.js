@@ -156,7 +156,8 @@ module.exports = async (req, res) => {
             amount: savedRegistration.registration_amount,
             mealPreference: savedRegistration.meal_preference,
             tshirtSize: savedRegistration.tshirt_size,
-            clubName: savedRegistration.club
+            clubName: savedRegistration.club,
+            orderId: savedRegistration.order_id
           })
         });
         

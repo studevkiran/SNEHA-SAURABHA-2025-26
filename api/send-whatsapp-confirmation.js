@@ -28,6 +28,7 @@ export default async function handler(req, res) {
       mealPreference,
       tshirtSize,
       clubName,
+      orderId, // The actual order_id (Cashfree order OR UTR number)
       receiptNo // optional: allow caller to specify a receipt number
     } = req.body;
 
@@ -55,6 +56,7 @@ export default async function handler(req, res) {
         meal: mealPreference || 'Veg',
         tshirtSize: tshirtSize || 'N/A',
         club: clubName || 'Not specified',
+        orderId: orderId || registrationId, // Use orderId (UTR/Cashfree), fallback to registrationId
         receiptNo: receiptNo || null
       });
       
@@ -141,17 +143,18 @@ async function sendViaGupshup(res, data) {
 
 // Infobip Implementation (Template API for trial)
 async function sendViaInfobip(registrationData) {
-  const { name, mobile, email, registrationId, type, amount, meal, tshirtSize, club, receiptNo: providedReceipt } = registrationData;
+  const { name, mobile, email, registrationId, type, amount, meal, tshirtSize, club, orderId, receiptNo: providedReceipt } = registrationData;
 
   console.log('📱 Infobip: Sending WhatsApp to', mobile);
-  console.log('📋 Registration Data:', { name, registrationId, type, amount, meal, tshirtSize, club });
+  console.log('📋 Registration Data:', { name, registrationId, type, amount, meal, tshirtSize, club, orderId });
 
   // Infobip WhatsApp Template API
   const infobipUrl = `https://${process.env.INFOBIP_BASE_URL}/whatsapp/1/message/template`;
 
   // Use custom domain instead of Vercel URL for accessibility
   const baseUrl = 'https://sneha2026.in';
-  const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registrationId}`;
+  // Use orderId (UTR or Cashfree order_id) for receipt page link
+  const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${orderId || registrationId}`;
 
   // Receipt number: prefer caller-provided receiptNo, else fall back to full registrationId
   const receiptNo = providedReceipt || registrationId;
