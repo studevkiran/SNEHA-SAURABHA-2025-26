@@ -89,6 +89,10 @@ module.exports = async (req, res) => {
       // Auto-map zone based on club name
       const zone = getZoneForClub(clubName);
       
+      console.log('🔵 API create.js calling createRegistration with:', {
+        name, mobile, clubName, registrationType, amount, paymentStatus, zone
+      });
+
       const result = await createRegistration({
         orderId: orderId || `ORDER_${Date.now()}`,
         name,
@@ -110,14 +114,19 @@ module.exports = async (req, res) => {
       if (result.success && result.registration) {
         registrationData.registration_id = result.registration.registration_id;
         savedRegistration = result.registration;
+        console.log('✅ Registration saved successfully:', savedRegistration.registration_id);
       } else {
+        console.error('❌ PostgreSQL save failed: No result.success or result.registration');
         throw new Error('PostgreSQL save failed');
       }
     } catch (pgError) {
-      console.error('❌ PostgreSQL save failed:', pgError.message);
+      console.error('❌ PostgreSQL save failed:', {
+        message: pgError.message,
+        stack: pgError.stack
+      });
       return res.status(500).json({
         success: false,
-        error: 'Database error: Could not save registration'
+        error: `Database error: ${pgError.message || 'Could not save registration'}`
       });
     }
 
