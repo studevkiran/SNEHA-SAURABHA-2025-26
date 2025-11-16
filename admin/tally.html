@@ -118,6 +118,23 @@
             background: #16A34A;
             transform: translateY(-2px);
         }
+
+        .refresh-btn {
+            background: #2563EB;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: #1D4ED8;
+            transform: translateY(-2px);
+        }
         
         .table-wrapper {
             overflow-x: auto;
@@ -277,6 +294,7 @@
                 <strong id="total-count">0</strong> Total Registrations
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
+            <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh Full Data</button>
         </div>
         
         <!-- Registration Type Breakdown - Single Line Format -->
@@ -312,6 +330,7 @@
                 <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(8)"><strong>Zone 8:</strong> <span id="count-zone-8">0</span></span> | 
                 <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(9)"><strong>Zone 9:</strong> <span id="count-zone-9">0</span></span>
             </div>
+            <div style="margin-top:8px;font-size:12px;color:#555">Last updated: <span id="last-updated">--:--:--</span> (auto-refresh every 60s)</div>
         </div>
         
         <!-- Zone Details Modal -->
@@ -406,6 +425,31 @@
             } catch (error) {
                 console.error('❌ Error fetching registrations:', error);
                 showError('Error loading data: ' + error.message);
+            }
+            // After initial full fetch, refresh zone stats from lightweight endpoint
+            fetchZoneStats();
+        }
+
+        async function fetchZoneStats(forceFresh = false) {
+            try {
+                const url = forceFresh ? '/api/stats/zones?fresh=1' : '/api/stats/zones';
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('Zone stats HTTP ' + resp.status);
+                const json = await resp.json();
+                if (!json.success) throw new Error(json.error || 'Zone stats failed');
+                const { zoneTotals, generatedAt, guestCount, cacheTtlMs } = json.data;
+                for (let i = 1; i <= 9; i++) {
+                    const v = zoneTotals[i] || 0;
+                    document.getElementById('count-zone-' + i).textContent = v;
+                }
+                // Update guest count display if present in breakdown
+                // (guest count already handled in updateStats for types, but ensure freshness if types not refreshed)
+                document.getElementById('count-guest').textContent = guestCount;
+                const tsStr = new Date(generatedAt).toLocaleTimeString();
+                document.getElementById('last-updated').textContent = tsStr + (json.fresh ? ' (live)' : '');
+                document.getElementById('last-updated').title = 'Cache TTL: ' + cacheTtlMs + 'ms' + (json.fresh ? ' | fresh bypass' : '');
+            } catch (e) {
+                console.warn('Zone stats fetch failed:', e.message);
             }
         }
         
@@ -615,14 +659,11 @@
             const uniqueZones = new Set();
             
             allRegistrations.forEach(reg => {
-                if (reg.zone_id) uniqueZones.add(reg.zone_id);
-                
-                if (reg.payment_status !== 'test' && reg.zone_id) {
-                    const zone = reg.zone_id.toString();
-                    if (zoneCounts.hasOwnProperty(zone)) {
-                        zoneCounts[zone]++;
-                    } else {
-                        console.warn('⚠️ Invalid zone:', zone);
+                if (reg.zone && /^Zone\s+\d+$/i.test(reg.zone)) {
+                    const zoneNum = reg.zone.match(/Zone\s+(\d+)/i)[1];
+                    uniqueZones.add(zoneNum);
+                    if (reg.payment_status !== 'test' && zoneCounts.hasOwnProperty(zoneNum)) {
+                        zoneCounts[zoneNum]++;
                     }
                 }
             });
@@ -656,7 +697,7 @@
                 'Email': reg.email || 'N/A',
                 'Type': reg.registration_type,
                 'Club': reg.club || 'N/A',
-                'Zone': reg.zone_id ? `Zone ${reg.zone_id}` : 'Unmapped',
+                'Zone': reg.zone || 'Unmapped',
                 'AG Name': reg.zone_ag_name || 'N/A',
                 'AG Mobile': reg.zone_ag_mobile || 'N/A',
                 'Meal Preference': reg.meal_preference,
@@ -699,41 +740,46 @@
         }
         
         // Zone Details Modal Functions
-        function showZoneDetails(zoneNumber) {
+        async function showZoneDetails(zoneNumber) {
             const modal = document.getElementById('zoneModal');
             const title = document.getElementById('zoneModalTitle');
             const content = document.getElementById('zoneModalContent');
-            
-            // Filter registrations by zone_id (exclude test)
-            const zoneRegs = allRegistrations.filter(reg => 
-                reg.zone_id == zoneNumber && reg.payment_status !== 'test'
-            );
-            
-            // Count by club
-            const clubCounts = {};
-            zoneRegs.forEach(reg => {
-                const club = reg.club || 'Unknown';
-                clubCounts[club] = (clubCounts[club] || 0) + 1;
-            });
-            
-            // Sort clubs by count (descending) for ranking
-            const sortedClubs = Object.entries(clubCounts).sort((a, b) => b[1] - a[1]);
-            
-            // Calculate total registrations in this zone
-            const total = zoneRegs.length;
-            const maxCount = sortedClubs.length > 0 ? sortedClubs[0][1] : 1;
+            // Fetch latest club ranking data from stats (lighter than full list)
+            let clubs = [];
+            try {
+                const resp = await fetch('/api/stats/zones');
+                const json = await resp.json();
+                if (json.success) {
+                    const zoneClubs = json.data.clubsByZone[zoneNumber] || [];
+                    clubs = zoneClubs;
+                }
+            } catch (e) {
+                console.warn('Failed to load zone clubs from stats, fallback to local data');
+                // Fallback using existing allRegistrations if stats endpoint fails
+                const zoneRegs = allRegistrations.filter(reg => {
+                    if (!reg.zone || reg.payment_status === 'test') return false;
+                    const m = reg.zone.match(/Zone\s+(\d+)/i);
+                    return m && m[1] == zoneNumber;
+                });
+                const clubCounts = {};
+                zoneRegs.forEach(r => { const c = r.club || 'Unknown'; clubCounts[c] = (clubCounts[c]||0)+1; });
+                clubs = Object.entries(clubCounts).map(([club,count])=>({club,count})).sort((a,b)=>b.count-a.count);
+            }
+
+            const clubsTotal = clubs.reduce((sum,c)=>sum+c.count,0);
+            const clubsMax = clubs.length ? clubs[0].count : 1;
             
             // Build bar graph with rankings
             let html = `
                 <div style="max-height: 60vh; overflow-y: auto;">
             `;
             
-            sortedClubs.forEach(([club, count], index) => {
+            clubs.forEach(({club, count}, index) => {
                 const rank = index + 1;
                 // Percentage of ZONE TOTAL (not relative to max club)
-                const percentageOfZone = (count / total) * 100;
+                const percentageOfZone = clubsTotal === 0 ? 0 : (count / clubsTotal) * 100;
                 // Bar width based on max club count for visual scaling
-                const barWidth = (count / maxCount) * 100;
+                const barWidth = (count / clubsMax) * 100;
                 
                 // Badge styling based on rank
                 let badge = '';
@@ -769,7 +815,7 @@
             html += `
                 </div>
                 <div style="margin-top: 20px; padding: 15px; background: #FEF3C7; border-radius: 8px; text-align: center;">
-                    <strong style="font-size: 16px; color: #D97706;">Total Registrations: ${total}</strong>
+                    <strong style="font-size: 16px; color: #D97706;">Total Registrations: ${clubsTotal}</strong>
                 </div>
             `;
             
@@ -789,6 +835,20 @@
                 closeZoneModal();
             }
         });
+
+        // Auto-refresh full registration list every 60s, dynamic zone stats every 15s (fresh bypass)
+        setInterval(() => {
+            fetchRegistrations();
+        }, 60000);
+        setInterval(() => {
+            fetchZoneStats(true);
+        }, 15000);
+
+        // Manual refresh button triggers full data + fresh zone stats
+        function manualRefresh() {
+            fetchRegistrations();
+            fetchZoneStats(true);
+        }
         
     </script>
 </body>

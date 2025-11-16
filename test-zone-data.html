@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zone Data Verification Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+        .box { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .success { color: #16A34A; font-weight: bold; }
+        .error { color: #DC2626; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #D4AF37; color: white; }
+        .zone2 { background: #DBEAFE; }
+        .zone7 { background: #FEF3C7; }
+        button { background: #D4AF37; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; margin: 5px; }
+        button:hover { background: #B8941F; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Zone Data Verification</h1>
+    
+    <div class="box">
+        <h2>Test 1: API Endpoint Response</h2>
+        <button onclick="testAPI()">🔄 Fetch from /api/registrations/list</button>
+        <div id="api-result"></div>
+    </div>
+
+    <div class="box">
+        <h2>Test 2: Zone Stats Endpoint (Fresh)</h2>
+        <button onclick="testZoneStats()">🔄 Fetch from /api/stats/zones?fresh=1</button>
+        <div id="stats-result"></div>
+    </div>
+
+    <div class="box">
+        <h2>Test 3: Specific IDs Check</h2>
+        <button onclick="testSpecificIDs()">🔍 Check 5 Specific Registrations</button>
+        <div id="specific-result"></div>
+    </div>
+
+    <script>
+        const testIDs = ['2026RTY0698', '2026RTY0697', '2026RTY0692', '2026RTY0691', '2026RTY0690'];
+
+        async function testAPI() {
+            const div = document.getElementById('api-result');
+            div.innerHTML = '<p>⏳ Loading...</p>';
+            
+            try {
+                const resp = await fetch('/api/registrations/list');
+                const data = await resp.json();
+                
+                if (!data.success) {
+                    div.innerHTML = `<p class="error">❌ API Error: ${data.error}</p>`;
+                    return;
+                }
+
+                const regs = data.data.registrations;
+                const found = regs.filter(r => testIDs.includes(r.registration_id));
+                
+                let html = `<p class="success">✅ API returned ${regs.length} registrations</p>`;
+                html += `<p>Found ${found.length}/5 test IDs:</p>`;
+                html += '<table><tr><th>ID</th><th>Name</th><th>Club</th><th>Zone</th></tr>';
+                
+                found.forEach(r => {
+                    const cls = r.club.includes('Hill-Side') ? 'zone2' : r.club === 'Mysore' ? 'zone7' : '';
+                    html += `<tr class="${cls}">
+                        <td>${r.registration_id}</td>
+                        <td>${r.name}</td>
+                        <td>${r.club}</td>
+                        <td><strong>${r.zone || '❌ UNMAPPED'}</strong></td>
+                    </tr>`;
+                });
+                html += '</table>';
+                
+                const zone2Count = found.filter(r => r.zone === 'Zone 2').length;
+                const zone7Count = found.filter(r => r.zone === 'Zone 7').length;
+                html += `<p>Zone 2: ${zone2Count}/2 | Zone 7: ${zone7Count}/3</p>`;
+                
+                div.innerHTML = html;
+            } catch (err) {
+                div.innerHTML = `<p class="error">❌ Error: ${err.message}</p>`;
+            }
+        }
+
+        async function testZoneStats() {
+            const div = document.getElementById('stats-result');
+            div.innerHTML = '<p>⏳ Loading...</p>';
+            
+            try {
+                const resp = await fetch('/api/stats/zones?fresh=1');
+                const data = await resp.json();
+                
+                if (!data.success) {
+                    div.innerHTML = `<p class="error">❌ Stats Error: ${data.error}</p>`;
+                    return;
+                }
+
+                const { zoneTotals, clubsByZone, totalRegistrations, guestCount } = data.data;
+                
+                let html = `<p class="success">✅ Stats API (Fresh: ${data.fresh})</p>`;
+                html += `<p>Total: ${totalRegistrations} | Guest: ${guestCount}</p>`;
+                html += '<table><tr><th>Zone</th><th>Count</th></tr>';
+                
+                for (let i = 1; i <= 9; i++) {
+                    html += `<tr><td>Zone ${i}</td><td><strong>${zoneTotals[i] || 0}</strong></td></tr>`;
+                }
+                html += '</table>';
+                
+                const zone2Clubs = clubsByZone['2'] || [];
+                const hillSide = zone2Clubs.find(c => c.club === 'Mangalore Hill-Side');
+                html += `<p>🔍 Mangalore Hill-Side in Zone 2: ${hillSide ? hillSide.count : '❌ NOT FOUND'}</p>`;
+                
+                const zone7Clubs = clubsByZone['7'] || [];
+                const mysore = zone7Clubs.find(c => c.club === 'Mysore');
+                html += `<p>🔍 Mysore in Zone 7: ${mysore ? mysore.count : '❌ NOT FOUND'}</p>`;
+                
+                div.innerHTML = html;
+            } catch (err) {
+                div.innerHTML = `<p class="error">❌ Error: ${err.message}</p>`;
+            }
+        }
+
+        async function testSpecificIDs() {
+            const div = document.getElementById('specific-result');
+            div.innerHTML = '<p>⏳ Loading...</p>';
+            
+            try {
+                const resp = await fetch('/api/registrations/list');
+                const data = await resp.json();
+                
+                if (!data.success) {
+                    div.innerHTML = `<p class="error">❌ Error: ${data.error}</p>`;
+                    return;
+                }
+
+                const regs = data.data.registrations;
+                const specific = testIDs.map(id => regs.find(r => r.registration_id === id)).filter(Boolean);
+                
+                let html = '<table><tr><th>ID</th><th>Name</th><th>Club</th><th>Zone Status</th></tr>';
+                
+                specific.forEach(r => {
+                    const expectedZone = r.club.includes('Hill-Side') ? 'Zone 2' : r.club === 'Mysore' ? 'Zone 7' : 'Unknown';
+                    const match = r.zone === expectedZone;
+                    const status = match ? '✅ CORRECT' : `❌ WRONG (expected ${expectedZone})`;
+                    
+                    html += `<tr>
+                        <td>${r.registration_id}</td>
+                        <td>${r.name}</td>
+                        <td>${r.club}</td>
+                        <td>${r.zone} ${status}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                
+                const allCorrect = specific.every(r => {
+                    const expected = r.club.includes('Hill-Side') ? 'Zone 2' : r.club === 'Mysore' ? 'Zone 7' : null;
+                    return r.zone === expected;
+                });
+                
+                html = `<p class="${allCorrect ? 'success' : 'error'}">${allCorrect ? '✅ All zones correct!' : '❌ Some zones incorrect'}</p>` + html;
+                
+                div.innerHTML = html;
+            } catch (err) {
+                div.innerHTML = `<p class="error">❌ Error: ${err.message}</p>`;
+            }
+        }
+
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            testAPI();
+            testZoneStats();
+            testSpecificIDs();
+        });
+    </script>
+</body>
+</html>
