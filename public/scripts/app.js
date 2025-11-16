@@ -861,12 +861,13 @@ function showReview() {
     const manualMode = document.getElementById('manual-reg-mode');
     
     if (guestMode && guestMode.style.display !== 'none') {
-        // Guest mode - no club required
+        // Guest mode - club is optional
         fullName = document.getElementById('guest-name').value.trim();
         mobile = document.getElementById('guest-mobile').value.trim();
         email = document.getElementById('guest-email').value.trim();
+        const guestClubInput = document.getElementById('guest-club').value.trim();
         
-        clubName = 'Guest'; // Guest category doesn't need club/zone
+        clubName = guestClubInput || 'Guest'; // Use input or default to 'Guest'
         clubId = 0;
         
     } else if (autofilledDetails && autofilledDetails.style.display !== 'none') {
