@@ -172,25 +172,22 @@ async function sendViaInfobip(registrationData) {
         to: phoneNumber,
         messageId: `reg-${registrationId}-${Date.now()}`,
         content: {
-          templateName: 'registration_confirmation_v4',
+          templateName: 'sneha_confirmation_short',
           templateData: {
-            header: {
-              type: 'IMAGE',
-              mediaUrl: process.env.EVENT_LOGO_URL || 'https://res.cloudinary.com/dnai1dz03/image/upload/v1763028752/WhatsApp_Image_2025-11-13_at_09.00.02_ny0cn9.jpg'
-            },
             body: {
               placeholders: [
-                name,                             // {{1}} Name (Hi {{1}})
-                name,                             // {{2}} Name (👤 Name: {{2}})
-                mobile,                           // {{3}} Mobile
-                email || 'Not Provided',          // {{4}} Email
-                type || registrationType || 'Participant', // {{5}} Registration Category
-                meal || 'Veg',                    // {{6}} Food Preference
-                tshirtSize || 'N/A',              // {{7}} T-Shirt Size
-                `${amount.toLocaleString('en-IN')}`, // {{8}} Amount (template has ₹ symbol)
-                confirmationLink                  // {{9}} View complete details link
+                name,                             // {{1}} Name
+                registrationId,                   // {{2}} Registration ID
+                type || 'Participant',            // {{3}} Type
+                meal || 'Veg'                     // {{4}} Meal
               ]
-            }
+            },
+            buttons: [
+              {
+                type: 'URL',
+                parameter: registrationId         // Dynamic URL parameter
+              }
+            ]
           },
           language: 'en'
         }
