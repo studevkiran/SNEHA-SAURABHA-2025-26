@@ -82,7 +82,7 @@ module.exports = async (req, res) => {
           }
           
           // Use Vercel URL for payment callback format
-          const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://sneha2026.in';
+          const baseUrl = 'https://sneha2026.in';
           const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registration.registration_id}`;
           const receiptNo = transactionId || registration.registration_id;
           

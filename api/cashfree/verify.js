@@ -101,7 +101,7 @@ module.exports = async (req, res) => {
         }
         
         // Use Vercel URL for payment callback format
-        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://sneha2026.vercel.app';
+        const baseUrl = 'https://sneha2026.in';
         // Use payment callback URL format instead of r.html
         const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registration.registration_id}`;
         // Use Cashfree transaction ID as receipt number (unique payment identifier)
