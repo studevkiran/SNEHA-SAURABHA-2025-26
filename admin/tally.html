@@ -316,19 +316,19 @@
             </div>
         </div>
 
-        <!-- Zone-wise Breakdown - Single Line Format -->
+        <!-- Zone-wise Breakdown - Simple Display (Excel has details) -->
         <div style="background: #FFF8E7; border: 2px solid #D4A024; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-            <h3 style="margin: 0 0 15px 0; color: #D97706; font-size: 18px;">ZONE-WISE BREAKDOWN</h3>
+            <h3 style="margin: 0 0 15px 0; color: #D97706; font-size: 18px;">ZONE-WISE BREAKDOWN (Download Excel for club details)</h3>
             <div style="font-size: 15px; line-height: 1.8;">
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(1)"><strong>Zone 1:</strong> <span id="count-zone-1">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(2)"><strong>Zone 2:</strong> <span id="count-zone-2">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(3)"><strong>Zone 3:</strong> <span id="count-zone-3">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(4)"><strong>Zone 4:</strong> <span id="count-zone-4">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(5)"><strong>Zone 5:</strong> <span id="count-zone-5">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(6)"><strong>Zone 6:</strong> <span id="count-zone-6">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(7)"><strong>Zone 7:</strong> <span id="count-zone-7">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(8)"><strong>Zone 8:</strong> <span id="count-zone-8">0</span></span> | 
-                <span style="cursor: pointer; text-decoration: underline;" onclick="showZoneDetails(9)"><strong>Zone 9:</strong> <span id="count-zone-9">0</span></span>
+                <strong>Zone 1:</strong> <span id="count-zone-1">0</span> | 
+                <strong>Zone 2:</strong> <span id="count-zone-2">0</span> | 
+                <strong>Zone 3:</strong> <span id="count-zone-3">0</span> | 
+                <strong>Zone 4:</strong> <span id="count-zone-4">0</span> | 
+                <strong>Zone 5:</strong> <span id="count-zone-5">0</span> | 
+                <strong>Zone 6:</strong> <span id="count-zone-6">0</span> | 
+                <strong>Zone 7:</strong> <span id="count-zone-7">0</span> | 
+                <strong>Zone 8:</strong> <span id="count-zone-8">0</span> | 
+                <strong>Zone 9:</strong> <span id="count-zone-9">0</span>
             </div>
             <div style="margin-top:8px;font-size:12px;color:#555">Last updated: <span id="last-updated">--:--:--</span> (auto-refresh every 60s)</div>
         </div>
@@ -688,8 +688,11 @@
                 return;
             }
             
-            // Prepare data for Excel
-            const excelData = filteredRegistrations.map(reg => ({
+            // Filter out test entries
+            const validRegs = allRegistrations.filter(r => r.payment_status !== 'test' && r.payment_status !== 'manual-B');
+            
+            // Prepare data for Excel - All Registrations Sheet
+            const excelData = validRegs.map(reg => ({
                 'Registration ID': reg.registration_id,
                 'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
                 'Name': reg.name,
@@ -705,38 +708,60 @@
                 'Amount': reg.registration_amount || 0,
                 'Payment Status': reg.payment_status || 'pending',
                 'Order ID': reg.order_id || 'N/A'
-            }));            // Create workbook
-            const ws = XLSX.utils.json_to_sheet(excelData);
+            }));
+            
+            // Create workbook
             const wb = XLSX.utils.book_new();
+            
+            // Sheet 1: All Registrations
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            ws['!cols'] = [
+                { wch: 12 }, { wch: 12 }, { wch: 30 }, { wch: 15 }, { wch: 30 },
+                { wch: 22 }, { wch: 30 }, { wch: 10 }, { wch: 25 }, { wch: 15 },
+                { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 30 }
+            ];
             XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
             
-            // Auto-size columns
-            const colWidths = [
-                { wch: 12 }, // Registration ID
-                { wch: 12 }, // Date
-                { wch: 30 }, // Name
-                { wch: 15 }, // Mobile
-                { wch: 30 }, // Email
-                { wch: 22 }, // Type
-                { wch: 30 }, // Club
-                { wch: 10 }, // Zone
-                { wch: 25 }, // AG Name
-                { wch: 15 }, // AG Mobile
-                { wch: 15 }, // Meal
-                { wch: 12 }, // T-Shirt
-                { wch: 12 }, // Amount
-                { wch: 15 }, // Status
-                { wch: 30 }  // Order ID
-            ];
-            ws['!cols'] = colWidths;
+            // Zone-wise sheets (Zone 1 to Zone 9)
+            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
+                const zoneRegs = validRegs.filter(r => {
+                    const m = (r.zone || '').match(/Zone\s+(\d+)/i);
+                    return m && m[1] == zoneNum;
+                });
+                
+                // Count by club
+                const clubCounts = {};
+                zoneRegs.forEach(r => {
+                    const club = r.club || 'Unknown';
+                    clubCounts[club] = (clubCounts[club] || 0) + 1;
+                });
+                
+                // Sort by count descending
+                const sortedClubs = Object.entries(clubCounts).sort((a,b) => b[1] - a[1]);
+                const zoneTotal = sortedClubs.reduce((sum,[,count]) => sum + count, 0);
+                
+                // Prepare zone sheet data
+                const zoneData = sortedClubs.map(([club, count]) => ({
+                    'Club': club,
+                    'Count': count
+                }));
+                
+                // Add total row
+                zoneData.push({ 'Club': 'TOTAL', 'Count': zoneTotal });
+                
+                // Create zone sheet
+                const zoneWs = XLSX.utils.json_to_sheet(zoneData);
+                zoneWs['!cols'] = [{ wch: 35 }, { wch: 10 }];
+                XLSX.utils.book_append_sheet(wb, zoneWs, `Zone ${zoneNum}`);
+            }
             
             // Generate filename with timestamp
             const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `SNEHA-SAURABHA-All-Registrations-${timestamp}.xlsx`;
+            const filename = `SNEHA-SAURABHA-Registrations-${timestamp}.xlsx`;
             
             // Download
             XLSX.writeFile(wb, filename);
-            console.log('✅ Excel exported:', filename);
+            console.log('✅ Excel exported with zone breakdowns:', filename);
         }
         
         // Zone Details Modal Functions
