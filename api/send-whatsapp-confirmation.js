@@ -180,14 +180,14 @@ async function sendViaInfobip(registrationData) {
             },
             body: {
               placeholders: [
-                name,                             // {{1}} Name
-                name,                             // {{2}} Name (repeated for greeting)
+                name,                             // {{1}} Name (Hi {{1}})
+                name,                             // {{2}} Name (👤 Name: {{2}})
                 mobile,                           // {{3}} Mobile
                 email || 'Not Provided',          // {{4}} Email
                 type || registrationType || 'Participant', // {{5}} Registration Category
                 meal || 'Veg',                    // {{6}} Food Preference
                 tshirtSize || 'N/A',              // {{7}} T-Shirt Size
-                `₹${amount.toLocaleString('en-IN')}`, // {{8}} Amount
+                `${amount.toLocaleString('en-IN')}`, // {{8}} Amount (template has ₹ symbol)
                 confirmationLink                  // {{9}} View complete details link
               ]
             }

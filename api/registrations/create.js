@@ -144,17 +144,18 @@ module.exports = async (req, res) => {
     // 3. Send WhatsApp confirmation (async, don't wait)
     if (savedRegistration) {
       try {
-        const whatsappResponse = await fetch(`${process.env.VERCEL_URL || 'https://sneha2026.vercel.app'}/api/send-whatsapp-confirmation`, {
+        const whatsappResponse = await fetch('https://sneha2026.in/api/send-whatsapp-confirmation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name: savedRegistration.name,
             mobile: savedRegistration.mobile,
-            email: savedRegistration.email || 'Not Provided',
+            email: savedRegistration.email,
             registrationId: savedRegistration.registration_id,
             registrationType: savedRegistration.registration_type,
             amount: savedRegistration.registration_amount,
             mealPreference: savedRegistration.meal_preference,
+            tshirtSize: savedRegistration.tshirt_size,
             clubName: savedRegistration.club
           })
         });
