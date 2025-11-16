@@ -741,26 +741,40 @@
         }
         
         // Zone Details Modal Functions
-        function showZoneDetails(zoneNumber) {
+        async function showZoneDetails(zoneNumber) {
             const modal = document.getElementById('zoneModal');
             const title = document.getElementById('zoneModalTitle');
             const content = document.getElementById('zoneModalContent');
             
-            // Filter registrations by textual zone (exclude test)
-            const zoneRegs = allRegistrations.filter(reg => {
-                if (!reg.zone || reg.payment_status === 'test') return false;
-                const m = reg.zone.match(/Zone\s+(\d+)/i);
-                return m && m[1] == zoneNumber;
-            });
-            
-            // Count by club
-            const clubCounts = {};
-            zoneRegs.forEach(reg => {
-                const club = reg.club || 'Unknown';
-                clubCounts[club] = (clubCounts[club] || 0) + 1;
-            });
+            // Fetch latest club ranking data from stats WITH FRESH=1 to bypass cache
+            let clubs = [];
+            try {
+                const resp = await fetch('/api/stats/zones?fresh=1');
+                const json = await resp.json();
+                if (json.success) {
+                    const zoneClubs = json.data.clubsByZone[zoneNumber] || [];
+                    clubs = zoneClubs.map(c => [c.club, c.count]);
+                }
+            } catch (e) {
+                console.warn('Failed to load zone clubs from stats, fallback to local data');
+                // Fallback: Filter registrations by textual zone (exclude test and manual-B)
+                const zoneRegs = allRegistrations.filter(reg => {
+                    if (!reg.zone || reg.payment_status === 'test' || reg.payment_status === 'manual-B') return false;
+                    const m = reg.zone.match(/Zone\s+(\d+)/i);
+                    return m && m[1] == zoneNumber;
+                });
+                
+                // Count by club
+                const clubCounts = {};
+                zoneRegs.forEach(reg => {
+                    const club = reg.club || 'Unknown';
+                    clubCounts[club] = (clubCounts[club] || 0) + 1;
+                });
+                clubs = Object.entries(clubCounts);
+            }
             
             // Sort clubs by count (descending) for ranking
+            const sortedClubs = clubs.sort((a,b) => b[1] - a[1]);
             const clubsTotal = sortedClubs.reduce((sum,[,count])=>sum+count,0);
             const clubsMax = sortedClubs.length ? sortedClubs[0][1] : 1;
 

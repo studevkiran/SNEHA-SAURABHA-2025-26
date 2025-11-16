@@ -43,8 +43,8 @@ module.exports = async (req, res) => {
     let guestCount = 0;
 
     for (const row of result.rows) {
-      // Exclude test entries from totals
-      if (row.payment_status === 'test') continue;
+      // Exclude test entries from totals (test, manual-B for test registrations)
+      if (row.payment_status === 'test' || row.payment_status === 'manual-B') continue;
       totalRegistrations++;
 
       const zoneText = row.zone || 'Unmapped';

@@ -744,10 +744,10 @@
             const modal = document.getElementById('zoneModal');
             const title = document.getElementById('zoneModalTitle');
             const content = document.getElementById('zoneModalContent');
-            // Fetch latest club ranking data from stats (lighter than full list)
+            // Fetch latest club ranking data from stats WITH FRESH=1 to bypass cache
             let clubs = [];
             try {
-                const resp = await fetch('/api/stats/zones');
+                const resp = await fetch('/api/stats/zones?fresh=1');
                 const json = await resp.json();
                 if (json.success) {
                     const zoneClubs = json.data.clubsByZone[zoneNumber] || [];
@@ -757,7 +757,7 @@
                 console.warn('Failed to load zone clubs from stats, fallback to local data');
                 // Fallback using existing allRegistrations if stats endpoint fails
                 const zoneRegs = allRegistrations.filter(reg => {
-                    if (!reg.zone || reg.payment_status === 'test') return false;
+                    if (!reg.zone || reg.payment_status === 'test' || reg.payment_status === 'manual-B') return false;
                     const m = reg.zone.match(/Zone\s+(\d+)/i);
                     return m && m[1] == zoneNumber;
                 });
