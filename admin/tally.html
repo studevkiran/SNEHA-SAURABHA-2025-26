@@ -294,6 +294,7 @@
                 <strong id="total-count">0</strong> Total Registrations
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
+            <button class="export-btn" style="background: #2563EB;" onclick="exportZoneWise()">📊 Zone-wise Excel</button>
             <button class="refresh-btn" onclick="manualRefresh()">🔄 Refresh Full Data</button>
         </div>
         
@@ -762,6 +763,63 @@
             // Download
             XLSX.writeFile(wb, filename);
             console.log('✅ Excel exported with zone breakdowns:', filename);
+        }
+        
+        function exportZoneWise() {
+            if (allRegistrations.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            // Filter out test entries
+            const validRegs = allRegistrations.filter(r => r.payment_status !== 'test' && r.payment_status !== 'manual-B');
+            
+            // Create single sheet with all zones
+            const zoneData = [];
+            
+            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
+                const zoneRegs = validRegs.filter(r => {
+                    const m = (r.zone || '').match(/Zone\s+(\d+)/i);
+                    return m && m[1] == zoneNum;
+                });
+                
+                // Count by club
+                const clubCounts = {};
+                zoneRegs.forEach(r => {
+                    const club = r.club || 'Unknown';
+                    clubCounts[club] = (clubCounts[club] || 0) + 1;
+                });
+                
+                // Sort by count descending
+                const sortedClubs = Object.entries(clubCounts).sort((a,b) => b[1] - a[1]);
+                const zoneTotal = sortedClubs.reduce((sum,[,count]) => sum + count, 0);
+                
+                // Add zone header
+                zoneData.push({ 'Zone': `ZONE ${zoneNum}`, 'Club': '', 'Count': '' });
+                
+                // Add clubs
+                sortedClubs.forEach(([club, count]) => {
+                    zoneData.push({ 'Zone': '', 'Club': club, 'Count': count });
+                });
+                
+                // Add zone total
+                zoneData.push({ 'Zone': '', 'Club': `ZONE ${zoneNum} TOTAL`, 'Count': zoneTotal });
+                
+                // Add blank row
+                zoneData.push({ 'Zone': '', 'Club': '', 'Count': '' });
+            }
+            
+            // Create workbook with single sheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(zoneData);
+            ws['!cols'] = [{ wch: 12 }, { wch: 35 }, { wch: 10 }];
+            XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
+            
+            // Download
+            const timestamp = new Date().toISOString().split('T')[0];
+            const filename = `SNEHA-SAURABHA-Zone-Summary-${timestamp}.xlsx`;
+            XLSX.writeFile(wb, filename);
+            console.log('✅ Zone-wise Excel exported:', filename);
         }
         
         // Zone Details Modal Functions
