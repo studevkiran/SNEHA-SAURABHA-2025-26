@@ -232,6 +232,31 @@ function setupClearButtons() {
 // Load clubs from JSON
 let clubsList = [];
 
+// ===================================================================================
+// LOADING OVERLAY FUNCTIONS
+// ===================================================================================
+
+function showLoading(message = 'Processing...', subtext = 'Please wait, do not close this window') {
+    const overlay = document.getElementById('loadingOverlay');
+    const messageEl = document.getElementById('loadingMessage');
+    const subtextEl = document.getElementById('loadingSubtext');
+    
+    if (overlay && messageEl && subtextEl) {
+        messageEl.textContent = message;
+        subtextEl.textContent = subtext;
+        overlay.setAttribute('data-active', 'true');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.setAttribute('data-active', 'false');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+}
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     // Check for payment callback from Cashfree
@@ -1850,8 +1875,8 @@ async function verifyBypassCode() {
         // Close modal
         closeBypassCodeModal();
         
-        // Show loading
-        alert('Processing manual registration...');
+        // Show loading overlay
+        showLoading('Processing Manual Registration...', 'Saving your registration details');
         
         // Create registration with manual payment status
         const response = await fetch('/api/registrations/create', {
@@ -1876,11 +1901,15 @@ async function verifyBypassCode() {
         
         const result = await response.json();
         
+        // Hide loading
+        hideLoading();
+        
         if (result.success && result.registration) {
             // Store registration ID
             registrationData.registrationId = result.registration.registration_id;
             registrationData.paymentStatus = paymentStatus;
             registrationData.utrNumber = utr;
+            registrationData.orderID = utr; // Store UTR as order ID
             
             // Show success screen
             document.getElementById('success-name').textContent = registrationData.fullName;
@@ -1894,15 +1923,17 @@ async function verifyBypassCode() {
             
             showScreen('screen-success');
             
-            alert('✅ Registration successful! ID: ' + result.registration.registration_id);
             console.log('✅ Manual registration completed:', result.registration.registration_id);
         } else {
             error.textContent = result.error || 'Registration failed';
-            alert('❌ Registration failed: ' + (result.error || 'Unknown error'));
+            // Show error in modal instead of alert
+            document.getElementById('bypassCodeModal').style.display = 'flex';
         }
     } catch (err) {
+        hideLoading();
         console.error('Bypass code error:', err);
-        alert('Error processing manual registration. Please try again.');
+        error.textContent = 'Error processing registration. Please try again.';
+        document.getElementById('bypassCodeModal').style.display = 'flex';
     }
 }
 
