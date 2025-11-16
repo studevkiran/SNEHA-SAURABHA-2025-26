@@ -25,30 +25,16 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    console.log('🔄 Fixing TEMP registration IDs...');
+    console.log('🔄 Fixing TEMP registration IDs to specific numbers...');
     
-    // Get the highest current 2026RTY number
-    const maxResult = await pool.query(`
-      SELECT registration_id,
-             CAST(SUBSTRING(registration_id FROM '.{4}$') AS INTEGER) as num_part
-      FROM registrations 
-      WHERE registration_id LIKE '2026RTY%'
-      ORDER BY num_part DESC 
-      LIMIT 1
-    `);
-    
-    let nextNumber = 690; // Default start
-    if (maxResult.rows.length > 0) {
-      nextNumber = maxResult.rows[0].num_part + 1;
-      console.log(`📊 Highest 2026RTY: ${maxResult.rows[0].registration_id} (${maxResult.rows[0].num_part})`);
-      console.log(`➡️  Next number: ${nextNumber}`);
-    }
-    
-    // Update TEMP IDs to proper 2026RTY format
+    // Update TEMP IDs to specific 2026RTY numbers as requested
+    // TEMP_0003 (was RAC54V0690) → 2026RTY0690
+    // TEMP_0002 (was RAC54V0691) → 2026RTY0691
+    // TEMP_0001 (was RAC54V0692) → 2026RTY0692
     const updates = [
-      { old: 'TEMP_0001', new: `2026RTY${String(nextNumber).padStart(4, '0')}` },
-      { old: 'TEMP_0002', new: `2026RTY${String(nextNumber + 1).padStart(4, '0')}` },
-      { old: 'TEMP_0003', new: `2026RTY${String(nextNumber + 2).padStart(4, '0')}` }
+      { old: 'TEMP_0003', new: '2026RTY0690', name: 'DRR Rtr Rtn Prajwal R' },
+      { old: 'TEMP_0002', new: '2026RTY0691', name: 'Rtr Rtn Sumuk Bharadwaj KS' },
+      { old: 'TEMP_0001', new: '2026RTY0692', name: 'Rtr Rtn Jeswanthdhar C' }
     ];
     
     const results = [];
@@ -86,7 +72,11 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: `Fixed ${successCount} of ${updates.length} TEMP registrations`,
-      nextNumber: nextNumber,
+      updates: [
+        'TEMP_0003 (RAC54V0690) → 2026RTY0690',
+        'TEMP_0002 (RAC54V0691) → 2026RTY0691',
+        'TEMP_0001 (RAC54V0692) → 2026RTY0692'
+      ],
       results: results
     });
     
