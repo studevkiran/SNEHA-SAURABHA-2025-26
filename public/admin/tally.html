@@ -594,77 +594,184 @@
             // Filter out test entries
             const validRegs = allRegistrations.filter(r => r.payment_status !== 'test' && r.payment_status !== 'manual-B');
             
-            // Prepare data for Excel - All Registrations Sheet
-            const excelData = validRegs.map(reg => ({
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            
+            // === SHEET 1: Summary Dashboard ===
+            const totalAmount = validRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+            const summaryData = [
+                ['SNEHA SAURABHA 2025-26 - REGISTRATION SUMMARY'],
+                ['Generated on:', new Date().toLocaleString('en-IN')],
+                [''],
+                ['OVERALL STATISTICS'],
+                ['Total Registrations:', validRegs.length],
+                ['Total Revenue (₹):', totalAmount.toLocaleString('en-IN')],
+                [''],
+                ['REGISTRATION TYPE BREAKDOWN'],
+                ['Type', 'Count', 'Amount (₹)']
+            ];
+            
+            // Calculate type-wise breakdown
+            const typeStats = {};
+            validRegs.forEach(r => {
+                const type = r.registration_type || 'Unknown';
+                if (!typeStats[type]) {
+                    typeStats[type] = { count: 0, amount: 0 };
+                }
+                typeStats[type].count++;
+                typeStats[type].amount += parseFloat(r.registration_amount) || 0;
+            });
+            
+            Object.entries(typeStats).sort((a, b) => b[1].count - a[1].count).forEach(([type, stats]) => {
+                summaryData.push([type, stats.count, stats.amount.toLocaleString('en-IN')]);
+            });
+            
+            summaryData.push(['', '', '']);
+            summaryData.push(['ZONE-WISE BREAKDOWN']);
+            summaryData.push(['Zone', 'Clubs', 'Registrations', 'Amount (₹)']);
+            
+            // Calculate zone-wise breakdown
+            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
+                const zoneRegs = validRegs.filter(r => {
+                    const m = (r.zone || '').match(/Zone\s+(\d+)/i);
+                    return m && m[1] == zoneNum;
+                });
+                const zoneClubs = new Set(zoneRegs.map(r => r.club)).size;
+                const zoneAmount = zoneRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+                summaryData.push([`Zone ${zoneNum}`, zoneClubs, zoneRegs.length, zoneAmount.toLocaleString('en-IN')]);
+            }
+            
+            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+            summaryWs['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 20 }, { wch: 20 }];
+            
+            // Format header rows
+            if (summaryWs['A1']) summaryWs['A1'].s = { font: { bold: true, sz: 14 }, fill: { fgColor: { rgb: 'D4AF37' } } };
+            if (summaryWs['A4']) summaryWs['A4'].s = { font: { bold: true }, fill: { fgColor: { rgb: 'F4D03F' } } };
+            if (summaryWs['A8']) summaryWs['A8'].s = { font: { bold: true }, fill: { fgColor: { rgb: 'F4D03F' } } };
+            
+            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+            
+            // === SHEET 2: All Registrations ===
+            const excelData = validRegs.map((reg, index) => ({
+                'S.No': index + 1,
                 'Registration ID': reg.registration_id,
                 'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
                 'Name': reg.name,
                 'Mobile': reg.mobile,
                 'Email': reg.email || 'N/A',
-                'Type': reg.registration_type,
-                'Club': reg.club || 'N/A',
+                'Registration Type': reg.registration_type,
+                'Club Name': reg.club || 'N/A',
                 'Zone': reg.zone || 'Unmapped',
                 'AG Name': reg.zone_ag_name || 'N/A',
                 'AG Mobile': reg.zone_ag_mobile || 'N/A',
-                'Meal Preference': reg.meal_preference,
-                'T-Shirt Size': reg.tshirt_size || 'N/A',
-                'Amount': reg.registration_amount || 0,
+                'Meal': reg.meal_preference,
+                'T-Shirt': reg.tshirt_size || 'N/A',
+                'Amount (₹)': reg.registration_amount || 0,
                 'Payment Status': reg.payment_status || 'pending',
                 'Order ID': reg.order_id || 'N/A'
             }));
             
-            // Create workbook
-            const wb = XLSX.utils.book_new();
-            
-            // Sheet 1: All Registrations
             const ws = XLSX.utils.json_to_sheet(excelData);
             ws['!cols'] = [
-                { wch: 12 }, { wch: 12 }, { wch: 30 }, { wch: 15 }, { wch: 30 },
-                { wch: 22 }, { wch: 30 }, { wch: 10 }, { wch: 25 }, { wch: 15 },
-                { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 30 }
+                { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 }, { wch: 15 }, 
+                { wch: 30 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, 
+                { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 15 }, { wch: 30 }
             ];
+            
+            // Add autofilter
+            ws['!autofilter'] = { ref: `A1:P${excelData.length + 1}` };
+            
             XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
             
-            // Zone-wise sheets (Zone 1 to Zone 9)
+            // === SHEETS 3-11: Zone-wise Details ===
             for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
                 const zoneRegs = validRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
                     return m && m[1] == zoneNum;
                 });
                 
-                // Count by club
-                const clubCounts = {};
+                // Zone header data
+                const zoneAmount = zoneRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+                const zoneHeaderData = [
+                    [`ZONE ${zoneNum} - DETAILED BREAKDOWN`],
+                    ['Total Registrations:', zoneRegs.length],
+                    ['Total Amount (₹):', zoneAmount.toLocaleString('en-IN')],
+                    [''],
+                    ['CLUB-WISE SUMMARY'],
+                    ['Rank', 'Club Name', 'Registrations', 'Amount (₹)', 'Percentage']
+                ];
+                
+                // Count by club with amounts
+                const clubStats = {};
                 zoneRegs.forEach(r => {
                     const club = r.club || 'Unknown';
-                    clubCounts[club] = (clubCounts[club] || 0) + 1;
+                    if (!clubStats[club]) {
+                        clubStats[club] = { count: 0, amount: 0 };
+                    }
+                    clubStats[club].count++;
+                    clubStats[club].amount += parseFloat(r.registration_amount) || 0;
                 });
                 
                 // Sort by count descending
-                const sortedClubs = Object.entries(clubCounts).sort((a,b) => b[1] - a[1]);
-                const zoneTotal = sortedClubs.reduce((sum,[,count]) => sum + count, 0);
+                const sortedClubs = Object.entries(clubStats).sort((a,b) => b[1].count - a[1].count);
                 
-                // Prepare zone sheet data
-                const zoneData = sortedClubs.map(([club, count]) => ({
-                    'Club': club,
-                    'Count': count
-                }));
+                sortedClubs.forEach(([club, stats], idx) => {
+                    const percentage = ((stats.count / zoneRegs.length) * 100).toFixed(1);
+                    const rank = idx + 1;
+                    let medal = '';
+                    if (rank === 1) medal = '🥇';
+                    else if (rank === 2) medal = '🥈';
+                    else if (rank === 3) medal = '🥉';
+                    
+                    zoneHeaderData.push([
+                        `${medal} ${rank}`,
+                        club,
+                        stats.count,
+                        stats.amount.toLocaleString('en-IN'),
+                        `${percentage}%`
+                    ]);
+                });
                 
                 // Add total row
-                zoneData.push({ 'Club': 'TOTAL', 'Count': zoneTotal });
+                zoneHeaderData.push(['', 'TOTAL', zoneRegs.length, zoneAmount.toLocaleString('en-IN'), '100%']);
+                zoneHeaderData.push(['']);
+                zoneHeaderData.push(['DETAILED REGISTRATIONS']);
                 
                 // Create zone sheet
-                const zoneWs = XLSX.utils.json_to_sheet(zoneData);
-                zoneWs['!cols'] = [{ wch: 35 }, { wch: 10 }];
+                const zoneWs = XLSX.utils.aoa_to_sheet(zoneHeaderData);
+                
+                // Add detailed registrations below summary
+                const zoneDetailData = zoneRegs.map((reg, idx) => ({
+                    'S.No': idx + 1,
+                    'Name': reg.name,
+                    'Mobile': reg.mobile,
+                    'Club': reg.club || 'N/A',
+                    'Type': reg.registration_type,
+                    'Meal': reg.meal_preference,
+                    'Amount (₹)': reg.registration_amount || 0
+                }));
+                
+                XLSX.utils.sheet_add_json(zoneWs, zoneDetailData, { 
+                    origin: `A${zoneHeaderData.length + 1}`,
+                    skipHeader: false
+                });
+                
+                zoneWs['!cols'] = [
+                    { wch: 10 }, { wch: 35 }, { wch: 15 }, { wch: 15 }, { wch: 12 }, 
+                    { wch: 12 }, { wch: 12 }
+                ];
+                
                 XLSX.utils.book_append_sheet(wb, zoneWs, `Zone ${zoneNum}`);
             }
             
             // Generate filename with timestamp
             const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `SNEHA-SAURABHA-Registrations-${timestamp}.xlsx`;
+            const filename = `SNEHA-SAURABHA-Complete-Report-${timestamp}.xlsx`;
             
             // Download
             XLSX.writeFile(wb, filename);
-            console.log('✅ Excel exported with zone breakdowns:', filename);
+            console.log('✅ Enhanced Excel exported with complete breakdown:', filename);
+            alert(`✅ Excel file downloaded!\n\nFile: ${filename}\nTotal Registrations: ${validRegs.length}\nTotal Amount: ₹${totalAmount.toLocaleString('en-IN')}`);
         }
         
         function exportZoneWise() {
@@ -675,9 +782,22 @@
             
             // Filter out test entries
             const validRegs = allRegistrations.filter(r => r.payment_status !== 'test' && r.payment_status !== 'manual-B');
+            const totalAmount = validRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
             
-            // Create single sheet with all zones
-            const zoneData = [];
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            
+            // Build comprehensive zone summary data
+            const zoneData = [
+                ['SNEHA SAURABHA 2025-26 - ZONE-WISE CLUB SUMMARY'],
+                ['Generated on:', new Date().toLocaleString('en-IN')],
+                ['Total Registrations:', validRegs.length, '', 'Total Revenue (₹):', totalAmount.toLocaleString('en-IN')],
+                [''],
+                ['Zone', 'Rank', 'Club Name', 'Registrations', 'Amount (₹)', 'Percentage']
+            ];
+            
+            let grandTotal = 0;
+            let grandAmount = 0;
             
             for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
                 const zoneRegs = validRegs.filter(r => {
@@ -685,43 +805,93 @@
                     return m && m[1] == zoneNum;
                 });
                 
-                // Count by club
-                const clubCounts = {};
+                // Count by club with amounts
+                const clubStats = {};
                 zoneRegs.forEach(r => {
                     const club = r.club || 'Unknown';
-                    clubCounts[club] = (clubCounts[club] || 0) + 1;
+                    if (!clubStats[club]) {
+                        clubStats[club] = { count: 0, amount: 0 };
+                    }
+                    clubStats[club].count++;
+                    clubStats[club].amount += parseFloat(r.registration_amount) || 0;
                 });
                 
                 // Sort by count descending
-                const sortedClubs = Object.entries(clubCounts).sort((a,b) => b[1] - a[1]);
-                const zoneTotal = sortedClubs.reduce((sum,[,count]) => sum + count, 0);
+                const sortedClubs = Object.entries(clubStats).sort((a,b) => b[1].count - a[1].count);
+                const zoneTotal = sortedClubs.reduce((sum,[,stats]) => sum + stats.count, 0);
+                const zoneAmount = sortedClubs.reduce((sum,[,stats]) => sum + stats.amount, 0);
+                
+                grandTotal += zoneTotal;
+                grandAmount += zoneAmount;
                 
                 // Add zone header
-                zoneData.push({ 'Zone': `ZONE ${zoneNum}`, 'Club': '', 'Count': '' });
+                zoneData.push(['', '', '', '', '', '']);
+                zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Clubs)`, zoneTotal, zoneAmount.toLocaleString('en-IN'), '']);
                 
-                // Add clubs
-                sortedClubs.forEach(([club, count]) => {
-                    zoneData.push({ 'Zone': '', 'Club': club, 'Count': count });
+                // Add clubs with rankings
+                sortedClubs.forEach(([club, stats], idx) => {
+                    const percentage = zoneTotal > 0 ? ((stats.count / zoneTotal) * 100).toFixed(1) : '0.0';
+                    const rank = idx + 1;
+                    let medal = '';
+                    if (rank === 1) medal = '🥇';
+                    else if (rank === 2) medal = '🥈';
+                    else if (rank === 3) medal = '🥉';
+                    
+                    zoneData.push([
+                        '',
+                        `${medal} ${rank}`,
+                        club,
+                        stats.count,
+                        stats.amount.toLocaleString('en-IN'),
+                        `${percentage}%`
+                    ]);
                 });
                 
                 // Add zone total
-                zoneData.push({ 'Zone': '', 'Club': `ZONE ${zoneNum} TOTAL`, 'Count': zoneTotal });
-                
-                // Add blank row
-                zoneData.push({ 'Zone': '', 'Club': '', 'Count': '' });
+                zoneData.push([
+                    '',
+                    '',
+                    `ZONE ${zoneNum} TOTAL`,
+                    zoneTotal,
+                    zoneAmount.toLocaleString('en-IN'),
+                    '100%'
+                ]);
             }
             
-            // Create workbook with single sheet
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.json_to_sheet(zoneData);
-            ws['!cols'] = [{ wch: 12 }, { wch: 35 }, { wch: 10 }];
+            // Add grand total
+            zoneData.push(['', '', '', '', '', '']);
+            zoneData.push(['', '', '', '', '', '']);
+            zoneData.push([
+                'GRAND TOTAL',
+                '',
+                'All 9 Zones',
+                grandTotal,
+                grandAmount.toLocaleString('en-IN'),
+                '100%'
+            ]);
+            
+            // Create worksheet
+            const ws = XLSX.utils.aoa_to_sheet(zoneData);
+            ws['!cols'] = [
+                { wch: 12 },  // Zone
+                { wch: 10 },  // Rank
+                { wch: 35 },  // Club Name
+                { wch: 15 },  // Registrations
+                { wch: 18 },  // Amount
+                { wch: 12 }   // Percentage
+            ];
+            
+            // Add autofilter
+            ws['!autofilter'] = { ref: 'A5:F5' };
+            
             XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
             
             // Download
             const timestamp = new Date().toISOString().split('T')[0];
             const filename = `SNEHA-SAURABHA-Zone-Summary-${timestamp}.xlsx`;
             XLSX.writeFile(wb, filename);
-            console.log('✅ Zone-wise Excel exported:', filename);
+            console.log('✅ Enhanced zone-wise Excel exported:', filename);
+            alert(`✅ Zone Summary downloaded!\n\nFile: ${filename}\nTotal: ${grandTotal} registrations\nAmount: ₹${grandAmount.toLocaleString('en-IN')}`);
         }
         
         // Auto-refresh registration list every 60 seconds
