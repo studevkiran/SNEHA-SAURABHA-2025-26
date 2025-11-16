@@ -32,16 +32,15 @@ module.exports = async (req, res) => {
     const reg1 = await pool.query(`
       INSERT INTO registrations (
         registration_id, order_id, name, email, mobile, club, club_id,
-        zone, registration_type, registration_amount, meal_preference, 
-        tshirt_size, payment_status, payment_method, transaction_id,
-        created_at
+        registration_type, registration_amount, meal_preference, 
+        payment_status, payment_method, transaction_id, created_at
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
       ) RETURNING *
     `, [
       'RAC54V0690', 'ORDER_1763264962774_432', 'DRR Rtr Rtn Prajwal R',
-      'rtrprajwal@gmail.com', '9164734985', 'Mysore', 0, 'Zone 7',
-      'Rotaractor', 2400, 'Veg', 'M', 'success', 'Cashfree', 
+      'rtrprajwal@gmail.com', '9164734985', 'Mysore', 0,
+      'Rotaractor', 2400, 'Veg', 'success', 'Cashfree', 
       'ORDER_1763264962774_432'
     ]);
     registrations.push(reg1.rows[0]);
@@ -50,16 +49,15 @@ module.exports = async (req, res) => {
     const reg2 = await pool.query(`
       INSERT INTO registrations (
         registration_id, order_id, name, email, mobile, club, club_id,
-        zone, registration_type, registration_amount, meal_preference, 
-        tshirt_size, payment_status, payment_method, transaction_id,
-        created_at
+        registration_type, registration_amount, meal_preference, 
+        payment_status, payment_method, transaction_id, created_at
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
       ) RETURNING *
     `, [
       'RAC54V0691', 'ORDER_1763265922613_046', 'Rtr Rtn Sumuk Bharadwaj KS',
-      'rtnsumukbharadwaj3181@gmail.com', '8553590814', 'Mysore', 0, 'Zone 7',
-      'Rotaractor', 2400, 'Veg', 'M', 'success', 'Cashfree',
+      'rtnsumukbharadwaj3181@gmail.com', '8553590814', 'Mysore', 0,
+      'Rotaractor', 2400, 'Veg', 'success', 'Cashfree',
       'ORDER_1763265922613_046'
     ]);
     registrations.push(reg2.rows[0]);
@@ -68,16 +66,15 @@ module.exports = async (req, res) => {
     const reg3 = await pool.query(`
       INSERT INTO registrations (
         registration_id, order_id, name, email, mobile, club, club_id,
-        zone, registration_type, registration_amount, meal_preference, 
-        tshirt_size, payment_status, payment_method, transaction_id,
-        created_at
+        registration_type, registration_amount, meal_preference, 
+        payment_status, payment_method, transaction_id, created_at
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
       ) RETURNING *
     `, [
       'RAC54V0692', 'ORDER_1763266000000_047', 'Rtr Rtn Jeswanthdhar C',
-      'rtr.rtn.jeswanthdhar@gmail.com', '9901330544', 'Mysore', 0, 'Zone 7',
-      'Rotaractor', 2400, 'Non-Veg', 'M', 'success', 'Cashfree',
+      'rtr.rtn.jeswanthdhar@gmail.com', '9901330544', 'Mysore', 0,
+      'Rotaractor', 2400, 'Non-Veg', 'success', 'Cashfree',
       'ORDER_1763266000000_047'
     ]);
     registrations.push(reg3.rows[0]);
