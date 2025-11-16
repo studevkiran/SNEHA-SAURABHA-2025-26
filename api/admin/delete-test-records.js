@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
     const checkQuery = `
       SELECT registration_id, name, mobile, email, registration_type, registration_amount
       FROM registrations
-      WHERE registration_id IN ('SS00027', 'SS00028', 'SS00029')
+      WHERE registration_id IN ('SS00027', 'SS00028', 'SS00029', 'SS00030')
       ORDER BY registration_id;
     `;
 
@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
     // Delete them
     const deleteQuery = `
       DELETE FROM registrations
-      WHERE registration_id IN ('SS00027', 'SS00028', 'SS00029')
+      WHERE registration_id IN ('SS00027', 'SS00028', 'SS00029', 'SS00030')
       RETURNING registration_id, name, mobile;
     `;
 

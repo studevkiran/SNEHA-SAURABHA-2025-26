@@ -1989,7 +1989,8 @@ const VALID_COUPONS = {
     '100': { discount: 100, name: '₹100 OFF' },
     'DISCOUNT100': { discount: 100, name: '₹100 OFF' },
     'EARLYBIRD': { discount: 250, name: '₹250 OFF' },
-    'VIP500': { discount: 500, name: '₹500 OFF' }
+    'VIP500': { discount: 500, name: '₹500 OFF' },
+    'TESTER9919': { discount: 'FULL-1', name: 'TEST MODE - ₹1 ONLY' }
 };
 
 let appliedDiscount = 0;
@@ -2021,7 +2022,15 @@ window.applyCoupon = function() {
         appliedDiscount = VALID_COUPONS[code].discount;
         appliedCouponCode = code;
         
-        couponMessage.textContent = `✅ ${VALID_COUPONS[code].name} applied! You saved ₹${appliedDiscount}`;
+        // Special message for tester coupon
+        let successMessage;
+        if (appliedDiscount === 'FULL-1') {
+            successMessage = `✅ ${VALID_COUPONS[code].name} applied! Price reduced to ₹1 for testing`;
+        } else {
+            successMessage = `✅ ${VALID_COUPONS[code].name} applied! You saved ₹${appliedDiscount}`;
+        }
+        
+        couponMessage.textContent = successMessage;
         couponMessage.classList.add('success');
         
         // Update buttons
@@ -2034,7 +2043,7 @@ window.applyCoupon = function() {
         updateFinalAmount();
         
         // Store in registration data
-        registrationData.discount = appliedDiscount;
+        registrationData.discount = appliedDiscount === 'FULL-1' ? registrationData.price - 1 : appliedDiscount;
         registrationData.applied_coupon = appliedCouponCode;
         
     } else {
@@ -2084,7 +2093,14 @@ window.updateFinalAmount = function() {
     
     // Get original amount from registration data (use 'price' not 'registration_amount')
     const originalAmount = registrationData.price || 0;
-    const finalAmount = Math.max(0, originalAmount - appliedDiscount);
+    
+    // Handle special "FULL-1" discount (for tester9919 coupon)
+    let finalAmount;
+    if (appliedDiscount === 'FULL-1') {
+        finalAmount = 1; // Set to ₹1 for testing
+    } else {
+        finalAmount = Math.max(0, originalAmount - appliedDiscount);
+    }
     
     // Update payment button
     if (paymentAmountSpan) {
@@ -2096,7 +2112,7 @@ window.updateFinalAmount = function() {
     
     console.log('💰 Amount updated:', {
         original: originalAmount,
-        discount: appliedDiscount,
+        discount: appliedDiscount === 'FULL-1' ? `Full discount to ₹1` : appliedDiscount,
         final: finalAmount
     });
 };
