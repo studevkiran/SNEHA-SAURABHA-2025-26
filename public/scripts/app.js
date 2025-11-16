@@ -861,18 +861,13 @@ function showReview() {
     const manualMode = document.getElementById('manual-reg-mode');
     
     if (guestMode && guestMode.style.display !== 'none') {
-        // Guest mode - club is now mandatory
+        // Guest mode - club is optional
         fullName = document.getElementById('guest-name').value.trim();
         mobile = document.getElementById('guest-mobile').value.trim();
         email = document.getElementById('guest-email').value.trim();
         const guestClubInput = document.getElementById('guest-club').value.trim();
         
-        if (!guestClubInput) {
-            alert('Please enter your club or organization name');
-            return;
-        }
-        
-        clubName = guestClubInput;
+        clubName = guestClubInput || 'Guest'; // Default to 'Guest' if no club provided
         clubId = 0;
         
     } else if (autofilledDetails && autofilledDetails.style.display !== 'none') {

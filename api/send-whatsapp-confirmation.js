@@ -147,8 +147,8 @@ async function sendViaInfobip(registrationData) {
   // Infobip WhatsApp Template API
   const infobipUrl = `https://${process.env.INFOBIP_BASE_URL}/whatsapp/1/message/template`;
 
-  // Confirmation page URL: use payment callback format instead of r.html
-  const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://sneha2026.vercel.app';
+  // Use custom domain instead of Vercel URL for accessibility
+  const baseUrl = 'https://sneha2026.in';
   const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registrationId}`;
 
   // Receipt number: prefer caller-provided receiptNo, else fall back to full registrationId
@@ -170,7 +170,7 @@ async function sendViaInfobip(registrationData) {
         to: phoneNumber,
         messageId: `reg-${registrationId}-${Date.now()}`,
         content: {
-          templateName: 'registration_confirmation_v4', // v4 template APPROVED
+          templateName: 'registration_confirmation_v4',
           templateData: {
             header: {
               type: 'IMAGE',
@@ -178,17 +178,19 @@ async function sendViaInfobip(registrationData) {
             },
             body: {
               placeholders: [
-                name,                    // {{1}} Name (greeting)
-                registrationId,          // {{2}} Registration No.
-                receiptNo,               // {{3}} Receipt No. (Cashfree transaction ID)
-                name,                    // {{4}} Name (in details)
-                phoneNumber,             // {{5}} Mobile
-                email || 'Not Provided', // {{6}} Email
-                meal || 'Veg',           // {{7}} Food Preference
-                amount.toLocaleString('en-IN'), // {{8}} Amount (formatted)
-                confirmationLink         // {{9}} Short confirmation link
+                name,                             // {{1}} Name
+                registrationId,                   // {{2}} Registration ID
+                type || registrationType || 'Participant', // {{3}} Registration Type
+                meal || 'Veg',                    // {{4}} Meal Preference
+                `₹${amount.toLocaleString('en-IN')}` // {{5}} Amount with rupee symbol
               ]
-            }
+            },
+            buttons: [
+              {
+                type: 'URL',
+                parameter: registrationId  // {{1}} in button URL - appends to template URL
+              }
+            ]
           },
           language: 'en'
         }
