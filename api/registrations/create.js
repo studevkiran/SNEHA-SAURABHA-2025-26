@@ -1,5 +1,6 @@
 // API: Create new registration
 const { createRegistration, createPaymentLog } = require('../../lib/db-functions');
+const { getZoneForClub } = require('../../lib/zone-mapping');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -25,6 +26,7 @@ module.exports = async (req, res) => {
       registrationType,
       amount,
       mealPreference,
+      tshirtSize,
       orderId,
       transactionId,
       upiId,
@@ -84,6 +86,9 @@ module.exports = async (req, res) => {
     // 1. Save to PostgreSQL (primary - MUST succeed)
     let savedRegistration = null;
     try {
+      // Auto-map zone based on club name
+      const zone = getZoneForClub(clubName);
+      
       const result = await createRegistration({
         orderId: orderId || `ORDER_${Date.now()}`,
         name,
@@ -91,9 +96,11 @@ module.exports = async (req, res) => {
         mobile,
         clubName,
         clubId: clubId || 0,
+        zone,
         registrationType,
         amount,
         mealPreference: mealPreference || 'Veg',
+        tshirtSize: tshirtSize || 'N/A',
         paymentStatus: paymentStatus || 'Pending',
         paymentMethod: paymentMethod || 'Cashfree',
         transactionId: transactionId || null,
@@ -123,6 +130,31 @@ module.exports = async (req, res) => {
         paymentStatus,
         paymentMethod
       }).catch(err => console.error('⚠️ Payment log error:', err.message));
+    }
+
+    // 3. Send WhatsApp confirmation (async, don't wait)
+    if (savedRegistration) {
+      try {
+        const whatsappResponse = await fetch(`${process.env.VERCEL_URL || 'https://sneha2026.vercel.app'}/api/send-whatsapp-confirmation`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: savedRegistration.name,
+            mobile: savedRegistration.mobile,
+            email: savedRegistration.email || 'Not Provided',
+            registrationId: savedRegistration.registration_id,
+            registrationType: savedRegistration.registration_type,
+            amount: savedRegistration.registration_amount,
+            mealPreference: savedRegistration.meal_preference,
+            clubName: savedRegistration.club
+          })
+        });
+        
+        const whatsappResult = await whatsappResponse.json();
+        console.log('📱 WhatsApp confirmation:', whatsappResult.success ? '✅ Sent' : '⚠️ Failed');
+      } catch (whatsappError) {
+        console.error('⚠️ WhatsApp error (non-blocking):', whatsappError.message);
+      }
     }
 
     // Return success immediately after PostgreSQL save

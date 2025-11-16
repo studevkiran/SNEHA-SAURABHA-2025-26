@@ -1900,25 +1900,34 @@ async function submitBypassRegistration() {
             registrationData.paymentStatus = paymentStatus;
             registrationData.utrNumber = utr;
             
-            // Show success screen with null checks
-            const successName = document.getElementById('success-name');
-            const successRegId = document.getElementById('success-reg-id');
-            const successType = document.getElementById('success-type');
-            const successAmount = document.getElementById('success-amount');
-            const successClub = document.getElementById('success-club');
-            const successMeal = document.getElementById('success-meal');
-            const successMobile = document.getElementById('success-mobile');
-            const successEmail = document.getElementById('success-email');
+            // Populate success screen using same format as Cashfree payment
+            const setElementText = (id, text) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = text || 'Not Provided';
+            };
             
-            if (successName) successName.textContent = registrationData.fullName;
-            if (successRegId) successRegId.textContent = result.registration.registration_id;
-            if (successType) successType.textContent = registrationData.typeName;
-            if (successAmount) successAmount.textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-            if (successClub) successClub.textContent = registrationData.clubName;
-            if (successMeal) successMeal.textContent = registrationData.mealPreference;
-            if (successMobile) successMobile.textContent = registrationData.mobile;
-            if (successEmail) successEmail.textContent = registrationData.email || 'N/A';
+            const currentDate = new Date().toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
             
+            setElementText('confirmation-id-display', result.registration.registration_id);
+            setElementText('ack-name', registrationData.fullName);
+            setElementText('ack-type', registrationData.typeName);
+            setElementText('ack-mobile', registrationData.mobile);
+            setElementText('ack-club', registrationData.clubName);
+            setElementText('ack-meal', registrationData.mealPreference);
+            setElementText('ack-amount', `₹${registrationData.price.toLocaleString('en-IN')}`);
+            setElementText('ack-txn', utr); // Show UTR as transaction ID
+            setElementText('ack-date', currentDate);
+            
+            console.log('📝 Manual registration acknowledgment page populated');
+            
+            // Show success screen
             showScreen('screen-success');
             
             alert('✅ Registration successful! ID: ' + result.registration.registration_id);
