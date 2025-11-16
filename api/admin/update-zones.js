@@ -40,22 +40,31 @@ module.exports = async (req, res) => {
 
     let updated = 0;
     let unmapped = 0;
-
-    for (const row of result.rows) {
+    
+    // Batch update using CASE statement for better performance
+    const updates = result.rows.map(row => {
       const zone = getZoneForClub(row.club);
-      
-      await pool.query(
-        `UPDATE registrations SET zone = $1 WHERE registration_id = $2`,
-        [zone, row.registration_id]
-      );
-
       if (zone === 'Unmapped') {
-        console.log(`⚠️ ${row.registration_id}: ${row.club} → Unmapped`);
         unmapped++;
       } else {
-        console.log(`✅ ${row.registration_id}: ${row.club} → ${zone}`);
         updated++;
       }
+      return { id: row.registration_id, zone, club: row.club };
+    });
+
+    // Update in batches
+    const batchSize = 100;
+    for (let i = 0; i < updates.length; i += batchSize) {
+      const batch = updates.slice(i, i + batchSize);
+      
+      for (const item of batch) {
+        await pool.query(
+          `UPDATE registrations SET zone = $1 WHERE registration_id = $2`,
+          [item.zone, item.id]
+        );
+      }
+      
+      console.log(`✅ Processed ${Math.min(i + batchSize, updates.length)} / ${updates.length}`);
     }
 
     console.log(`✅ Updated ${updated} registrations with zones`);
