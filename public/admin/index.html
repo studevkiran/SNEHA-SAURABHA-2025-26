@@ -322,6 +322,9 @@
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="🔍 Search by name, mobile, email, club..." onkeyup="searchTable()">
             </div>
+            <div class="search-box" style="max-width: 250px;">
+                <input type="text" id="regid-search" placeholder="📋 Search by Registration ID" onkeyup="searchByRegId()">
+            </div>
             <div class="stat-item">
                 <strong id="total-count">0</strong> Total Registrations
             </div>
@@ -381,6 +384,11 @@
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Email</label>
                     <input type="email" id="edit_email" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Order ID / UTR</label>
+                    <input type="text" id="edit_order_id" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
                 
                 <div style="margin-bottom: 20px;">
@@ -668,9 +676,6 @@
                                  reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
                 const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
                 
-                // Safely encode registration data as JSON
-                const regData = JSON.stringify(reg).replace(/"/g, '&quot;');
-                
                 return `
                     <tr>
                         <td>${reg.registration_id}</td>
@@ -685,7 +690,7 @@
                         <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
                         <td><span class="status-badge ${statusClass}">${reg.payment_status || 'pending'}</span></td>
                         <td>
-                            <button onclick='openEditModal(${regData})' style="padding: 6px 12px; background: #3B82F6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 4px;">✏️ Edit</button>
+                            <button onclick="openEditModalById('${reg.registration_id}')" style="padding: 6px 12px; background: #3B82F6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 4px;">✏️ Edit</button>
                             <button onclick="printReceipt('${reg.order_id || reg.registration_id}')" style="padding: 6px 12px; background: #10B981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">🖨️ Print</button>
                         </td>
                     </tr>
@@ -865,18 +870,23 @@
                 'Meal': reg.meal_preference,
                 'T-Shirt': reg.tshirt_size || 'N/A',
                 'Payment Status': reg.payment_status || 'pending',
-                'Order ID': reg.order_id || 'N/A'
+                'Order ID / UTR': reg.order_id || 'N/A',
+                'Transaction ID': reg.transaction_id || 'N/A',
+                'UPI ID': reg.upi_id || 'N/A',
+                'Edit Remarks': reg.edit_remarks || 'Not edited',
+                'Last Updated': reg.updated_at ? new Date(reg.updated_at).toLocaleString('en-IN') : 'N/A'
             }));
             
             const ws = XLSX.utils.json_to_sheet(excelData);
             ws['!cols'] = [
                 { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 }, { wch: 15 }, 
                 { wch: 30 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, 
-                { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 15 }, { wch: 30 }
+                { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 15 }, { wch: 30 },
+                { wch: 25 }, { wch: 20 }, { wch: 35 }, { wch: 20 }
             ];
             
             // Add autofilter
-            ws['!autofilter'] = { ref: `A1:O${excelData.length + 1}` };
+            ws['!autofilter'] = { ref: `A1:S${excelData.length + 1}` };
             
             XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
             
@@ -1092,11 +1102,36 @@
         
         // ========== EDIT FUNCTIONS ==========
         
+        function searchByRegId() {
+            const regId = document.getElementById('regid-search').value.trim();
+            
+            if (regId === '') {
+                filteredRegistrations = [...allRegistrations];
+            } else {
+                filteredRegistrations = allRegistrations.filter(reg => 
+                    (reg.registration_id || '').toLowerCase().includes(regId.toLowerCase())
+                );
+            }
+            
+            displayRegistrations(filteredRegistrations);
+            updateStats(filteredRegistrations);
+        }
+        
+        function openEditModalById(registrationId) {
+            const registration = allRegistrations.find(r => r.registration_id === registrationId);
+            if (!registration) {
+                alert('❌ Registration not found!');
+                return;
+            }
+            openEditModal(registration);
+        }
+        
         function openEditModal(registration) {
             document.getElementById('edit_registration_id').value = registration.registration_id;
             document.getElementById('edit_name').value = registration.name;
             document.getElementById('edit_mobile').value = registration.mobile;
             document.getElementById('edit_email').value = registration.email || '';
+            document.getElementById('edit_order_id').value = registration.order_id || '';
             document.getElementById('edit_club').value = registration.club || '';
             document.getElementById('edit_registration_type').value = registration.registration_type;
             document.getElementById('edit_meal_preference').value = registration.meal_preference;
@@ -1129,6 +1164,7 @@
                 name: document.getElementById('edit_name').value,
                 mobile: document.getElementById('edit_mobile').value,
                 email: document.getElementById('edit_email').value,
+                order_id: document.getElementById('edit_order_id').value,
                 club: document.getElementById('edit_club').value,
                 registration_type: document.getElementById('edit_registration_type').value,
                 meal_preference: document.getElementById('edit_meal_preference').value,
