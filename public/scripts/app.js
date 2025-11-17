@@ -1575,7 +1575,7 @@ async function downloadReceiptPDF() {
     console.log('📄 Download PDF clicked');
     console.log('📋 Registration Data:', registrationData);
     
-    if (!registrationData.confirmationId) {
+    if (!registrationData.confirmationId && !registrationData.registrationId) {
         alert('⚠️ Receipt not ready. Please complete payment first.');
         return;
     }
@@ -2050,6 +2050,9 @@ window.openBypassCodeModal = openBypassCodeModal;
 window.closeBypassModal = closeBypassCodeModal;
 window.verifyBypassCode = verifyBypassCode;
 window.submitBypassRegistration = submitBypassRegistration;
+
+// PDF download function
+window.downloadReceiptPDF = downloadReceiptPDF;
 
 // ===================================================================================
 // COUPON CODE SYSTEM - Simplified with Remove Button
