@@ -7,6 +7,34 @@
     <title>SNEHA SAURABHA 2025-26 Registration</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- Critical CSS Override for Desktop Spacing Fix -->
+    <style>
+        /* Force remove excessive spacing on desktop */
+        @media (min-width: 768px) {
+            body {
+                min-height: auto !important;
+                padding: 20px !important;
+            }
+            
+            .screen {
+                position: relative !important;
+                height: auto !important;
+                min-height: 0 !important;
+                margin: 20px auto !important;
+                padding: 0 !important;
+            }
+            
+            .banner-content {
+                min-height: 0 !important;
+            }
+            
+            .screen-content {
+                padding: 20px 20px 30px 20px !important;
+            }
+        }
+    </style>
+    
     <!-- Libraries for PDF and Image download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
