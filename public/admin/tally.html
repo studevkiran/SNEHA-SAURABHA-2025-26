@@ -452,7 +452,7 @@
             
             // Track current cycle position per column
             if (!window.cyclicSortState) window.cyclicSortState = {};
-            if (!window.cyclicSortState[column]) window.cyclicSortState[column] = -1;
+            if (window.cyclicSortState[column] === undefined) window.cyclicSortState[column] = -1;
             
             // Move to next value in cycle
             window.cyclicSortState[column] = (window.cyclicSortState[column] + 1) % uniqueValues.length;
