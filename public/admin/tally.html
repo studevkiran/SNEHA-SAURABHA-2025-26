@@ -259,41 +259,7 @@
     </style>
 </head>
 <body>
-    <!-- Authentication Modal -->
-    <div id="authModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 99999; align-items: center; justify-content: center;">
-        <div style="background: white; border-radius: 16px; padding: 40px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <div style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px;">
-                    🔐
-                </div>
-                <h2 style="color: #D4AF37; margin-bottom: 8px;">Admin Access</h2>
-                <p style="color: #666; font-size: 14px;">Enter password to access tally page</p>
-            </div>
-            
-            <form id="authForm">
-                <div style="margin-bottom: 20px;">
-                    <input 
-                        type="password" 
-                        id="adminPassword" 
-                        placeholder="Enter admin password"
-                        style="width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;"
-                        required
-                        autocomplete="current-password"
-                    />
-                </div>
-                
-                <button type="submit" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
-                    🔓 Unlock Dashboard
-                </button>
-                
-                <div id="authError" style="display: none; margin-top: 15px; padding: 12px; background: #FEE; border-radius: 8px; color: #C53030; font-size: 14px; text-align: center;">
-                    ❌ Incorrect password
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="container" id="mainContent" style="display: none;">
+    <div class="container" id="mainContent">
         <header>
             <img src="../images/header-left.jpg" alt="Left Logo" class="header-logo">
             <div class="header-center">
@@ -305,13 +271,15 @@
         
         <div class="controls">
             <div class="search-box">
-                <input type="text" id="search-input" placeholder="🔍 Search by name, mobile, email, club..." onkeyup="searchTable()">
+                <input type="text" id="search-input" placeholder="🔍 Search by name, club, type..." onkeyup="searchTable()">
             </div>
             <div class="stat-item">
                 <strong id="total-count">0</strong> Total Registrations
             </div>
-            <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
-            <button class="export-btn" style="background: #2563EB;" onclick="exportZoneWise()">📊 Zone-wise Excel</button>
+            <div class="stat-item">
+                <strong id="zone-count">0</strong> Zones Active
+            </div>
+            <button class="export-btn" onclick="exportToExcel()">📥 Download Excel</button>
         </div>
 
         
@@ -319,156 +287,36 @@
             <table id="registrations-table">
                 <thead>
                     <tr>
-                        <th class="sortable" onclick="sortTable(0)" data-column="registration_id">ID</th>
-                        <th class="sortable" onclick="sortTable(1)" data-column="created_at">Date</th>
-                        <th class="sortable" onclick="sortTable(2)" data-column="name">Name</th>
-                        <th class="sortable" onclick="sortTable(3)" data-column="mobile">Mobile</th>
-                        <th class="sortable" onclick="sortTable(4)" data-column="email">Email</th>
-                        <th class="sortable" onclick="sortTable(5)" data-column="registration_type">Type</th>
-                        <th class="sortable" onclick="sortTable(6)" data-column="club">Club</th>
-                        <th class="sortable" onclick="sortTable(7)" data-column="meal_preference">Meal</th>
-                        <th class="sortable" onclick="sortTable(8)" data-column="tshirt_size">T-Shirt</th>
-                        <th class="sortable" onclick="sortTable(9)" data-column="registration_amount">Amount</th>
-                        <th class="sortable" onclick="sortTable(10)" data-column="payment_status">Status</th>
-                        <th style="min-width: 120px;">Actions</th>
+                        <th class="sortable" onclick="sortTable(0)" data-column="registration_id">Reg No. ⇅</th>
+                        <th class="sortable" onclick="sortTable(1)" data-column="created_at">Reg Date</th>
+                        <th class="sortable" onclick="sortTable(2)" data-column="club">Club</th>
+                        <th>Name</th>
+                        <th class="sortable" onclick="sortTable(4)" data-column="registration_type">Type</th>
+                        <th>Food</th>
+                        <th class="sortable" onclick="sortTable(6)" data-column="tshirt_size">Size</th>
                     </tr>
                 </thead>
                 <tbody id="registrations-body">
                     <tr>
-                        <td colspan="12" class="loading">Loading registrations...</td>
+                        <td colspan="7" class="loading">Loading registrations...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-
-    <!-- Edit Registration Modal -->
-    <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; overflow-y: auto;">
-        <div style="max-width: 600px; margin: 50px auto; background: white; border-radius: 12px; padding: 30px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2 style="color: #D4AF37; margin: 0;">Edit Registration</h2>
-                <button onclick="closeEditModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">&times;</button>
-            </div>
-            
-            <form id="editForm">
-                <input type="hidden" id="edit_registration_id">
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Name *</label>
-                    <input type="text" id="edit_name" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Mobile *</label>
-                    <input type="tel" id="edit_mobile" required pattern="[0-9]{10}" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Email</label>
-                    <input type="email" id="edit_email" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Club *</label>
-                    <input type="text" id="edit_club" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registration Type *</label>
-                    <select id="edit_registration_type" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                        <option value="Rotarian">Rotarian</option>
-                        <option value="Rotarian with Spouse">Rotarian with Spouse</option>
-                        <option value="Rotary Ann">Rotary Ann</option>
-                        <option value="Rotary Annet">Rotary Annet</option>
-                        <option value="Guest">Guest</option>
-                        <option value="Rotaractor">Rotaractor</option>
-                        <option value="Silver Donor">Silver Donor</option>
-                        <option value="Silver Sponsor">Silver Sponsor</option>
-                        <option value="Gold Sponsor">Gold Sponsor</option>
-                        <option value="Platinum Sponsor">Platinum Sponsor</option>
-                        <option value="Patron Sponsor">Patron Sponsor</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Meal Preference *</label>
-                    <select id="edit_meal_preference" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                        <option value="Veg">Veg</option>
-                        <option value="Non-Veg">Non-Veg</option>
-                        <option value="Jain">Jain</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">T-Shirt Size *</label>
-                    <select id="edit_tshirt_size" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="XXL">XXL</option>
-                        <option value="XXXL">XXXL</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 25px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 700; color: #92400E;">Edit Remarks (Mandatory) *</label>
-                    <textarea id="edit_remarks" required minlength="5" placeholder="Why are you editing this registration? (minimum 5 characters)" style="width: 100%; padding: 12px; border: 2px solid #FCD34D; border-radius: 8px; font-size: 14px; min-height: 80px; resize: vertical;"></textarea>
-                    <small style="color: #92400E; font-size: 13px;">⚠️ This remark will be saved permanently and exported in Excel reports.</small>
-                </div>
-                
-                <div style="display: flex; gap: 12px;">
-                    <button type="submit" style="flex: 1; padding: 14px; background: #10B981; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
-                        💾 Save Changes
-                    </button>
-                    <button type="button" onclick="closeEditModal()" style="flex: 1; padding: 14px; background: #6B7280; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // ========== AUTHENTICATION ==========
-        const ADMIN_PASSWORD = 'sneha2026admin'; // Change this to your secure password
-        
-        // Check if already authenticated
-        const isAuthenticated = sessionStorage.getItem('tallyAuthenticated') === 'true';
-        
-        if (isAuthenticated) {
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-        }
-        
-        document.getElementById('authForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('adminPassword').value;
-            
-            if (password === ADMIN_PASSWORD) {
-                sessionStorage.setItem('tallyAuthenticated', 'true');
-                document.getElementById('authModal').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                fetchRegistrations(); // Load data after authentication
-            } else {
-                document.getElementById('authError').style.display = 'block';
-                document.getElementById('adminPassword').value = '';
-                document.getElementById('adminPassword').focus();
-            }
-        });
-        
-        // ========== MAIN TALLY FUNCTIONS ==========
-        
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
         let allRegistrations = [];
         let filteredRegistrations = [];
-        let currentSort = { column: null, direction: 'asc' };
+        let currentSort = { column: 'registration_id', direction: 'asc' }; // Default sort by Reg ID
         
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function() {
-            if (isAuthenticated) {
-                fetchRegistrations();
-            }
+            fetchRegistrations();
         });
         
         async function fetchRegistrations() {
@@ -493,6 +341,10 @@
                     allRegistrations = data.data.registrations || [];
                     console.log('📋 Loaded registrations:', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
+                    
+                    // Apply default sort by registration_id ascending
+                    sortRegistrationsByDefault();
+                    
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
                     
@@ -525,8 +377,6 @@
                 filteredRegistrations = allRegistrations.filter(reg => {
                     return (
                         (reg.name || '').toLowerCase().includes(searchTerm) ||
-                        (reg.mobile || '').toLowerCase().includes(searchTerm) ||
-                        (reg.email || '').toLowerCase().includes(searchTerm) ||
                         (reg.club || '').toLowerCase().includes(searchTerm) ||
                         (reg.registration_id || '').toLowerCase().includes(searchTerm) ||
                         (reg.registration_type || '').toLowerCase().includes(searchTerm)
@@ -534,8 +384,58 @@
                 });
             }
             
+            // Maintain current sort after filtering
+            if (currentSort.column) {
+                sortByColumn(currentSort.column, currentSort.direction);
+            }
+            
             displayRegistrations(filteredRegistrations);
             updateStats(filteredRegistrations);
+        }
+        
+        function sortRegistrationsByDefault() {
+            // Sort by registration_id ascending (2026RTY0001, 2026RTY0002, etc.)
+            filteredRegistrations.sort((a, b) => {
+                const aVal = String(a.registration_id || '').toLowerCase();
+                const bVal = String(b.registration_id || '').toLowerCase();
+                
+                if (aVal < bVal) return -1;
+                if (aVal > bVal) return 1;
+                return 0;
+            });
+            
+            // Update UI to show sorted state
+            const headers = document.querySelectorAll('th.sortable');
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            if (headers[0]) {
+                headers[0].classList.add('sorted-asc');
+            }
+        }
+        
+        function sortByColumn(column, direction) {
+            filteredRegistrations.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+                
+                // Handle null/undefined
+                if (aVal === null || aVal === undefined) aVal = '';
+                if (bVal === null || bVal === undefined) bVal = '';
+                
+                // Handle dates
+                if (column === 'created_at') {
+                    aVal = new Date(aVal).getTime();
+                    bVal = new Date(bVal).getTime();
+                }
+                // Handle strings
+                else {
+                    aVal = String(aVal).toLowerCase();
+                    bVal = String(bVal).toLowerCase();
+                }
+                
+                if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+                if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
         }
         
         function sortTable(columnIndex) {
@@ -595,36 +495,24 @@
             const tbody = document.getElementById('registrations-body');
             
             if (registrations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
                 return;
             }
             
-            tbody.innerHTML = registrations.map(reg => {
+            tbody.innerHTML = registrations.map((reg, index) => {
                 const date = new Date(reg.created_at).toLocaleDateString('en-IN');
                 const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' : 
                                  reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
-                const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
-                
-                // Safely encode registration data as JSON
-                const regData = JSON.stringify(reg).replace(/"/g, '&quot;');
                 
                 return `
                     <tr>
                         <td>${reg.registration_id}</td>
                         <td>${date}</td>
-                        <td>${reg.name}</td>
-                        <td>${reg.mobile}</td>
-                        <td>${reg.email || 'N/A'}</td>
-                        <td>${reg.registration_type}</td>
                         <td>${reg.club || 'N/A'}</td>
+                        <td>${reg.name}</td>
+                        <td>${reg.registration_type}</td>
                         <td class="${mealClass}">${reg.meal_preference}</td>
                         <td>${reg.tshirt_size || 'N/A'}</td>
-                        <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
-                        <td><span class="status-badge ${statusClass}">${reg.payment_status || 'pending'}</span></td>
-                        <td>
-                            <button onclick='openEditModal(${regData})' style="padding: 6px 12px; background: #3B82F6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 4px;">✏️ Edit</button>
-                            <button onclick="printReceipt('${reg.order_id || reg.registration_id}')" style="padding: 6px 12px; background: #10B981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">🖨️ Print</button>
-                        </td>
                     </tr>
                 `;
             }).join('');
@@ -636,6 +524,18 @@
             // Count only non-test registrations for total
             const nonTestCount = registrations.filter(r => r.payment_status !== 'test').length;
             document.getElementById('total-count').textContent = nonTestCount;
+            
+            // Calculate active zones (zones with at least 1 registration)
+            const activeZones = new Set();
+            registrations.forEach(reg => {
+                if (reg.payment_status !== 'test' && reg.zone) {
+                    const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
+                    if (zoneMatch) {
+                        activeZones.add(parseInt(zoneMatch[1]));
+                    }
+                }
+            });
+            document.getElementById('zone-count').textContent = activeZones.size;
             
             // Count registration types from ALL registrations (not filtered)
             const typeCounts = {
