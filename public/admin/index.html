@@ -675,11 +675,58 @@
             });
         }
         
+        // Cyclic sorting function for columns with limited distinct values
+        function cyclicSort(column) {
+            // Get all unique values for this column, sorted alphabetically
+            const uniqueValues = [...new Set(allRegistrations.map(r => r[column]).filter(v => v))].sort();
+            
+            // Track current cycle position per column
+            if (!window.cyclicSortState) window.cyclicSortState = {};
+            if (!window.cyclicSortState[column]) window.cyclicSortState[column] = -1;
+            
+            // Move to next value in cycle
+            window.cyclicSortState[column] = (window.cyclicSortState[column] + 1) % uniqueValues.length;
+            const targetValue = uniqueValues[window.cyclicSortState[column]];
+            
+            console.log(`🔄 Cyclic sort ${column}: showing "${targetValue}" (${window.cyclicSortState[column] + 1}/${uniqueValues.length})`);
+            
+            // Sort: target value first (by regid), then all others (by regid)
+            filteredRegistrations.sort((a, b) => {
+                const aVal = a[column] || '';
+                const bVal = b[column] || '';
+                const aIsTarget = aVal === targetValue;
+                const bIsTarget = bVal === targetValue;
+                
+                // Target value comes first
+                if (aIsTarget && !bIsTarget) return -1;
+                if (!aIsTarget && bIsTarget) return 1;
+                
+                // Within same group (target or non-target), sort by registration_id
+                const aRegId = String(a.registration_id || '').toLowerCase();
+                const bRegId = String(b.registration_id || '').toLowerCase();
+                if (aRegId < bRegId) return -1;
+                if (aRegId > bRegId) return 1;
+                return 0;
+            });
+            
+            // Update UI
+            const headers = document.querySelectorAll('th.sortable');
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            
+            displayRegistrations(filteredRegistrations);
+        }
+        
         function sortTable(columnIndex) {
             const headers = document.querySelectorAll('th.sortable');
             const column = headers[columnIndex].getAttribute('data-column');
             
-            // Toggle sort direction
+            // Special cyclic sorting for specific columns
+            if (column === 'meal_preference' || column === 'registration_type' || column === 'club' || column === 'tshirt_size') {
+                cyclicSort(column);
+                return;
+            }
+            
+            // Toggle sort direction for regular columns
             if (currentSort.column === column) {
                 currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
             } else {
