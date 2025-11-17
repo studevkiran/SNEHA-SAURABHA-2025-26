@@ -327,67 +327,6 @@
                 </div>
             </div>
 
-            <!-- ============= COUPON CODE SECTION ============= -->
-            <div id="couponSection" class="coupon-wrapper">
-                <div class="coupon-container">
-                    <div class="coupon-shimmer"></div>
-                    <div class="coupon-content">
-                        <div class="coupon-header">
-                            <span class="coupon-icon">🎟️</span>
-                            <h3>Have a Discount Coupon?</h3>
-                        </div>
-                        
-                        <div class="coupon-input-group">
-                            <input 
-                                type="text" 
-                                id="couponCode" 
-                                placeholder="Enter code (e.g., 100)" 
-                                class="coupon-input"
-                                maxlength="20"
-                                autocomplete="off"
-                            />
-                            <button onclick="applyCoupon()" type="button" class="coupon-btn" id="couponApplyBtn">
-                                <span class="btn-text">APPLY</span>
-                                <span class="btn-icon">✨</span>
-                            </button>
-                        </div>
-                        
-                        <div id="couponMessage" class="coupon-message"></div>
-                        
-                        <div id="discountDisplay" class="discount-display" style="display: none;">
-                            <div class="discount-info">
-                                <span class="discount-icon">💰</span>
-                                <div class="discount-details">
-                                    <span class="discount-label">Discount Applied</span>
-                                    <span id="discountAmount" class="discount-value">₹0</span>
-                                </div>
-                            </div>
-                            <div class="discount-savings">
-                                <span class="savings-text">You Saved</span>
-                                <span id="savingsAmount" class="savings-value">₹100</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Final Amount Card -->
-                <div class="final-amount-card">
-                    <div class="amount-row">
-                        <span class="amount-label">Original Amount:</span>
-                        <span id="originalAmount" class="amount-value">₹0</span>
-                    </div>
-                    <div class="amount-row discount-row" id="discountRow" style="display: none;">
-                        <span class="amount-label">Discount:</span>
-                        <span id="discountValue" class="amount-value discount-text">-₹0</span>
-                    </div>
-                    <div class="amount-row total-row">
-                        <span class="amount-label-large">Total Payable:</span>
-                        <span id="finalAmount" class="amount-value-large" data-review-amount>₹0</span>
-                    </div>
-                </div>
-            </div>
-            <!-- ============= END COUPON SECTION ============= -->
-
                 <div style="display: flex; gap: 12px; flex-direction: column;">
                 <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 18px; padding: 16px;">
                     💳 PAY NOW <span id="paymentAmount" data-review-amount>₹0</span>

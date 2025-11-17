@@ -50,9 +50,7 @@ module.exports = async (req, res) => {
         payment_method,
         transaction_id,
         upi_id,
-        created_at,
-        coupon_code,
-        discount_amount
+        created_at
       FROM registrations 
       WHERE order_id = $1
       ORDER BY created_at DESC
@@ -89,9 +87,7 @@ module.exports = async (req, res) => {
         payment_method: registration.payment_method,
         transaction_id: registration.transaction_id,
         upi_id: registration.upi_id,
-        created_at: registration.created_at,
-        coupon_code: registration.coupon_code,
-        discount_amount: parseFloat(registration.discount_amount) || 0
+        created_at: registration.created_at
       }
     });
 
