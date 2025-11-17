@@ -267,27 +267,38 @@
                     🔐
                 </div>
                 <h2 style="color: #D4AF37; margin-bottom: 8px;">Admin Access</h2>
-                <p style="color: #666; font-size: 14px;">Enter password to access tally page</p>
+                <p style="color: #666; font-size: 14px;">Enter credentials to access admin dashboard</p>
             </div>
             
             <form id="authForm">
                 <div style="margin-bottom: 20px;">
                     <input 
+                        type="text" 
+                        id="adminUsername" 
+                        placeholder="Username"
+                        style="width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;"
+                        required
+                        autocomplete="username"
+                    />
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <input 
                         type="password" 
                         id="adminPassword" 
-                        placeholder="Enter admin password"
+                        placeholder="Password"
                         style="width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;"
                         required
                         autocomplete="current-password"
                     />
                 </div>
                 
-                <button type="submit" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                <button type="submit" id="authButton" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
                     🔓 Unlock Dashboard
                 </button>
                 
                 <div id="authError" style="display: none; margin-top: 15px; padding: 12px; background: #FEE; border-radius: 8px; color: #C53030; font-size: 14px; text-align: center;">
-                    ❌ Incorrect password
+                    ❌ Invalid username or password
                 </div>
             </form>
         </div>
@@ -431,34 +442,83 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // ========== AUTHENTICATION ==========
-        const ADMIN_PASSWORD = 'sneha2026admin'; // Change this to your secure password
-        
-        // Check if already authenticated
-        const isAuthenticated = sessionStorage.getItem('tallyAuthenticated') === 'true';
-        
-        if (isAuthenticated) {
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-        }
-        
-        document.getElementById('authForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('adminPassword').value;
+    <script>
+        // ==================== AUTHENTICATION ====================
+
+        function checkAuth() {
+            const modal = document.getElementById('authModal');
+            const container = document.querySelector('.container');
             
-            if (password === ADMIN_PASSWORD) {
-                sessionStorage.setItem('tallyAuthenticated', 'true');
-                document.getElementById('authModal').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                fetchRegistrations(); // Load data after authentication
+            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                modal.style.display = 'none';
+                container.style.display = 'block';
+                fetchRegistrations();
             } else {
-                document.getElementById('authError').style.display = 'block';
+                modal.style.display = 'flex';
+                container.style.display = 'none';
+            }
+        }
+
+        async function verifyCredentials(username, password) {
+            try {
+                const response = await fetch('/api/admin/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                return result.success;
+            } catch (error) {
+                console.error('❌ Authentication error:', error);
+                return false;
+            }
+        }
+
+        async function unlockDashboard() {
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('authError');
+            const authButton = document.getElementById('authButton');
+            
+            if (!username || !password) {
+                errorDiv.textContent = '⚠️ Please enter both username and password';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Disable button and show loading state
+            authButton.disabled = true;
+            authButton.textContent = '⏳ Verifying...';
+            errorDiv.style.display = 'none';
+            
+            const authenticated = await verifyCredentials(username, password);
+            
+            if (authenticated) {
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                checkAuth();
+            } else {
+                errorDiv.textContent = '❌ Invalid username or password';
+                errorDiv.style.display = 'block';
+                
+                // Re-enable button
+                authButton.disabled = false;
+                authButton.textContent = '🔓 Unlock Dashboard';
+                
+                // Clear password field
                 document.getElementById('adminPassword').value = '';
                 document.getElementById('adminPassword').focus();
             }
+        }
+
+        // Handle form submission
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            unlockDashboard();
         });
-        
-        // ========== MAIN TALLY FUNCTIONS ==========
+
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', checkAuth);        // ========== MAIN TALLY FUNCTIONS ==========
         
         let allRegistrations = [];
         let filteredRegistrations = [];
