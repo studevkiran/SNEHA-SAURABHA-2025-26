@@ -489,12 +489,12 @@
             <img src="../images/header-right.jpg" alt="Right Logo" class="header-logo">
         </header>
         
-        <div class="controls" style="justify-content: center; margin-bottom: 30px;">
+        <!-- Total Registrations Display (Centered) -->
+        <div style="display: flex; justify-content: center; margin-bottom: 30px;">
             <div style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); padding: 24px 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3); text-align: center; min-width: 280px;">
                 <div style="font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">📊 Total Registrations</div>
                 <div style="font-size: 48px; font-weight: 800; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);" id="total-count">0</div>
             </div>
-            <button class="export-btn" onclick="exportZoneWise()" style="height: fit-content;">🗺️ Zone-wise Excel Report</button>
         </div>
         
         <!-- Dynamic Counts Section -->
@@ -510,11 +510,12 @@
             </div>
         </div>
         
-        <!-- Search Box -->
-        <div style="margin-bottom: 20px;">
-            <div class="search-box" style="max-width: 100%;">
+        <!-- Search Box and Download Button Row -->
+        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+            <div class="search-box" style="flex: 1; max-width: 500px;">
                 <input type="text" id="search-input" placeholder="🔍 Search by name, club, type..." onkeyup="searchTable()">
             </div>
+            <button class="export-btn" onclick="exportZoneWise()">🗺️ Zone-wise Excel Report</button>
         </div>
 
         
