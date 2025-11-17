@@ -447,8 +447,11 @@
         
         // Cyclic sorting function for columns with limited distinct values
         function cyclicSort(column) {
-            // Get all unique values for this column, sorted alphabetically
-            const uniqueValues = [...new Set(allRegistrations.map(r => r[column]).filter(v => v))].sort();
+            // Get all unique values for this column, sorted alphabetically (case-insensitive)
+            const uniqueValues = [...new Set(allRegistrations.map(r => {
+                const val = r[column];
+                return val ? String(val).toLowerCase() : '';
+            }).filter(v => v))].sort();
             
             // Track current cycle position per column
             if (!window.cyclicSortState) window.cyclicSortState = {};
@@ -462,8 +465,8 @@
             
             // Sort: target value first (by regid), then all others (by regid)
             filteredRegistrations.sort((a, b) => {
-                const aVal = a[column] || '';
-                const bVal = b[column] || '';
+                const aVal = String(a[column] || '').toLowerCase();
+                const bVal = String(b[column] || '').toLowerCase();
                 const aIsTarget = aVal === targetValue;
                 const bIsTarget = bVal === targetValue;
                 
