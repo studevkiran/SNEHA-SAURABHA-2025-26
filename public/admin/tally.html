@@ -281,6 +281,19 @@
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download Excel</button>
         </div>
+        
+        <!-- Dynamic Counts Section -->
+        <div style="background: #FEF3C7; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #92400E; margin: 0 0 15px 0; font-size: 18px;">📊 Registration Type Breakdown</h3>
+            <div id="type-counts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px;">
+                <!-- Dynamic type counts will be inserted here -->
+            </div>
+            
+            <h3 style="color: #92400E; margin: 20px 0 15px 0; font-size: 18px;">🗺️ Zone-wise Breakdown</h3>
+            <div id="zone-counts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                <!-- Dynamic zone counts will be inserted here -->
+            </div>
+        </div>
 
         
         <div class="table-wrapper">
@@ -669,7 +682,41 @@
             console.log('📋 Unique registration types in data:', Array.from(uniqueTypes));
             console.log('📊 Type counts:', typeCounts);
             
-            // Registration breakdown removed - stats calculated for Excel only
+            // Update Registration Type Counts Display
+            const typeCountsDiv = document.getElementById('type-counts');
+            typeCountsDiv.innerHTML = Object.entries(typeCounts)
+                .filter(([type, count]) => type !== 'deregistered' && count > 0)
+                .sort((a, b) => b[1] - a[1]) // Sort by count descending
+                .map(([type, count]) => `
+                    <div style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid #D4AF37;">
+                        <div style="font-size: 14px; color: #666; margin-bottom: 4px;">${type}</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #D4AF37;">${count}</div>
+                    </div>
+                `).join('');
+            
+            // Update Zone-wise Counts Display
+            const zoneCounts = {};
+            allRegistrations.forEach(reg => {
+                if (reg.payment_status !== 'test' && reg.zone) {
+                    const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
+                    if (zoneMatch) {
+                        const zoneNum = parseInt(zoneMatch[1]);
+                        zoneCounts[zoneNum] = (zoneCounts[zoneNum] || 0) + 1;
+                    }
+                }
+            });
+            
+            const zoneCountsDiv = document.getElementById('zone-counts');
+            zoneCountsDiv.innerHTML = Array.from({ length: 9 }, (_, i) => i + 1)
+                .map(zoneNum => {
+                    const count = zoneCounts[zoneNum] || 0;
+                    return `
+                        <div style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#10B981' : '#E5E7EB'};">
+                            <div style="font-size: 14px; color: #666; margin-bottom: 4px;">Zone ${zoneNum}</div>
+                            <div style="font-size: 20px; font-weight: 700; color: ${count > 0 ? '#10B981' : '#9CA3AF'};">${count}</div>
+                        </div>
+                    `;
+                }).join('');
         }
         
         function showError(message) {
