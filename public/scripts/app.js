@@ -232,6 +232,62 @@ function setupClearButtons() {
 // Load clubs from JSON
 let clubsList = [];
 
+// Fetch and display registration by order_id (for WhatsApp links and direct access)
+async function fetchAndShowRegistration(orderId) {
+    try {
+        console.log('🔍 Fetching registration for order_id:', orderId);
+        
+        const response = await fetch(`/api/registrations/by-order?order_id=${orderId}`);
+        const result = await response.json();
+        
+        if (result.success && result.registration) {
+            const reg = result.registration;
+            
+            // Populate success screen with registration details
+            document.getElementById('success-name').textContent = reg.name;
+            document.getElementById('success-reg-id').textContent = reg.registration_id;
+            document.getElementById('success-type').textContent = reg.registration_type;
+            document.getElementById('success-amount').textContent = `₹${reg.registration_amount.toLocaleString('en-IN')}`;
+            document.getElementById('success-club').textContent = reg.club;
+            document.getElementById('success-meal').textContent = reg.meal_preference;
+            document.getElementById('success-mobile').textContent = reg.mobile;
+            document.getElementById('success-email').textContent = reg.email || 'N/A';
+            
+            // Store for PDF generation
+            registrationData = {
+                registrationId: reg.registration_id,
+                fullName: reg.name,
+                mobile: reg.mobile,
+                email: reg.email,
+                typeName: reg.registration_type,
+                price: reg.registration_amount,
+                clubName: reg.club,
+                zone: reg.zone,
+                mealPreference: reg.meal_preference,
+                tshirtSize: reg.tshirt_size,
+                orderID: reg.order_id,
+                paymentStatus: reg.payment_status,
+                transactionId: reg.transaction_id,
+                upiId: reg.upi_id,
+                createdAt: reg.created_at
+            };
+            
+            // Show success screen
+            showScreen('screen-success');
+            
+            console.log('✅ Registration details loaded and displayed');
+        } else {
+            console.error('❌ Registration not found for order_id:', orderId);
+            alert('Registration not found. Please contact support.');
+            showScreen('screen-home');
+        }
+    } catch (error) {
+        console.error('❌ Error fetching registration:', error);
+        alert('Error loading registration details. Please try again.');
+        showScreen('screen-home');
+    }
+}
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     // Check for payment callback from Cashfree
@@ -242,28 +298,14 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🔍 Page loaded with params:', { paymentStatus, orderId });
     
     if ((paymentStatus === 'success' || paymentStatus === 'pending') && orderId) {
-        // Payment completed - verify with backend
-        const pendingData = sessionStorage.getItem('pendingRegistration');
-        const cashfreeOrderId = sessionStorage.getItem('cashfreeOrderId');
-        
+        // Payment completed - fetch registration by order_id
         console.log('💳 Payment callback received:', { 
             paymentStatus, 
-            orderId: orderId || cashfreeOrderId,
-            hasPendingData: !!pendingData 
+            orderId
         });
         
-        // Create minimal pending data if not in session (e.g., page refresh)
-        const registrationDataToUse = pendingData || JSON.stringify({
-            fullName: 'Verifying...',
-            mobile: '',
-            email: '',
-            typeName: 'Registration',
-            price: 0,
-            mealPreference: 'Veg'
-        });
-        
-        // Verify payment with backend
-        verifyPaymentAndShowSuccess(orderId || cashfreeOrderId, registrationDataToUse);
+        // Fetch registration details by order_id (works for Cashfree order_id AND UTR)
+        fetchAndShowRegistration(orderId);
         return; // Don't run other initialization
         
     } else if (paymentStatus === 'cancelled' || paymentStatus === 'failed') {
