@@ -312,7 +312,7 @@
         <header>
             <img src="../images/header-left.jpg" alt="Left Logo" class="header-logo">
             <div class="header-center">
-                <h1>📊 Registration Tally</h1>
+                <h1>📊 Admin Dashboard</h1>
                 <p>SNEHA SAURABHA 2025-26 - District Conference</p>
             </div>
             <img src="../images/header-right.jpg" alt="Right Logo" class="header-logo">
@@ -326,7 +326,6 @@
                 <strong id="total-count">0</strong> Total Registrations
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
-            <button class="export-btn" style="background: #2563EB;" onclick="exportZoneWise()">📊 Zone-wise Excel</button>
         </div>
 
         
@@ -339,10 +338,10 @@
                         <th class="sortable" onclick="sortTable(2)" data-column="name">Name</th>
                         <th>Mobile</th>
                         <th>Email</th>
-                        <th class="sortable" onclick="sortTable(5)" data-column="registration_type">Type</th>
-                        <th class="sortable" onclick="sortTable(6)" data-column="club">Club</th>
-                        <th class="sortable" onclick="sortTable(7)" data-column="meal_preference">Meal</th>
-                        <th class="sortable" onclick="sortTable(8)" data-column="tshirt_size">T-Shirt</th>
+                        <th class="sortable" onclick="sortTable(3)" data-column="registration_type">Type</th>
+                        <th class="sortable" onclick="sortTable(4)" data-column="club">Club</th>
+                        <th class="sortable" onclick="sortTable(5)" data-column="meal_preference">Meal</th>
+                        <th class="sortable" onclick="sortTable(6)" data-column="tshirt_size">T-Shirt</th>
                         <th>Amount</th>
                         <th>Status</th>
                         <th style="min-width: 120px;">Actions</th>

@@ -291,9 +291,9 @@
                         <th class="sortable" onclick="sortTable(1)" data-column="created_at">Reg Date</th>
                         <th class="sortable" onclick="sortTable(2)" data-column="club">Club</th>
                         <th>Name</th>
-                        <th class="sortable" onclick="sortTable(4)" data-column="registration_type">Type</th>
-                        <th>Food</th>
-                        <th class="sortable" onclick="sortTable(6)" data-column="tshirt_size">Size</th>
+                        <th class="sortable" onclick="sortTable(3)" data-column="registration_type">Type</th>
+                        <th class="sortable" onclick="sortTable(4)" data-column="meal_preference">Food</th>
+                        <th class="sortable" onclick="sortTable(5)" data-column="tshirt_size">Size</th>
                     </tr>
                 </thead>
                 <tbody id="registrations-body">
@@ -432,8 +432,15 @@
                     bVal = String(bVal).toLowerCase();
                 }
                 
+                // Primary sort by selected column
                 if (aVal < bVal) return direction === 'asc' ? -1 : 1;
                 if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+                
+                // Secondary sort by registration_id (always ascending)
+                const aRegId = String(a.registration_id || '').toLowerCase();
+                const bRegId = String(b.registration_id || '').toLowerCase();
+                if (aRegId < bRegId) return -1;
+                if (aRegId > bRegId) return 1;
                 return 0;
             });
         }
@@ -458,7 +465,7 @@
             // Add sort class to current header
             headers[columnIndex].classList.add(currentSort.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
             
-            // Sort the data
+            // Sort the data with registration_id as secondary sort
             filteredRegistrations.sort((a, b) => {
                 let aVal = a[column];
                 let bVal = b[column];
@@ -483,8 +490,15 @@
                     bVal = String(bVal).toLowerCase();
                 }
                 
+                // Primary sort by selected column
                 if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
                 if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+                
+                // Secondary sort by registration_id (always ascending)
+                const aRegId = String(a.registration_id || '').toLowerCase();
+                const bRegId = String(b.registration_id || '').toLowerCase();
+                if (aRegId < bRegId) return -1;
+                if (aRegId > bRegId) return 1;
                 return 0;
             });
             
