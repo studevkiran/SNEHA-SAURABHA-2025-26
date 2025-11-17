@@ -243,15 +243,28 @@ async function fetchAndShowRegistration(orderId) {
         if (result.success && result.registration) {
             const reg = result.registration;
             
-            // Populate success screen with registration details
-            document.getElementById('success-name').textContent = reg.name;
-            document.getElementById('success-reg-id').textContent = reg.registration_id;
-            document.getElementById('success-type').textContent = reg.registration_type;
-            document.getElementById('success-amount').textContent = `₹${reg.registration_amount.toLocaleString('en-IN')}`;
-            document.getElementById('success-club').textContent = reg.club;
-            document.getElementById('success-meal').textContent = reg.meal_preference;
-            document.getElementById('success-mobile').textContent = reg.mobile;
-            document.getElementById('success-email').textContent = reg.email || 'N/A';
+            // Populate success screen with registration details (using public/index.html element IDs)
+            document.getElementById('confirmation-id-display').textContent = reg.registration_id;
+            document.getElementById('ack-name').textContent = reg.name;
+            document.getElementById('ack-type').textContent = reg.registration_type;
+            document.getElementById('ack-amount').textContent = `₹${reg.registration_amount.toLocaleString('en-IN')}`;
+            document.getElementById('ack-club').textContent = reg.club;
+            document.getElementById('ack-meal').textContent = reg.meal_preference;
+            document.getElementById('ack-mobile').textContent = reg.mobile;
+            document.getElementById('ack-txn').textContent = reg.order_id;
+            
+            // Format date
+            const createdDate = new Date(reg.created_at);
+            const dateStr = createdDate.toLocaleDateString('en-IN', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+            const timeStr = createdDate.toLocaleTimeString('en-IN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            document.getElementById('ack-date').textContent = `${dateStr} ${timeStr}`;
             
             // Store for PDF generation
             registrationData = {
