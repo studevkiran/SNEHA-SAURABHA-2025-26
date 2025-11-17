@@ -99,18 +99,23 @@ body {
 /* Desktop: allow natural scrolling, fit content, no white space */
 @media (min-width: 768px) {
     .screen {
-        position: relative;
-        height: auto;
-        min-height: 0;
-        overflow-y: visible;
-        max-width: 800px;
-        margin: 20px auto;
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
-        padding: 0;
+        position: relative !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow-y: visible !important;
+        max-width: 800px !important;
+        margin: 0 auto 20px auto !important;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1) !important;
+        padding: 0 !important;
+        display: block !important;
+        top: auto !important;
+        left: auto !important;
+        width: 100% !important;
     }
     
     body {
-        padding: 20px 20px;
+        padding: 20px 20px !important;
+        overflow-y: auto !important;
     }
 }
 
@@ -136,7 +141,10 @@ body {
 /* Desktop: reduce padding */
 @media (min-width: 768px) {
     .screen-content {
-        padding: 20px 20px 30px 20px;
+        padding: 20px !important;
+        display: block !important;
+        flex: none !important;
+        overflow-y: visible !important;
     }
 }
 
