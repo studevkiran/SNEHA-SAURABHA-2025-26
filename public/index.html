@@ -626,5 +626,65 @@
     <!-- ============= END BYPASS MODAL ============= -->
 
     <script src="scripts/app.js"></script>
+    
+    <!-- Force Fix Desktop Spacing with JavaScript -->
+    <script>
+        // Execute immediately on DOM load to fix spacing
+        (function() {
+            function forceFixSpacing() {
+                if (window.innerWidth >= 768) {
+                    const screens = document.querySelectorAll('.screen');
+                    const screenContents = document.querySelectorAll('.screen-content');
+                    const bannerContent = document.querySelector('.banner-content');
+                    const body = document.body;
+                    
+                    // Force body styles
+                    body.style.padding = '20px';
+                    body.style.minHeight = 'auto';
+                    body.style.overflowY = 'auto';
+                    
+                    // Force all screen styles
+                    screens.forEach(function(screen) {
+                        screen.style.position = 'relative';
+                        screen.style.height = 'auto';
+                        screen.style.minHeight = '0';
+                        screen.style.margin = '0 auto 20px auto';
+                        screen.style.padding = '0';
+                        screen.style.display = 'block';
+                        screen.style.top = 'auto';
+                        screen.style.left = 'auto';
+                        screen.style.width = '100%';
+                        screen.style.maxWidth = '800px';
+                    });
+                    
+                    // Force content styles
+                    screenContents.forEach(function(content) {
+                        content.style.padding = '20px';
+                        content.style.display = 'block';
+                        content.style.flex = 'none';
+                    });
+                    
+                    // Force banner content
+                    if (bannerContent) {
+                        bannerContent.style.minHeight = '0';
+                        bannerContent.style.display = 'block';
+                    }
+                    
+                    console.log('✅ Desktop spacing fixed via JavaScript');
+                }
+            }
+            
+            // Run immediately
+            forceFixSpacing();
+            
+            // Run after DOM is fully loaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', forceFixSpacing);
+            }
+            
+            // Run after window is fully loaded
+            window.addEventListener('load', forceFixSpacing);
+        })();
+    </script>
 </body>
 </html>
