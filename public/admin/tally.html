@@ -279,7 +279,7 @@
             <div class="stat-item">
                 <strong id="zone-count">0</strong> Zones Active
             </div>
-            <button class="export-btn" onclick="exportToExcel()">📥 Download Excel</button>
+            <button class="export-btn" onclick="exportTShirtSizes()">👕 T-Shirt Size Report</button>
         </div>
         
         <!-- Dynamic Counts Section -->
@@ -913,21 +913,17 @@
             alert(`✅ Excel file downloaded!\n\nFile: ${filename}\nTotal Registrations: ${validRegs.length}`);
         }
         
-        function exportZoneWise() {
+        function exportTShirtSizes() {
             if (allRegistrations.length === 0) {
                 alert('No data to export');
                 return;
             }
             
-            // Filter out test entries (by status, mobile, email, and name patterns)
+            // Filter out test entries
             const validRegs = allRegistrations.filter(r => {
-                // Exclude by payment status
                 if (r.payment_status === 'test' || r.payment_status === 'manual-B') return false;
-                // Exclude test mobile numbers
                 if (r.mobile === '0000000001' || r.mobile === '9999999999') return false;
-                // Exclude test emails
                 if (r.email && (r.email.includes('test@') || r.email === 'test@test.com')) return false;
-                // Exclude TEST names
                 if (r.name && r.name.toUpperCase().includes('TEST ENTRY')) return false;
                 return true;
             });
@@ -935,102 +931,95 @@
             // Create workbook
             const wb = XLSX.utils.book_new();
             
-            // Build comprehensive zone summary data
-            const zoneData = [
-                ['SNEHA SAURABHA 2025-26 - ZONE-WISE CLUB SUMMARY'],
+            // === SHEET 1: T-Shirt Size Summary ===
+            const summaryData = [
+                ['SNEHA SAURABHA 2025-26 - T-SHIRT SIZE BREAKDOWN'],
                 ['Generated on:', new Date().toLocaleString('en-IN')],
                 [''],
-                ['Zone', 'Rank', 'Club Name', 'Registrations', 'Percentage']
+                ['T-Shirt Size', 'Count', 'Percentage'],
             ];
             
-            let grandTotal = 0;
+            // Count by size
+            const sizeStats = {};
+            validRegs.forEach(r => {
+                const size = r.tshirt_size || 'Not Specified';
+                sizeStats[size] = (sizeStats[size] || 0) + 1;
+            });
             
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                const zoneRegs = validRegs.filter(r => {
-                    const m = (r.zone || '').match(/Zone\s+(\d+)/i);
-                    return m && m[1] == zoneNum;
-                });
+            // Standard size order
+            const sizeOrder = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'Not Specified'];
+            const total = validRegs.length;
+            
+            sizeOrder.forEach(size => {
+                const count = sizeStats[size] || 0;
+                const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : '0.0';
+                summaryData.push([size, count, `${percentage}%`]);
+            });
+            
+            summaryData.push(['', '', '']);
+            summaryData.push(['TOTAL', total, '100%']);
+            
+            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+            summaryWs['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 15 }];
+            XLSX.utils.book_append_sheet(wb, summaryWs, 'Size Summary');
+            
+            // === SHEET 2: Detailed Breakdown by Size ===
+            sizeOrder.forEach(size => {
+                const sizeRegs = validRegs.filter(r => (r.tshirt_size || 'Not Specified') === size);
                 
-                // Count by club
-                const clubStats = {};
-                zoneRegs.forEach(r => {
-                    const club = r.club || 'Unknown';
-                    if (!clubStats[club]) {
-                        clubStats[club] = { count: 0 };
-                    }
-                    clubStats[club].count++;
-                });
-                
-                // Sort by count descending
-                const sortedClubs = Object.entries(clubStats).sort((a,b) => b[1].count - a[1].count);
-                const zoneTotal = sortedClubs.reduce((sum,[,stats]) => sum + stats.count, 0);
-                
-                grandTotal += zoneTotal;
-                
-                // Add zone header
-                zoneData.push(['', '', '', '', '']);
-                zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Clubs)`, '', '']);
-                
-                // Add clubs with rankings
-                sortedClubs.forEach(([club, stats], idx) => {
-                    const percentage = zoneTotal > 0 ? ((stats.count / zoneTotal) * 100).toFixed(1) : '0.0';
-                    const rank = idx + 1;
-                    let medal = '';
-                    if (rank === 1) medal = '🥇';
-                    else if (rank === 2) medal = '🥈';
-                    else if (rank === 3) medal = '🥉';
+                if (sizeRegs.length > 0) {
+                    const sizeData = sizeRegs.map((reg, idx) => ({
+                        'S.No': idx + 1,
+                        'Registration ID': reg.registration_id,
+                        'Name': reg.name,
+                        'Mobile': reg.mobile,
+                        'Club': reg.club || 'N/A',
+                        'Zone': reg.zone || 'Unmapped',
+                        'Type': reg.registration_type,
+                        'Meal': reg.meal_preference,
+                        'T-Shirt': reg.tshirt_size || 'Not Specified'
+                    }));
                     
-                    zoneData.push([
-                        '',
-                        `${medal} ${rank}`,
-                        club,
-                        stats.count,
-                        `${percentage}%`
-                    ]);
-                });
-                
-                // Add zone total
-                zoneData.push([
-                    '',
-                    '',
-                    `ZONE ${zoneNum} TOTAL`,
-                    zoneTotal,
-                    '100%'
-                ]);
-            }
+                    const sizeWs = XLSX.utils.json_to_sheet(sizeData);
+                    sizeWs['!cols'] = [
+                        { wch: 6 }, { wch: 15 }, { wch: 30 }, { wch: 15 },
+                        { wch: 30 }, { wch: 12 }, { wch: 25 }, { wch: 12 }, { wch: 10 }
+                    ];
+                    
+                    XLSX.utils.book_append_sheet(wb, sizeWs, `Size ${size}`);
+                }
+            });
             
-            // Add grand total
-            zoneData.push(['', '', '', '', '']);
-            zoneData.push(['', '', '', '', '']);
-            zoneData.push([
-                'GRAND TOTAL',
-                '',
-                'All 9 Zones',
-                grandTotal,
-                '100%'
-            ]);
+            // === SHEET 3: Complete List with T-Shirt Info ===
+            const allData = validRegs.map((reg, idx) => ({
+                'S.No': idx + 1,
+                'Registration ID': reg.registration_id,
+                'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
+                'Name': reg.name,
+                'Mobile': reg.mobile,
+                'Club': reg.club || 'N/A',
+                'Zone': reg.zone || 'Unmapped',
+                'Type': reg.registration_type,
+                'Meal': reg.meal_preference,
+                'T-Shirt': reg.tshirt_size || 'Not Specified',
+                'Payment': reg.payment_status || 'pending'
+            }));
             
-            // Create worksheet
-            const ws = XLSX.utils.aoa_to_sheet(zoneData);
-            ws['!cols'] = [
-                { wch: 12 },  // Zone
-                { wch: 10 },  // Rank
-                { wch: 35 },  // Club Name
-                { wch: 15 },  // Registrations
-                { wch: 12 }   // Percentage
+            const allWs = XLSX.utils.json_to_sheet(allData);
+            allWs['!cols'] = [
+                { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 }, { wch: 15 },
+                { wch: 30 }, { wch: 12 }, { wch: 25 }, { wch: 12 }, { wch: 10 }, { wch: 15 }
             ];
+            allWs['!autofilter'] = { ref: `A1:K${allData.length + 1}` };
             
-            // Add autofilter
-            ws['!autofilter'] = { ref: 'A4:E4' };
-            
-            XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
+            XLSX.utils.book_append_sheet(wb, allWs, 'All Registrations');
             
             // Download
             const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `SNEHA-SAURABHA-Zone-Summary-${timestamp}.xlsx`;
+            const filename = `SNEHA-SAURABHA-TShirt-Report-${timestamp}.xlsx`;
             XLSX.writeFile(wb, filename);
-            console.log('✅ Enhanced zone-wise Excel exported:', filename);
-            alert(`✅ Zone Summary downloaded!\n\nFile: ${filename}\nTotal: ${grandTotal} registrations`);
+            console.log('✅ T-Shirt size report exported:', filename);
+            alert(`✅ T-Shirt Size Report downloaded!\n\nFile: ${filename}\nTotal: ${total} registrations`);
         }
         
         // Auto-refresh registration list every 60 seconds
