@@ -259,7 +259,41 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Authentication Modal -->
+    <div id="authModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 99999; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 16px; padding: 40px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px;">
+                    🔐
+                </div>
+                <h2 style="color: #D4AF37; margin-bottom: 8px;">Admin Access</h2>
+                <p style="color: #666; font-size: 14px;">Enter password to access tally page</p>
+            </div>
+            
+            <form id="authForm">
+                <div style="margin-bottom: 20px;">
+                    <input 
+                        type="password" 
+                        id="adminPassword" 
+                        placeholder="Enter admin password"
+                        style="width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;"
+                        required
+                        autocomplete="current-password"
+                    />
+                </div>
+                
+                <button type="submit" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                    🔓 Unlock Dashboard
+                </button>
+                
+                <div id="authError" style="display: none; margin-top: 15px; padding: 12px; background: #FEE; border-radius: 8px; color: #C53030; font-size: 14px; text-align: center;">
+                    ❌ Incorrect password
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" id="mainContent" style="display: none;">
         <header>
             <img src="../images/header-left.jpg" alt="Left Logo" class="header-logo">
             <div class="header-center">
@@ -279,26 +313,6 @@
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
             <button class="export-btn" style="background: #2563EB;" onclick="exportZoneWise()">📊 Zone-wise Excel</button>
         </div>
-        
-        <!-- Registration Type Breakdown - Single Line Format -->
-        <div style="background: #FFF8E7; border: 2px solid #D4A024; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-            <h3 style="margin: 0 0 15px 0; color: #D97706; font-size: 18px;">REGISTRATION BREAKDOWN</h3>
-            <div style="font-size: 15px; line-height: 1.8;">
-                <strong>Rotarian:</strong> <span id="count-rotarian">0</span> | 
-                <strong>Rotary Ann:</strong> <span id="count-ann">0</span> | 
-                <strong>Rotary Annet:</strong> <span id="count-annet">0</span> | 
-                <strong>Rotarian with Spouse:</strong> <span id="count-spouse">0</span> | 
-                <strong>Guest:</strong> <span id="count-guest">0</span> | 
-                <strong>Rotaractor:</strong> <span id="count-rotaractor">0</span> | 
-                <strong>Silver Donor:</strong> <span id="count-silver-donor">0</span> | 
-                <strong>Silver Sponsor:</strong> <span id="count-silver-sponsor">0</span> | 
-                <strong>Gold Sponsor:</strong> <span id="count-gold-sponsor">0</span> | 
-                <strong>Platinum Sponsor:</strong> <span id="count-platinum-sponsor">0</span> | 
-                <strong>Patron Sponsor:</strong> <span id="count-patron-sponsor">0</span> | 
-                <span style="color: #DC2626;"><strong>De-registered:</strong> <span id="count-deregistered">0</span></span>
-            </div>
-        </div>
-
 
         
         <div class="table-wrapper">
@@ -417,13 +431,44 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
+        // ========== AUTHENTICATION ==========
+        const ADMIN_PASSWORD = 'sneha2026admin'; // Change this to your secure password
+        
+        // Check if already authenticated
+        const isAuthenticated = sessionStorage.getItem('tallyAuthenticated') === 'true';
+        
+        if (isAuthenticated) {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }
+        
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem('tallyAuthenticated', 'true');
+                document.getElementById('authModal').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                fetchRegistrations(); // Load data after authentication
+            } else {
+                document.getElementById('authError').style.display = 'block';
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        });
+        
+        // ========== MAIN TALLY FUNCTIONS ==========
+        
         let allRegistrations = [];
         let filteredRegistrations = [];
         let currentSort = { column: null, direction: 'asc' };
         
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function() {
-            fetchRegistrations();
+            if (isAuthenticated) {
+                fetchRegistrations();
+            }
         });
         
         async function fetchRegistrations() {
