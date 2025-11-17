@@ -224,6 +224,217 @@
             color: #DC2626;
         }
         
+        /* Zone Modal Styles */
+        .zone-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .zone-modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .zone-modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .zone-modal-header {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+            padding: 24px;
+            color: white;
+            position: relative;
+        }
+        
+        .zone-modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .zone-modal-header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+        
+        .zone-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .zone-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .zone-modal-body {
+            padding: 24px;
+            max-height: calc(80vh - 140px);
+            overflow-y: auto;
+        }
+        
+        .club-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: #F9FAFB;
+            border-radius: 12px;
+            border-left: 4px solid #D4AF37;
+            transition: all 0.3s;
+        }
+        
+        .club-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+        }
+        
+        .club-item.rank-1 {
+            border-left-color: #FFD700;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFFDF7 100%);
+        }
+        
+        .club-item.rank-2 {
+            border-left-color: #C0C0C0;
+            background: linear-gradient(135deg, #F5F5F5 0%, #FAFAFA 100%);
+        }
+        
+        .club-item.rank-3 {
+            border-left-color: #CD7F32;
+            background: linear-gradient(135deg, #FFF4E6 0%, #FFFBF5 100%);
+        }
+        
+        .club-rank {
+            font-size: 28px;
+            margin-right: 16px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .club-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .club-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .club-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #D4AF37;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+        
+        .club-item.rank-1 .progress-fill {
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+        }
+        
+        .club-item.rank-2 .progress-fill {
+            background: linear-gradient(90deg, #C0C0C0 0%, #A8A8A8 100%);
+        }
+        
+        .club-item.rank-3 .progress-fill {
+            background: linear-gradient(90deg, #CD7F32 0%, #B8860B 100%);
+        }
+        
+        .club-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1F2937;
+            min-width: 40px;
+            text-align: right;
+        }
+        
+        .club-item.rank-1 .club-count {
+            color: #D97706;
+        }
+        
+        .club-item.rank-2 .club-count {
+            color: #6B7280;
+        }
+        
+        .club-item.rank-3 .club-count {
+            color: #92400E;
+        }
+        
+        .zone-card {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .zone-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -237,6 +448,15 @@
             .header-logo {
                 width: 80px;
                 height: 80px;
+            }
+            
+            .zone-modal {
+                max-width: 100%;
+                border-radius: 16px 16px 0 0;
+            }
+            
+            .club-name {
+                font-size: 14px;
             }
             
             header h1 {
@@ -318,8 +538,19 @@
         </div>
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script>
+    <!-- Zone Details Modal -->
+    <div class="zone-modal-overlay" id="zoneModal" onclick="closeZoneModal(event)">
+        <div class="zone-modal" onclick="event.stopPropagation()">
+            <div class="zone-modal-header">
+                <button class="zone-modal-close" onclick="closeZoneModal()">✕</button>
+                <h2 id="modalZoneTitle">🗺️ Zone 1</h2>
+                <p id="modalZoneSubtitle">Total Registrations: 0</p>
+            </div>
+            <div class="zone-modal-body" id="modalZoneContent">
+                <!-- Dynamic club breakdown will be inserted here -->
+            </div>
+        </div>
+    </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
@@ -711,13 +942,97 @@
                 .map(zoneNum => {
                     const count = zoneCounts[zoneNum] || 0;
                     return `
-                        <div style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#10B981' : '#E5E7EB'};">
+                        <div class="zone-card" onclick="showZoneDetails(${zoneNum})" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#10B981' : '#E5E7EB'};">
                             <div style="font-size: 14px; color: #666; margin-bottom: 4px;">Zone ${zoneNum}</div>
                             <div style="font-size: 20px; font-weight: 700; color: ${count > 0 ? '#10B981' : '#9CA3AF'};">${count}</div>
                         </div>
                     `;
                 }).join('');
         }
+        
+        function showZoneDetails(zoneNum) {
+            // Filter registrations for this zone
+            const zoneRegs = allRegistrations.filter(r => {
+                if (r.payment_status === 'test') return false;
+                const m = (r.zone || '').match(/Zone\s+(\d+)/i);
+                return m && m[1] == zoneNum;
+            });
+            
+            if (zoneRegs.length === 0) {
+                alert(`No registrations found for Zone ${zoneNum}`);
+                return;
+            }
+            
+            // Count by club
+            const clubStats = {};
+            zoneRegs.forEach(r => {
+                const club = r.club || 'Unknown';
+                clubStats[club] = (clubStats[club] || 0) + 1;
+            });
+            
+            // Sort by count descending
+            const sortedClubs = Object.entries(clubStats).sort((a, b) => b[1] - a[1]);
+            const maxCount = sortedClubs[0][1];
+            
+            // Update modal header
+            document.getElementById('modalZoneTitle').textContent = `🗺️ Zone ${zoneNum} - Club Breakdown`;
+            document.getElementById('modalZoneSubtitle').textContent = `Total Registrations: ${zoneRegs.length} | Clubs: ${sortedClubs.length}`;
+            
+            // Generate club cards with medals for top 3
+            const modalContent = document.getElementById('modalZoneContent');
+            modalContent.innerHTML = sortedClubs.map(([club, count], index) => {
+                const rank = index + 1;
+                let emoji = '📍';
+                let rankClass = '';
+                
+                if (rank === 1) {
+                    emoji = '🥇';
+                    rankClass = 'rank-1';
+                } else if (rank === 2) {
+                    emoji = '🥈';
+                    rankClass = 'rank-2';
+                } else if (rank === 3) {
+                    emoji = '🥉';
+                    rankClass = 'rank-3';
+                }
+                
+                const percentage = ((count / maxCount) * 100).toFixed(0);
+                
+                return `
+                    <div class="club-item ${rankClass}">
+                        <div class="club-rank">${emoji}</div>
+                        <div class="club-info">
+                            <div class="club-name">${club}</div>
+                            <div class="club-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="club-count">${count}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Show modal
+            document.getElementById('zoneModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeZoneModal(event) {
+            // Close if clicking overlay or if no event (X button)
+            if (!event || event.target.id === 'zoneModal') {
+                document.getElementById('zoneModal').classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeZoneModal();
+            }
+        });
         
         function showError(message) {
             const tbody = document.getElementById('registrations-body');
