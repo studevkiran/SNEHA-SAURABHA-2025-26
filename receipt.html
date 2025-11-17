@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Receipt - SNEHA SAURABHA 2025-26</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #D4AF37;
+            --amber: #F4C430;
+            --text-dark: #2C1810;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FFF9E6 0%, #F9F3DC 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--amber) 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .info-box {
+            background: #f9f9f9;
+            border-left: 4px solid var(--primary-gold);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .info-box p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--amber) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-download:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee;
+            border-left: 4px solid #e53e3e;
+            padding: 12px;
+            border-radius: 8px;
+            color: #c53030;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-gold);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .examples strong {
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 Download Receipt</h1>
+            <p>SNEHA SAURABHA 2025-26</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <p>
+                    <strong>🔍 Find Your Receipt</strong><br>
+                    Enter your Order ID or UTR number to view and download your registration receipt.
+                </p>
+            </div>
+
+            <form id="receiptForm">
+                <div class="form-group">
+                    <label for="orderId">Order ID / UTR Number</label>
+                    <input 
+                        type="text" 
+                        id="orderId" 
+                        placeholder="e.g., 4729291983 or ORDER_1731812456"
+                        autocomplete="off"
+                        required
+                    />
+                    <div class="examples">
+                        <strong>Examples:</strong><br>
+                        • UTR Number: 4729291983<br>
+                        • Cashfree Order: ORDER_1731812456789<br>
+                        • Registration ID: 2026RTY0700
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-download">
+                    📥 View & Download Receipt
+                </button>
+
+                <div class="error-message" id="errorMessage"></div>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="color: #666;">Fetching your receipt...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('receiptForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const orderIdInput = document.getElementById('orderId');
+            const orderId = orderIdInput.value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const form = document.getElementById('receiptForm');
+
+            if (!orderId) {
+                errorMessage.textContent = 'Please enter your Order ID or UTR number';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Hide error, show loading
+            errorMessage.style.display = 'none';
+            form.style.display = 'none';
+            loading.style.display = 'block';
+
+            try {
+                // First, try to fetch by order_id
+                let response = await fetch(`/api/registrations/by-order?order_id=${orderId}`);
+                let result = await response.json();
+
+                // If not found by order_id, try by registration_id
+                if (!result.success) {
+                    response = await fetch(`/api/registrations/by-reg-id?id=${orderId}`);
+                    result = await response.json();
+                }
+
+                if (result.success && result.registration) {
+                    // Found! Redirect to receipt page with order_id
+                    const actualOrderId = result.registration.order_id || orderId;
+                    window.location.href = `/index.html?payment=success&order_id=${actualOrderId}`;
+                } else {
+                    // Not found
+                    loading.style.display = 'none';
+                    form.style.display = 'block';
+                    errorMessage.textContent = '❌ Registration not found. Please check your Order ID/UTR and try again.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                loading.style.display = 'none';
+                form.style.display = 'block';
+                errorMessage.textContent = '❌ Error connecting to server. Please try again.';
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        // Clear error on input change
+        document.getElementById('orderId').addEventListener('input', function() {
+            document.getElementById('errorMessage').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
