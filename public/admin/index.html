@@ -1155,18 +1155,9 @@
         });
         
         function printReceipt(orderId) {
-            // Open receipt page in new window for printing
-            const receiptUrl = `/index.html?payment=success&order_id=${orderId}`;
-            const printWindow = window.open(receiptUrl, '_blank');
-            
-            // Wait for page to load, then trigger print dialog
-            if (printWindow) {
-                printWindow.addEventListener('load', function() {
-                    setTimeout(() => {
-                        printWindow.print();
-                    }, 1000);
-                });
-            }
+            // Open receipt page in new tab
+            const receiptUrl = `https://www.sneha2026.in/index.html?payment=success&order_id=${orderId}`;
+            window.open(receiptUrl, '_blank');
         }
         
     </script>
