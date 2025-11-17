@@ -316,14 +316,102 @@
                         <th class="sortable" onclick="sortTable(8)" data-column="tshirt_size">T-Shirt</th>
                         <th class="sortable" onclick="sortTable(9)" data-column="registration_amount">Amount</th>
                         <th class="sortable" onclick="sortTable(10)" data-column="payment_status">Status</th>
+                        <th style="min-width: 120px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="registrations-body">
                     <tr>
-                        <td colspan="11" class="loading">Loading registrations...</td>
+                        <td colspan="12" class="loading">Loading registrations...</td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- Edit Registration Modal -->
+    <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; overflow-y: auto;">
+        <div style="max-width: 600px; margin: 50px auto; background: white; border-radius: 12px; padding: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="color: #D4AF37; margin: 0;">Edit Registration</h2>
+                <button onclick="closeEditModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">&times;</button>
+            </div>
+            
+            <form id="editForm">
+                <input type="hidden" id="edit_registration_id">
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Name *</label>
+                    <input type="text" id="edit_name" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Mobile *</label>
+                    <input type="tel" id="edit_mobile" required pattern="[0-9]{10}" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Email</label>
+                    <input type="email" id="edit_email" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Club *</label>
+                    <input type="text" id="edit_club" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registration Type *</label>
+                    <select id="edit_registration_type" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                        <option value="Rotarian">Rotarian</option>
+                        <option value="Rotarian with Spouse">Rotarian with Spouse</option>
+                        <option value="Rotary Ann">Rotary Ann</option>
+                        <option value="Rotary Annet">Rotary Annet</option>
+                        <option value="Guest">Guest</option>
+                        <option value="Rotaractor">Rotaractor</option>
+                        <option value="Silver Donor">Silver Donor</option>
+                        <option value="Silver Sponsor">Silver Sponsor</option>
+                        <option value="Gold Sponsor">Gold Sponsor</option>
+                        <option value="Platinum Sponsor">Platinum Sponsor</option>
+                        <option value="Patron Sponsor">Patron Sponsor</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Meal Preference *</label>
+                    <select id="edit_meal_preference" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                        <option value="Veg">Veg</option>
+                        <option value="Non-Veg">Non-Veg</option>
+                        <option value="Jain">Jain</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">T-Shirt Size *</label>
+                    <select id="edit_tshirt_size" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                        <option value="XXXL">XXXL</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 25px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700; color: #92400E;">Edit Remarks (Mandatory) *</label>
+                    <textarea id="edit_remarks" required minlength="5" placeholder="Why are you editing this registration? (minimum 5 characters)" style="width: 100%; padding: 12px; border: 2px solid #FCD34D; border-radius: 8px; font-size: 14px; min-height: 80px; resize: vertical;"></textarea>
+                    <small style="color: #92400E; font-size: 13px;">⚠️ This remark will be saved permanently and exported in Excel reports.</small>
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" style="flex: 1; padding: 14px; background: #10B981; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                        💾 Save Changes
+                    </button>
+                    <button type="button" onclick="closeEditModal()" style="flex: 1; padding: 14px; background: #6B7280; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -462,7 +550,7 @@
             const tbody = document.getElementById('registrations-body');
             
             if (registrations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
                 return;
             }
             
@@ -471,6 +559,9 @@
                 const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' : 
                                  reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
                 const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
+                
+                // Safely encode registration data as JSON
+                const regData = JSON.stringify(reg).replace(/"/g, '&quot;');
                 
                 return `
                     <tr>
@@ -485,6 +576,10 @@
                         <td>${reg.tshirt_size || 'N/A'}</td>
                         <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
                         <td><span class="status-badge ${statusClass}">${reg.payment_status || 'pending'}</span></td>
+                        <td>
+                            <button onclick='openEditModal(${regData})' style="padding: 6px 12px; background: #3B82F6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 4px;">✏️ Edit</button>
+                            <button onclick="printReceipt('${reg.order_id || reg.registration_id}')" style="padding: 6px 12px; background: #10B981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">🖨️ Print</button>
+                        </td>
                     </tr>
                 `;
             }).join('');
@@ -898,6 +993,89 @@
         setInterval(() => {
             fetchRegistrations();
         }, 60000);
+        
+        // ========== EDIT FUNCTIONS ==========
+        
+        function openEditModal(registration) {
+            document.getElementById('edit_registration_id').value = registration.registration_id;
+            document.getElementById('edit_name').value = registration.name;
+            document.getElementById('edit_mobile').value = registration.mobile;
+            document.getElementById('edit_email').value = registration.email || '';
+            document.getElementById('edit_club').value = registration.club || '';
+            document.getElementById('edit_registration_type').value = registration.registration_type;
+            document.getElementById('edit_meal_preference').value = registration.meal_preference;
+            document.getElementById('edit_tshirt_size').value = registration.tshirt_size || 'M';
+            document.getElementById('edit_remarks').value = '';
+            
+            document.getElementById('editModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('editForm').reset();
+        }
+        
+        document.getElementById('editForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const registration_id = document.getElementById('edit_registration_id').value;
+            const remarks = document.getElementById('edit_remarks').value.trim();
+            
+            if (remarks.length < 5) {
+                alert('❌ Edit remarks must be at least 5 characters long!');
+                return;
+            }
+            
+            const updateData = {
+                registration_id,
+                name: document.getElementById('edit_name').value,
+                mobile: document.getElementById('edit_mobile').value,
+                email: document.getElementById('edit_email').value,
+                club: document.getElementById('edit_club').value,
+                registration_type: document.getElementById('edit_registration_type').value,
+                meal_preference: document.getElementById('edit_meal_preference').value,
+                tshirt_size: document.getElementById('edit_tshirt_size').value,
+                edit_remarks: remarks
+            };
+            
+            try {
+                const response = await fetch('/api/registrations/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ Registration updated successfully!');
+                    closeEditModal();
+                    fetchRegistrations(); // Reload data
+                } else {
+                    alert('❌ Error: ' + (result.error || 'Failed to update'));
+                }
+            } catch (error) {
+                console.error('Error updating registration:', error);
+                alert('❌ Error updating registration. Please try again.');
+            }
+        });
+        
+        function printReceipt(orderId) {
+            // Open receipt page in new window for printing
+            const receiptUrl = `/index.html?payment=success&order_id=${orderId}`;
+            const printWindow = window.open(receiptUrl, '_blank');
+            
+            // Wait for page to load, then trigger print dialog
+            if (printWindow) {
+                printWindow.addEventListener('load', function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 1000);
+                });
+            }
+        }
         
     </script>
 </body>
