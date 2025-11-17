@@ -389,6 +389,11 @@
                 </div>
                 
                 <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registration Amount (₹) *</label>
+                    <input type="number" id="edit_registration_amount" required min="0" step="1" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Club *</label>
                     <input type="text" id="edit_club" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
@@ -1172,6 +1177,7 @@
             document.getElementById('edit_mobile').value = registration.mobile;
             document.getElementById('edit_email').value = registration.email || '';
             document.getElementById('edit_order_id').value = registration.order_id || '';
+            document.getElementById('edit_registration_amount').value = registration.registration_amount || 0;
             document.getElementById('edit_club').value = registration.club || '';
             document.getElementById('edit_registration_type').value = registration.registration_type;
             document.getElementById('edit_meal_preference').value = registration.meal_preference;
@@ -1205,6 +1211,7 @@
                 mobile: document.getElementById('edit_mobile').value,
                 email: document.getElementById('edit_email').value,
                 order_id: document.getElementById('edit_order_id').value,
+                registration_amount: parseFloat(document.getElementById('edit_registration_amount').value) || 0,
                 club: document.getElementById('edit_club').value,
                 registration_type: document.getElementById('edit_registration_type').value,
                 meal_preference: document.getElementById('edit_meal_preference').value,

@@ -27,6 +27,7 @@ module.exports = async (req, res) => {
       mobile,
       club,
       order_id,
+      registration_amount,
       registration_type,
       meal_preference,
       tshirt_size,
@@ -82,6 +83,12 @@ module.exports = async (req, res) => {
     if (order_id) {
       updates.push(`order_id = $${paramCount}`);
       values.push(order_id);
+      paramCount++;
+    }
+
+    if (registration_amount !== undefined && registration_amount !== null) {
+      updates.push(`registration_amount = $${paramCount}`);
+      values.push(registration_amount);
       paramCount++;
     }
 
