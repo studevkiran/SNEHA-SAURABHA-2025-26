@@ -329,29 +329,6 @@
                 </div>
             </div>
 
-            <!-- ============= SIMPLIFIED COUPON SECTION ============= -->
-            <div class="coupon-simple-wrapper">
-                <label class="coupon-label">🎟️ Have a discount code? Type 100 here to get discount:</label>
-                <div id="couponMessage" class="coupon-simple-message"></div>
-                <div class="coupon-input-container">
-                    <input 
-                        type="text" 
-                        id="couponCode" 
-                        placeholder="Type 100 here" 
-                        class="coupon-simple-input"
-                        maxlength="20"
-                        autocomplete="off"
-                    />
-                    <button onclick="applyCoupon()" type="button" class="coupon-simple-btn" id="couponApplyBtn">
-                        APPLY
-                    </button>
-                    <button onclick="removeCoupon()" type="button" class="coupon-remove-btn" id="couponRemoveBtn" style="display: none;">
-                        ✕
-                    </button>
-                </div>
-            </div>
-            <!-- ============= END COUPON SECTION ============= -->
-
             <div style="display: flex; gap: 12px; flex-direction: column; margin-top: 20px;">
                 <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 20px; padding: 18px; font-weight: 700;">
                     💳 PAY NOW <span id="paymentAmount" data-review-amount>₹0</span>
