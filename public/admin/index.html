@@ -1155,8 +1155,8 @@
         });
         
         function printReceipt(orderId) {
-            // Open direct receipt viewer in new tab (faster, no flicker)
-            const receiptUrl = `https://www.sneha2026.in/receipt-view.html?order_id=${orderId}`;
+            // Open receipt page in new tab
+            const receiptUrl = `https://www.sneha2026.in/index.html?payment=success&order_id=${orderId}`;
             window.open(receiptUrl, '_blank');
         }
         
