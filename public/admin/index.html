@@ -998,7 +998,14 @@
             XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
             
             // === SHEET 2: All Registrations ===
-            const excelData = validRegs.map((reg, index) => ({
+            // Sort by registration_id to get proper sequence (0001, 0002, 0003...)
+            const sortedRegs = [...validRegs].sort((a, b) => {
+                const aNum = parseInt((a.registration_id || '').match(/\d+$/)?.[0] || '0');
+                const bNum = parseInt((b.registration_id || '').match(/\d+$/)?.[0] || '0');
+                return aNum - bNum;
+            });
+            
+            const excelData = sortedRegs.map((reg, index) => ({
                 'S.No': index + 1,
                 'Registration ID': reg.registration_id,
                 'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
@@ -1238,10 +1245,11 @@
             alert(`✅ Zone Summary downloaded!\n\nFile: ${filename}\nTotal: ${grandTotal} registrations`);
         }
         
-        // Auto-refresh registration list every 60 seconds
-        setInterval(() => {
-            fetchRegistrations();
-        }, 60000);
+        // Manual refresh only - removed auto-refresh
+        // User will click refresh button before operations
+        // setInterval(() => {
+        //     fetchRegistrations();
+        // }, 60000);
         
         // ========== EDIT FUNCTIONS ==========
         
