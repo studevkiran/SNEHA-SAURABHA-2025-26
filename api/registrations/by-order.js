@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
 
     // First check if payment attempt exists but registration not created yet
     const attemptCheck = await query(
-      `SELECT order_id, payment_status, amount FROM payment_attempts WHERE order_id = $1 LIMIT 1`,
+      `SELECT order_id, payment_status, registration_amount FROM payment_attempts WHERE order_id = $1 LIMIT 1`,
       [order_id]
     );
 
