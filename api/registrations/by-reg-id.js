@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
 
     console.log('🔍 Fetching registration by registration_id:', registration_id);
 
-        // Query by registration_id
+    // Query by registration_id
     const result = await query(
       `SELECT 
         registration_id,
@@ -36,10 +36,10 @@ module.exports = async (req, res) => {
         name,
         email,
         mobile,
-        COALESCE(club_name, club) AS club_name,
+        COALESCE(club, club_name) AS club_name,
         zone,
         registration_type,
-        COALESCE(amount, registration_amount) AS amount,
+        COALESCE(registration_amount, amount) AS amount,
         meal_preference,
         tshirt_size,
         payment_status,
