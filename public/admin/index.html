@@ -339,6 +339,7 @@
                 <strong id="total-count">0</strong> Total Registrations
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
+            <button class="export-btn" onclick="openBulkWhatsappModal()" style="background: #25D366; margin-left: 10px;">📱 Bulk WhatsApp</button>
         </div>
 
         
@@ -1544,6 +1545,213 @@
                 btn.disabled = false;
                 btn.innerHTML = '📲 Send WhatsApp';
             }
+        }
+        
+        // ========== BULK WHATSAPP ==========
+        
+        function openBulkWhatsappModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    <h2>📱 Bulk WhatsApp Sender</h2>
+                    
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                        <strong>⚠️ WhatsApp Limits:</strong><br>
+                        • Maximum 1,000-10,000 messages per 24 hours<br>
+                        • Avoid sending to same number repeatedly<br>
+                        • Test numbers burn through your limit<br>
+                        • Failed deliveries don't count against limit
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: bold;">
+                            Select Recipients:
+                        </label>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                            <button onclick="selectBulkFilter('all')" class="btn-filter" style="padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                ✅ All Valid (${allRegistrations.filter(r => isValidForWhatsApp(r)).length})
+                            </button>
+                            <button onclick="selectBulkFilter('zone')" class="btn-filter" style="padding: 10px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                🗺️ By Zone
+                            </button>
+                            <button onclick="selectBulkFilter('club')" class="btn-filter" style="padding: 10px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                🏛️ By Club
+                            </button>
+                            <button onclick="selectBulkFilter('type')" class="btn-filter" style="padding: 10px; background: #9C27B0; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                👥 By Type
+                            </button>
+                        </div>
+                        
+                        <div id="bulk-filter-options" style="margin-top: 15px;"></div>
+                        
+                        <div id="bulk-selected-count" style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 5px; font-weight: bold;"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button onclick="this.closest('.modal').remove()" style="padding: 10px 20px; background: #999; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Cancel
+                        </button>
+                        <button id="bulk-send-btn" onclick="sendBulkWhatsApp()" disabled style="padding: 10px 20px; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            📤 Send WhatsApp
+                        </button>
+                    </div>
+                    
+                    <div id="bulk-progress" style="margin-top: 20px; display: none;">
+                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">Sending...</div>
+                            <div style="background: #ddd; height: 20px; border-radius: 10px; overflow: hidden;">
+                                <div id="bulk-progress-bar" style="background: #25D366; height: 100%; width: 0%; transition: width 0.3s;"></div>
+                            </div>
+                            <div id="bulk-progress-text" style="margin-top: 10px; font-size: 14px;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        let selectedBulkRecipients = [];
+        
+        function isValidForWhatsApp(reg) {
+            const status = (reg.payment_status || '').toLowerCase();
+            const validStatuses = ['success', 'paid', 'manual', 'manual-s', 'manual-b', 'manual-p', 'imported'];
+            return validStatuses.includes(status) && 
+                   reg.mobile && 
+                   reg.mobile.length === 10 &&
+                   reg.mobile !== '0000000001' &&
+                   reg.mobile !== '9999999999' &&
+                   !reg.mobile.startsWith('916'); // Exclude landlines
+        }
+        
+        function selectBulkFilter(filterType) {
+            const optionsDiv = document.getElementById('bulk-filter-options');
+            
+            if (filterType === 'all') {
+                selectedBulkRecipients = allRegistrations.filter(r => isValidForWhatsApp(r));
+                optionsDiv.innerHTML = '';
+                updateBulkCount();
+                return;
+            }
+            
+            if (filterType === 'zone') {
+                const zones = [...new Set(allRegistrations.map(r => r.zone))].filter(z => z).sort();
+                optionsDiv.innerHTML = `
+                    <label style="display: block; margin-bottom: 5px;">Select Zone:</label>
+                    <select id="zone-select" onchange="filterByZone(this.value)" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                        <option value="">-- Select Zone --</option>
+                        ${zones.map(z => `<option value="${z}">${z}</option>`).join('')}
+                    </select>
+                `;
+            } else if (filterType === 'club') {
+                const clubs = [...new Set(allRegistrations.map(r => r.club))].filter(c => c).sort();
+                optionsDiv.innerHTML = `
+                    <label style="display: block; margin-bottom: 5px;">Select Club:</label>
+                    <select id="club-select" onchange="filterByClub(this.value)" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                        <option value="">-- Select Club --</option>
+                        ${clubs.map(c => `<option value="${c}">${c}</option>`).join('')}
+                    </select>
+                `;
+            } else if (filterType === 'type') {
+                const types = [...new Set(allRegistrations.map(r => r.registration_type))].filter(t => t).sort();
+                optionsDiv.innerHTML = `
+                    <label style="display: block; margin-bottom: 5px;">Select Type:</label>
+                    <select id="type-select" onchange="filterByType(this.value)" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                        <option value="">-- Select Type --</option>
+                        ${types.map(t => `<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                `;
+            }
+        }
+        
+        function filterByZone(zone) {
+            if (zone) {
+                selectedBulkRecipients = allRegistrations.filter(r => r.zone === zone && isValidForWhatsApp(r));
+                updateBulkCount();
+            }
+        }
+        
+        function filterByClub(club) {
+            if (club) {
+                selectedBulkRecipients = allRegistrations.filter(r => r.club === club && isValidForWhatsApp(r));
+                updateBulkCount();
+            }
+        }
+        
+        function filterByType(type) {
+            if (type) {
+                selectedBulkRecipients = allRegistrations.filter(r => r.registration_type === type && isValidForWhatsApp(r));
+                updateBulkCount();
+            }
+        }
+        
+        function updateBulkCount() {
+            const countDiv = document.getElementById('bulk-selected-count');
+            const sendBtn = document.getElementById('bulk-send-btn');
+            
+            if (selectedBulkRecipients.length > 0) {
+                countDiv.innerHTML = `✅ Selected: <strong>${selectedBulkRecipients.length}</strong> recipients`;
+                sendBtn.disabled = false;
+            } else {
+                countDiv.innerHTML = '⚠️ No recipients selected';
+                sendBtn.disabled = true;
+            }
+        }
+        
+        async function sendBulkWhatsApp() {
+            if (selectedBulkRecipients.length === 0) {
+                alert('Please select recipients first');
+                return;
+            }
+            
+            if (!confirm(`Send WhatsApp to ${selectedBulkRecipients.length} recipients?\n\nThis will use your 24-hour message limit.`)) {
+                return;
+            }
+            
+            const progressDiv = document.getElementById('bulk-progress');
+            const progressBar = document.getElementById('bulk-progress-bar');
+            const progressText = document.getElementById('bulk-progress-text');
+            const sendBtn = document.getElementById('bulk-send-btn');
+            
+            progressDiv.style.display = 'block';
+            sendBtn.disabled = true;
+            
+            let sent = 0;
+            let failed = 0;
+            
+            for (let i = 0; i < selectedBulkRecipients.length; i++) {
+                const reg = selectedBulkRecipients[i];
+                
+                try {
+                    const response = await fetch(`${API_BASE}/api/resend-whatsapp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ registration_id: reg.registration_id })
+                    });
+                    
+                    if (response.ok) {
+                        sent++;
+                    } else {
+                        failed++;
+                    }
+                } catch (error) {
+                    failed++;
+                }
+                
+                // Update progress
+                const progress = ((i + 1) / selectedBulkRecipients.length) * 100;
+                progressBar.style.width = progress + '%';
+                progressText.innerHTML = `Sent: ${sent} | Failed: ${failed} | Total: ${i + 1}/${selectedBulkRecipients.length}`;
+                
+                // Small delay to avoid rate limiting (500ms between messages)
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            alert(`✅ Bulk WhatsApp Complete!\n\nSent: ${sent}\nFailed: ${failed}\nTotal: ${selectedBulkRecipients.length}`);
+            document.querySelector('.modal').remove();
         }
         
     </script>
