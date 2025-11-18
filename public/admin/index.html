@@ -551,7 +551,7 @@
         
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function() {
-            if (isAuthenticated) {
+            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
                 fetchRegistrations();
             }
         });
@@ -1361,10 +1361,10 @@
             const regId = document.getElementById('deleteRegId').value.trim();
             if (!regId) { alert('⚠️ Please enter a Registration ID'); return; }
             try {
-                const response = await fetch(`/api/registrations?registration_id=${regId}`);
+                const response = await fetch(`/api/registrations/by-reg-id?registration_id=${regId}`);
                 const data = await response.json();
-                if (data.success && data.registrations && data.registrations.length > 0) {
-                    displayDeleteRegistrationDetails(data.registrations[0]);
+                if (data.success && data.registration) {
+                    displayDeleteRegistrationDetails(data.registration);
                 } else {
                     alert('❌ Registration not found with ID: ' + regId);
                 }
@@ -1456,10 +1456,10 @@
             const regId = document.getElementById('whatsappRegId').value.trim();
             if (!regId) { alert('⚠️ Please enter a Registration ID'); return; }
             try {
-                const response = await fetch(`/api/registrations?registration_id=${regId}`);
+                const response = await fetch(`/api/registrations/by-reg-id?registration_id=${regId}`);
                 const data = await response.json();
-                if (data.success && data.registrations && data.registrations.length > 0) {
-                    displayWhatsAppRegistrationDetails(data.registrations[0]);
+                if (data.success && data.registration) {
+                    displayWhatsAppRegistrationDetails(data.registration);
                 } else {
                     alert('❌ Registration not found with ID: ' + regId);
                 }
