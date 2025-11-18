@@ -1,6 +1,5 @@
 // API to resend WhatsApp confirmation
 const { query } = require('../lib/db-neon');
-const InfobipService = require('../lib/infobip-whatsapp');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -59,45 +58,53 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Send WhatsApp confirmation
-    const infobip = new InfobipService();
-    
-    const whatsappData = {
+    // Call the send-whatsapp-confirmation API internally
+    const whatsappPayload = {
+      name: registration.name,
       mobile: registration.mobile,
-      name: `${registration.name_prefix || ''} ${registration.name}`.trim(),
-      registration_id: registration.registration_id,
-      amount: registration.amount,
-      transaction_id: registration.transaction_id,
-      registration_type: registration.registration_type
+      email: registration.email || 'Not Provided',
+      registrationId: registration.registration_id,
+      registrationType: registration.registration_type,
+      amount: parseFloat(registration.registration_amount || 0),
+      mealPreference: registration.meal_preference,
+      tshirtSize: registration.tshirt_size,
+      clubName: registration.club,
+      orderId: registration.order_id
     };
 
-    console.log('Sending WhatsApp to:', whatsappData.mobile);
+    console.log('📤 Calling WhatsApp API with:', whatsappPayload);
+
+    // Import and call the WhatsApp confirmation handler
+    const sendWhatsAppConfirmation = require('./send-whatsapp-confirmation');
     
-    const whatsappResult = await infobip.sendConfirmation(whatsappData);
-
-    if (whatsappResult.success) {
-      // Update WhatsApp sent status
-      await query(
-        'UPDATE registrations SET whatsapp_sent = TRUE, updated_at = NOW() WHERE registration_id = $1',
-        [registration.registration_id]
-      );
-
-      console.log('✅ WhatsApp resent successfully to:', whatsappData.mobile);
-
-      return res.status(200).json({
-        success: true,
-        message: 'WhatsApp confirmation sent successfully',
-        registration_id: registration.registration_id,
-        mobile: whatsappData.mobile,
-        whatsapp_status: whatsappResult
-      });
-    } else {
-      console.error('❌ WhatsApp sending failed:', whatsappResult);
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to send WhatsApp: ' + (whatsappResult.error || 'Unknown error')
-      });
-    }
+    // Create a mock request/response to call the handler
+    const mockReq = {
+      method: 'POST',
+      body: whatsappPayload
+    };
+    
+    const mockRes = {
+      status: (code) => ({
+        json: (data) => {
+          if (code === 200 && data.success) {
+            return res.status(200).json({
+              success: true,
+              message: 'WhatsApp confirmation sent successfully',
+              registration_id: registration.registration_id,
+              mobile: registration.mobile
+            });
+          } else {
+            return res.status(500).json({
+              success: false,
+              error: data.message || 'Failed to send WhatsApp'
+            });
+          }
+        }
+      })
+    };
+    
+    // Call the WhatsApp handler
+    await sendWhatsAppConfirmation(mockReq, mockRes);
 
   } catch (error) {
     console.error('❌ Error resending WhatsApp:', error);

@@ -1410,7 +1410,11 @@
             const regId = document.getElementById('confirmDeleteBtn').dataset.regId;
             if (!confirm(`⚠️ FINAL CONFIRMATION\\n\\nAre you absolutely sure you want to DELETE registration ${regId}?\\n\\nThis action is PERMANENT and cannot be undone!`)) return;
             try {
-                const response = await fetch(`${API_BASE}/api/registrations/${regId}`, { method: 'DELETE' });
+                const response = await fetch(`${API_BASE}/api/registrations/delete`, { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ registration_id: regId })
+                });
                 const result = await response.json();
                 if (result.success) {
                     alert('✅ Registration deleted successfully!');
