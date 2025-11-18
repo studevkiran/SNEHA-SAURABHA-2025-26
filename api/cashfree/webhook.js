@@ -22,19 +22,73 @@ module.exports = async (req, res) => {
 
   try {
     const payload = req.body;
-    const signature = req.headers['x-cashfree-signature'] || req.body.signature;
+    
+    // NEW FORMAT (2023-08-01): Uses x-webhook-signature header
+    const signature = req.headers['x-webhook-signature'] || 
+                     req.headers['x-cashfree-signature'] || 
+                     req.body.signature;
+    
+    // NEW FORMAT: Also includes timestamp
+    const timestamp = req.headers['x-webhook-timestamp'];
+    const version = req.headers['x-webhook-version'];
+
+    console.log('📥 Webhook received:', {
+      version,
+      hasSignature: !!signature,
+      hasTimestamp: !!timestamp,
+      orderId: payload?.data?.order?.order_id || payload?.order_id || 'unknown'
+    });
 
     if (!payload || !signature) {
-      console.error('❌ Webhook missing data');
+      console.error('❌ Webhook missing data or signature');
       return res.status(400).json({
         success: false,
         error: 'Invalid webhook data'
       });
     }
 
-    // Verify and process webhook
+    // For new format (2023-08-01), verify signature differently
     const cashfree = new CashfreeService();
-    const webhookResult = await cashfree.handleWebhook(payload, signature);
+    
+    let webhookResult;
+    if (version === '2023-08-01') {
+      // New format: signature is computed from raw body + timestamp
+      console.log('🆕 Verifying new format webhook (2023-08-01)');
+      
+      // For new format, we verify by recomputing the signature
+      // Cashfree sends: HMAC-SHA256(rawPostData + timestamp, secret_key)
+      const crypto = require('crypto');
+      const rawBody = JSON.stringify(payload);
+      const signatureData = rawBody + timestamp;
+      
+      const computedSignature = crypto
+        .createHmac('sha256', process.env.CASHFREE_SECRET_KEY)
+        .update(signatureData)
+        .digest('base64');
+      
+      const verified = computedSignature === signature;
+      
+      console.log(verified ? '✅ Signature verified' : '❌ Signature mismatch');
+      
+      if (!verified) {
+        console.error('❌ Signature verification failed');
+        console.log('Expected:', computedSignature);
+        console.log('Received:', signature);
+        return res.status(400).json({
+          success: false,
+          error: 'Webhook signature verification failed'
+        });
+      }
+      
+      // Parse the new format webhook
+      webhookResult = await cashfree.handleWebhook(payload, signature);
+      webhookResult.verified = verified;
+      
+    } else {
+      // Old format: use existing verification
+      console.log('📜 Verifying old format webhook');
+      webhookResult = await cashfree.handleWebhook(payload, signature);
+    }
 
     if (!webhookResult.verified) {
       console.error('❌ Webhook verification failed');
@@ -44,12 +98,14 @@ module.exports = async (req, res) => {
       });
     }
 
-    const { orderId, paymentSuccess, orderAmount, transactionId, orderStatus, paymentMethod } = webhookResult;
+    const { orderId, paymentSuccess, orderAmount, transactionId, orderStatus, paymentMethod, upiId } = webhookResult;
 
-    console.log(`📥 Webhook received: ${orderId} - ${orderStatus}`);
+    console.log(`📥 Webhook received: ${orderId} - ${orderStatus} - ${paymentMethod}`);
 
     if (paymentSuccess) {
       console.log('✅ Payment successful via webhook');
+      console.log('💳 Transaction ID:', transactionId);
+      console.log('💰 UPI ID:', upiId || 'N/A');
       
       // Check if already processed
       const attempt = await getPaymentAttempt(orderId);
@@ -66,7 +122,7 @@ module.exports = async (req, res) => {
       
       // Create confirmed registration (generates registration ID)
       console.log('🎫 Creating confirmed registration via webhook...');
-      const confirmResult = await createConfirmedRegistration(orderId, transactionId);
+      const confirmResult = await createConfirmedRegistration(orderId, transactionId, upiId);
       console.log('✅ Webhook: Confirmed registration created');
 
       // Send WhatsApp confirmation via Infobip

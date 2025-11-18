@@ -645,7 +645,15 @@ function showScreen(screenId) {
     
     // Show target screen
     setTimeout(() => {
-        document.getElementById(screenId).classList.add('active');
+        const targetScreen = document.getElementById(screenId);
+        
+        // Safety check: Make sure screen exists before adding class
+        if (targetScreen) {
+            targetScreen.classList.add('active');
+        } else {
+            console.error('❌ Screen not found:', screenId);
+            return;
+        }
         
         // If showing personal details, update selected type and price display
         if (screenId === 'screen-personal-details') {
