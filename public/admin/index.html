@@ -486,7 +486,7 @@
 
         async function verifyCredentials(username, password) {
             try {
-                const response = await fetch('/api/admin/auth', {
+                const response = await fetch(`${API_BASE}/api/admin/auth`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -542,8 +542,15 @@
             unlockDashboard();
         });
 
-        // Check auth on page load
-        window.addEventListener('DOMContentLoaded', checkAuth);        // ========== MAIN TALLY FUNCTIONS ==========
+                // Check auth on page load
+                window.addEventListener('DOMContentLoaded', checkAuth);
+
+                // ===== API BASE (handles custom domain vs Vercel) =====
+                const API_BASE = (location.hostname.includes('sneha2026.in'))
+                    ? 'https://sneha2026.vercel.app'
+                    : '';
+
+                // ========== MAIN TALLY FUNCTIONS ==========
         
         let allRegistrations = [];
         let filteredRegistrations = [];
@@ -561,7 +568,7 @@
                 console.log('🔄 Fetching registrations from /api/registrations/list');
                 
                 // Use the correct serverless function endpoint
-                const response = await fetch('/api/registrations/list');
+                const response = await fetch(`${API_BASE}/api/registrations/list`);
                 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -1296,7 +1303,7 @@
             };
             
             try {
-                const response = await fetch('/api/registrations/update', {
+                const response = await fetch(`${API_BASE}/api/registrations/update`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updateData)
@@ -1361,7 +1368,7 @@
             const regId = document.getElementById('deleteRegId').value.trim();
             if (!regId) { alert('⚠️ Please enter a Registration ID'); return; }
             try {
-                const response = await fetch(`/api/registrations/by-reg-id?registration_id=${regId}`);
+                const response = await fetch(`${API_BASE}/api/registrations/by-reg-id?registration_id=${regId}`);
                 const data = await response.json();
                 if (data.success && data.registration) {
                     displayDeleteRegistrationDetails(data.registration);
@@ -1403,7 +1410,7 @@
             const regId = document.getElementById('confirmDeleteBtn').dataset.regId;
             if (!confirm(`⚠️ FINAL CONFIRMATION\\n\\nAre you absolutely sure you want to DELETE registration ${regId}?\\n\\nThis action is PERMANENT and cannot be undone!`)) return;
             try {
-                const response = await fetch(`/api/registrations/${regId}`, { method: 'DELETE' });
+                const response = await fetch(`${API_BASE}/api/registrations/${regId}`, { method: 'DELETE' });
                 const result = await response.json();
                 if (result.success) {
                     alert('✅ Registration deleted successfully!');
@@ -1456,7 +1463,7 @@
             const regId = document.getElementById('whatsappRegId').value.trim();
             if (!regId) { alert('⚠️ Please enter a Registration ID'); return; }
             try {
-                const response = await fetch(`/api/registrations/by-reg-id?registration_id=${regId}`);
+                const response = await fetch(`${API_BASE}/api/registrations/by-reg-id?registration_id=${regId}`);
                 const data = await response.json();
                 if (data.success && data.registration) {
                     displayWhatsAppRegistrationDetails(data.registration);
@@ -1505,7 +1512,7 @@
             btn.disabled = true;
             btn.innerHTML = '⏳ Sending...';
             try {
-                const response = await fetch('/api/resend-whatsapp', {
+                const response = await fetch(`${API_BASE}/api/resend-whatsapp`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ registration_id: regId, order_id: orderId })
