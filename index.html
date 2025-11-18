@@ -378,6 +378,38 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Coupon Code Section -->
+                <div class="review-section" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);">
+                    <h3 style="color: white; font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <span>🎟️</span> Have a Coupon Code?
+                    </h3>
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                        <input 
+                            type="text" 
+                            id="couponCode" 
+                            placeholder="Enter coupon code" 
+                            style="flex: 1; padding: 12px; border: 2px solid rgba(255,255,255,0.3); border-radius: 8px; font-size: 14px; background: rgba(255,255,255,0.95); color: #1F2937; font-weight: 600;"
+                        >
+                        <button 
+                            onclick="applyCoupon()" 
+                            style="background: white; color: #8B5CF6; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.3s; font-size: 14px;"
+                            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'"
+                        >
+                            Apply
+                        </button>
+                    </div>
+                    <div id="couponMessage" style="font-size: 13px; min-height: 20px; font-weight: 500;"></div>
+                    <div id="couponAppliedInfo" style="display: none; background: rgba(255,255,255,0.2); padding: 12px; border-radius: 8px; margin-top: 10px; backdrop-filter: blur(10px);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 14px; font-weight: 600;">Discount Applied</span>
+                            <button onclick="removeCoupon()" style="background: rgba(255,255,255,0.3); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 600;">
+                                ✕ Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div style="display: flex; gap: 12px; flex-direction: column; max-width: 500px; margin: 25px auto 0;">
