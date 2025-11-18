@@ -50,13 +50,26 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Check if payment is successful
-    if (registration.payment_status !== 'SUCCESS') {
+    // Check if payment is completed (handle various statuses - case insensitive)
+    const paymentStatus = (registration.payment_status || '').toLowerCase();
+    const validStatuses = [
+      'success',      // Webhook/API created
+      'paid',         // Alternative success status
+      'manual',       // Generic manual
+      'manual-s',     // Manual - Sneha (mallige2830)
+      'manual-b',     // Manual - Bangalore (asha1990)
+      'manual-p',     // Manual - Prahlad (prahlad1966)
+      'imported'      // Imported from Excel
+    ];
+    
+    if (!validStatuses.includes(paymentStatus)) {
       return res.status(400).json({
         success: false,
-        error: 'Can only resend WhatsApp for successful payments'
+        error: `Cannot resend WhatsApp for payment status: ${registration.payment_status}. Only completed payments can receive WhatsApp confirmation.`
       });
     }
+    
+    console.log('✅ Payment status check passed:', registration.payment_status);
 
     // Call the send-whatsapp-confirmation API internally
     const whatsappPayload = {
