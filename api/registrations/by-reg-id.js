@@ -1,10 +1,5 @@
 // API: Get registration by registration_id (e.g., 2026RTY0700)
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
-  ssl: { rejectUnauthorized: false }
-});
+const { query } = require('../../lib/db-neon');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -21,8 +16,8 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Get registration_id from URL path
-    const registration_id = req.query.id || req.url.split('/').pop().split('?')[0];
+    // Get registration_id from query parameter
+    const registration_id = req.query.registration_id;
 
     if (!registration_id) {
       return res.status(400).json({
@@ -33,18 +28,18 @@ module.exports = async (req, res) => {
 
     console.log('🔍 Fetching registration by registration_id:', registration_id);
 
-    // Query by registration_id
-    const result = await pool.query(
+        // Query by registration_id
+    const result = await query(
       `SELECT 
         registration_id,
         order_id,
         name,
         email,
         mobile,
-        club,
+        club_name,
         zone,
         registration_type,
-        registration_amount,
+        amount,
         meal_preference,
         tshirt_size,
         payment_status,
@@ -77,10 +72,10 @@ module.exports = async (req, res) => {
         name: registration.name,
         email: registration.email || 'Not Provided',
         mobile: registration.mobile,
-        club: registration.club,
+        club_name: registration.club_name,
         zone: registration.zone,
         registration_type: registration.registration_type,
-        registration_amount: parseFloat(registration.registration_amount) || 0,
+        amount: parseFloat(registration.amount) || 0,
         meal_preference: registration.meal_preference,
         tshirt_size: registration.tshirt_size || 'N/A',
         payment_status: registration.payment_status,
