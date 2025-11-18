@@ -309,29 +309,82 @@
     <div id="screen-review" class="screen">
         <div class="screen-content">
             <button class="btn-back" onclick="showScreen('screen-personal-details')">← Back</button>
-            <h2>Review Details</h2>
-            <div class="review-container">
-                <div class="review-section">
-                    <h3>Registration Type</h3>
-                    <p id="review-type"></p>
-                    <p class="review-price" id="review-price"></p>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h2 style="color: #D4AF37; font-size: 28px; margin-bottom: 8px;">✓ Review Your Details</h2>
+                <p style="color: #666; font-size: 14px;">Please verify all information before payment</p>
+            </div>
+
+            <div class="review-container" style="max-width: 500px; margin: 0 auto;">
+                <!-- Registration Type Card -->
+                <div class="review-section" style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                        <span style="font-size: 32px;">🎫</span>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0; font-size: 14px; opacity: 0.9; font-weight: 500;">Registration Type</h3>
+                            <p id="review-type" style="margin: 5px 0 0 0; font-size: 18px; font-weight: 600;"></p>
+                        </div>
+                    </div>
+                    <p class="review-price" id="review-price" style="margin: 0; font-size: 32px; font-weight: 700; text-align: right;"></p>
                 </div>
-                <div class="review-section">
-                    <h3>Personal Information</h3>
-                    <p><strong>Name:</strong> <span id="review-name"></span></p>
-                    <p><strong>Mobile:</strong> <span id="review-mobile"></span></p>
-                    <p><strong>Email:</strong> <span id="review-email"></span></p>
-                    <p><strong>Club:</strong> <span id="review-club"></span></p>
-                    <p><strong>Meal Preference:</strong> <span id="review-meal"></span></p>
-                    <p><strong>T-Shirt Size:</strong> <span id="review-tshirt"></span></p>
+
+                <!-- Personal Information Card -->
+                <div class="review-section" style="background: white; border: 2px solid #E5E7EB; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                    <h3 style="color: #D4AF37; font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <span>👤</span> Personal Information
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <span style="font-size: 18px; width: 24px;">👤</span>
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;">Name</div>
+                                <div id="review-name" style="font-size: 16px; font-weight: 600; color: #1F2937;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <span style="font-size: 18px; width: 24px;">📱</span>
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;">Mobile</div>
+                                <div id="review-mobile" style="font-size: 16px; font-weight: 600; color: #1F2937;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <span style="font-size: 18px; width: 24px;">✉️</span>
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;">Email</div>
+                                <div id="review-email" style="font-size: 15px; font-weight: 500; color: #1F2937; word-break: break-all;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <span style="font-size: 18px; width: 24px;">⚙️</span>
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;">Club</div>
+                                <div id="review-club" style="font-size: 15px; font-weight: 600; color: #1F2937;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <span style="font-size: 18px; width: 24px;">🍽️</span>
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;">Meal Preference</div>
+                                <div id="review-meal" style="font-size: 16px; font-weight: 600; color: #1F2937;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <span style="font-size: 18px; width: 24px;">👕</span>
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;">T-Shirt Size</div>
+                                <div id="review-tshirt" style="font-size: 16px; font-weight: 600; color: #1F2937;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-                <div style="display: flex; gap: 12px; flex-direction: column;">
-                <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 18px; padding: 16px;">
+            <div style="display: flex; gap: 12px; flex-direction: column; max-width: 500px; margin: 25px auto 0;">
+                <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 18px; padding: 18px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
                     💳 PAY NOW <span id="paymentAmount" data-review-amount>₹0</span>
                 </button>
-                <button class="btn-secondary" onclick="showScreen('screen-personal-details')" style="background: #666;">
+                <button class="btn-secondary" onclick="showScreen('screen-personal-details')" style="background: #6B7280; color: white; padding: 14px; border-radius: 8px; border: none; font-size: 15px;">
                     ← Back to Edit
                 </button>
             </div>

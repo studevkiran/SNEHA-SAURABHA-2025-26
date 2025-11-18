@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Tally - SNEHA SAURABHA 2025-26</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="admin-modals.js"></script>
     <style>
         * {
             margin: 0;
@@ -318,6 +319,19 @@
             <img src="../images/header-right.jpg" alt="Right Logo" class="header-logo">
         </header>
         
+        <!-- Admin Action Buttons -->
+        <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center;">
+            <button onclick="openDeleteEntryModal()" style="background: #EF4444; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);" onmouseover="this.style.background='#DC2626'" onmouseout="this.style.background='#EF4444'">
+                🗑️ Delete Entry
+            </button>
+            <button onclick="openWhatsAppResendModal()" style="background: #10B981; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
+                📲 WhatsApp Resend
+            </button>
+            <button onclick="window.location.href='recover-payment.html'" style="background: #F59E0B; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);" onmouseover="this.style.background='#D97706'" onmouseout="this.style.background='#F59E0B'">
+                💳 Payment Recovery
+            </button>
+        </div>
+
         <div class="controls">
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="🔍 Search by name, mobile, email, club, registration ID..." onkeyup="searchTable()">
