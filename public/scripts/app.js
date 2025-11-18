@@ -2059,7 +2059,6 @@ window.downloadReceiptPDF = downloadReceiptPDF;
 // ===================================================================================
 
 const VALID_COUPONS = {
-    '100': { discount: 100, name: '₹100 OFF' },
     'TESTER9919': { discount: 'FULL-1', name: 'TEST MODE - ₹1 ONLY' }
 };
 

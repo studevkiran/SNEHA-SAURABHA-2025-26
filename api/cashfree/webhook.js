@@ -163,8 +163,9 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error('❌ Webhook processing error:', error);
     
-    // Still return 200 to avoid Cashfree retries
-    return res.status(200).json({
+    // Return 500 to trigger Cashfree retry mechanism
+    // This ensures payment is not lost if registration fails
+    return res.status(500).json({
       success: false,
       error: 'Webhook processing failed'
     });
