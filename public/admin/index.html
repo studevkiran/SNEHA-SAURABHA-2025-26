@@ -216,6 +216,26 @@
             font-weight: 600;
         }
         
+        .badge-imported {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+        
+        .badge-new {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
         .loading {
             text-align: center;
             padding: 60px;
@@ -339,7 +359,6 @@
                 <strong id="total-count">0</strong> Total Registrations
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
-            <button class="export-btn" onclick="openBulkWhatsappModal()" style="background: #25D366; margin-left: 10px;">📱 Bulk WhatsApp</button>
         </div>
 
         
@@ -358,6 +377,7 @@
                         <th class="sortable" onclick="sortTable(6)" data-column="tshirt_size">T-Shirt</th>
                         <th>Amount</th>
                         <th>Status</th>
+                        <th class="sortable" onclick="sortTable(7)" data-column="source">Source ⇅</th>
                         <th style="min-width: 120px;">Actions</th>
                     </tr>
                 </thead>
@@ -740,11 +760,59 @@
             displayRegistrations(filteredRegistrations);
         }
         
+        function cyclicSortSource() {
+            // Three states: Imported (1-689), New (690+), All
+            if (!window.cyclicSortState) window.cyclicSortState = {};
+            if (window.cyclicSortState.source === undefined) window.cyclicSortState.source = -1;
+            
+            const states = ['imported', 'new', 'all'];
+            window.cyclicSortState.source = (window.cyclicSortState.source + 1) % states.length;
+            const currentState = states[window.cyclicSortState.source];
+            
+            console.log(`🔄 Cyclic sort source: showing "${currentState}" (${window.cyclicSortState.source + 1}/${states.length})`);
+            
+            // Filter based on state
+            if (currentState === 'imported') {
+                // Show only 1-689 (imported entries)
+                filteredRegistrations = allRegistrations.filter(reg => {
+                    const regNumber = parseInt((reg.registration_id || '').replace(/\D/g, '')) || 0;
+                    return regNumber >= 1 && regNumber <= 689;
+                });
+            } else if (currentState === 'new') {
+                // Show only 690+ (new registrations)
+                filteredRegistrations = allRegistrations.filter(reg => {
+                    const regNumber = parseInt((reg.registration_id || '').replace(/\D/g, '')) || 0;
+                    return regNumber > 689;
+                });
+            } else {
+                // Show all
+                filteredRegistrations = [...allRegistrations];
+            }
+            
+            // Sort by registration_id within the filtered set
+            filteredRegistrations.sort((a, b) => {
+                const aNum = parseInt((a.registration_id || '').replace(/\D/g, '')) || 0;
+                const bNum = parseInt((b.registration_id || '').replace(/\D/g, '')) || 0;
+                return aNum - bNum;
+            });
+            
+            // Update UI
+            const headers = document.querySelectorAll('th.sortable');
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            
+            displayRegistrations(filteredRegistrations);
+        }
+        
         function sortTable(columnIndex) {
             const headers = document.querySelectorAll('th.sortable');
             const column = headers[columnIndex].getAttribute('data-column');
             
-            // Special cyclic sorting for specific columns
+            // Special cyclic sorting for specific columns (including source)
+            if (column === 'source') {
+                cyclicSortSource();
+                return;
+            }
+            
             if (column === 'meal_preference' || column === 'registration_type' || column === 'club' || column === 'tshirt_size') {
                 cyclicSort(column);
                 return;
@@ -810,7 +878,7 @@
             const tbody = document.getElementById('registrations-body');
             
             if (registrations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
                 return;
             }
             
@@ -819,6 +887,12 @@
                 const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' : 
                                  reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
                 const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
+                
+                // Determine source (Imported vs New)
+                const regNumber = parseInt((reg.registration_id || '').replace(/\D/g, '')) || 0;
+                const isImported = regNumber >= 1 && regNumber <= 689;
+                const sourceLabel = isImported ? '📥 Imported' : '🆕 New';
+                const sourceClass = isImported ? 'badge-imported' : 'badge-new';
                 
                 return `
                     <tr>
@@ -833,6 +907,7 @@
                         <td>${reg.tshirt_size || 'N/A'}</td>
                         <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
                         <td><span class="status-badge ${statusClass}">${reg.payment_status || 'pending'}</span></td>
+                        <td><span class="badge ${sourceClass}">${sourceLabel}</span></td>
                         <td>
                             <button onclick="openEditModalById('${reg.registration_id}')" style="padding: 6px 12px; background: #3B82F6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 4px;">✏️ Edit</button>
                             <button onclick="printReceipt('${reg.order_id || reg.registration_id}')" style="padding: 6px 12px; background: #10B981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">🖨️ Print</button>
