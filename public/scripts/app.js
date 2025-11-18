@@ -240,6 +240,18 @@ async function fetchAndShowRegistration(orderId) {
         const response = await fetch(`/api/registrations/by-order?order_id=${orderId}`);
         const result = await response.json();
         
+        // Handle pending registration (payment received but webhook still processing)
+        if (response.status === 202 && result.pending) {
+            console.log('⏳ Registration pending, will retry in 3 seconds...');
+            alert('✅ Payment received! Processing your registration... Please wait.');
+            
+            // Retry after 3 seconds
+            setTimeout(() => {
+                fetchAndShowRegistration(orderId);
+            }, 3000);
+            return;
+        }
+        
         if (result.success && result.registration) {
             const reg = result.registration;
             

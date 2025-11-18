@@ -1,10 +1,5 @@
 // API: Get registration by order_id (works for Cashfree order_id OR UTR number)
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
+const { query } = require('../../lib/db-neon');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -32,18 +27,29 @@ module.exports = async (req, res) => {
 
     console.log('🔍 Fetching registration by order_id:', order_id);
 
+    // First check if payment attempt exists but registration not created yet
+    const attemptCheck = await query(
+      `SELECT order_id, payment_status, amount FROM payment_attempts WHERE order_id = $1 LIMIT 1`,
+      [order_id]
+    );
+
+    if (attemptCheck.rows.length > 0 && attemptCheck.rows[0].payment_status === 'SUCCESS') {
+      // Payment exists but registration might not be created yet
+      console.log('⚠️ Payment successful but checking registration...');
+    }
+
     // Query by order_id (could be Cashfree order_id or UTR number)
-    const result = await pool.query(
+    const result = await query(
       `SELECT 
         registration_id,
         order_id,
         name,
         email,
         mobile,
-        club,
+        club_name as club,
         zone,
         registration_type,
-        registration_amount,
+        amount as registration_amount,
         meal_preference,
         tshirt_size,
         payment_status,
@@ -59,6 +65,16 @@ module.exports = async (req, res) => {
     );
 
     if (result.rows.length === 0) {
+      // Check if it's in payment_attempts
+      if (attemptCheck.rows.length > 0) {
+        return res.status(202).json({
+          success: false,
+          pending: true,
+          message: 'Payment received. Registration is being processed. Please wait a moment and refresh.',
+          order_id: order_id
+        });
+      }
+      
       return res.status(404).json({
         success: false,
         error: 'Registration not found for this order_id'
