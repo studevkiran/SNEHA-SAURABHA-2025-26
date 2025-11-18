@@ -72,39 +72,37 @@ module.exports = async (req, res) => {
       orderId: registration.order_id
     };
 
-    console.log('📤 Calling WhatsApp API with:', whatsappPayload);
+    // Call the WhatsApp API via HTTP request (using node-fetch or axios)
+    const axios = require('axios');
+    const whatsappApiUrl = `https://sneha2026.vercel.app/api/send-whatsapp-confirmation`;
+    
+    console.log('📤 Calling WhatsApp API at:', whatsappApiUrl);
 
-    // Import and call the WhatsApp confirmation handler
-    const sendWhatsAppConfirmation = require('./send-whatsapp-confirmation');
-    
-    // Create a mock request/response to call the handler
-    const mockReq = {
-      method: 'POST',
-      body: whatsappPayload
-    };
-    
-    const mockRes = {
-      status: (code) => ({
-        json: (data) => {
-          if (code === 200 && data.success) {
-            return res.status(200).json({
-              success: true,
-              message: 'WhatsApp confirmation sent successfully',
-              registration_id: registration.registration_id,
-              mobile: registration.mobile
-            });
-          } else {
-            return res.status(500).json({
-              success: false,
-              error: data.message || 'Failed to send WhatsApp'
-            });
-          }
-        }
-      })
-    };
-    
-    // Call the WhatsApp handler
-    await sendWhatsAppConfirmation(mockReq, mockRes);
+    const whatsappResponse = await axios.post(whatsappApiUrl, whatsappPayload, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      validateStatus: () => true // Don't throw on any status
+    });
+
+    const whatsappResult = whatsappResponse.data;
+
+    if (whatsappResponse.status === 200 && whatsappResult.success) {
+      console.log('✅ WhatsApp sent successfully to:', registration.mobile);
+      
+      return res.status(200).json({
+        success: true,
+        message: 'WhatsApp confirmation sent successfully',
+        registration_id: registration.registration_id,
+        mobile: registration.mobile
+      });
+    } else {
+      console.error('❌ WhatsApp sending failed:', whatsappResult);
+      return res.status(500).json({
+        success: false,
+        error: whatsappResult.message || 'Failed to send WhatsApp'
+      });
+    }
 
   } catch (error) {
     console.error('❌ Error resending WhatsApp:', error);

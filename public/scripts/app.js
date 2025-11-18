@@ -248,6 +248,18 @@ async function fetchAndShowRegistration(orderId) {
         // Handle pending registration (payment received but webhook still processing)
         if (response.status === 202 && result.pending) {
             console.log('⏳ Registration pending, will retry in 3 seconds...');
+            
+            // After 30 seconds (10 retries), show recovery option
+            if (!window.retryCount) window.retryCount = 0;
+            window.retryCount++;
+            
+            if (window.retryCount >= 10) {
+                alert('⚠️ Registration is taking longer than expected.\n\nYour payment was successful!\n\nPlease contact support with your Order ID:\n' + orderId + '\n\nOr use the Payment Recovery tool in admin panel.');
+                window.retryCount = 0;
+                showScreen('screen-home');
+                return;
+            }
+            
             alert('✅ Payment received! Processing your registration... Please wait.');
             
             // Retry after 3 seconds
@@ -256,6 +268,9 @@ async function fetchAndShowRegistration(orderId) {
             }, 3000);
             return;
         }
+        
+        // Reset retry count on success
+        window.retryCount = 0;
         
         if (result.success && result.registration) {
             const reg = result.registration;
