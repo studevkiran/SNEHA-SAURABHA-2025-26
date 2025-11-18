@@ -2,8 +2,10 @@
 // Handles payment initiation and verification with Cashfree API
 
 const CashfreePaymentService = {
-  // API base URL (update after Vercel deployment)
-  apiBaseUrl: window.location.origin,
+  // API base URL (route to Vercel when on custom domain)
+  apiBaseUrl: (location.hostname.includes('sneha2026.in')) 
+    ? 'https://sneha2026.vercel.app' 
+    : window.location.origin,
 
   /**
    * Initialize payment with Cashfree

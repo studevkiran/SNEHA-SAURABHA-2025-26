@@ -13,6 +13,11 @@ let registrationData = {
     upiId: ''
 };
 
+// ===== API BASE (handles custom domain vs Vercel) =====
+const API_BASE = (location.hostname.includes('sneha2026.in'))
+  ? 'https://sneha2026.vercel.app'
+  : '';
+
 // Embedded fallback list of clubs (used when fetching local file via file:// is blocked by browser)
 const EMBEDDED_CLUBS = [
     { "id": 1, "name": "B C Road City" },
@@ -237,7 +242,7 @@ async function fetchAndShowRegistration(orderId) {
     try {
         console.log('🔍 Fetching registration for order_id:', orderId);
         
-        const response = await fetch(`/api/registrations/by-order?order_id=${orderId}`);
+        const response = await fetch(`${API_BASE}/api/registrations/by-order?order_id=${orderId}`);
         const result = await response.json();
         
         // Handle pending registration (payment received but webhook still processing)
@@ -753,7 +758,7 @@ async function fetchMembersByClub(clubName) {
         memberSearch.placeholder = 'Loading members...';
         memberSearch.disabled = true;
         
-        const response = await fetch(`/api/club-members?clubName=${encodeURIComponent(clubName)}`);
+        const response = await fetch(`${API_BASE}/api/club-members?clubName=${encodeURIComponent(clubName)}`);
         const data = await response.json();
         
         if (data.success && data.members.length > 0) {
@@ -1222,7 +1227,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         }
         
         // Call backend to verify payment
-        const response = await fetch(`/api/cashfree/verify?orderId=${orderId}`);
+        const response = await fetch(`${API_BASE}/api/cashfree/verify?orderId=${orderId}`);
         
         console.log('📡 Response status:', response.status);
         console.log('📡 Response OK:', response.ok);
