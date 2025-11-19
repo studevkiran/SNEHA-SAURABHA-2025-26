@@ -1007,18 +1007,8 @@
                 return;
             }
             
-            // Filter out test entries (by status, mobile, email, and name patterns)
-            const validRegs = allRegistrations.filter(r => {
-                // Exclude by payment status
-                if (r.payment_status === 'test' || r.payment_status === 'manual-B') return false;
-                // Exclude test mobile numbers
-                if (r.mobile === '0000000001' || r.mobile === '9999999999') return false;
-                // Exclude test emails
-                if (r.email && (r.email.includes('test@') || r.email === 'test@test.com')) return false;
-                // Exclude TEST names
-                if (r.name && r.name.toUpperCase().includes('TEST ENTRY')) return false;
-                return true;
-            });
+            // DON'T filter - export ALL registrations including test entries
+            const allRegs = [...allRegistrations];
             
             // Create workbook
             const wb = XLSX.utils.book_new();
@@ -1029,7 +1019,7 @@
                 ['Generated on:', new Date().toLocaleString('en-IN')],
                 [''],
                 ['OVERALL STATISTICS'],
-                ['Total Registrations:', validRegs.length],
+                ['Total Registrations:', allRegs.length],
                 [''],
                 ['REGISTRATION TYPE BREAKDOWN'],
                 ['Type', 'Count']
@@ -1037,7 +1027,7 @@
             
             // Calculate type-wise breakdown
             const typeStats = {};
-            validRegs.forEach(r => {
+            allRegs.forEach(r => {
                 const type = r.registration_type || 'Unknown';
                 if (!typeStats[type]) {
                     typeStats[type] = { count: 0 };
@@ -1055,7 +1045,7 @@
             
             // Calculate zone-wise breakdown
             for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                const zoneRegs = validRegs.filter(r => {
+                const zoneRegs = allRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
                     return m && m[1] == zoneNum;
                 });
@@ -1074,51 +1064,59 @@
             XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
             
             // === SHEET 2: All Registrations ===
-            // Sort by registration_id to get proper sequence (0001, 0002, 0003...)
-            const sortedRegs = [...validRegs].sort((a, b) => {
-                const aNum = parseInt((a.registration_id || '').match(/\d+$/)?.[0] || '0');
-                const bNum = parseInt((b.registration_id || '').match(/\d+$/)?.[0] || '0');
+            // Sort by registration_id number to get proper sequence (1, 2, 3...)
+            const sortedRegs = [...allRegs].sort((a, b) => {
+                const aNum = parseInt((a.registration_id || '').replace(/\D/g, '')) || 0;
+                const bNum = parseInt((b.registration_id || '').replace(/\D/g, '')) || 0;
                 return aNum - bNum;
             });
             
-            const excelData = sortedRegs.map((reg, index) => ({
-                'S.No': index + 1,
-                'Registration ID': reg.registration_id,
-                'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
-                'Name': reg.name,
-                'Mobile': reg.mobile,
-                'Email': reg.email || 'N/A',
-                'Registration Type': reg.registration_type,
-                'Club Name': reg.club || 'N/A',
-                'Zone': reg.zone || 'Unmapped',
-                'AG Name': reg.zone_ag_name || 'N/A',
-                'AG Mobile': reg.zone_ag_mobile || 'N/A',
-                'Meal': reg.meal_preference,
-                'T-Shirt': reg.tshirt_size || 'N/A',
-                'Payment Status': reg.payment_status || 'pending',
-                'Order ID / UTR': reg.order_id || 'N/A',
-                'Transaction ID': reg.transaction_id || 'N/A',
-                'UPI ID': reg.upi_id || 'N/A',
-                'Edit Remarks': reg.edit_remarks || 'Not edited',
-                'Last Updated': reg.updated_at ? new Date(reg.updated_at).toLocaleString('en-IN') : 'N/A'
-            }));
+            // Map S.No to Registration ID number (not index)
+            const excelData = sortedRegs.map((reg) => {
+                const regNumber = parseInt((reg.registration_id || '').replace(/\D/g, '')) || 0;
+                const isImported = regNumber >= 1 && regNumber <= 689;
+                const source = isImported ? 'Imported (1-689)' : 'New Registration';
+                
+                return {
+                    'S.No': regNumber, // Use registration number as S.No
+                    'Registration ID': reg.registration_id,
+                    'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
+                    'Name': reg.name,
+                    'Mobile': reg.mobile,
+                    'Email': reg.email || 'N/A',
+                    'Registration Type': reg.registration_type,
+                    'Club Name': reg.club || 'N/A',
+                    'Zone': reg.zone || 'Unmapped',
+                    'AG Name': reg.zone_ag_name || 'N/A',
+                    'AG Mobile': reg.zone_ag_mobile || 'N/A',
+                    'Meal': reg.meal_preference,
+                    'T-Shirt': reg.tshirt_size || 'N/A',
+                    'Payment Status': reg.payment_status || 'pending',
+                    'Source': source,
+                    'Order ID / UTR': reg.order_id || 'N/A',
+                    'Transaction ID': reg.transaction_id || 'N/A',
+                    'UPI ID': reg.upi_id || 'N/A',
+                    'Edit Remarks': reg.edit_remarks || 'Not edited',
+                    'Last Updated': reg.updated_at ? new Date(reg.updated_at).toLocaleString('en-IN') : 'N/A'
+                };
+            });
             
             const ws = XLSX.utils.json_to_sheet(excelData);
             ws['!cols'] = [
                 { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 }, { wch: 15 }, 
                 { wch: 30 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, 
-                { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 15 }, { wch: 30 },
-                { wch: 25 }, { wch: 20 }, { wch: 35 }, { wch: 20 }
+                { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 15 }, { wch: 20 },
+                { wch: 30 }, { wch: 25 }, { wch: 20 }, { wch: 35 }, { wch: 20 }
             ];
             
             // Add autofilter
-            ws['!autofilter'] = { ref: `A1:S${excelData.length + 1}` };
+            ws['!autofilter'] = { ref: `A1:T${excelData.length + 1}` };
             
             XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
             
             // === SHEETS 3-11: Zone-wise Details ===
             for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                const zoneRegs = validRegs.filter(r => {
+                const zoneRegs = allRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
                     return m && m[1] == zoneNum;
                 });
@@ -1198,7 +1196,7 @@
             // Download
             XLSX.writeFile(wb, filename);
             console.log('✅ Enhanced Excel exported with complete breakdown:', filename);
-            alert(`✅ Excel file downloaded!\n\nFile: ${filename}\nTotal Registrations: ${validRegs.length}`);
+            alert(`✅ Excel file downloaded!\n\nFile: ${filename}\nTotal Registrations: ${allRegs.length}`);
         }
         
         function exportZoneWise() {
@@ -1207,18 +1205,8 @@
                 return;
             }
             
-            // Filter out test entries (by status, mobile, email, and name patterns)
-            const validRegs = allRegistrations.filter(r => {
-                // Exclude by payment status
-                if (r.payment_status === 'test' || r.payment_status === 'manual-B') return false;
-                // Exclude test mobile numbers
-                if (r.mobile === '0000000001' || r.mobile === '9999999999') return false;
-                // Exclude test emails
-                if (r.email && (r.email.includes('test@') || r.email === 'test@test.com')) return false;
-                // Exclude TEST names
-                if (r.name && r.name.toUpperCase().includes('TEST ENTRY')) return false;
-                return true;
-            });
+            // Use ALL registrations - no filtering
+            const allRegs = allRegistrations;
             
             // Create workbook
             const wb = XLSX.utils.book_new();
@@ -1234,7 +1222,7 @@
             let grandTotal = 0;
             
             for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                const zoneRegs = validRegs.filter(r => {
+                const zoneRegs = allRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
                     return m && m[1] == zoneNum;
                 });
