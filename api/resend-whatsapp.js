@@ -1,7 +1,7 @@
 // API to resend WhatsApp confirmation
-const { query } = require('../lib/db-neon');
+import Airtable from 'airtable';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -27,87 +27,92 @@ module.exports = async (req, res) => {
 
     console.log('📲 Resending WhatsApp for:', { registration_id, order_id });
 
+    // Connect to Airtable
+    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+    const table = base(process.env.AIRTABLE_TABLE_NAME || 'registrations');
+
     // Fetch registration details
-    let registration;
+    let registrationRecord;
+    let filterFormula;
+
     if (registration_id) {
-      const result = await query(
-        'SELECT * FROM registrations WHERE registration_id = $1',
-        [registration_id]
-      );
-      registration = result.rows[0];
+      filterFormula = `{Registration ID} = '${registration_id}'`;
     } else {
-      const result = await query(
-        'SELECT * FROM registrations WHERE order_id = $1',
-        [order_id]
-      );
-      registration = result.rows[0];
+      filterFormula = `{Order ID} = '${order_id}'`;
     }
 
-    if (!registration) {
+    const records = await table.select({
+      filterByFormula: filterFormula,
+      maxRecords: 1
+    }).firstPage();
+
+    if (!records || records.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'Registration not found'
       });
     }
 
+    registrationRecord = records[0];
+    const fields = registrationRecord.fields;
+
     // Check if payment is completed (handle various statuses - case insensitive)
-    const paymentStatus = (registration.payment_status || '').toLowerCase();
+    const paymentStatus = (fields['Payment Status'] || '').toUpperCase();
     const validStatuses = [
-      'success',      // Webhook/API created
-      'paid',         // Alternative success status
-      'manual',       // Generic manual
-      'manual-s',     // Manual - Sneha (mallige2830)
-      'manual-b',     // Manual - Bangalore (asha1990)
-      'manual-p',     // Manual - Prahlad (prahlad1966)
-      'imported'      // Imported from Excel
+      'SUCCESS',      // Webhook/API created
+      'PAID',         // Alternative success status
+      'MANUAL',       // Generic manual
+      'MANUAL-S',     // Manual - Sneha (mallige2830)
+      'MANUAL-B',     // Manual - Bangalore (asha1990)
+      'MANUAL-P',     // Manual - Prahlad (prahlad1966)
+      'IMPORTED',     // Imported from Excel
+      'TEST'          // Test entries
     ];
     
     if (!validStatuses.includes(paymentStatus)) {
       return res.status(400).json({
         success: false,
-        error: `Cannot resend WhatsApp for payment status: ${registration.payment_status}. Only completed payments can receive WhatsApp confirmation.`
+        error: `Cannot resend WhatsApp for payment status: ${fields['Payment Status']}. Only completed payments can receive WhatsApp confirmation.`
       });
     }
     
-    console.log('✅ Payment status check passed:', registration.payment_status);
+    console.log('✅ Payment status check passed:', fields['Payment Status']);
 
     // Call the send-whatsapp-confirmation API internally
     const whatsappPayload = {
-      name: registration.name,
-      mobile: registration.mobile,
-      email: registration.email || 'Not Provided',
-      registrationId: registration.registration_id,
-      registrationType: registration.registration_type,
-      amount: parseFloat(registration.registration_amount || 0),
-      mealPreference: registration.meal_preference,
-      tshirtSize: registration.tshirt_size,
-      clubName: registration.club,
-      orderId: registration.order_id
+      name: fields['Name'],
+      mobile: fields['Mobile']?.toString().replace(/\D/g, ''),
+      email: fields['Email'] || 'Not Provided',
+      registrationId: fields['Registration ID'],
+      registrationType: fields['Registration Type'],
+      amount: parseFloat(fields['Amount']?.toString().replace(/[₹,]/g, '') || 0),
+      mealPreference: fields['Meal Preference'],
+      tshirtSize: fields['T-Shirt Size'],
+      clubName: fields['Club Name'],
+      orderId: fields['Order ID']
     };
 
-    // Call the WhatsApp API via HTTP request (using node-fetch or axios)
-    const axios = require('axios');
-    const whatsappApiUrl = `https://sneha2026.vercel.app/api/send-whatsapp-confirmation`;
-    
-    console.log('📤 Calling WhatsApp API at:', whatsappApiUrl);
+    console.log('📤 Calling WhatsApp API with payload:', whatsappPayload);
 
-    const whatsappResponse = await axios.post(whatsappApiUrl, whatsappPayload, {
+    // Call WhatsApp API using fetch
+    const whatsappResponse = await fetch('https://sneha2026.in/api/send-whatsapp-confirmation', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      validateStatus: () => true // Don't throw on any status
+      body: JSON.stringify(whatsappPayload)
     });
 
-    const whatsappResult = whatsappResponse.data;
+    const whatsappResult = await whatsappResponse.json();
 
-    if (whatsappResponse.status === 200 && whatsappResult.success) {
-      console.log('✅ WhatsApp sent successfully to:', registration.mobile);
+    if (whatsappResponse.ok && whatsappResult.success) {
+      console.log('✅ WhatsApp sent successfully to:', whatsappPayload.mobile);
       
       return res.status(200).json({
         success: true,
         message: 'WhatsApp confirmation sent successfully',
-        registration_id: registration.registration_id,
-        mobile: registration.mobile
+        registration_id: fields['Registration ID'],
+        mobile: whatsappPayload.mobile
       });
     } else {
       console.error('❌ WhatsApp sending failed:', whatsappResult);
@@ -124,4 +129,4 @@ module.exports = async (req, res) => {
       error: error.message || 'Failed to resend WhatsApp'
     });
   }
-};
+}

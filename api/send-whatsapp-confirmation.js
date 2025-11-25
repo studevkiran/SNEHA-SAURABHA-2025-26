@@ -141,12 +141,34 @@ async function sendViaGupshup(res, data) {
   });
 }
 
+// Rate limiter to prevent frequency capping
+const rateLimiter = {
+  lastSentTime: 0,
+  minDelay: 2000, // 2 seconds between messages (30 msgs/min max)
+  
+  async wait() {
+    const now = Date.now();
+    const timeSinceLastSent = now - this.lastSentTime;
+    
+    if (timeSinceLastSent < this.minDelay) {
+      const waitTime = this.minDelay - timeSinceLastSent;
+      console.log(`⏳ Rate limiting: waiting ${waitTime}ms before sending...`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+    
+    this.lastSentTime = Date.now();
+  }
+};
+
 // Infobip Implementation (Template API for trial)
 async function sendViaInfobip(registrationData) {
   const { name, mobile, email, registrationId, type, amount, meal, tshirtSize, club, orderId, receiptNo: providedReceipt } = registrationData;
 
   console.log('📱 Infobip: Sending WhatsApp to', mobile);
   console.log('📋 Registration Data:', { name, registrationId, type, amount, meal, tshirtSize, club, orderId });
+  
+  // Apply rate limiting
+  await rateLimiter.wait();
 
   // Infobip WhatsApp Template API
   const infobipUrl = `https://${process.env.INFOBIP_BASE_URL}/whatsapp/1/message/template`;
@@ -201,26 +223,63 @@ async function sendViaInfobip(registrationData) {
     ]
   };  console.log('📤 Sending to Infobip:', JSON.stringify(messageData, null, 2));
 
-  const response = await fetch(infobipUrl, {
-    method: 'POST',
-    headers: {
-      'Authorization': `App ${process.env.INFOBIP_API_KEY}`,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify(messageData)
-  });
-
-  const result = await response.json();
+  // Retry logic with exponential backoff
+  let lastError;
+  const maxRetries = 3;
   
-  console.log('📥 Infobip Response Status:', response.status);
-  console.log('📥 Infobip Response:', JSON.stringify(result, null, 2));
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(infobipUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `App ${process.env.INFOBIP_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(messageData)
+      });
 
-  if (!response.ok) {
-    console.error('❌ Infobip API error:', result);
-    throw new Error(`Infobip API error: ${JSON.stringify(result)}`);
+      const result = await response.json();
+      
+      console.log('📥 Infobip Response Status:', response.status);
+      console.log('📥 Infobip Response:', JSON.stringify(result, null, 2));
+
+      // Check for rate limit error (429 or error code 7032)
+      if (response.status === 429 || 
+          (result.messages && result.messages[0]?.status?.groupName === 'UNDELIVERABLE' && 
+           result.messages[0]?.status?.description?.includes('7032'))) {
+        
+        const retryAfter = response.headers.get('Retry-After') || (attempt * 5); // exponential backoff
+        console.log(`⚠️ Rate limit hit (attempt ${attempt}/${maxRetries}). Waiting ${retryAfter}s...`);
+        
+        if (attempt < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+          continue; // Retry
+        } else {
+          throw new Error(`Rate limit exceeded after ${maxRetries} attempts. Please try again later.`);
+        }
+      }
+
+      if (!response.ok) {
+        console.error('❌ Infobip API error:', result);
+        throw new Error(`Infobip API error: ${JSON.stringify(result)}`);
+      }
+
+      console.log('✅ WhatsApp message sent successfully via Infobip');
+      return result;
+      
+    } catch (error) {
+      lastError = error;
+      console.error(`❌ Attempt ${attempt}/${maxRetries} failed:`, error.message);
+      
+      if (attempt < maxRetries) {
+        const backoffTime = attempt * 3; // 3s, 6s, 9s
+        console.log(`⏳ Retrying in ${backoffTime}s...`);
+        await new Promise(resolve => setTimeout(resolve, backoffTime * 1000));
+      }
+    }
   }
-
-  console.log('✅ WhatsApp message sent successfully via Infobip');
-  return result;
+  
+  // All retries failed
+  throw lastError || new Error('Failed to send WhatsApp after all retries');
 }
