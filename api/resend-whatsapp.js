@@ -1,7 +1,7 @@
 // API to resend WhatsApp confirmation
-const { getRegistrationById, getRegistrationByOrderId } = require('../../lib/db-functions');
+const { query } = require('../lib/db-neon');
 
-module.exports = async function handler(req, res) {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -27,13 +27,20 @@ module.exports = async function handler(req, res) {
 
     console.log('📲 Resending WhatsApp for:', { registration_id, order_id });
 
-    // Fetch registration from PostgreSQL
+    // Fetch registration details
     let registration;
-    
     if (registration_id) {
-      registration = await getRegistrationById(registration_id);
+      const result = await query(
+        'SELECT * FROM registrations WHERE registration_id = $1',
+        [registration_id]
+      );
+      registration = result.rows[0];
     } else {
-      registration = await getRegistrationByOrderId(order_id);
+      const result = await query(
+        'SELECT * FROM registrations WHERE order_id = $1',
+        [order_id]
+      );
+      registration = result.rows[0];
     }
 
     if (!registration) {
@@ -43,9 +50,18 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Check if payment is completed
-    const paymentStatus = (registration.payment_status || '').toUpperCase();
-    const validStatuses = ['SUCCESS', 'PAID', 'MANUAL', 'MANUAL-S', 'MANUAL-B', 'MANUAL-P', 'IMPORTED', 'TEST'];
+    // Check if payment is completed (handle various statuses - case insensitive)
+    const paymentStatus = (registration.payment_status || '').toLowerCase();
+    const validStatuses = [
+      'success',      // Webhook/API created
+      'paid',         // Alternative success status
+      'manual',       // Generic manual
+      'manual-s',     // Manual - Sneha (mallige2830)
+      'manual-b',     // Manual - Bangalore (asha1990)
+      'manual-p',     // Manual - Prahlad (prahlad1966)
+      'imported',     // Imported from Excel
+      'test'          // Test entries
+    ];
     
     if (!validStatuses.includes(paymentStatus)) {
       return res.status(400).json({
@@ -59,14 +75,14 @@ module.exports = async function handler(req, res) {
     // Call the send-whatsapp-confirmation API internally
     const whatsappPayload = {
       name: registration.name,
-      mobile: registration.mobile?.toString().replace(/\D/g, ''),
+      mobile: registration.mobile,
       email: registration.email || 'Not Provided',
       registrationId: registration.registration_id,
       registrationType: registration.registration_type,
-      amount: parseFloat(registration.amount || registration.registration_amount || 0),
+      amount: parseFloat(registration.registration_amount || 0),
       mealPreference: registration.meal_preference,
       tshirtSize: registration.tshirt_size,
-      clubName: registration.club_name || registration.club,
+      clubName: registration.club,
       orderId: registration.order_id
     };
 
@@ -84,13 +100,13 @@ module.exports = async function handler(req, res) {
     const whatsappResult = await whatsappResponse.json();
 
     if (whatsappResponse.ok && whatsappResult.success) {
-      console.log('✅ WhatsApp sent successfully to:', whatsappPayload.mobile);
+      console.log('✅ WhatsApp sent successfully to:', registration.mobile);
       
       return res.status(200).json({
         success: true,
         message: 'WhatsApp confirmation sent successfully',
         registration_id: registration.registration_id,
-        mobile: whatsappPayload.mobile
+        mobile: registration.mobile
       });
     } else {
       console.error('❌ WhatsApp sending failed:', whatsappResult);
@@ -107,4 +123,4 @@ module.exports = async function handler(req, res) {
       error: error.message || 'Failed to resend WhatsApp'
     });
   }
-}
+};

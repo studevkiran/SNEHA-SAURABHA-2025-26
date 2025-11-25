@@ -1,9 +1,9 @@
 // api/admin/send-batch-whatsapp.js
 // Send WhatsApp confirmations in batches with rate limiting
 
-const { Pool } = require('pg');
+const { query } = require('../../lib/db-neon');
 
-module.exports = async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
@@ -11,32 +11,25 @@ module.exports = async function handler(req, res) {
   try {
     const { date, batchSize = 10, delayBetweenBatches = 30000 } = req.body;
 
-    // Connect to PostgreSQL
-    const pool = new Pool({
-      connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
-      ssl: { rejectUnauthorized: false }
-    });
-
     // Build SQL query
-    let query = `SELECT * FROM registrations WHERE payment_status IN ('SUCCESS', 'PAID', 'MANUAL', 'MANUAL-S', 'MANUAL-B', 'MANUAL-P', 'IMPORTED', 'TEST')`;
+    let sqlQuery = `SELECT * FROM registrations WHERE payment_status IN ('SUCCESS', 'PAID', 'Manual', 'MANUAL-S', 'MANUAL-B', 'MANUAL-P', 'Imported', 'TEST')`;
     const params = [];
     
     if (date) {
-      query += ` AND DATE(created_at) = $1`;
+      sqlQuery += ` AND DATE(created_at) = $1`;
       params.push(date);
     }
     
-    query += ` ORDER BY created_at DESC`;
+    sqlQuery += ` ORDER BY created_at DESC`;
 
-    console.log('📊 Fetching registrations with query:', query, params);
+    console.log('📊 Fetching registrations with query:', sqlQuery, params);
 
-    const result = await pool.query(query, params);
+    const result = await query(sqlQuery, params);
     const registrations = result.rows;
 
     console.log(`📋 Found ${registrations.length} registrations to process`);
 
     if (registrations.length === 0) {
-      await pool.end();
       return res.status(200).json({
         success: true,
         message: 'No registrations found to send WhatsApp',
@@ -129,8 +122,6 @@ module.exports = async function handler(req, res) {
         await new Promise(resolve => setTimeout(resolve, delayBetweenBatches));
       }
     }
-
-    await pool.end();
 
     console.log('\n✅ Batch processing complete');
     console.log(`📊 Results: ${results.sent} sent, ${results.failed} failed out of ${results.total} total`);
