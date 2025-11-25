@@ -1,7 +1,7 @@
 // api/admin/send-batch-whatsapp.js
 // Send WhatsApp confirmations in batches with rate limiting
 
-const Airtable = require('airtable');
+const { Pool } = require('pg');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -9,30 +9,34 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { date, batchSize = 10, delayBetweenBatches = 30000 } = req.body; // 30s between batches
+    const { date, batchSize = 10, delayBetweenBatches = 30000 } = req.body;
 
-    // Connect to Airtable
-    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
-    const table = base(process.env.AIRTABLE_TABLE_NAME || 'registrations');
+    // Connect to PostgreSQL
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
+      ssl: { rejectUnauthorized: false }
+    });
 
-    // Build filter formula
-    let filterFormula = `{Payment Status} = 'SUCCESS'`;
+    // Build SQL query
+    let query = `SELECT * FROM registrations WHERE payment_status IN ('SUCCESS', 'PAID', 'MANUAL', 'MANUAL-S', 'MANUAL-B', 'MANUAL-P', 'IMPORTED', 'TEST')`;
+    const params = [];
+    
     if (date) {
-      // Filter by specific date
-      filterFormula = `AND(${filterFormula}, IS_SAME({Registration Date}, '${date}', 'day'))`;
+      query += ` AND DATE(created_at) = $1`;
+      params.push(date);
     }
+    
+    query += ` ORDER BY created_at DESC`;
 
-    console.log('📊 Fetching registrations with filter:', filterFormula);
+    console.log('📊 Fetching registrations with query:', query, params);
 
-    // Fetch all successful registrations
-    const records = await table.select({
-      filterByFormula: filterFormula,
-      sort: [{ field: 'Registration Date', direction: 'desc' }]
-    }).all();
+    const result = await pool.query(query, params);
+    const registrations = result.rows;
 
-    console.log(`📋 Found ${records.length} registrations to process`);
+    console.log(`📋 Found ${registrations.length} registrations to process`);
 
-    if (records.length === 0) {
+    if (registrations.length === 0) {
+      await pool.end();
       return res.status(200).json({
         success: true,
         message: 'No registrations found to send WhatsApp',
@@ -43,25 +47,24 @@ module.exports = async function handler(req, res) {
 
     // Process in batches
     const results = {
-      total: records.length,
+      total: registrations.length,
       sent: 0,
       failed: 0,
       errors: []
     };
 
-    for (let i = 0; i < records.length; i += batchSize) {
-      const batch = records.slice(i, i + batchSize);
+    for (let i = 0; i < registrations.length; i += batchSize) {
+      const batch = registrations.slice(i, i + batchSize);
       const batchNum = Math.floor(i / batchSize) + 1;
-      const totalBatches = Math.ceil(records.length / batchSize);
+      const totalBatches = Math.ceil(registrations.length / batchSize);
 
       console.log(`\n📦 Processing batch ${batchNum}/${totalBatches} (${batch.length} messages)`);
 
       // Send all messages in this batch (with internal rate limiting)
-      const batchPromises = batch.map(async (record) => {
+      const batchPromises = batch.map(async (registration) => {
         try {
-          const fields = record.fields;
-          const registrationId = fields['Registration ID'];
-          const mobile = fields['Mobile']?.toString().replace(/\D/g, '');
+          const registrationId = registration.registration_id;
+          const mobile = registration.mobile?.toString().replace(/\D/g, '');
 
           if (!mobile || mobile.length < 10) {
             console.log(`⚠️ Skipping ${registrationId} - invalid mobile`);
@@ -75,16 +78,16 @@ module.exports = async function handler(req, res) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              name: fields['Name'],
+              name: registration.name,
               mobile: mobile,
-              email: fields['Email'] || 'Not Provided',
+              email: registration.email || 'Not Provided',
               registrationId: registrationId,
-              registrationType: fields['Registration Type'],
-              amount: parseFloat(fields['Amount']?.toString().replace(/[₹,]/g, '') || 0),
-              mealPreference: fields['Meal Preference'],
-              tshirtSize: fields['T-Shirt Size'],
-              clubName: fields['Club Name'],
-              orderId: fields['Order ID'] || registrationId
+              registrationType: registration.registration_type,
+              amount: parseFloat(registration.amount || registration.registration_amount || 0),
+              mealPreference: registration.meal_preference,
+              tshirtSize: registration.tshirt_size,
+              clubName: registration.club_name || registration.club,
+              orderId: registration.order_id || registrationId
             })
           });
 
@@ -107,10 +110,10 @@ module.exports = async function handler(req, res) {
           await new Promise(resolve => setTimeout(resolve, 2000)); // 2s between each
 
         } catch (error) {
-          console.error(`❌ Error sending to ${record.fields['Registration ID']}:`, error.message);
+          console.error(`❌ Error sending to ${registration.registration_id}:`, error.message);
           results.failed++;
           results.errors.push({ 
-            id: record.fields['Registration ID'], 
+            id: registration.registration_id, 
             error: error.message 
           });
         }
@@ -120,12 +123,14 @@ module.exports = async function handler(req, res) {
       await Promise.all(batchPromises);
 
       // Wait between batches (except for last batch)
-      if (i + batchSize < records.length) {
+      if (i + batchSize < registrations.length) {
         const waitTime = Math.floor(delayBetweenBatches / 1000);
         console.log(`\n⏳ Waiting ${waitTime}s before next batch...`);
         await new Promise(resolve => setTimeout(resolve, delayBetweenBatches));
       }
     }
+
+    await pool.end();
 
     console.log('\n✅ Batch processing complete');
     console.log(`📊 Results: ${results.sent} sent, ${results.failed} failed out of ${results.total} total`);

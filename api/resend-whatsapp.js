@@ -1,5 +1,5 @@
 // API to resend WhatsApp confirmation
-const Airtable = require('airtable');
+const { getRegistrationById, getRegistrationByOrderId } = require('../../lib/db-functions');
 
 module.exports = async function handler(req, res) {
   // Enable CORS
@@ -27,69 +27,47 @@ module.exports = async function handler(req, res) {
 
     console.log('📲 Resending WhatsApp for:', { registration_id, order_id });
 
-    // Connect to Airtable
-    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
-    const table = base(process.env.AIRTABLE_TABLE_NAME || 'registrations');
-
-    // Fetch registration details
-    let registrationRecord;
-    let filterFormula;
-
+    // Fetch registration from PostgreSQL
+    let registration;
+    
     if (registration_id) {
-      filterFormula = `{Registration ID} = '${registration_id}'`;
+      registration = await getRegistrationById(registration_id);
     } else {
-      filterFormula = `{Order ID} = '${order_id}'`;
+      registration = await getRegistrationByOrderId(order_id);
     }
 
-    const records = await table.select({
-      filterByFormula: filterFormula,
-      maxRecords: 1
-    }).firstPage();
-
-    if (!records || records.length === 0) {
+    if (!registration) {
       return res.status(404).json({
         success: false,
         error: 'Registration not found'
       });
     }
 
-    registrationRecord = records[0];
-    const fields = registrationRecord.fields;
-
-    // Check if payment is completed (handle various statuses - case insensitive)
-    const paymentStatus = (fields['Payment Status'] || '').toUpperCase();
-    const validStatuses = [
-      'SUCCESS',      // Webhook/API created
-      'PAID',         // Alternative success status
-      'MANUAL',       // Generic manual
-      'MANUAL-S',     // Manual - Sneha (mallige2830)
-      'MANUAL-B',     // Manual - Bangalore (asha1990)
-      'MANUAL-P',     // Manual - Prahlad (prahlad1966)
-      'IMPORTED',     // Imported from Excel
-      'TEST'          // Test entries
-    ];
+    // Check if payment is completed
+    const paymentStatus = (registration.payment_status || '').toUpperCase();
+    const validStatuses = ['SUCCESS', 'PAID', 'MANUAL', 'MANUAL-S', 'MANUAL-B', 'MANUAL-P', 'IMPORTED', 'TEST'];
     
     if (!validStatuses.includes(paymentStatus)) {
       return res.status(400).json({
         success: false,
-        error: `Cannot resend WhatsApp for payment status: ${fields['Payment Status']}. Only completed payments can receive WhatsApp confirmation.`
+        error: `Cannot resend WhatsApp for payment status: ${registration.payment_status}. Only completed payments can receive WhatsApp confirmation.`
       });
     }
     
-    console.log('✅ Payment status check passed:', fields['Payment Status']);
+    console.log('✅ Payment status check passed:', registration.payment_status);
 
     // Call the send-whatsapp-confirmation API internally
     const whatsappPayload = {
-      name: fields['Name'],
-      mobile: fields['Mobile']?.toString().replace(/\D/g, ''),
-      email: fields['Email'] || 'Not Provided',
-      registrationId: fields['Registration ID'],
-      registrationType: fields['Registration Type'],
-      amount: parseFloat(fields['Amount']?.toString().replace(/[₹,]/g, '') || 0),
-      mealPreference: fields['Meal Preference'],
-      tshirtSize: fields['T-Shirt Size'],
-      clubName: fields['Club Name'],
-      orderId: fields['Order ID']
+      name: registration.name,
+      mobile: registration.mobile?.toString().replace(/\D/g, ''),
+      email: registration.email || 'Not Provided',
+      registrationId: registration.registration_id,
+      registrationType: registration.registration_type,
+      amount: parseFloat(registration.amount || registration.registration_amount || 0),
+      mealPreference: registration.meal_preference,
+      tshirtSize: registration.tshirt_size,
+      clubName: registration.club_name || registration.club,
+      orderId: registration.order_id
     };
 
     console.log('📤 Calling WhatsApp API with payload:', whatsappPayload);
@@ -111,7 +89,7 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({
         success: true,
         message: 'WhatsApp confirmation sent successfully',
-        registration_id: fields['Registration ID'],
+        registration_id: registration.registration_id,
         mobile: whatsappPayload.mobile
       });
     } else {
