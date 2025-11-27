@@ -238,8 +238,11 @@
             <button class="btn-verify" onclick="verifyClubs()">
                 🔍 Verify Clubs
             </button>
+            <button class="btn-fix" onclick="quickFix()" style="background: #f59e0b;">
+                ⚡ Quick Fix (BC Road + Kollegal)
+            </button>
             <button class="btn-fix" onclick="fixClubs()" id="fixBtn" disabled>
-                🔧 Fix Mismatches
+                🔧 Fix All Mismatches
             </button>
         </div>
         
@@ -413,6 +416,35 @@
                 }
                 
                 loading.style.display = 'none';
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function quickFix() {
+            if (!confirm('Quick fix BC Road City and Kollegal Midtown?\n\nThis will:\n• "BC Road City" → "B C Road City"\n• "Kollegal Midtown" → "Kollegal Mid Town"')) {
+                return;
+            }
+            
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/admin/quick-fix-clubs', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (result.success) {
+                    alert(`✅ Quick Fix Complete!\n\n${result.fixes.map(f => `"${f.from}" → "${f.to}" (${f.updated} rows)`).join('\n')}\n\nVerification:\n${'B C Road City'}: ${result.verification['B C Road City']} registrations\n${'Kollegal Mid Town'}: ${result.verification['Kollegal Mid Town']} registrations`);
+                    verifyClubs(); // Refresh
+                } else {
+                    alert('Error: ' + result.error);
+                }
                 
             } catch (error) {
                 loading.style.display = 'none';
