@@ -867,7 +867,7 @@
                 'Gold Sponsor': 0,
                 'Platinum Sponsor': 0,
                 'Patron Sponsor': 0,
-                'Unknown': 0,
+                'Patron Sponsor': 0,
                 'deregistered': 0
             };
 
@@ -916,7 +916,8 @@
                         typeCounts[type]++;
                     } else {
                         console.warn('⚠️ Unknown registration type:', rawType, '→', type);
-                        typeCounts['Unknown']++;
+                        // Only track unknown if we really want to see it, otherwise ignore or map to Guest?
+                        // For now, let's just log it.
                     }
                 }
             });
@@ -927,7 +928,7 @@
             // Update Registration Type Counts Display - SHOW ALL TYPES (including zero counts)
             const typeCountsDiv = document.getElementById('type-counts');
             typeCountsDiv.innerHTML = Object.entries(typeCounts)
-                .filter(([type, count]) => type !== 'deregistered')
+                .filter(([type, count]) => type !== 'deregistered' && type !== 'Unknown')
                 .sort((a, b) => b[1] - a[1]) // Sort by count descending
                 .map(([type, count]) => `
                     <div style="background: white; padding: 8px 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#D4AF37' : '#E5E7EB'}; min-width: 140px;">
