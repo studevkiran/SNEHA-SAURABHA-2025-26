@@ -942,8 +942,33 @@
                 }).join('');
         }
         
+        // Club member counts (from official Rotary District 3181 data)
+        const CLUB_MEMBERS = {
+            'Mulky': 23, 'Bajpe': 25, 'Kinnigoli': 44, 'Moodbidri Mid Town': 20,
+            'Surathkal': 58, 'Mangalore East': 54, 'Mangalore Coastal': 19, 'Mangalore North': 63, 'Mangalore Hill-Side': 43, 'Mangalore Hillside': 43,
+            'Baikampady': 43, 'Mangalore Sunrise': 19, 'Mangalore Central': 67, 'Mangalore Port Town': 21,
+            'Mangalore Down Town': 25, 'Mangalore Downtown': 25, 'Mangalore South': 57, 'Mangalore City': 31, 'Deralakatte': 19,
+            'Mangalore Seaside': 23, 'Mangalore Sea Side': 23, 'Mangalore Metro': 42, 'Mangalore Midtown': 23, 'Mangalore Mid-Town': 23, 'Mangalore': 78,
+            'Modankap': 14, 'Farangipete': 16, 'B C Road City': 41, 'BC Road City': 41,
+            'Bantwal Town': 41, 'Belthangady': 71, 'Bantwal': 83, 'Madanthyar': 35,
+            'Moodabidri': 93, 'Moodbidri Temple Town': 43, 'Siddakatte Phalguni': 44, 'Bantwal Loretto Hills': 56,
+            'Puttur City': 68, 'Vittal': 30, 'Uppinangadi': 30,
+            'Puttur Yuva': 49, 'Puttur-East': 64, 'Puttur East': 64, 'Puttur Swarna': 25, 'Puttur Elite': 41,
+            'Puttur': 103, 'Puttur Central': 34, 'Subramanya': 38, 'Kadaba Town': 20,
+            'Sullia City': 42, 'Sullia': 84, 'Bellare Town': 38, 'Birumale Hills Puttur': 11,
+            'Virajpet': 27, 'Virajpete': 27, 'Gonikoppal': 50, 'Gonikoppal ': 50, 'Madikeri': 31, 'Misty Hills Madikeri': 67, 'Misty Hills Madikeri ': 67, 'Madikeri Woods': 23,
+            'Malleshwara Alur Siddapura': 14, 'Shanivarsanthe': 25, 'Hemavathi Kodlipet': 20, 'Somwarpet Hills': 41, 'Kushalnagar': 47,
+            'Krishnarajanagar': 30, 'Periyapatna Mid Town': 54, 'Periyapatna Midtown': 54, 'Periyapatna Icons': 42, 'Hunsur, Hunsur': 34, 'Hunsur': 34,
+            'Panchsheel Mysore': 46, 'Panchsheel': 46, 'Ivory City Mysuru': 47, 'Krishnaraja': 14, 'Mysore': 101, 'Mysore Shreegandha': 20, 'Mysore Metro': 50,
+            'E-Club of Mysuru Center': 31, 'E Club Mysure Center': 31, 'Mysore Mid-Town': 72, 'Mysore Midtown': 72, 'Central Mysore': 55, 'Mysore Jayaprakash Nagar': 27, 'Mysore East': 30, 'Seva Mysore': 18,
+            'Mysore South East': 56, 'Mysore Brindavan': 29, 'Vijayanagar Mysore': 21, 'Vijaynagar Mysore': 21, 'Mysuru Diamond': 23, 'Mysore Diamonds': 23, 'Mysore North': 78, 'Mysore Ambari': 19,
+            'Mysore Elite': 39, 'Mysore West': 95, 'Mysore Royal': 28, 'Mysore Stars': 13, 'H.D. Kote': 22, 'HD Kote': 22, 'Heritage Mysuru': 61,
+            'Chamarajanagar': 55, 'Chamarajanagar Silk City': 30, 'Nanjangud': 30,
+            'Bannur': 38, 'Yelanduru Greenway': 17, 'Kollegal': 39, 'Kollegal Mid Town': 28, 'Kollegal Midtown': 28
+        };
+
         function showZoneDetails(zoneNum) {
-            // Filter registrations for this zone
+            // Filter registrations for this zone (including all sub-zones)
             const zoneRegs = allRegistrations.filter(r => {
                 if (r.payment_status === 'test') return false;
                 const m = (r.zone || '').match(/Zone\s+(\d+)/i);
@@ -955,56 +980,107 @@
                 return;
             }
             
-            // Count by club
-            const clubStats = {};
+            // Group by sub-zone
+            const subZoneGroups = {};
             zoneRegs.forEach(r => {
-                const club = r.club || 'Unknown';
-                clubStats[club] = (clubStats[club] || 0) + 1;
+                const zone = r.zone || 'Unknown';
+                if (!subZoneGroups[zone]) {
+                    subZoneGroups[zone] = [];
+                }
+                subZoneGroups[zone].push(r);
             });
             
-            // Sort by count descending
-            const sortedClubs = Object.entries(clubStats).sort((a, b) => b[1] - a[1]);
-            const maxCount = sortedClubs[0][1];
+            // Sort sub-zones (1, 2A, 2B, 3A, etc.)
+            const sortedSubZones = Object.keys(subZoneGroups).sort((a, b) => {
+                const extractNum = (z) => {
+                    const match = z.match(/Zone\s+(\d+)([A-Z])?/i);
+                    if (!match) return [0, ''];
+                    return [parseInt(match[1]), match[2] || ''];
+                };
+                const [numA, suffixA] = extractNum(a);
+                const [numB, suffixB] = extractNum(b);
+                if (numA !== numB) return numA - numB;
+                return suffixA.localeCompare(suffixB);
+            });
+            
+            // Calculate total zone members and registrations
+            let totalZoneMembers = 0;
+            let totalZoneRegs = zoneRegs.length;
+            
+            sortedSubZones.forEach(subZone => {
+                const regs = subZoneGroups[subZone];
+                regs.forEach(r => {
+                    const members = CLUB_MEMBERS[r.club] || 0;
+                    totalZoneMembers += members;
+                });
+            });
+            
+            const zonePercentage = totalZoneMembers > 0 ? ((totalZoneRegs / totalZoneMembers) * 100).toFixed(1) : '0.0';
             
             // Update modal header
             document.getElementById('modalZoneTitle').textContent = `🗺️ Zone ${zoneNum} - Club Breakdown`;
-            document.getElementById('modalZoneSubtitle').textContent = `Total Registrations: ${zoneRegs.length} | Clubs: ${sortedClubs.length}`;
+            document.getElementById('modalZoneSubtitle').textContent = `${totalZoneRegs}/${totalZoneMembers} registrations (${zonePercentage}%) | ${sortedSubZones.length} sub-zone${sortedSubZones.length > 1 ? 's' : ''}`;
             
-            // Generate club cards with medals for top 3
+            // Generate HTML for each sub-zone
             const modalContent = document.getElementById('modalZoneContent');
-            modalContent.innerHTML = sortedClubs.map(([club, count], index) => {
-                const rank = index + 1;
-                let emoji = '▪️';
-                let rankClass = '';
+            let html = '';
+            
+            sortedSubZones.forEach(subZone => {
+                const subZoneRegs = subZoneGroups[subZone];
                 
-                if (rank === 1) {
-                    emoji = '🥇';
-                    rankClass = 'rank-1';
-                } else if (rank === 2) {
-                    emoji = '🥈';
-                    rankClass = 'rank-2';
-                } else if (rank === 3) {
-                    emoji = '🥉';
-                    rankClass = 'rank-3';
-                }
+                // Count by club
+                const clubStats = {};
+                subZoneRegs.forEach(r => {
+                    const club = r.club || 'Unknown';
+                    if (!clubStats[club]) {
+                        clubStats[club] = { count: 0, members: CLUB_MEMBERS[club] || 0 };
+                    }
+                    clubStats[club].count++;
+                });
                 
-                const percentage = ((count / maxCount) * 100).toFixed(0);
+                // Calculate sub-zone totals
+                const subZoneTotalRegs = subZoneRegs.length;
+                const subZoneTotalMembers = Object.values(clubStats).reduce((sum, s) => sum + s.members, 0);
+                const subZonePercentage = subZoneTotalMembers > 0 ? ((subZoneTotalRegs / subZoneTotalMembers) * 100).toFixed(1) : '0.0';
                 
-                return `
-                    <div class="club-item ${rankClass}">
-                        <div class="club-rank">${emoji}</div>
-                        <div class="club-info">
-                            <div class="club-name">${club}</div>
-                            <div class="club-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                // Sort clubs by percentage (highest first)
+                const sortedClubs = Object.entries(clubStats).sort((a, b) => {
+                    const percA = a[1].members > 0 ? (a[1].count / a[1].members) * 100 : 0;
+                    const percB = b[1].members > 0 ? (b[1].count / b[1].members) * 100 : 0;
+                    return percB - percA;
+                });
+                
+                // Sub-zone header
+                html += `
+                    <div style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); padding: 12px 16px; border-radius: 8px; margin: 20px 0 12px 0;">
+                        <div style="font-weight: 600; font-size: 16px; color: #1F2937; margin-bottom: 4px;">${subZone}</div>
+                        <div style="font-size: 14px; color: #4B5563;">${subZoneTotalRegs}/${subZoneTotalMembers} registrations (${subZonePercentage}%)</div>
+                    </div>
+                `;
+                
+                // Club cards
+                sortedClubs.forEach(([club, stats], index) => {
+                    const percentage = stats.members > 0 ? ((stats.count / stats.members) * 100).toFixed(1) : 0;
+                    const serialNum = index + 1;
+                    
+                    html += `
+                        <div class="club-item" style="margin-bottom: 8px; background: white; border-radius: 6px; border-left: 4px solid #10B981; padding: 12px 16px; display: flex; align-items: center; gap: 12px;">
+                            <div style="min-width: 30px; text-align: center; font-weight: 600; color: #6B7280; font-size: 14px;">#${serialNum}</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; color: #1F2937; margin-bottom: 6px;">${club}</div>
+                                <div style="background: #E5E7EB; height: 24px; border-radius: 4px; overflow: hidden; position: relative;">
+                                    <div style="background: linear-gradient(90deg, #10B981 0%, #059669 100%); height: 100%; width: ${Math.min(percentage, 100)}%; transition: width 0.3s ease;"></div>
+                                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: ${percentage > 50 ? 'white' : '#1F2937'};">
+                                        ${stats.count}/${stats.members} (${percentage}%)
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="club-count">${count}</div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                });
+            });
+            
+            modalContent.innerHTML = html;
             
             // Show modal
             document.getElementById('zoneModal').classList.add('active');
