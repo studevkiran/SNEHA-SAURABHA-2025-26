@@ -867,6 +867,7 @@
                 'Gold Sponsor': 0,
                 'Platinum Sponsor': 0,
                 'Patron Sponsor': 0,
+                'Unknown': 0,
                 'deregistered': 0
             };
 
@@ -915,6 +916,7 @@
                         typeCounts[type]++;
                     } else {
                         console.warn('⚠️ Unknown registration type:', rawType, '→', type);
+                        typeCounts['Unknown']++;
                     }
                 }
             });
@@ -935,13 +937,19 @@
                 `).join('');
 
             // Update Zone-wise Counts Display
-            const zoneCounts = {};
+            const zoneCounts = { 'Unmapped': 0 };
             allRegistrations.forEach(reg => {
-                if (reg.payment_status !== 'test' && reg.zone) {
-                    const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
-                    if (zoneMatch) {
-                        const zoneNum = parseInt(zoneMatch[1]);
-                        zoneCounts[zoneNum] = (zoneCounts[zoneNum] || 0) + 1;
+                if (reg.payment_status !== 'test') {
+                    if (reg.zone) {
+                        const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
+                        if (zoneMatch) {
+                            const zoneNum = parseInt(zoneMatch[1]);
+                            zoneCounts[zoneNum] = (zoneCounts[zoneNum] || 0) + 1;
+                        } else {
+                            zoneCounts['Unmapped']++;
+                        }
+                    } else {
+                        zoneCounts['Unmapped']++;
                     }
                 }
             });
@@ -957,6 +965,16 @@
                         </div>
                     `;
                 }).join('');
+
+            // Add Unmapped Zone if any
+            if (zoneCounts['Unmapped'] > 0) {
+                zoneCountsDiv.innerHTML += `
+                    <div class="zone-card" style="background: #FEE2E2; padding: 12px; border-radius: 6px; border-left: 4px solid #EF4444;">
+                        <div style="font-size: 14px; color: #991B1B; margin-bottom: 4px;">Unmapped</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #DC2626;">${zoneCounts['Unmapped']}</div>
+                    </div>
+                `;
+            }
         }
 
         // Club member counts (from official Rotary District 3181 data)
