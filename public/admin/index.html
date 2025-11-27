@@ -575,7 +575,7 @@
         
         let allRegistrations = [];
         let filteredRegistrations = [];
-        let currentSort = { column: 'registration_id', direction: 'asc' };
+        let currentSort = { column: 'registration_id', direction: 'desc' }; // Default descending
         
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -665,21 +665,20 @@
         }
         
         function sortRegistrationsByDefault() {
-            // Sort by registration_id ascending (2026RTY0001, 2026RTY0002, etc.)
+            // Sort by registration_id DESCENDING (2026RTY0734, 2026RTY0733, etc.) - newest first
             filteredRegistrations.sort((a, b) => {
-                const aVal = String(a.registration_id || '').toLowerCase();
-                const bVal = String(b.registration_id || '').toLowerCase();
+                // Extract last 4 digits as numbers for proper sorting
+                const aNum = parseInt((a.registration_id || '').slice(-4)) || 0;
+                const bNum = parseInt((b.registration_id || '').slice(-4)) || 0;
                 
-                if (aVal < bVal) return -1;
-                if (aVal > bVal) return 1;
-                return 0;
+                return bNum - aNum; // Descending order (highest first)
             });
             
             // Update UI to show sorted state
             const headers = document.querySelectorAll('th.sortable');
             headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
             if (headers[0]) {
-                headers[0].classList.add('sorted-asc');
+                headers[0].classList.add('sorted-desc'); // Show descending indicator
             }
         }
         

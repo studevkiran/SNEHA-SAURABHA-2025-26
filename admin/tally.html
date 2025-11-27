@@ -331,7 +331,7 @@
     <script>
         let allRegistrations = [];
         let filteredRegistrations = [];
-        let currentSort = { column: null, direction: 'asc' };
+        let currentSort = { column: 'registration_id', direction: 'desc' }; // Default descending
         
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function() {
