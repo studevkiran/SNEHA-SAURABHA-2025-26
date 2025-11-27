@@ -238,11 +238,14 @@
             <button class="btn-verify" onclick="verifyClubs()">
                 🔍 Verify Clubs
             </button>
+            <button class="btn-fix" onclick="fixAllKnownIssues()" style="background: #ef4444;">
+                ⚡ Fix All Known Issues (4 clubs)
+            </button>
             <button class="btn-fix" onclick="quickFix()" style="background: #f59e0b;">
-                ⚡ Quick Fix (BC Road + Kollegal)
+                🔧 Quick Fix (BC Road + Kollegal)
             </button>
             <button class="btn-fix" onclick="fixClubs()" id="fixBtn" disabled>
-                🔧 Fix All Mismatches
+                🔄 Fix All Mismatches
             </button>
         </div>
         
@@ -416,6 +419,41 @@
                 }
                 
                 loading.style.display = 'none';
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function fixAllKnownIssues() {
+            if (!confirm('Fix all 4 known club name issues?\n\nThis will fix:\n• "Hunsur" → "Hunsur, Hunsur" (2 registrations)\n• "Mysore Midtown" → "Mysore Mid-Town" (48 registrations)\n• "Puttur East" → "Puttur-East" (9 registrations)\n• "Virajpete" → "Virajpet" (8 registrations)\n\nTotal: 67 registrations will be updated')) {
+                return;
+            }
+            
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/admin/fix-all-clubs', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (result.success) {
+                    const fixDetails = result.fixes.map(f => 
+                        f.status === 'success' 
+                            ? `✅ "${f.from}" → "${f.to}" (${f.updated} rows)` 
+                            : `❌ "${f.from}" → Error: ${f.error}`
+                    ).join('\\n');
+                    
+                    alert(`✅ Fixed ${result.totalFixed} registrations!\\n\\n${fixDetails}\\n\\nVerification:\\n${Object.entries(result.verification).map(([k,v]) => `${k}: ${v} registrations`).join('\\n')}`);
+                    verifyClubs(); // Refresh
+                } else {
+                    alert('Error: ' + result.error);
+                }
                 
             } catch (error) {
                 loading.style.display = 'none';
