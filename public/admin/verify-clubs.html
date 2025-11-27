@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Verification Tool - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-verify {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-verify:hover {
+            background: #2563eb;
+        }
+        
+        .btn-fix {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-fix:hover {
+            background: #059669;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .list {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .list-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mismatch-item {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .unknown-item {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .arrow {
+            color: #f59e0b;
+            font-weight: 700;
+            margin: 0 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .reg-404 {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .reg-404-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+        
+        .reg-404-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .reg-404-field {
+            font-size: 14px;
+        }
+        
+        .reg-404-label {
+            color: #92400e;
+            font-weight: 600;
+        }
+        
+        .reg-404-value {
+            color: #1e293b;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Club Verification Tool</h1>
+        <p class="subtitle">Check and fix club name mismatches in the database</p>
+        
+        <div class="buttons">
+            <button class="btn-verify" onclick="verifyClubs()">
+                🔍 Verify Clubs
+            </button>
+            <button class="btn-fix" onclick="fixClubs()" id="fixBtn" disabled>
+                🔧 Fix Mismatches
+            </button>
+        </div>
+        
+        <div id="stats" style="display: none;">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRegs">-</div>
+                    <div class="stat-label">Total Registrations</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #10b981;">
+                    <div class="stat-value" id="totalClubs">-</div>
+                    <div class="stat-label">Unique Clubs</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #f59e0b;">
+                    <div class="stat-value" id="mismatches">-</div>
+                    <div class="stat-label">Mismatches Found</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #ef4444;">
+                    <div class="stat-value" id="unknownClubs">-</div>
+                    <div class="stat-label">Unknown Clubs</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="reg404" style="display: none;"></div>
+        
+        <div id="mismatchesSection" style="display: none;" class="section">
+            <div class="section-title">
+                ⚠️ Club Name Mismatches
+                <span class="badge badge-warning" id="mismatchBadge">0</span>
+            </div>
+            <div id="mismatchList" class="list"></div>
+        </div>
+        
+        <div id="unknownSection" style="display: none;" class="section">
+            <div class="section-title">
+                ❌ Unknown Clubs (Not in Official List)
+                <span class="badge badge-error" id="unknownBadge">0</span>
+            </div>
+            <div id="unknownList" class="list"></div>
+        </div>
+        
+        <div id="correctSection" style="display: none;" class="section">
+            <div class="section-title">
+                ✅ Correct Club Names
+                <span class="badge badge-success" id="correctBadge">0</span>
+            </div>
+            <div id="correctList" class="list"></div>
+        </div>
+        
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <div>Loading...</div>
+        </div>
+    </div>
+    
+    <script>
+        async function verifyClubs() {
+            const loading = document.getElementById('loading');
+            const stats = document.getElementById('stats');
+            const reg404 = document.getElementById('reg404');
+            const mismatchesSection = document.getElementById('mismatchesSection');
+            const unknownSection = document.getElementById('unknownSection');
+            const correctSection = document.getElementById('correctSection');
+            
+            loading.style.display = 'block';
+            stats.style.display = 'none';
+            reg404.style.display = 'none';
+            mismatchesSection.style.display = 'none';
+            unknownSection.style.display = 'none';
+            correctSection.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/admin/verify-clubs');
+                const result = await response.json();
+                
+                if (!result.success) {
+                    alert('Error: ' + result.error);
+                    loading.style.display = 'none';
+                    return;
+                }
+                
+                const data = result.data;
+                
+                // Update stats
+                document.getElementById('totalRegs').textContent = data.totalRegistrations.toLocaleString();
+                document.getElementById('totalClubs').textContent = data.totalUniqueClubs;
+                document.getElementById('mismatches').textContent = data.mismatches.length;
+                document.getElementById('unknownClubs').textContent = data.unknownClubs.length;
+                stats.style.display = 'block';
+                
+                // Show Registration 0404
+                if (data.registration404) {
+                    const r = data.registration404;
+                    reg404.innerHTML = `
+                        <div class="reg-404-title">🎯 Registration 2026RTY0404</div>
+                        <div class="reg-404-content">
+                            <div class="reg-404-field">
+                                <div class="reg-404-label">Name:</div>
+                                <div class="reg-404-value">${r.name}</div>
+                            </div>
+                            <div class="reg-404-field">
+                                <div class="reg-404-label">Club:</div>
+                                <div class="reg-404-value">${r.club}</div>
+                            </div>
+                            <div class="reg-404-field">
+                                <div class="reg-404-label">Type:</div>
+                                <div class="reg-404-value">${r.registration_type}</div>
+                            </div>
+                            <div class="reg-404-field">
+                                <div class="reg-404-label">Meal:</div>
+                                <div class="reg-404-value">${r.meal_preference}</div>
+                            </div>
+                            <div class="reg-404-field">
+                                <div class="reg-404-label">T-Shirt:</div>
+                                <div class="reg-404-value">${r.tshirt_size}</div>
+                            </div>
+                            <div class="reg-404-field">
+                                <div class="reg-404-label">Date:</div>
+                                <div class="reg-404-value">${r.reg_date}</div>
+                            </div>
+                        </div>
+                    `;
+                    reg404.style.display = 'block';
+                }
+                
+                // Show mismatches
+                if (data.mismatches.length > 0) {
+                    document.getElementById('mismatchBadge').textContent = data.mismatches.length;
+                    const mismatchList = document.getElementById('mismatchList');
+                    mismatchList.innerHTML = data.mismatches.map(m => `
+                        <div class="list-item mismatch-item">
+                            <div>
+                                <strong>"${m.wrong}"</strong>
+                                <span class="arrow">→</span>
+                                <strong style="color: #10b981;">"${m.correct}"</strong>
+                            </div>
+                            <div class="badge badge-warning">${m.count} registrations</div>
+                        </div>
+                    `).join('');
+                    mismatchesSection.style.display = 'block';
+                    document.getElementById('fixBtn').disabled = false;
+                } else {
+                    document.getElementById('fixBtn').disabled = true;
+                }
+                
+                // Show unknown clubs
+                if (data.unknownClubs.length > 0) {
+                    document.getElementById('unknownBadge').textContent = data.unknownClubs.length;
+                    const unknownList = document.getElementById('unknownList');
+                    unknownList.innerHTML = data.unknownClubs.map(u => `
+                        <div class="list-item unknown-item">
+                            <div><strong>"${u.name}"</strong></div>
+                            <div class="badge badge-error">${u.count} registrations</div>
+                        </div>
+                    `).join('');
+                    unknownSection.style.display = 'block';
+                }
+                
+                // Show correct clubs
+                if (data.correctClubs.length > 0) {
+                    document.getElementById('correctBadge').textContent = data.correctClubs.length;
+                    const correctList = document.getElementById('correctList');
+                    correctList.innerHTML = data.correctClubs.map(c => `
+                        <div class="list-item">
+                            <div><strong>"${c.name}"</strong></div>
+                            <div class="badge badge-success">${c.count} registrations</div>
+                        </div>
+                    `).join('');
+                    correctSection.style.display = 'block';
+                }
+                
+                loading.style.display = 'none';
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function fixClubs() {
+            if (!confirm('Fix all club name mismatches? This will update the database.')) {
+                return;
+            }
+            
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/admin/fix-clubs', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (result.success) {
+                    alert(`✅ Success! Fixed ${result.fixed} registrations.\n\n${result.fixes.map(f => `"${f.wrong}" → "${f.correct}" (${f.rowsUpdated} rows)`).join('\n')}`);
+                    verifyClubs(); // Refresh
+                } else {
+                    alert('Error: ' + result.error);
+                }
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
