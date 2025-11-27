@@ -18,94 +18,95 @@ const EMBEDDED_CLUBS = [
     { "id": 1, "name": "B C Road City" },
     { "id": 2, "name": "Baikampady" },
     { "id": 3, "name": "Bajpe" },
-    { "id": 4, "name": "Ballalbagh" },
-    { "id": 5, "name": "Bannanje" },
-    { "id": 6, "name": "Belthangady" },
-    { "id": 7, "name": "Bolar" },
-    { "id": 8, "name": "Central Mall" },
-    { "id": 9, "name": "City East" },
-    { "id": 10, "name": "City North" },
-    { "id": 11, "name": "City South" },
-    { "id": 12, "name": "City West" },
-    { "id": 13, "name": "Cotton Hill" },
-    { "id": 14, "name": "Dharwad" },
-    { "id": 15, "name": "Gokarn" },
-    { "id": 16, "name": "Hampankatta" },
-    { "id": 17, "name": "Hostel Road" },
-    { "id": 18, "name": "Hubli" },
-    { "id": 19, "name": "Ibrahim" },
-    { "id": 20, "name": "Jayanagar" },
-    { "id": 21, "name": "K.R. Market" },
-    { "id": 22, "name": "Kadri" },
-    { "id": 23, "name": "Kankanady" },
-    { "id": 24, "name": "Kasargod" },
-    { "id": 25, "name": "Kinnigoli" },
-    { "id": 26, "name": "Kodialbail" },
-    { "id": 27, "name": "Kotekar" },
-    { "id": 28, "name": "Kundapura" },
-    { "id": 29, "name": "M. G. Road" },
-    { "id": 30, "name": "Mangalore" },
-    { "id": 31, "name": "Marnamikatta" },
-    { "id": 32, "name": "Mudipu" },
-    { "id": 33, "name": "Mulki" },
-    { "id": 34, "name": "N.A. Road" },
-    { "id": 35, "name": "Nellur" },
-    { "id": 36, "name": "Padil" },
-    { "id": 37, "name": "Panambur" },
-    { "id": 38, "name": "Puttur" },
-    { "id": 39, "name": "Ramachandrapura" },
-    { "id": 40, "name": "Sampige" },
-    { "id": 41, "name": "Santhosh" },
-    { "id": 42, "name": "Shakthinagar" },
-    { "id": 43, "name": "Shivamogga" },
-    { "id": 44, "name": "Someshwar" },
-    { "id": 45, "name": "Surathkal" },
-    { "id": 46, "name": "Tannirbavi" },
-    { "id": 47, "name": "Town Hall" },
-    { "id": 48, "name": "Ullal" },
-    { "id": 49, "name": "Uppinangady" },
-    { "id": 50, "name": "Vamanjoor" },
-    { "id": 51, "name": "Vijayapura" },
-    { "id": 52, "name": "Vittal" },
-    { "id": 53, "name": "Yeshwantpur" },
-    { "id": 54, "name": "Zillah" },
-    { "id": 55, "name": "Alleppey" },
-    { "id": 56, "name": "Belgaum" },
-    { "id": 57, "name": "Chikmagalur" },
-    { "id": 58, "name": "Davanagere" },
-    { "id": 59, "name": "Erode" },
-    { "id": 60, "name": "Gulbarga" },
-    { "id": 61, "name": "Hassan" },
-    { "id": 62, "name": "Ichalkaranji" },
-    { "id": 63, "name": "Jalgaon" },
-    { "id": 64, "name": "Kolar" },
-    { "id": 65, "name": "Lonavala" },
-    { "id": 66, "name": "Miraj" },
-    { "id": 67, "name": "Nagpur" },
-    { "id": 68, "name": "Osmanabad" },
-    { "id": 69, "name": "Pondicherry" },
-    { "id": 70, "name": "Quilon" },
-    { "id": 71, "name": "Ratnagiri" },
-    { "id": 72, "name": "Salem" },
-    { "id": 73, "name": "Tirupur" },
-    { "id": 74, "name": "Udupi" },
-    { "id": 75, "name": "Venkatagiri" },
-    { "id": 76, "name": "Wayanad" },
-    { "id": 77, "name": "Xavier Town" },
-    { "id": 78, "name": "Yadgir" },
-    { "id": 79, "name": "Zunheboto" },
-    { "id": 80, "name": "Newtown" },
-    { "id": 81, "name": "Old City" },
-    { "id": 82, "name": "Harbour" },
-    { "id": 83, "name": "Greenfield" },
-    { "id": 84, "name": "Lighthouse" },
-    { "id": 85, "name": "Oakwood" },
-    { "id": 86, "name": "Riverside" },
-    { "id": 87, "name": "Sunset" },
-    { "id": 88, "name": "Valley" },
-    { "id": 89, "name": "Willow" },
-    { "id": 90, "name": "Zenith" },
-    { "id": 91, "name": "Aurora" }
+    { "id": 4, "name": "Bannur" },
+    { "id": 5, "name": "Bantwal" },
+    { "id": 6, "name": "Bantwal Loretto Hills" },
+    { "id": 7, "name": "Bantwal Town" },
+    { "id": 8, "name": "Bellare Town" },
+    { "id": 9, "name": "Belthangady" },
+    { "id": 10, "name": "Birumale Hills Puttur" },
+    { "id": 11, "name": "Central Mysore" },
+    { "id": 93, "name": "Chamarajanagar" },
+    { "id": 94, "name": "Chamarajanagar Silk City" },
+    { "id": 14, "name": "Deralakatte" },
+    { "id": 95, "name": "E-Club of Mysuru Center" },
+    { "id": 16, "name": "Farangipete" },
+    { "id": 17, "name": "Gonikoppal" },
+    { "id": 18, "name": "H.D. Kote" },
+    { "id": 96, "name": "Hemavathi Kodlipet" },
+    { "id": 21, "name": "Heritage Mysuru" },
+    { "id": 97, "name": "Hunsur, Hunsur" },
+    { "id": 98, "name": "Ivory City Mysuru" },
+    { "id": 99, "name": "Kadaba Town" },
+    { "id": 100, "name": "Kinnigoli" },
+    { "id": 101, "name": "Kollegal" },
+    { "id": 102, "name": "Kollegal Mid Town" },
+    { "id": 27, "name": "Krishnaraja" },
+    { "id": 103, "name": "Krishnarajanagar" },
+    { "id": 104, "name": "Kushalnagar" },
+    { "id": 30, "name": "Madanthyar" },
+    { "id": 31, "name": "Madikeri" },
+    { "id": 32, "name": "Madikeri Woods" },
+    { "id": 105, "name": "Malleshwara Alur Siddapura" },
+    { "id": 34, "name": "Mangalore" },
+    { "id": 35, "name": "Mangalore Central" },
+    { "id": 36, "name": "Mangalore City" },
+    { "id": 37, "name": "Mangalore Coastal" },
+    { "id": 38, "name": "Mangalore Down Town" },
+    { "id": 39, "name": "Mangalore East" },
+    { "id": 40, "name": "Mangalore Hill-Side" },
+    { "id": 41, "name": "Mangalore Metro" },
+    { "id": 42, "name": "Mangalore Midtown" },
+    { "id": 43, "name": "Mangalore North" },
+    { "id": 44, "name": "Mangalore Port Town" },
+    { "id": 45, "name": "Mangalore Seaside" },
+    { "id": 46, "name": "Mangalore South" },
+    { "id": 47, "name": "Mangalore Sunrise" },
+    { "id": 48, "name": "Misty Hills Madikeri" },
+    { "id": 49, "name": "Modankap" },
+    { "id": 50, "name": "Moodabidri" },
+    { "id": 106, "name": "Moodbidri Mid Town" },
+    { "id": 107, "name": "Moodbidri Temple Town" },
+    { "id": 108, "name": "Mulky" },
+    { "id": 54, "name": "Mysore" },
+    { "id": 55, "name": "Mysore Ambari" },
+    { "id": 56, "name": "Mysore Brindavan" },
+    { "id": 57, "name": "Mysore East" },
+    { "id": 58, "name": "Mysore Elite" },
+    { "id": 59, "name": "Mysore Jayaprakash Nagar" },
+    { "id": 60, "name": "Mysore Metro" },
+    { "id": 61, "name": "Mysore Mid-Town" },
+    { "id": 62, "name": "Mysore North" },
+    { "id": 63, "name": "Mysore Royal" },
+    { "id": 109, "name": "Mysore Shreegandha" },
+    { "id": 65, "name": "Mysore South East" },
+    { "id": 67, "name": "Mysore Stars" },
+    { "id": 68, "name": "Mysore West" },
+    { "id": 69, "name": "Mysuru Diamond" },
+    { "id": 70, "name": "Nanjangud" },
+    { "id": 110, "name": "Panchsheel Mysore" },
+    { "id": 72, "name": "Periyapatna Icons" },
+    { "id": 73, "name": "Periyapatna Mid Town" },
+    { "id": 74, "name": "Puttur" },
+    { "id": 75, "name": "Puttur Central" },
+    { "id": 76, "name": "Puttur City" },
+    { "id": 78, "name": "Puttur Elite" },
+    { "id": 79, "name": "Puttur Swarna" },
+    { "id": 80, "name": "Puttur Yuva" },
+    { "id": 77, "name": "Puttur-East" },
+    { "id": 111, "name": "Seva Mysore" },
+    { "id": 112, "name": "Shanivarsanthe" },
+    { "id": 113, "name": "Siddakatte Phalguni" },
+    { "id": 114, "name": "Somwarpet Hills" },
+    { "id": 84, "name": "Subramanya" },
+    { "id": 85, "name": "Sullia" },
+    { "id": 86, "name": "Sullia City" },
+    { "id": 87, "name": "Surathkal" },
+    { "id": 115, "name": "Uppinangadi" },
+    { "id": 116, "name": "Vijayanagar Mysore" },
+    { "id": 117, "name": "Virajpet" },
+    { "id": 91, "name": "Vittal" },
+    { "id": 118, "name": "Yelanduru Greenway" }
 ];
 
 // Registration type options with complete details
@@ -205,25 +206,25 @@ function setupClearButtons() {
     const clubSearch = document.getElementById('club-search');
     const clearClub = document.getElementById('clear-club');
     if (clubSearch && clearClub) {
-        clubSearch.addEventListener('input', function() {
+        clubSearch.addEventListener('input', function () {
             clearClub.style.display = this.value ? 'block' : 'none';
         });
     }
-    
+
     // Club search in quick mode
     const clubSearchQuick = document.getElementById('club-search-quick');
     const clearClubQuick = document.getElementById('clear-club-quick');
     if (clubSearchQuick && clearClubQuick) {
-        clubSearchQuick.addEventListener('input', function() {
+        clubSearchQuick.addEventListener('input', function () {
             clearClubQuick.style.display = this.value ? 'block' : 'none';
         });
     }
-    
+
     // Member search in quick mode
     const memberSearch = document.getElementById('member-search');
     const clearMember = document.getElementById('clear-member');
     if (memberSearch && clearMember) {
-        memberSearch.addEventListener('input', function() {
+        memberSearch.addEventListener('input', function () {
             clearMember.style.display = this.value ? 'block' : 'none';
         });
     }
@@ -240,7 +241,7 @@ function showLoading(message = 'Processing...', subtext = 'Please wait, do not c
     const overlay = document.getElementById('loadingOverlay');
     const messageEl = document.getElementById('loadingMessage');
     const subtextEl = document.getElementById('loadingSubtext');
-    
+
     if (overlay && messageEl && subtextEl) {
         messageEl.textContent = message;
         subtextEl.textContent = subtext;
@@ -258,60 +259,60 @@ function hideLoading() {
 }
 
 // Initialize the app
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Check for payment callback from Cashfree
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
     const orderId = urlParams.get('order_id');
-    
+
     console.log('🔍 Page loaded with params:', { paymentStatus, orderId });
-    
+
     if ((paymentStatus === 'success' || paymentStatus === 'pending') && orderId) {
         // Payment completed - fetch registration by order_id
-        console.log('💳 Payment callback received:', { 
-            paymentStatus, 
+        console.log('💳 Payment callback received:', {
+            paymentStatus,
             orderId
         });
-        
+
         // Fetch registration details by order_id (works for Cashfree order_id AND UTR)
         fetchAndShowRegistration(orderId);
         return; // Don't run other initialization
-        
+
     } else if (paymentStatus === 'cancelled' || paymentStatus === 'failed') {
         // Payment cancelled or failed
         alert('Payment was ' + paymentStatus + '. Please try again.');
         showScreen('screen-payment');
     }
-    
+
     // Load clubs
     loadClubs();
-    
+
     // Setup club search
     setupClubSearch();
-    
+
     // Setup registration type selection
     setupRegistrationSelection();
-    
+
     // Setup meal preference selection
     setupMealPreference();
-    
+
     // Prevent form submission on enter
-    document.getElementById('personal-form').addEventListener('submit', function(e) {
+    document.getElementById('personal-form').addEventListener('submit', function (e) {
         e.preventDefault();
     });
-    
+
     // Setup "name not found" link to switch to manual mode
     const nameNotFoundLink = document.getElementById('name-not-found-link');
     if (nameNotFoundLink) {
-        nameNotFoundLink.addEventListener('click', function(e) {
+        nameNotFoundLink.addEventListener('click', function (e) {
             e.preventDefault();
             switchToManualMode();
         });
     }
-    
+
     // Add input validation
     setupFormValidation();
-    
+
     // Setup clear button visibility for all search inputs
     setupClearButtons();
 });
@@ -320,13 +321,13 @@ document.addEventListener('DOMContentLoaded', function() {
 async function fetchAndShowRegistration(orderId) {
     try {
         console.log('🔍 Fetching registration for order_id:', orderId);
-        
+
         const response = await fetch(`/api/registrations/by-order?order_id=${orderId}`);
         const result = await response.json();
-        
+
         if (result.success && result.registration) {
             const reg = result.registration;
-            
+
             // Populate success screen with registration details
             document.getElementById('success-name').textContent = reg.name;
             document.getElementById('success-reg-id').textContent = reg.registration_id;
@@ -336,7 +337,7 @@ async function fetchAndShowRegistration(orderId) {
             document.getElementById('success-meal').textContent = reg.meal_preference;
             document.getElementById('success-mobile').textContent = reg.mobile;
             document.getElementById('success-email').textContent = reg.email || 'N/A';
-            
+
             // Store for PDF generation
             registrationData = {
                 registrationId: reg.registration_id,
@@ -355,10 +356,10 @@ async function fetchAndShowRegistration(orderId) {
                 upiId: reg.upi_id,
                 createdAt: reg.created_at
             };
-            
+
             // Show success screen
             showScreen('screen-success');
-            
+
             console.log('✅ Registration details loaded and displayed');
         } else {
             console.error('❌ Registration not found for order_id:', orderId);
@@ -377,7 +378,7 @@ let clubsCache = null; // Cache to avoid re-fetching
 
 async function loadClubs() {
     const clubSelect = document.getElementById('club-name');
-    
+
     // Use cached clubs if available
     if (clubsCache) {
         clubsList = clubsCache;
@@ -395,16 +396,16 @@ async function loadClubs() {
 
         // Sort clubs alphabetically by name (only once)
         clubsList.sort((a, b) => a.name.localeCompare(b.name));
-        
+
         // Cache for future use
         clubsCache = clubsList;
     }
 
     // Fast DOM update using innerHTML (much faster than createElement loop)
-    const optionsHTML = clubsList.map(club => 
+    const optionsHTML = clubsList.map(club =>
         `<option value="${club.name}" data-id="${club.id}">${club.name}</option>`
     ).join('');
-    
+
     clubSelect.innerHTML = `<option value="">Select Club</option>${optionsHTML}`;
 }
 
@@ -414,23 +415,23 @@ function setupClubSearch() {
     const clubSelect = document.getElementById('club-name');
     const optionsList = document.getElementById('club-options');
     const clearBtn = document.getElementById('clear-club');
-    
+
     if (!searchInput || !clubSelect || !optionsList) return;
-    
+
     let allClubs = [];
-    
+
     // Populate options list from select
     function populateOptions(filter = '') {
         const options = Array.from(clubSelect.options);
         allClubs = options.filter(opt => opt.value !== '');
-        
+
         optionsList.innerHTML = '';
-        
+
         const filtered = allClubs.filter(opt => {
             const text = opt.textContent.toLowerCase();
             return text.includes(filter.toLowerCase());
         });
-        
+
         if (filtered.length === 0) {
             const noResultDiv = document.createElement('div');
             noResultDiv.className = 'club-option';
@@ -450,42 +451,42 @@ function setupClubSearch() {
             });
         }
     }
-    
+
     function selectClub(value, text, clubId) {
         clubSelect.value = value;
         searchInput.value = text;
-        
+
         // Store club ID in a data attribute on the select element for easy retrieval
         if (clubId) {
             clubSelect.setAttribute('data-selected-club-id', clubId);
         }
-        
+
         optionsList.classList.remove('show');
         optionsList.style.display = 'none'; // Completely hide dropdown
         if (clearBtn) clearBtn.style.display = 'block'; // Show X button
     }
-    
+
     // Toggle clear button visibility
     function toggleClearButton() {
         if (clearBtn) {
             clearBtn.style.display = searchInput.value ? 'block' : 'none';
         }
     }
-    
+
     // Show dropdown on focus
     searchInput.addEventListener('focus', () => {
         populateOptions(searchInput.value);
         optionsList.classList.add('show');
         optionsList.style.display = 'block';
     });
-    
+
     // Show dropdown on click
     searchInput.addEventListener('click', () => {
         populateOptions(searchInput.value);
         optionsList.classList.add('show');
         optionsList.style.display = 'block';
     });
-    
+
     // Filter on input
     searchInput.addEventListener('input', () => {
         populateOptions(searchInput.value);
@@ -493,14 +494,14 @@ function setupClubSearch() {
         optionsList.style.display = 'block';
         toggleClearButton();
     });
-    
+
     // Hide dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!searchInput.contains(e.target) && !optionsList.contains(e.target)) {
             optionsList.classList.remove('show');
         }
     });
-    
+
     // Initial population after clubs are loaded
     setTimeout(() => {
         populateOptions();
@@ -514,21 +515,21 @@ function clearClubSelection() {
     const clubSelect = document.getElementById('club-name');
     const clearBtn = document.getElementById('clear-club');
     const optionsList = document.getElementById('club-options');
-    
+
     if (searchInput) searchInput.value = '';
     if (clubSelect) {
         clubSelect.value = '';
         clubSelect.removeAttribute('data-selected-club-id'); // Clear stored club ID
     }
     if (clearBtn) clearBtn.style.display = 'none';
-    
+
     // Show all clubs again
     if (optionsList) {
         setupClubSearch(); // Reinitialize to show all options
         optionsList.classList.add('show');
         optionsList.style.display = 'block';
     }
-    
+
     // Refocus on input
     if (searchInput) searchInput.focus();
 }
@@ -539,28 +540,28 @@ function setupRegistrationSelection() {
     const continueBtn = document.getElementById('btn-continue-type');
     const descriptionBox = document.getElementById('selection-description-box');
     const descriptionText = document.getElementById('selected-description');
-    
+
     cards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const type = this.getAttribute('data-type');
             const typeInfo = registrationTypes[type];
-            
+
             // Remove selection from all cards
             cards.forEach(c => c.classList.remove('selected'));
-            
+
             // Select this card
             this.classList.add('selected');
-            
+
             // Show description box with details
             descriptionBox.classList.add('visible');
             descriptionText.textContent = typeInfo.description;
-            
+
             // Update registration data
             registrationData.type = type;
             registrationData.typeName = typeInfo.name;
             registrationData.price = typeInfo.price;
             registrationData.description = typeInfo.description;
-            
+
             // Enable continue button
             continueBtn.disabled = false;
         });
@@ -570,15 +571,15 @@ function setupRegistrationSelection() {
 // Setup meal preference toggle - updated for compact buttons
 function setupMealPreference() {
     const mealBtns = document.querySelectorAll('.meal-btn-compact');
-    
+
     mealBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             // Remove selection from all buttons
             mealBtns.forEach(b => b.classList.remove('selected'));
-            
+
             // Add selection to clicked button
             this.classList.add('selected');
-            
+
             // Update registration data
             registrationData.mealPreference = this.getAttribute('data-meal');
         });
@@ -588,20 +589,20 @@ function setupMealPreference() {
 // Setup form validation
 function setupFormValidation() {
     const inputs = document.querySelectorAll('#personal-form input, #personal-form select');
-    
+
     inputs.forEach(input => {
-        input.addEventListener('input', function() {
+        input.addEventListener('input', function () {
             validateInput(this);
         });
-        
-        input.addEventListener('blur', function() {
+
+        input.addEventListener('blur', function () {
             validateInput(this);
         });
     });
-    
+
     // Mobile number validation
     const mobileInput = document.getElementById('mobile');
-    mobileInput.addEventListener('input', function() {
+    mobileInput.addEventListener('input', function () {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 }
@@ -623,11 +624,11 @@ function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
-    
+
     // Show target screen
     setTimeout(() => {
         document.getElementById(screenId).classList.add('active');
-        
+
         // If showing personal details, update selected type and price display
         if (screenId === 'screen-personal-details') {
             const typeDisplay = document.getElementById('selected-type-display');
@@ -636,7 +637,7 @@ function showScreen(screenId) {
                 typeDisplay.textContent = registrationData.typeName;
                 priceDisplay.textContent = registrationData.price.toLocaleString('en-IN');
             }
-            
+
             // Initialize registration mode (quick vs manual)
             initializeRegistrationMode();
         }
@@ -649,7 +650,7 @@ function initializeRegistrationMode() {
     const manualMode = document.getElementById('manual-reg-mode');
     const guestMode = document.getElementById('guest-reg-mode');
     const autofilledDetails = document.getElementById('autofilled-details');
-    
+
     // Guest uses simple input mode (no club dropdown)
     if (registrationData.typeName === 'Guest') {
         quickMode.style.display = 'none';
@@ -669,7 +670,7 @@ function initializeRegistrationMode() {
         manualMode.style.display = 'none';
         guestMode.style.display = 'none';
         autofilledDetails.style.display = 'none';
-        
+
         // Initialize club search
         initializeClubSearch();
     }
@@ -679,29 +680,29 @@ function initializeRegistrationMode() {
 function initializeClubSearch() {
     const clubSearch = document.getElementById('club-search-quick');
     const clubDropdown = document.getElementById('club-dropdown-quick');
-    
+
     // Load clubs from the existing clubs data
     fetch('data/clubs.json')
         .then(response => response.json())
         .then(clubs => {
             // Store clubs globally for filtering
             window.clubsList = clubs;
-            
+
             // Filter on input
             clubSearch.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
-                const filtered = clubs.filter(club => 
+                const filtered = clubs.filter(club =>
                     club.name.toLowerCase().includes(searchTerm)
                 );
                 renderClubDropdown(filtered);
             });
-            
+
             // Show all clubs on focus
             clubSearch.addEventListener('focus', () => {
                 renderClubDropdown(clubs);
             });
         });
-    
+
     // Handle club selection
     clubDropdown.addEventListener('click', (e) => {
         const item = e.target.closest('.dropdown-item');
@@ -709,12 +710,12 @@ function initializeClubSearch() {
             const clubName = item.textContent.trim();
             clubSearch.value = clubName;
             clubDropdown.style.display = 'none';
-            
+
             // Fetch members for selected club
             fetchMembersByClub(clubName);
         }
     });
-    
+
     // Hide dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!clubSearch.contains(e.target) && !clubDropdown.contains(e.target)) {
@@ -726,12 +727,12 @@ function initializeClubSearch() {
 // Render club dropdown
 function renderClubDropdown(clubs) {
     const clubDropdown = document.getElementById('club-dropdown-quick');
-    
+
     if (clubs.length === 0) {
         clubDropdown.style.display = 'none';
         return;
     }
-    
+
     clubDropdown.innerHTML = clubs
         .map(club => `<div class="dropdown-item" data-club-id="${club.id}">${club.name}</div>`)
         .join('');
@@ -745,12 +746,12 @@ async function fetchMembersByClub(clubName) {
     const memberSearch = document.getElementById('member-search');
     const memberDropdown = document.getElementById('member-dropdown');
     const memberWrapper = document.getElementById('member-selection-wrapper');
-    
+
     // Show the member selection section
     if (memberWrapper) {
         memberWrapper.style.display = 'block';
     }
-    
+
     // Check cache first
     if (membersCache[clubName]) {
         window.currentMembers = membersCache[clubName];
@@ -762,27 +763,27 @@ async function fetchMembersByClub(clubName) {
         renderMemberDropdown(window.currentMembers);
         return;
     }
-    
+
     try {
         memberSearch.value = '';
         memberSearch.placeholder = 'Loading members...';
         memberSearch.disabled = true;
-        
+
         const response = await fetch(`/api/club-members?clubName=${encodeURIComponent(clubName)}`);
         const data = await response.json();
-        
+
         if (data.success && data.members.length > 0) {
             // Store members globally and in cache
             window.currentMembers = data.members;
             membersCache[clubName] = data.members; // Cache for future use
-            
+
             memberSearch.placeholder = 'Search member name...';
             memberSearch.disabled = false;
             memberSearch.focus();
-            
+
             // Initialize member search
             initializeMemberSearch();
-            
+
             // Show all members initially
             renderMemberDropdown(data.members);
         } else {
@@ -801,34 +802,34 @@ async function fetchMembersByClub(clubName) {
 function initializeMemberSearch() {
     const memberSearch = document.getElementById('member-search');
     const memberDropdown = document.getElementById('member-dropdown');
-    
+
     // Remove any existing listeners by cloning
     const newMemberSearch = memberSearch.cloneNode(true);
     memberSearch.parentNode.replaceChild(newMemberSearch, memberSearch);
-    
+
     const newMemberDropdown = memberDropdown.cloneNode(true);
     memberDropdown.parentNode.replaceChild(newMemberDropdown, memberDropdown);
-    
+
     // Re-get elements after cloning
     const memberSearchEl = document.getElementById('member-search');
     const memberDropdownEl = document.getElementById('member-dropdown');
-    
+
     // Filter on input
     memberSearchEl.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const filtered = window.currentMembers.filter(member => 
+        const filtered = window.currentMembers.filter(member =>
             member.name.toLowerCase().includes(searchTerm)
         );
         renderMemberDropdown(filtered);
     });
-    
+
     // Show all members on focus
     memberSearchEl.addEventListener('focus', () => {
         if (window.currentMembers && window.currentMembers.length > 0) {
             renderMemberDropdown(window.currentMembers);
         }
     });
-    
+
     // Handle member selection
     memberDropdownEl.addEventListener('click', (e) => {
         const item = e.target.closest('.dropdown-item');
@@ -839,7 +840,7 @@ function initializeMemberSearch() {
                 memberDropdownEl.style.display = 'none';
                 return;
             }
-            
+
             // Normal member selection
             const memberId = item.getAttribute('data-member-id');
             const member = window.currentMembers.find(m => m.id == memberId);
@@ -848,7 +849,7 @@ function initializeMemberSearch() {
             }
         }
     });
-    
+
     // Hide dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!memberSearchEl.contains(e.target) && !memberDropdownEl.contains(e.target)) {
@@ -860,23 +861,23 @@ function initializeMemberSearch() {
 // Render member dropdown
 function renderMemberDropdown(members) {
     const memberDropdown = document.getElementById('member-dropdown');
-    
+
     let dropdownHTML = '';
-    
+
     // Add member options
     if (members.length > 0) {
         dropdownHTML = members
             .map(member => `<div class="dropdown-item" data-member-id="${member.id}">${member.name}</div>`)
             .join('');
     }
-    
+
     // Always add "No Member Found" option at the bottom
     dropdownHTML += `
         <div class="dropdown-item" data-manual-entry="true" style="border-top: 1px solid #e5e7eb; margin-top: 8px; padding-top: 12px; color: #D4A024; font-weight: 600;">
             🔍 No Member Found? Click here to enter manually
         </div>
     `;
-    
+
     memberDropdown.innerHTML = dropdownHTML;
     memberDropdown.style.display = 'block';
 }
@@ -886,23 +887,23 @@ function handleMemberSelection(member) {
     const quickMode = document.getElementById('quick-reg-mode');
     const autofilledDetails = document.getElementById('autofilled-details');
     const memberDropdown = document.getElementById('member-dropdown');
-    
+
     // Hide dropdowns and quick mode
     memberDropdown.style.display = 'none';
     quickMode.style.display = 'none';
-    
+
     // Show autofilled details
     autofilledDetails.style.display = 'block';
-    
+
     // Populate autofilled fields - use correct IDs
     const nameElement = document.getElementById('autofilled-name');
     const emailElement = document.getElementById('email-quick');
     const mobileElement = document.getElementById('mobile-quick');
-    
+
     if (nameElement) nameElement.textContent = member.name;
     if (emailElement) emailElement.value = member.email || '';
     if (mobileElement) mobileElement.value = member.mobile || '';
-    
+
     // Store in registration data
     registrationData.autofilledMember = member;
     registrationData.clubName = document.getElementById('club-search-quick').value;
@@ -913,11 +914,11 @@ function switchToManualMode() {
     const quickMode = document.getElementById('quick-reg-mode');
     const manualMode = document.getElementById('manual-reg-mode');
     const autofilledDetails = document.getElementById('autofilled-details');
-    
+
     quickMode.style.display = 'none';
     manualMode.style.display = 'block';
     autofilledDetails.style.display = 'none';
-    
+
     // Pre-fill club if selected
     const selectedClub = document.getElementById('club-search-quick').value;
     if (selectedClub) {
@@ -929,7 +930,7 @@ function switchToManualMode() {
             }
         }
     }
-    
+
     // Clear autofilled data
     delete registrationData.autofilledMember;
 }
@@ -937,52 +938,52 @@ function switchToManualMode() {
 // Show review screen with collected data
 function showReview() {
     let fullName, mobile, email, clubName, clubId;
-    
+
     // Check which mode is active
     const guestMode = document.getElementById('guest-reg-mode');
     const autofilledDetails = document.getElementById('autofilled-details');
     const manualMode = document.getElementById('manual-reg-mode');
-    
+
     if (guestMode && guestMode.style.display !== 'none') {
         // Guest mode - club is now mandatory
         fullName = document.getElementById('guest-name').value.trim();
         mobile = document.getElementById('guest-mobile').value.trim();
         email = document.getElementById('guest-email').value.trim();
         const guestClubInput = document.getElementById('guest-club').value.trim();
-        
+
         if (!guestClubInput) {
             alert('Please enter your club or organization name');
             return;
         }
-        
+
         clubName = guestClubInput;
         clubId = 0;
-        
+
     } else if (autofilledDetails && autofilledDetails.style.display !== 'none') {
         // Quick mode - autofilled from member selection - use correct IDs
         if (!registrationData.autofilledMember) {
             alert('Please select a member or switch to manual entry');
             return;
         }
-        
+
         fullName = registrationData.autofilledMember.name;
         const emailInput = document.getElementById('email-quick');
         const mobileInput = document.getElementById('mobile-quick');
         email = emailInput ? emailInput.value.trim() : '';
         mobile = mobileInput ? mobileInput.value.trim() : '';
         clubName = registrationData.clubName;
-        
+
         // Get club ID from stored clubs list
         const club = window.clubsList?.find(c => c.name === clubName);
         clubId = club ? club.id : 0;
-        
+
     } else if (manualMode && manualMode.style.display !== 'none') {
         // Manual mode - user typed everything
         fullName = document.getElementById('full-name').value.trim();
         mobile = document.getElementById('mobile').value.trim();
         email = document.getElementById('email').value.trim();
         clubName = document.getElementById('club-name').value;
-        
+
         // Get club ID from selected option
         const clubSelect = document.getElementById('club-name');
         const selectedOption = clubSelect.options[clubSelect.selectedIndex];
@@ -990,32 +991,32 @@ function showReview() {
         if (!clubId) {
             clubId = clubSelect.getAttribute('data-selected-club-id');
         }
-        
+
     } else {
         alert('Please complete the registration form');
         return;
     }
-    
+
     const mealPreference = registrationData.mealPreference;
     const tshirtSize = document.getElementById('tshirt-size').value;
-    
+
     console.log('🏢 Selected club:', clubName);
     console.log('🏢 Club ID:', clubId);
-    
+
     // For guest mode, club is not required
     const isGuestMode = guestMode && guestMode.style.display !== 'none';
-    
+
     // Validate all required fields (email is optional, club optional for guest)
     if (!fullName || !mobile || !mealPreference || !tshirtSize) {
         alert('Please fill in all required fields including T-Shirt size');
         return;
     }
-    
+
     if (!isGuestMode && !clubName) {
         alert('Please select your club');
         return;
     }
-    
+
     // Email validation (only if provided)
     if (email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1024,14 +1025,14 @@ function showReview() {
             return;
         }
     }
-    
+
     // Phone validation (10 digits)
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(mobile)) {
         alert('Please enter a valid 10-digit mobile number');
         return;
     }
-    
+
     // Update registration data
     registrationData.fullName = fullName;
     registrationData.mobile = mobile;
@@ -1039,21 +1040,21 @@ function showReview() {
     registrationData.email = email || 'Not Provided';
     registrationData.clubName = clubName;
     registrationData.clubId = clubId ? parseInt(clubId) : 0;
-    
+
     // Populate review screen
     document.getElementById('review-type').textContent = registrationData.typeName;
     document.getElementById('review-price').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
-    
+
     document.getElementById('review-name').textContent = fullName;
     document.getElementById('review-mobile').textContent = mobile;
     document.getElementById('review-email').textContent = email;
     document.getElementById('review-club').textContent = clubName;
     document.getElementById('review-meal').textContent = mealPreference;
     document.getElementById('review-tshirt').textContent = tshirtSize;
-    
+
     // Show review screen
     showScreen('screen-review');
-    
+
     // Also populate payment screen
     document.getElementById('payment-type').textContent = registrationData.typeName;
     document.getElementById('payment-amount').textContent = `₹${registrationData.price.toLocaleString('en-IN')}`;
@@ -1080,33 +1081,33 @@ function generateOrderId() {
 async function initiateCashfreePayment() {
     console.log('🚀 Payment button clicked!');
     console.log('📋 Registration data:', registrationData);
-    
+
     try {
         // Show loading state
         const payBtn = event.target;
         const originalText = payBtn.innerHTML;
         payBtn.disabled = true;
         payBtn.innerHTML = '⏳ Creating Payment Order...';
-        
+
         console.log('💳 Starting Cashfree payment process...');
-        
+
         // Generate unique order ID
         const orderId = generateOrderId();
         registrationData.orderId = orderId;
-        
+
         console.log('📦 Order ID:', orderId);
-        
+
         // Check if running on localhost
-        const isLocalhost = window.location.hostname === 'localhost' || 
-                           window.location.hostname === '127.0.0.1';
-        
+        const isLocalhost = window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1';
+
         if (isLocalhost) {
             console.log('🧪 LOCALHOST MODE - Using mock payment gateway');
-            
+
             // Store data for mock gateway and callback
             sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
             sessionStorage.setItem('cashfreeOrderId', orderId);
-            
+
             // Redirect to mock payment gateway
             const mockPaymentUrl = `payment-gateway.html?` +
                 `purpose=${encodeURIComponent(registrationData.typeName)}` +
@@ -1115,17 +1116,17 @@ async function initiateCashfreePayment() {
                 `&email=${encodeURIComponent(registrationData.email)}` +
                 `&phone=${registrationData.mobile}` +
                 `&order_id=${orderId}`;
-            
+
             console.log('🔄 Redirecting to mock payment gateway...');
             console.log('🔗 Payment URL:', mockPaymentUrl);
-            
+
             window.location.href = mockPaymentUrl;
             return;
         }
-        
+
         // PRODUCTION MODE - Use real Cashfree API
         console.log('🌐 PRODUCTION MODE - Calling Cashfree API...');
-        
+
         const paymentData = {
             confirmationId: registrationData.confirmationId,
             orderId: orderId,
@@ -1139,56 +1140,56 @@ async function initiateCashfreePayment() {
             mealPreference: registrationData.mealPreference,
             qrData: registrationData.qrCode
         };
-        
+
         console.log('📦 Payment data:', paymentData);
         console.log('🏢 Club ID being sent:', registrationData.clubId);
-        
+
         // Call Cashfree API
         const response = await fetch('/api/cashfree/initiate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(paymentData)
         });
-        
+
         // Check if response is OK before parsing JSON
         if (!response.ok) {
             const errorText = await response.text();
             console.error('❌ API Error Response:', errorText);
             throw new Error(`Server error: ${response.status}`);
         }
-        
+
         const result = await response.json();
         console.log('✅ Cashfree response:', result);
-        
+
         if (result.success && result.paymentSessionId) {
             registrationData.paymentSessionId = result.paymentSessionId;
-            
+
             sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData));
             sessionStorage.setItem('cashfreeOrderId', result.orderId);
-            
+
             console.log('� Opening Cashfree checkout with payment session ID...');
-            
+
             // Initialize Cashfree SDK
             const cashfree = Cashfree({
                 mode: "production" // Production mode for live payments
             });
-            
+
             // Open Cashfree checkout
             let checkoutOptions = {
                 paymentSessionId: result.paymentSessionId,
                 redirectTarget: "_self" // Opens in same tab
             };
-            
+
             console.log('🔄 Opening Cashfree checkout...');
             cashfree.checkout(checkoutOptions);
-            
+
         } else {
             console.error('❌ Payment failed:', result.error);
             alert('Payment initiation failed: ' + (result.error || 'Unknown error'));
             payBtn.disabled = false;
             payBtn.innerHTML = originalText;
         }
-        
+
     } catch (error) {
         console.error('💥 Payment error:', error);
         alert('Payment initiation failed. Please try again.\n\nError: ' + error.message);
@@ -1204,7 +1205,7 @@ async function initiateCashfreePayment() {
 async function verifyPaymentAndShowSuccess(orderId, pendingData) {
     try {
         console.log('🔄 Verifying payment with backend...', orderId);
-        
+
         // Show loading state
         showScreen('screen-banner');
         const bannerContent = document.querySelector('.banner-content');
@@ -1219,27 +1220,27 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                 </div>
             `;
         }
-        
+
         // Call backend to verify payment
         const response = await fetch(`/api/cashfree/verify?orderId=${orderId}`);
-        
+
         console.log('📡 Response status:', response.status);
         console.log('📡 Response OK:', response.ok);
-        
+
         if (!response.ok) {
             const errorText = await response.text();
             console.error('❌ Server responded with error:', errorText);
             throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
-        
+
         const result = await response.json();
-        
+
         console.log('✅ Payment verification result:', result);
-        
+
         if (result.success && result.paymentSuccess) {
             // Payment successful - update registrationData with backend response
             const parsedData = pendingData ? JSON.parse(pendingData) : {};
-            
+
             // Use data from backend if available, fallback to session storage
             if (result.registration) {
                 console.log('✅ Using registration data from backend:', result.registration);
@@ -1266,7 +1267,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                 registrationData.paymentStatus = 'Paid';
                 registrationData.transactionId = result.transactionId || orderId;
                 registrationData.orderId = orderId;
-                
+
                 // Safeguard: If session data is also empty/invalid, show error
                 if (!registrationData.fullName || !registrationData.price) {
                     console.error('❌ No valid registration data available');
@@ -1275,20 +1276,20 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                     return;
                 }
             }
-            
+
             // Store updated data
             sessionStorage.setItem('registrationData', JSON.stringify(registrationData));
             sessionStorage.removeItem('pendingRegistration');
             sessionStorage.removeItem('cashfreeOrderId');
-            
+
             console.log('🎉 Updated registration data:', registrationData);
             console.log('🎉 Payment verified! Showing success screen...');
             processPayment('success');
-            
+
         } else if (result.success && !result.paymentSuccess) {
             // Payment still pending or failed
             console.log('⏳ Payment status:', result.status);
-            
+
             if (result.status === 'ACTIVE' || result.status === 'PENDING') {
                 // Payment is still processing
                 const processingMsg = '⏳ PAYMENT PROCESSING\n\n' +
@@ -1299,7 +1300,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                     '• Get WhatsApp/Email confirmation\n\n' +
                     '⏱️ This usually takes a few seconds.\n\n' +
                     'Would you like to check again?';
-                    
+
                 if (confirm(processingMsg)) {
                     // Retry verification after a delay
                     setTimeout(() => {
@@ -1307,8 +1308,8 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                     }, 3000);
                 } else {
                     alert('No worries! Your registration will be confirmed once payment is verified.\n\n' +
-                          'Order ID: ' + orderId + '\n\n' +
-                          'You will receive confirmation via WhatsApp: +91 99805 57785');
+                        'Order ID: ' + orderId + '\n\n' +
+                        'You will receive confirmation via WhatsApp: +91 99805 57785');
                     window.location.href = 'index.html';
                 }
             } else {
@@ -1326,15 +1327,15 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                     '   • You can try registering again\n' +
                     '   • Use the same details\n\n' +
                     '💡 Note: Registration ID will be generated only after successful payment verification.';
-                
+
                 alert(failureMsg);
                 window.location.href = 'index.html';
             }
-            
+
         } else {
             // Verification failed
             console.error('❌ Payment verification failed:', result.error);
-            
+
             const retryMsg = '⚠️ VERIFICATION ISSUE\n\n' +
                 'We could not verify your payment status automatically.\n\n' +
                 'Order ID: ' + orderId + '\n\n' +
@@ -1347,23 +1348,23 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
                 '💡 Your registration will be confirmed once payment is verified.\n' +
                 'Registration ID will be generated after confirmation.\n\n' +
                 'Would you like to retry verification now?';
-            
+
             if (confirm(retryMsg)) {
                 setTimeout(() => {
                     verifyPaymentAndShowSuccess(orderId, pendingData);
                 }, 2000);
             } else {
                 alert('No problem! WhatsApp your payment details to +91 99805 57785\n\n' +
-                      'Include Order ID: ' + orderId);
+                    'Include Order ID: ' + orderId);
                 window.location.href = 'index.html';
             }
         }
-        
+
     } catch (error) {
         console.error('💥 Payment verification error:', error);
         console.error('💥 Error stack:', error.stack);
         console.error('💥 Error message:', error.message);
-        
+
         const errorMsg = '⚠️ VERIFICATION ERROR\n\n' +
             'Technical error while verifying payment.\n\n' +
             'Order ID: ' + orderId + '\n' +
@@ -1378,7 +1379,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
             '• Verify your payment manually\n' +
             '• Generate your Registration ID\n' +
             '• Send confirmation within 24 hours';
-        
+
         alert(errorMsg);
         window.location.href = 'index.html';
     }
@@ -1392,13 +1393,13 @@ async function initiateInstamojoPayment() {
 // Process payment
 function processPayment(status) {
     console.log('💳 Processing payment with status:', status);
-    
+
     if (status === 'success') {
         console.log('✅ Payment successful! Generating confirmation...');
-        
+
         // Use confirmation ID from backend if available, otherwise generate
         let confirmationId = registrationData.confirmationId;
-        
+
         if (!confirmationId) {
             console.log('⚠️ No confirmation ID from backend, generating new one');
             // Get registration type prefix
@@ -1406,21 +1407,21 @@ function processPayment(status) {
                 key => registrationTypes[key].name === registrationData.typeName
             );
             const prefix = registrationPrefixes[typeKey] || 'SS';
-            
+
             // Get club number (2 digits, padded)
             const clubNumber = registrationData.clubId ? registrationData.clubId.toString().padStart(2, '0') : '00';
-            
+
             // Get meal specifier (V=Veg, N=Non-Veg)
             const mealCode = registrationData.mealPreference === 'Veg' ? 'V' : 'N';
-            
+
             // Generate 4-digit series number
             const seriesNumber = Date.now().toString().slice(-4);
-            
+
             // Format: XXCCM#### (e.g., RN15V1234)
             confirmationId = `${prefix}${clubNumber}${mealCode}${seriesNumber}`;
             registrationData.confirmationId = confirmationId;
         }
-        
+
         // Use actual Cashfree Order ID
         const transactionId = registrationData.orderId || registrationData.transactionId || 'ORDER_' + Date.now();
         const paymentDate = new Date().toLocaleString('en-IN', {
@@ -1430,52 +1431,52 @@ function processPayment(status) {
             hour: '2-digit',
             minute: '2-digit'
         });
-        
+
         registrationData.transactionId = transactionId;
         registrationData.paymentDate = paymentDate;
-        
+
         console.log('🎫 Confirmation ID:', confirmationId);
         console.log('🔢 Cashfree Order ID:', transactionId);
         console.log('📋 Final registration data:', registrationData);
-        
+
         // Populate refined acknowledgment page (with null checks)
         const setElementText = (id, text) => {
             const element = document.getElementById(id);
             if (element) element.textContent = text || 'Not Provided';
         };
-        
+
         setElementText('confirmation-id-display', confirmationId);
         setElementText('ack-name', registrationData.fullName);
         setElementText('ack-type', registrationData.typeName);
         setElementText('ack-mobile', registrationData.mobile);
         setElementText('ack-club', registrationData.clubName || 'Not specified');
         setElementText('ack-meal', registrationData.mealPreference);
-        
+
         // Safe amount display with null check
         const amount = registrationData.price || registrationData.amount || 0;
         setElementText('ack-amount', `₹${amount.toLocaleString('en-IN')}`);
-        
+
         setElementText('ack-txn', transactionId);
         setElementText('ack-date', paymentDate); // Optional field
-        
+
         console.log('📝 Acknowledgment page populated with all details');
         console.log('🎉 Showing success screen...');
-        
+
         // Show success screen
         showScreen('screen-success');
-        
+
         // Auto-download PDF after 2 seconds
         setTimeout(() => {
             console.log('🤖 Auto-downloading PDF...');
             downloadReceiptPDF();
         }, 2000);
-        
+
         // In real implementation:
         // 1. Send data to backend API
         // 2. Store in database
         // 3. Trigger WhatsApp confirmation (NEXT TO IMPLEMENT)
         // 4. Send email confirmation
-        
+
         console.log('✨ Registration successful:', {
             confirmationId,
             ...registrationData,
@@ -1493,7 +1494,7 @@ function processPayment(status) {
 function generateQRCode(confirmationId, name, type) {
     const qrContainer = document.getElementById('qr-code');
     qrContainer.innerHTML = ''; // Clear previous QR code
-    
+
     // QR code data: JSON string with registration details
     const qrData = JSON.stringify({
         id: confirmationId,
@@ -1501,7 +1502,7 @@ function generateQRCode(confirmationId, name, type) {
         type: type,
         mobile: registrationData.mobile
     });
-    
+
     new QRCode(qrContainer, {
         text: qrData,
         width: 200,
@@ -1516,7 +1517,7 @@ function generateQRCode(confirmationId, name, type) {
 function downloadAsPDF() {
     try {
         const ticket = document.getElementById('registration-ticket');
-        
+
         // Capture the ticket as canvas
         html2canvas(ticket, {
             backgroundColor: '#FFFFFF',
@@ -1527,26 +1528,26 @@ function downloadAsPDF() {
             windowHeight: 1123 // A4 height in pixels at 96 DPI (297mm)
         }).then(canvas => {
             const { jsPDF } = window.jspdf;
-            
+
             // Create PDF in A4 size
             const pdf = new jsPDF({
                 orientation: 'portrait',
                 unit: 'mm',
                 format: 'a4'
             });
-            
+
             // Get canvas dimensions
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
+
             // Add image to PDF
             const imgData = canvas.toDataURL('image/png');
             pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-            
+
             // Save PDF
             const filename = `SNEHA-SAURABHA-Ticket-${document.getElementById('confirmation-id').textContent}.pdf`;
             pdf.save(filename);
-            
+
             console.log('✅ PDF downloaded:', filename);
         });
     } catch (error) {
@@ -1559,7 +1560,7 @@ function downloadAsPDF() {
 function downloadAsImage() {
     try {
         const ticket = document.getElementById('registration-ticket');
-        
+
         html2canvas(ticket, {
             backgroundColor: '#FFFFFF',
             scale: 3, // Higher resolution for better quality
@@ -1585,15 +1586,15 @@ function downloadAsImage() {
 async function downloadReceiptPDF() {
     console.log('📄 Download PDF clicked');
     console.log('📋 Registration Data:', registrationData);
-    
+
     if (!registrationData.confirmationId) {
         alert('⚠️ Receipt not ready. Please complete payment first.');
         return;
     }
-    
+
     let button = null;
     let originalText = '';
-    
+
     try {
         // Show loading message
         button = event ? event.target.closest('button') : null;
@@ -1602,7 +1603,7 @@ async function downloadReceiptPDF() {
             button.innerHTML = '⏳ Generating PDF...';
             button.disabled = true;
         }
-        
+
         // Get the acknowledgment screen element - try multiple IDs
         let receiptElement = document.getElementById('receipt-container');
         if (!receiptElement) {
@@ -1611,13 +1612,13 @@ async function downloadReceiptPDF() {
         if (!receiptElement) {
             receiptElement = document.querySelector('.acknowledgment-container');
         }
-        
+
         if (!receiptElement) {
             throw new Error('Receipt element not found. Please ensure you are on the success page.');
         }
-        
+
         console.log('📸 Capturing screenshot of:', receiptElement.id || receiptElement.className);
-        
+
         // Use html2canvas to capture the screen
         const canvas = await html2canvas(receiptElement, {
             scale: 2, // Higher quality
@@ -1627,12 +1628,12 @@ async function downloadReceiptPDF() {
             windowWidth: receiptElement.scrollWidth,
             windowHeight: receiptElement.scrollHeight
         });
-        
+
         console.log('✅ Screenshot captured, converting to PDF...');
-        
+
         // Convert canvas to image
         const imgData = canvas.toDataURL('image/png');
-        
+
         // Create PDF with jsPDF
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({
@@ -1640,19 +1641,19 @@ async function downloadReceiptPDF() {
             unit: 'mm',
             format: 'a4'
         });
-        
+
         // Calculate dimensions to fit A4
         const imgWidth = 210; // A4 width in mm
         const pageHeight = 297; // A4 height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
+
         let heightLeft = imgHeight;
         let position = 0;
-        
+
         // Add first page
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
-        
+
         // Add additional pages if content is longer than one page
         while (heightLeft > 0) {
             position = heightLeft - imgHeight;
@@ -1660,23 +1661,23 @@ async function downloadReceiptPDF() {
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
         }
-        
+
         // Save PDF
         pdf.save(`SNEHA-SAURABHA-Receipt-${registrationData.confirmationId}.pdf`);
-        
+
         console.log('✅ PDF downloaded successfully!');
         console.log('📄 PDF pages:', pdf.internal.getNumberOfPages());
-        
+
         // Restore button
         if (button) {
             button.innerHTML = originalText;
             button.disabled = false;
         }
-        
+
     } catch (error) {
         console.error('❌ PDF generation error:', error);
         alert('⚠️ Failed to generate PDF: ' + error.message);
-        
+
         // Restore button
         if (button && originalText) {
             button.innerHTML = originalText;
@@ -1701,36 +1702,36 @@ function resetForm() {
         transactionId: '',
         upiId: ''
     };
-    
+
     // Clear form inputs
     document.getElementById('personal-form').reset();
-    
+
     // Clear selections
     document.querySelectorAll('.selection-card').forEach(card => {
         card.classList.remove('selected', 'expanded');
         const details = card.querySelector('.selection-details');
         if (details) details.remove();
     });
-    
+
     // Clear meal preference
     document.querySelectorAll('.meal-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
-    
+
     // Disable continue button
     document.getElementById('btn-continue-type').disabled = true;
-    
+
     // Reset input borders
     document.querySelectorAll('#personal-form input, #personal-form select').forEach(input => {
         input.style.borderColor = 'var(--light-gold)';
     });
-    
+
     // Go back to home screen
     showScreen('screen-banner');
 }
 
 // Prevent pull-to-refresh on mobile
-document.body.addEventListener('touchmove', function(e) {
+document.body.addEventListener('touchmove', function (e) {
     if (e.target.closest('.screen-content')) {
         return;
     }
@@ -1739,7 +1740,7 @@ document.body.addEventListener('touchmove', function(e) {
 
 // Prevent double-tap zoom
 let lastTouchEnd = 0;
-document.addEventListener('touchend', function(e) {
+document.addEventListener('touchend', function (e) {
     const now = Date.now();
     if (now - lastTouchEnd <= 300) {
         e.preventDefault();
@@ -1752,7 +1753,7 @@ function clearClubSelection() {
     const clubSearchInput = document.getElementById('club-search');
     const clearButton = document.getElementById('clear-club');
     const clubOptions = document.getElementById('club-options');
-    
+
     if (clubSearchInput) {
         clubSearchInput.value = '';
         clearButton.style.display = 'none';
@@ -1766,7 +1767,7 @@ function clearClubSelectionQuick() {
     const clearButton = document.getElementById('clear-club-quick');
     const clubDropdown = document.getElementById('club-dropdown-quick');
     const memberWrapper = document.getElementById('member-selection-wrapper');
-    
+
     if (clubSearchInput) {
         clubSearchInput.value = '';
         clearButton.style.display = 'none';
@@ -1781,7 +1782,7 @@ function clearMemberSelection() {
     const clearButton = document.getElementById('clear-member');
     const memberDropdown = document.getElementById('member-dropdown');
     const autofilledDetails = document.getElementById('autofilled-details');
-    
+
     if (memberSearchInput) {
         memberSearchInput.value = '';
         clearButton.style.display = 'none';
@@ -1801,21 +1802,21 @@ function clearAutofilledDetails() {
     const autofilledDetails = document.getElementById('autofilled-details');
     const memberSearch = document.getElementById('member-search');
     const clubSearchQuick = document.getElementById('club-search-quick');
-    
+
     // Hide autofilled, show quick mode back
     if (autofilledDetails) autofilledDetails.style.display = 'none';
     if (quickMode) quickMode.style.display = 'block';
-    
+
     // Clear the member search input
     if (memberSearch) memberSearch.value = '';
-    
+
     // Show member selection wrapper again
     const memberWrapper = document.getElementById('member-selection-wrapper');
     if (memberWrapper) memberWrapper.style.display = 'block';
-    
+
     // Clear registration data
     delete registrationData.autofilledMember;
-    
+
     // Focus back on member search
     if (memberSearch) memberSearch.focus();
 }
@@ -1833,14 +1834,14 @@ function openBypassCodeModal(event) {
     const error = document.getElementById('bypassCodeError');
     const utrSection = document.getElementById('utrSection');
     const utrInput = document.getElementById('utrInput');
-    
+
     // Reset fields
     input.value = '';
     utrInput.value = '';
     error.textContent = '';
     utrSection.style.display = 'none';
     modal.style.display = 'flex';
-    
+
     // Focus on input
     setTimeout(() => input.focus(), 100);
 }
@@ -1856,25 +1857,25 @@ async function verifyBypassCode() {
     const utrSection = document.getElementById('utrSection');
     const utrInput = document.getElementById('utrInput');
     const code = input.value.trim();
-    
+
     if (!code) {
         error.textContent = 'Please enter a code';
         return;
     }
-    
+
     // Validate bypass code first (client-side)
     const BYPASS_CODES = {
         'mallige2830': 'manual-S',
         'asha1990': 'manual-B',
         'prahlad1966': 'manual-P'
     };
-    
+
     if (!BYPASS_CODES[code]) {
         error.textContent = 'Invalid bypass code';
         utrSection.style.display = 'none';
         return;
     }
-    
+
     // Show UTR section after valid code entry
     if (utrSection.style.display === 'none') {
         utrSection.style.display = 'block';
@@ -1882,23 +1883,23 @@ async function verifyBypassCode() {
         utrInput.focus();
         return;
     }
-    
+
     // Validate UTR is entered
     const utr = utrInput.value.trim();
     if (!utr) {
         error.textContent = 'Please enter UTR/Reference Number';
         return;
     }
-    
+
     const paymentStatus = BYPASS_CODES[code];
-    
+
     try {
         // Close modal
         closeBypassCodeModal();
-        
+
         // Show loading overlay
         showLoading('Processing Manual Registration...', 'Saving your registration details');
-        
+
         // Create registration with manual payment status
         const response = await fetch('/api/registrations/create', {
             method: 'POST',
@@ -1919,19 +1920,19 @@ async function verifyBypassCode() {
                 paymentMethod: 'Manual Registration'
             })
         });
-        
+
         const result = await response.json();
-        
+
         // Hide loading
         hideLoading();
-        
+
         if (result.success && result.registration) {
             // Store registration ID
             registrationData.registrationId = result.registration.registration_id;
             registrationData.paymentStatus = paymentStatus;
             registrationData.utrNumber = utr;
             registrationData.orderID = utr; // Store UTR as order ID
-            
+
             // Show success screen
             document.getElementById('success-name').textContent = registrationData.fullName;
             document.getElementById('success-reg-id').textContent = result.registration.registration_id;
@@ -1941,9 +1942,9 @@ async function verifyBypassCode() {
             document.getElementById('success-meal').textContent = registrationData.mealPreference;
             document.getElementById('success-mobile').textContent = registrationData.mobile;
             document.getElementById('success-email').textContent = registrationData.email || 'N/A';
-            
+
             showScreen('screen-success');
-            
+
             console.log('✅ Manual registration completed:', result.registration.registration_id);
         } else {
             error.textContent = result.error || 'Registration failed';
@@ -1969,10 +1970,10 @@ async function processManualRegistration(result) {
         document.getElementById('success-meal').textContent = result.registration.meal_preference;
         document.getElementById('success-mobile').textContent = result.registration.mobile;
         document.getElementById('success-email').textContent = result.registration.email || 'N/A';
-        
+
         // Show success screen
         showScreen('screen-success');
-        
+
         // Trigger WhatsApp confirmation (handled by backend)
         console.log('Manual registration completed:', result.registration.registration_id);
     } catch (err) {
@@ -2006,19 +2007,19 @@ let appliedDiscount = 0;
 let appliedCouponCode = '';
 
 // Apply coupon code with validation and animation
-window.applyCoupon = function() {
+window.applyCoupon = function () {
     const couponInput = document.getElementById('couponCode');
     const couponMessage = document.getElementById('couponMessage');
     const applyBtn = document.getElementById('couponApplyBtn');
-    
+
     if (!couponInput || !couponMessage || !applyBtn) return;
-    
+
     const code = couponInput.value.trim().toUpperCase();
-    
+
     // Clear previous messages
     couponMessage.textContent = '';
     couponMessage.className = 'coupon-message';
-    
+
     if (!code) {
         couponMessage.textContent = '⚠️ Please enter a coupon code';
         couponMessage.classList.add('error', 'slide-in');
@@ -2026,24 +2027,24 @@ window.applyCoupon = function() {
         setTimeout(() => couponInput.classList.remove('shake'), 500);
         return;
     }
-    
+
     // Check if valid coupon
     if (VALID_COUPONS[code]) {
         appliedDiscount = VALID_COUPONS[code].discount;
         appliedCouponCode = code;
-        
+
         // Success animation
         applyBtn.classList.add('shrink-pulse');
         setTimeout(() => applyBtn.classList.remove('shrink-pulse'), 400);
-        
+
         couponMessage.textContent = `✅ ${VALID_COUPONS[code].name} applied successfully!`;
         couponMessage.classList.add('success', 'slide-in');
-        
+
         // Show discount display
         const discountDisplay = document.getElementById('discountDisplay');
         const discountAmount = document.getElementById('discountAmount');
         const savingsAmount = document.getElementById('savingsAmount');
-        
+
         if (discountDisplay && discountAmount && savingsAmount) {
             discountAmount.textContent = `-₹${appliedDiscount}`;
             savingsAmount.textContent = `₹${appliedDiscount}`;
@@ -2051,20 +2052,20 @@ window.applyCoupon = function() {
             discountDisplay.classList.add('success-pop');
             setTimeout(() => discountDisplay.classList.remove('success-pop'), 600);
         }
-        
+
         // Update final amount
         updateFinalAmount();
-        
+
         // Disable input after successful application
         couponInput.disabled = true;
         applyBtn.disabled = true;
         applyBtn.textContent = '✓ APPLIED';
         applyBtn.style.background = '#10B981';
-        
+
         // Store in registration data
         registrationData.discount = appliedDiscount;
         registrationData.applied_coupon = appliedCouponCode;
-        
+
     } else {
         // Invalid coupon
         couponMessage.textContent = '❌ Invalid coupon code. Please try again.';
@@ -2077,17 +2078,17 @@ window.applyCoupon = function() {
 };
 
 // Update final amount with discount
-window.updateFinalAmount = function() {
+window.updateFinalAmount = function () {
     const originalAmountSpan = document.getElementById('originalAmount');
     const discountValueSpan = document.getElementById('discountValue');
     const finalAmountSpan = document.getElementById('finalAmount');
     const discountRow = document.getElementById('discountRow');
     const paymentAmountSpan = document.getElementById('paymentAmount');
-    
+
     // Get original amount from registration data
     const originalAmount = registrationData.registration_amount || 0;
     const finalAmount = Math.max(0, originalAmount - appliedDiscount);
-    
+
     // Update UI
     if (originalAmountSpan) originalAmountSpan.textContent = `₹${originalAmount.toLocaleString('en-IN')}`;
     if (discountValueSpan) discountValueSpan.textContent = `-₹${appliedDiscount}`;
@@ -2097,12 +2098,12 @@ window.updateFinalAmount = function() {
         setTimeout(() => finalAmountSpan.classList.remove('amount-bounce'), 2000);
     }
     if (paymentAmountSpan) paymentAmountSpan.textContent = `₹${finalAmount.toLocaleString('en-IN')}`;
-    
+
     // Show/hide discount row
     if (discountRow) {
         discountRow.style.display = appliedDiscount > 0 ? 'flex' : 'none';
     }
-    
+
     // Update registration data with final amount
     registrationData.final_amount = finalAmount;
 };
@@ -2112,12 +2113,12 @@ function initializeCouponSection() {
     // Reset coupon state
     appliedDiscount = 0;
     appliedCouponCode = '';
-    
+
     const couponInput = document.getElementById('couponCode');
     const applyBtn = document.getElementById('couponApplyBtn');
     const couponMessage = document.getElementById('couponMessage');
     const discountDisplay = document.getElementById('discountDisplay');
-    
+
     if (couponInput) {
         couponInput.value = '';
         couponInput.disabled = false;
@@ -2134,16 +2135,16 @@ function initializeCouponSection() {
     if (discountDisplay) {
         discountDisplay.style.display = 'none';
     }
-    
+
     // Update amounts
     updateFinalAmount();
 }
 
 // Hook into existing showScreen function to initialize coupon section
 const originalShowScreen = window.showScreen;
-window.showScreen = function(screenId) {
+window.showScreen = function (screenId) {
     originalShowScreen(screenId);
-    
+
     if (screenId === 'screen-review') {
         // Small delay to ensure DOM is ready
         setTimeout(initializeCouponSection, 100);
