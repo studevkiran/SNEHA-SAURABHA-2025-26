@@ -738,7 +738,9 @@ function renderClubDropdown(clubs) {
     clubDropdown.style.display = 'block';
 }
 
-// Fetch members by club name
+// Fetch members by club name (optimized with caching)
+const membersCache = {}; // Cache members by club name
+
 async function fetchMembersByClub(clubName) {
     const memberSearch = document.getElementById('member-search');
     const memberDropdown = document.getElementById('member-dropdown');
@@ -747,6 +749,18 @@ async function fetchMembersByClub(clubName) {
     // Show the member selection section
     if (memberWrapper) {
         memberWrapper.style.display = 'block';
+    }
+    
+    // Check cache first
+    if (membersCache[clubName]) {
+        window.currentMembers = membersCache[clubName];
+        memberSearch.placeholder = 'Search member name...';
+        memberSearch.disabled = false;
+        memberSearch.value = '';
+        memberSearch.focus();
+        initializeMemberSearch();
+        renderMemberDropdown(window.currentMembers);
+        return;
     }
     
     try {
@@ -758,8 +772,9 @@ async function fetchMembersByClub(clubName) {
         const data = await response.json();
         
         if (data.success && data.members.length > 0) {
-            // Store members globally for filtering
+            // Store members globally and in cache
             window.currentMembers = data.members;
+            membersCache[clubName] = data.members; // Cache for future use
             
             memberSearch.placeholder = 'Search member name...';
             memberSearch.disabled = false;
