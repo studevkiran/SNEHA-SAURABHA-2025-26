@@ -392,34 +392,40 @@ document.addEventListener('DOMContentLoaded', function() {
     setupClearButtons();
 });
 
-// Load clubs from JSON file
+// Load clubs from JSON file (optimized with caching and fast DOM updates)
+let clubsCache = null; // Cache to avoid re-fetching
+
 async function loadClubs() {
     const clubSelect = document.getElementById('club-name');
-    // Reset options (keep first placeholder)
-    clubSelect.innerHTML = '<option value="">Select Club</option>';
+    
+    // Use cached clubs if available
+    if (clubsCache) {
+        clubsList = clubsCache;
+    } else {
+        try {
+            // Try fetching the clubs JSON (works when served over http/https)
+            const response = await fetch('data/clubs.json');
+            if (!response.ok) throw new Error('Network response was not ok');
+            clubsList = await response.json();
+        } catch (error) {
+            // If fetch fails (commonly when opening index.html via file://), fall back to embedded list
+            console.warn('Could not load data/clubs.json (falling back to embedded list):', error);
+            clubsList = EMBEDDED_CLUBS.slice();
+        }
 
-    try {
-        // Try fetching the clubs JSON (works when served over http/https)
-        const response = await fetch('data/clubs.json');
-        if (!response.ok) throw new Error('Network response was not ok');
-        clubsList = await response.json();
-    } catch (error) {
-        // If fetch fails (commonly when opening index.html via file://), fall back to embedded list
-        console.warn('Could not load data/clubs.json (falling back to embedded list):', error);
-        clubsList = EMBEDDED_CLUBS.slice();
+        // Sort clubs alphabetically by name (only once)
+        clubsList.sort((a, b) => a.name.localeCompare(b.name));
+        
+        // Cache for future use
+        clubsCache = clubsList;
     }
 
-    // Sort clubs alphabetically by name
-    clubsList.sort((a, b) => a.name.localeCompare(b.name));
-
-    // Populate club dropdown (sorted alphabetically, no numbering)
-    clubsList.forEach(club => {
-        const option = document.createElement('option');
-        option.value = club.name;
-        option.textContent = club.name; // Just the name, no ID prefix
-        option.setAttribute('data-id', club.id); // Keep original ID for database
-        clubSelect.appendChild(option);
-    });
+    // Fast DOM update using innerHTML (much faster than createElement loop)
+    const optionsHTML = clubsList.map(club => 
+        `<option value="${club.name}" data-id="${club.id}">${club.name}</option>`
+    ).join('');
+    
+    clubSelect.innerHTML = `<option value="">Select Club</option>${optionsHTML}`;
 }
 
 // Add club search functionality
