@@ -82,7 +82,7 @@ module.exports = async (req, res) => {
       query += ' WHERE ' + conditions.join(' AND ');
     }
     
-    query += ' ORDER BY created_at DESC';
+    query += ' ORDER BY id DESC';
     
     const result = await pool.query(query, values);
     const registrations = result.rows;

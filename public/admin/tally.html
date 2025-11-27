@@ -1435,10 +1435,10 @@
             alert(`✅ Zone Summary downloaded!\n\nFile: ${filename}\nTotal: ${grandTotal} registrations`);
         }
         
-        // Auto-refresh registration list every 60 seconds
-        setInterval(() => {
-            fetchRegistrations();
-        }, 60000);
+        // Auto-refresh disabled to prevent automatic sorting
+        // setInterval(() => {
+        //     fetchRegistrations();
+        // }, 60000);
         
         // ========== EDIT FUNCTIONS ==========
         
