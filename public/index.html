@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
@@ -7,54 +8,26 @@
     <title>SNEHA SAURABHA 2025-26 Registration</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/main.css">
-    
-    <!-- Critical CSS Override for Desktop Spacing Fix -->
-    <style>
-        /* Force remove excessive spacing on desktop */
-        @media (min-width: 768px) {
-            body {
-                min-height: auto !important;
-                padding: 20px !important;
-            }
-            
-            .screen {
-                position: relative !important;
-                height: auto !important;
-                min-height: 0 !important;
-                margin: 20px auto !important;
-                padding: 0 !important;
-                display: block !important;
-            }
-            
-            .screen-content {
-                padding: 20px !important;
-                display: block !important;
-                flex: none !important;
-            }
-            
-            .banner-content {
-                min-height: 0 !important;
-                display: block !important;
-                align-items: flex-start !important;
-            }
-        }
-    </style>
-    
+
+
+
     <!-- Libraries for PDF and Image download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+
     <!-- Cashfree Payment Gateway SDK -->
     <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
     <script src="config/cashfree-config.js"></script>
     <script src="scripts/cashfree-service.js"></script>
 </head>
+
 <body>
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/919980557785" target="_blank" class="whatsapp-float" aria-label="Contact us on WhatsApp">
         <svg viewBox="0 0 32 32" class="whatsapp-icon">
-            <path fill="currentColor" d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 7.933-2.127c2.42 1.37 5.173 2.127 8.067 2.127 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-4.713 1.262 1.262-4.669-0.292-0.508c-1.207-2.100-1.847-4.507-1.847-6.924 0-7.435 6.050-13.485 13.485-13.485s13.485 6.050 13.485 13.485c0 7.435-6.050 13.485-13.485 13.485zM21.947 18.773c-0.326-0.163-1.93-0.952-2.23-1.060s-0.517-0.163-0.735 0.163c-0.218 0.326-0.844 1.060-1.034 1.278s-0.381 0.244-0.707 0.081c-0.326-0.163-1.376-0.507-2.62-1.617-0.968-0.864-1.621-1.930-1.811-2.256s-0.020-0.502 0.143-0.665c0.147-0.147 0.326-0.381 0.489-0.572s0.218-0.326 0.326-0.544c0.108-0.218 0.054-0.408-0.027-0.572s-0.735-1.771-1.008-2.423c-0.265-0.635-0.534-0.548-0.735-0.558-0.190-0.009-0.408-0.011-0.626-0.011s-0.572 0.081-0.871 0.408c-0.299 0.326-1.141 1.116-1.141 2.721s1.169 3.156 1.332 3.374c0.163 0.218 2.301 3.515 5.576 4.929 0.779 0.336 1.387 0.537 1.861 0.687 0.783 0.249 1.496 0.214 2.060 0.130 0.628-0.094 1.930-0.789 2.202-1.549s0.272-1.413 0.190-1.549c-0.081-0.136-0.299-0.218-0.626-0.381z"/>
+            <path fill="currentColor"
+                d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 7.933-2.127c2.42 1.37 5.173 2.127 8.067 2.127 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-4.713 1.262 1.262-4.669-0.292-0.508c-1.207-2.100-1.847-4.507-1.847-6.924 0-7.435 6.050-13.485 13.485-13.485s13.485 6.050 13.485 13.485c0 7.435-6.050 13.485-13.485 13.485zM21.947 18.773c-0.326-0.163-1.93-0.952-2.23-1.060s-0.517-0.163-0.735 0.163c-0.218 0.326-0.844 1.060-1.034 1.278s-0.381 0.244-0.707 0.081c-0.326-0.163-1.376-0.507-2.62-1.617-0.968-0.864-1.621-1.930-1.811-2.256s-0.020-0.502 0.143-0.665c0.147-0.147 0.326-0.381 0.489-0.572s0.218-0.326 0.326-0.544c0.108-0.218 0.054-0.408-0.027-0.572s-0.735-1.771-1.008-2.423c-0.265-0.635-0.534-0.548-0.735-0.558-0.190-0.009-0.408-0.011-0.626-0.011s-0.572 0.081-0.871 0.408c-0.299 0.326-1.141 1.116-1.141 2.721s1.169 3.156 1.332 3.374c0.163 0.218 2.301 3.515 5.576 4.929 0.779 0.336 1.387 0.537 1.861 0.687 0.783 0.249 1.496 0.214 2.060 0.130 0.628-0.094 1.930-0.789 2.202-1.549s0.272-1.413 0.190-1.549c-0.081-0.136-0.299-0.218-0.626-0.381z" />
         </svg>
     </a>
 
@@ -67,47 +40,50 @@
                 <img src="images/header-left.jpg" alt="Rotary District 3181" class="header-img">
                 <img src="images/UPDATED LOGO.png" alt="Sneha Saurabha 2025-26" class="header-img">
             </div>
-            
+
             <!-- Main Event Info -->
             <div class="event-info">
                 <!-- Tally Link -->
                 <div style="text-align: right; margin-bottom: 10px; width: 100%; align-self: flex-end;">
-                    <a href="admin/tally.html" target="_blank" style="color: #D4A024; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block;">Tally →</a>
+                    <a href="admin/tally.html" target="_blank"
+                        style="color: #D4A024; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block;">Reports
+                        →</a>
                 </div>
-                
+
                 <h2 class="subtitle">ROTARY DISTRICT CONFERENCE</h2>
                 <h1 class="main-title">SNEHA SAURABHA</h1>
                 <p class="slogan">Join the district's grand celebration — be part of the legacy.</p>
-                
+
                 <button class="btn-register" onclick="showScreen('screen-register-type')">Register Now</button>
-                
+
                 <!-- Event Card -->
                 <div class="event-card">
                     <div class="event-detail">
                         <div class="detail-icon" style="font-size: 0;">
-                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <!-- Red header -->
-                                <rect x="2" y="2" width="36" height="10" rx="2" fill="#C41E3A"/>
+                                <rect x="2" y="2" width="36" height="10" rx="2" fill="#C41E3A" />
                                 <!-- White body -->
-                                <rect x="2" y="12" width="36" height="26" fill="white" stroke="#333" stroke-width="2"/>
+                                <rect x="2" y="12" width="36" height="26" fill="white" stroke="#333" stroke-width="2" />
                                 <!-- Calendar grid lines -->
-                                <line x1="2" y1="20" x2="38" y2="20" stroke="#E0E0E0" stroke-width="1"/>
-                                <line x1="2" y1="28" x2="38" y2="28" stroke="#E0E0E0" stroke-width="1"/>
-                                <line x1="11" y1="12" x2="11" y2="38" stroke="#E0E0E0" stroke-width="1"/>
-                                <line x1="20" y1="12" x2="20" y2="38" stroke="#E0E0E0" stroke-width="1"/>
-                                <line x1="29" y1="12" x2="29" y2="38" stroke="#E0E0E0" stroke-width="1"/>
+                                <line x1="2" y1="20" x2="38" y2="20" stroke="#E0E0E0" stroke-width="1" />
+                                <line x1="2" y1="28" x2="38" y2="28" stroke="#E0E0E0" stroke-width="1" />
+                                <line x1="11" y1="12" x2="11" y2="38" stroke="#E0E0E0" stroke-width="1" />
+                                <line x1="20" y1="12" x2="20" y2="38" stroke="#E0E0E0" stroke-width="1" />
+                                <line x1="29" y1="12" x2="29" y2="38" stroke="#E0E0E0" stroke-width="1" />
                                 <!-- Small date dots (representing calendar dates) -->
-                                <circle cx="6" cy="16" r="1.5" fill="#333"/>
-                                <circle cx="15" cy="16" r="1.5" fill="#333"/>
-                                <circle cx="24" cy="16" r="1.5" fill="#333"/>
-                                <circle cx="33" cy="16" r="1.5" fill="#333"/>
-                                <circle cx="6" cy="24" r="1.5" fill="#333"/>
-                                <circle cx="15" cy="24" r="1.5" fill="#333"/>
-                                <circle cx="24" cy="24" r="1.5" fill="#333"/>
-                                <circle cx="33" cy="24" r="1.5" fill="#333"/>
-                                <circle cx="6" cy="32" r="1.5" fill="#333"/>
-                                <circle cx="15" cy="32" r="1.5" fill="#333"/>
-                                <circle cx="24" cy="32" r="1.5" fill="#333"/>
+                                <circle cx="6" cy="16" r="1.5" fill="#333" />
+                                <circle cx="15" cy="16" r="1.5" fill="#333" />
+                                <circle cx="24" cy="16" r="1.5" fill="#333" />
+                                <circle cx="33" cy="16" r="1.5" fill="#333" />
+                                <circle cx="6" cy="24" r="1.5" fill="#333" />
+                                <circle cx="15" cy="24" r="1.5" fill="#333" />
+                                <circle cx="24" cy="24" r="1.5" fill="#333" />
+                                <circle cx="33" cy="24" r="1.5" fill="#333" />
+                                <circle cx="6" cy="32" r="1.5" fill="#333" />
+                                <circle cx="15" cy="32" r="1.5" fill="#333" />
+                                <circle cx="24" cy="32" r="1.5" fill="#333" />
                             </svg>
                         </div>
                         <div class="detail-info">
@@ -119,15 +95,18 @@
                         <div class="detail-icon">📍</div>
                         <div class="detail-info">
                             <strong>Venue</strong>
-                            <p><a href="https://maps.google.com/?q=Silent+Shores+Mysore" target="_blank" class="venue-link">Silent Shores, Mysore</a></p>
+                            <p><a href="https://maps.google.com/?q=Silent+Shores+Mysore" target="_blank"
+                                    class="venue-link">Silent Shores, Mysore</a></p>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Policy Links -->
-                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(212, 160, 36, 0.3); order: 6;">
+                <div
+                    style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(212, 160, 36, 0.3); order: 6;">
                     <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; font-size: 13px;">
-                        <a href="terms-and-conditions.html" style="color: #D4A024; text-decoration: none;">Terms & Conditions</a>
+                        <a href="terms-and-conditions.html" style="color: #D4A024; text-decoration: none;">Terms &
+                            Conditions</a>
                         <span style="color: #999;">•</span>
                         <a href="refund-policy.html" style="color: #D4A024; text-decoration: none;">Refund Policy</a>
                         <span style="color: #999;">•</span>
@@ -193,13 +172,14 @@
                     <div class="card-price">₹1,00,000</div>
                 </div>
             </div>
-            
+
             <!-- Description box - shows only when card is selected -->
             <div id="selection-description-box" class="description-box">
                 <p id="selected-description"></p>
             </div>
-            
-            <button class="btn-primary" id="btn-continue-type" disabled onclick="showScreen('screen-personal-details')">Continue</button>
+
+            <button class="btn-primary" id="btn-continue-type" disabled
+                onclick="showScreen('screen-personal-details')">Continue</button>
         </div>
     </div>
 
@@ -209,39 +189,46 @@
             <button class="btn-back" onclick="showScreen('screen-register-type')">← Back</button>
             <h2>Your Details</h2>
             <form id="personal-form" class="compact-form">
-                
+
                 <!-- Quick Registration Mode (for non-Rotaractor types) -->
                 <div id="quick-reg-mode" style="display: none;">
                     <!-- Club Selection -->
                     <div class="form-row">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your Club</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your
+                            Club</label>
                         <div style="position: relative;">
-                            <input type="text" id="club-search-quick" placeholder="Search and select your club..." autocomplete="off" style="padding-right: 35px;">
-                            <button type="button" id="clear-club-quick" onclick="clearClubSelectionQuick()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
+                            <input type="text" id="club-search-quick" placeholder="Search and select your club..."
+                                autocomplete="off" style="padding-right: 35px;">
+                            <button type="button" id="clear-club-quick" onclick="clearClubSelectionQuick()"
+                                style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
                                 ✕
                             </button>
                             <div id="club-dropdown-quick" class="dropdown-list" style="display: none;"></div>
                         </div>
                     </div>
-                    
+
                     <!-- Member Name Selection (shows after club selected) -->
                     <div id="member-selection-wrapper" class="form-row" style="display: none;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your Name</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Your
+                            Name</label>
                         <div style="position: relative;">
-                            <input type="text" id="member-search" placeholder="Search and select your name..." autocomplete="off" style="padding-right: 35px;">
-                            <button type="button" id="clear-member" onclick="clearMemberSelection()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
+                            <input type="text" id="member-search" placeholder="Search and select your name..."
+                                autocomplete="off" style="padding-right: 35px;">
+                            <button type="button" id="clear-member" onclick="clearMemberSelection()"
+                                style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
                                 ✕
                             </button>
                             <div id="member-dropdown" class="dropdown-list" style="display: none;"></div>
                         </div>
                         <div style="margin-top: 10px; text-align: center;">
-                            <a href="#" id="name-not-found-link" onclick="switchToManualMode(); return false;" style="color: #D4A024; text-decoration: none; font-size: 14px;">
+                            <a href="#" id="name-not-found-link" onclick="switchToManualMode(); return false;"
+                                style="color: #D4A024; text-decoration: none; font-size: 14px;">
                                 🔍 Name not found? Click here to enter manually
                             </a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Guest Registration Mode (no club required) -->
                 <div id="guest-reg-mode" style="display: none;">
                     <div class="form-row">
@@ -251,13 +238,14 @@
                         <input type="email" id="guest-email" placeholder="Email Address (Optional)">
                     </div>
                     <div class="form-row">
-                        <input type="tel" id="guest-mobile" required placeholder="Mobile Number *" pattern="[0-9]{10}" maxlength="10">
+                        <input type="tel" id="guest-mobile" required placeholder="Mobile Number *" pattern="[0-9]{10}"
+                            maxlength="10">
                     </div>
                     <div class="form-row">
                         <input type="text" id="guest-club" placeholder="Club Name / Organisation (Optional)">
                     </div>
                 </div>
-                
+
                 <!-- Manual Registration Mode (for Rotaractor OR manual fallback) -->
                 <div id="manual-reg-mode" style="display: none;">
                     <div class="form-row">
@@ -267,14 +255,17 @@
                         <input type="email" id="email" placeholder="Email Address (Optional)">
                     </div>
                     <div class="form-row">
-                        <input type="tel" id="mobile" required placeholder="Mobile Number *" pattern="[0-9]{10}" maxlength="10">
+                        <input type="tel" id="mobile" required placeholder="Mobile Number *" pattern="[0-9]{10}"
+                            maxlength="10">
                     </div>
-                    
+
                     <!-- Club dropdown for manual mode (Rotaractor and manual fallback) -->
                     <div class="form-row club-dropdown-wrapper">
                         <div style="position: relative;">
-                            <input type="text" id="club-search" placeholder="Search and Select Club..." autocomplete="off" style="padding-right: 35px;">
-                            <button type="button" id="clear-club" onclick="clearClubSelection()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
+                            <input type="text" id="club-search" placeholder="Search and Select Club..."
+                                autocomplete="off" style="padding-right: 35px;">
+                            <button type="button" id="clear-club" onclick="clearClubSelection()"
+                                style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 5px; display: none; color: #999; font-size: 18px; line-height: 1;">
                                 ✕
                             </button>
                         </div>
@@ -284,11 +275,13 @@
                         <div id="club-options" class="club-options-list"></div>
                     </div>
                 </div>
-                
+
                 <!-- Auto-filled details (shows when member selected in quick mode) -->
                 <div id="autofilled-details" style="display: none;">
-                    <div class="form-row" style="background: #f0f8f0; padding: 15px; border-radius: 8px; border: 1px solid #4CAF50; position: relative;">
-                        <button type="button" onclick="clearAutofilledDetails()" style="position: absolute; top: 10px; right: 10px; background: #dc2626; color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;">
+                    <div class="form-row"
+                        style="background: #f0f8f0; padding: 15px; border-radius: 8px; border: 1px solid #4CAF50; position: relative;">
+                        <button type="button" onclick="clearAutofilledDetails()"
+                            style="position: absolute; top: 10px; right: 10px; background: #dc2626; color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;">
                             ✕ Clear & Select Again
                         </button>
                         <div style="margin-bottom: 10px; color: #2a7f2a; font-weight: 600;">✓ Member Found</div>
@@ -299,12 +292,13 @@
                             <input type="email" id="email-quick" placeholder="Email (editable)">
                         </div>
                         <div class="form-row">
-                            <input type="tel" id="mobile-quick" placeholder="Mobile (editable)" pattern="[0-9]{10}" maxlength="10">
+                            <input type="tel" id="mobile-quick" placeholder="Mobile (editable)" pattern="[0-9]{10}"
+                                maxlength="10">
                         </div>
                         <input type="hidden" id="selected-club-name">
                     </div>
                 </div>
-                
+
                 <!-- Meal Preference (common for all modes) -->
                 <div class="form-row meal-row">
                     <div class="meal-label-compact">Meal Preference</div>
@@ -313,11 +307,13 @@
                         <button type="button" class="meal-btn-compact non-veg" data-meal="Non-Veg">Non-Veg</button>
                     </div>
                 </div>
-                
+
                 <!-- T-Shirt Size (common for all modes) -->
                 <div class="form-row">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">T-Shirt Size</label>
-                    <select id="tshirt-size" required style="width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; background: white;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">T-Shirt
+                        Size</label>
+                    <select id="tshirt-size" required
+                        style="width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; background: white;">
                         <option value="">Select Size</option>
                         <option value="S">S</option>
                         <option value="M">M</option>
@@ -327,9 +323,10 @@
                         <option value="3XL">3XL</option>
                     </select>
                 </div>
-                
+
                 <!-- Selected Type Display -->
-                <div class="form-row" style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); margin: 15px 0;">
+                <div class="form-row"
+                    style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); margin: 15px 0;">
                     <div style="font-size: 16px; font-weight: 600; color: var(--text-dark);">
                         Selected: <span id="selected-type-display"></span>
                     </div>
@@ -337,7 +334,7 @@
                         Amount: ₹<span id="selected-price-display"></span>
                     </div>
                 </div>
-                
+
                 <button type="button" class="btn-primary" onclick="showReview()">Continue</button>
             </form>
         </div>
@@ -348,7 +345,7 @@
         <div class="screen-content">
             <button class="btn-back" onclick="showScreen('screen-personal-details')">← Back</button>
             <h2>Review Details</h2>
-            
+
             <div class="review-container">
                 <div class="review-section">
                     <h3>Personal Information</h3>
@@ -362,34 +359,36 @@
                 </div>
 
                 <!-- Coupon Code Section -->
-                <div class="review-section" style="background: #F9FAFB; border: 2px dashed #8B5CF6; padding: 20px; margin-top: 20px;">
+                <div class="review-section"
+                    style="background: #F9FAFB; border: 2px dashed #8B5CF6; padding: 20px; margin-top: 20px; display: none;">
                     <h3 style="color: #8B5CF6; margin-bottom: 15px;">🎟️ Have a Coupon Code?</h3>
                     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input 
-                            type="text" 
-                            id="couponCode" 
-                            placeholder="Enter coupon code" 
-                            style="flex: 1; padding: 10px; border: 2px solid #E5E7EB; border-radius: 6px; font-size: 14px;"
-                        >
-                        <button id="couponApplyBtn" onclick="applyCoupon()" style="background: #8B5CF6; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap;">Apply</button>
-                        <button id="couponRemoveBtn" onclick="removeCoupon()" style="background: #EF4444; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap; display: none;">Remove</button>
+                        <input type="text" id="couponCode" placeholder="Enter coupon code"
+                            style="flex: 1; padding: 10px; border: 2px solid #E5E7EB; border-radius: 6px; font-size: 14px;">
+                        <button id="couponApplyBtn" onclick="applyCoupon()"
+                            style="background: #8B5CF6; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap;">Apply</button>
+                        <button id="couponRemoveBtn" onclick="removeCoupon()"
+                            style="background: #EF4444; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap; display: none;">Remove</button>
                     </div>
-                    <div id="couponMessage" class="coupon-simple-message" style="font-size: 13px; min-height: 20px;"></div>
+                    <div id="couponMessage" class="coupon-simple-message" style="font-size: 13px; min-height: 20px;">
+                    </div>
                 </div>
             </div>
 
             <div style="display: flex; gap: 12px; flex-direction: column; margin-top: 20px;">
-                <button class="btn-primary" onclick="initiateCashfreePayment()" style="font-size: 20px; padding: 18px; font-weight: 700;">
+                <button class="btn-primary" onclick="initiateCashfreePayment()"
+                    style="font-size: 20px; padding: 18px; font-weight: 700;">
                     💳 PAY NOW <span id="paymentAmount" data-review-amount>₹0</span>
                 </button>
                 <button class="btn-secondary" onclick="showScreen('screen-personal-details')" style="background: #666;">
                     ← Back to Edit
                 </button>
             </div>
-            
+
             <!-- Footer with bypass code link -->
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
-                <a href="javascript:void(0)" onclick="openBypassCodeModal()" style="color: #D97706; font-size: 12px; text-decoration: none; opacity: 0.7;">
+                <a href="javascript:void(0)" onclick="openBypassCodeModal()"
+                    style="color: #D97706; font-size: 12px; text-decoration: none; opacity: 0.7;">
                     SNEHA SAURABHA
                 </a>
             </div>
@@ -403,9 +402,11 @@
             <div class="payment-container">
                 <div class="payment-summary">
                     <p class="payment-gateway-badge">
-                        <svg style="height: 30px; vertical-align: middle;" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="200" height="50" fill="#5C4EDB" rx="5"/>
-                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white" text-anchor="middle">Cashfree</text>
+                        <svg style="height: 30px; vertical-align: middle;" viewBox="0 0 200 50"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect width="200" height="50" fill="#5C4EDB" rx="5" />
+                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold"
+                                fill="white" text-anchor="middle">Cashfree</text>
                         </svg>
                         <span style="margin-left: 8px;">Secure Payment Gateway</span>
                     </p>
@@ -419,9 +420,11 @@
                 </div>
                 <div class="payment-options">
                     <button class="payment-btn cashfree-btn" onclick="initiateCashfreePayment()">
-                        <svg style="height: 24px; margin-right: 8px;" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="200" height="50" fill="white" rx="5"/>
-                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#5C4EDB" text-anchor="middle">Cashfree</text>
+                        <svg style="height: 24px; margin-right: 8px;" viewBox="0 0 200 50"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect width="200" height="50" fill="white" rx="5" />
+                            <text x="100" y="32" font-family="Arial, sans-serif" font-size="20" font-weight="bold"
+                                fill="#5C4EDB" text-anchor="middle">Cashfree</text>
                         </svg>
                         Pay with Cashfree
                     </button>
@@ -432,32 +435,42 @@
                 <p class="payment-note">
                     <small>🔒 Powered by Cashfree Payments | Secure & Fast</small>
                 </p>
-                </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Screen 6: Registration Receipt -->
     <div id="screen-success" class="screen">
         <div class="screen-content" style="padding: 0; overflow-y: auto; height: 100vh;">
-            <div id="receipt-container" class="acknowledgment-container" style="max-width: 600px; margin: 0 auto; background: white; padding-bottom: 10px;">
-                
+            <div id="receipt-container" class="acknowledgment-container"
+                style="max-width: 600px; margin: 0 auto; background: white; padding-bottom: 10px;">
+
                 <!-- Compact Header -->
-                <div style="background: linear-gradient(135deg, var(--primary-gold) 0%, var(--amber) 100%); padding: 8px 15px;">
+                <div
+                    style="background: linear-gradient(135deg, var(--primary-gold) 0%, var(--amber) 100%); padding: 8px 15px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                        <img src="images/header-left.jpg" alt="Rotary" style="height: 35px; object-fit: contain; flex-shrink: 0;">
+                        <img src="images/header-left.jpg" alt="Rotary"
+                            style="height: 35px; object-fit: contain; flex-shrink: 0;">
                         <div style="text-align: center; flex: 1;">
-                            <h2 style="color: white; margin: 0; font-size: 9px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); letter-spacing: 0.3px;">ROTARY DISTRICT CONFERENCE</h2>
-                            <h1 style="color: white; margin: 1px 0 0; font-size: 14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); font-weight: 700;">SNEHA SAURABHA</h1>
+                            <h2
+                                style="color: white; margin: 0; font-size: 9px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); letter-spacing: 0.3px;">
+                                ROTARY DISTRICT CONFERENCE</h2>
+                            <h1
+                                style="color: white; margin: 1px 0 0; font-size: 14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); font-weight: 700;">
+                                SNEHA SAURABHA</h1>
                         </div>
-                        <img src="images/UPDATED LOGO.png" alt="Sneha Saurabha" style="height: 35px; object-fit: contain; flex-shrink: 0;">
+                        <img src="images/UPDATED LOGO.png" alt="Sneha Saurabha"
+                            style="height: 35px; object-fit: contain; flex-shrink: 0;">
                     </div>
                 </div>
 
                 <!-- Success Message -->
-                <div style="text-align: center; padding: 10px 20px; background: linear-gradient(180deg, #f9f9f9 0%, white 100%);">
+                <div
+                    style="text-align: center; padding: 10px 20px; background: linear-gradient(180deg, #f9f9f9 0%, white 100%);">
                     <div style="display: inline-flex; align-items: center; gap: 8px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                         <h2 style="color: #22C55E; margin: 0; font-size: 16px;">Registration Confirmed</h2>
@@ -465,13 +478,18 @@
                 </div>
 
                 <!-- Registration ID -->
-                <div style="margin: 0 20px 12px; padding: 12px; background: linear-gradient(135deg, #FFF9E6 0%, #F9F3DC 100%); border-radius: 8px; border: 2px solid var(--primary-gold); text-align: center;">
-                    <p style="font-size: 10px; color: #8B7355; margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.5px;">Registration ID</p>
-                    <p style="font-size: 24px; font-weight: 700; color: var(--primary-gold); margin: 0; letter-spacing: 2px; font-family: 'Courier New', monospace;" id="confirmation-id-display"></p>
+                <div
+                    style="margin: 0 20px 12px; padding: 12px; background: linear-gradient(135deg, #FFF9E6 0%, #F9F3DC 100%); border-radius: 8px; border: 2px solid var(--primary-gold); text-align: center;">
+                    <p
+                        style="font-size: 10px; color: #8B7355; margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Registration ID</p>
+                    <p style="font-size: 24px; font-weight: 700; color: var(--primary-gold); margin: 0; letter-spacing: 2px; font-family: 'Courier New', monospace;"
+                        id="confirmation-id-display"></p>
                 </div>
 
                 <!-- Registration & Payment Details - Consolidated -->
-                <div style="margin: 0 20px 15px; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px solid #ddd;">
+                <div
+                    style="margin: 0 20px 15px; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px solid #ddd;">
                     <!-- Details Grid -->
                     <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 12px;">
                         <div style="display: flex; justify-content: space-between; font-size: 13px;">
@@ -488,17 +506,18 @@
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 13px;">
                             <span style="color: #666;">Club:</span>
-                            <span style="color: var(--text-dark); font-weight: 600; text-align: right;" id="ack-club"></span>
+                            <span style="color: var(--text-dark); font-weight: 600; text-align: right;"
+                                id="ack-club"></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 13px;">
                             <span style="color: #666;">Meal:</span>
                             <span style="color: var(--text-dark); font-weight: 600;" id="ack-meal"></span>
                         </div>
                     </div>
-                    
+
                     <!-- Divider -->
                     <div style="height: 1px; background: #ddd; margin: 8px 0;"></div>
-                    
+
                     <!-- Payment Details (No green box) -->
                     <div style="display: grid; grid-template-columns: 1fr; gap: 4px; margin-bottom: 8px;">
                         <div style="display: flex; justify-content: space-between; font-size: 13px;">
@@ -507,29 +526,36 @@
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 11px;">
                             <span style="color: #666;">Order ID:</span>
-                            <span style="color: var(--text-dark); font-weight: 500; font-family: 'Courier New', monospace; font-size: 9px;" id="ack-txn"></span>
+                            <span
+                                style="color: var(--text-dark); font-weight: 500; font-family: 'Courier New', monospace; font-size: 9px;"
+                                id="ack-txn"></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 11px;">
                             <span style="color: #666;">Date & Time:</span>
                             <span style="color: var(--text-dark); font-weight: 500;" id="ack-date"></span>
                         </div>
                     </div>
-                    
+
                     <!-- Thank You (compact, inside same box) -->
                     <div style="padding-top: 8px; border-top: 1px dashed #ddd; text-align: center;">
-                        <p style="margin: 0; color: var(--text-dark); font-size: 13px; font-weight: 600;">🙏 Thank You!</p>
-                        <p style="margin: 3px 0 0; color: #8B7355; font-size: 11px;">See you at SNEHA SAURABHA 2025-26</p>
+                        <p style="margin: 0; color: var(--text-dark); font-size: 13px; font-weight: 600;">🙏 Thank You!
+                        </p>
+                        <p style="margin: 3px 0 0; color: #8B7355; font-size: 11px;">See you at SNEHA SAURABHA 2025-26
+                        </p>
                     </div>
                 </div>
 
             </div>
-            
+
             <!-- Simple Footer Note (NOT in PDF) -->
             <div style="padding: 0 20px 20px; max-width: 600px; margin: 5px auto 0;">
-                <div style="padding: 12px; background: #f9f9f9; border-radius: 8px; text-align: center; border: 1px solid #ddd;">
+                <div
+                    style="padding: 12px; background: #f9f9f9; border-radius: 8px; text-align: center; border: 1px solid #ddd;">
                     <p style="margin: 0; color: #666; font-size: 12px; line-height: 1.5;">
                         📱 Confirmation & registration details will be sent through <strong>WhatsApp</strong>.<br>
-                        To download the receipt, <a href="#" onclick="downloadReceiptPDF(event); return false;" style="color: var(--primary-gold); font-weight: 600; text-decoration: underline;">click here</a>.
+                        To download the receipt, <a href="#" onclick="downloadReceiptPDF(event); return false;"
+                            style="color: var(--primary-gold); font-weight: 600; text-decoration: underline;">click
+                            here</a>.
                     </p>
                 </div>
             </div>
@@ -554,14 +580,20 @@
     </div>
 
     <!-- Footer with Legal Links - Light Theme (Hidden on mobile registration screens) -->
-    <footer style="background: linear-gradient(135deg, #FFF8DC 0%, #F4E4C1 100%); color: #2C2416; padding: 20px; border-top: 2px solid #D4A024; text-align: center; display: none;">
+    <footer
+        style="background: linear-gradient(135deg, #FFF8DC 0%, #F4E4C1 100%); color: #2C2416; padding: 20px; border-top: 2px solid #D4A024; text-align: center; display: none;">
         <div style="max-width: 900px; margin: 0 auto;">
             <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 15px;">
-                <a href="terms-and-conditions.html" style="color: #B8960C; text-decoration: none; font-size: 13px; font-weight: 600;">Terms & Conditions</a>
+                <a href="terms-and-conditions.html"
+                    style="color: #B8960C; text-decoration: none; font-size: 13px; font-weight: 600;">Terms &
+                    Conditions</a>
                 <span style="color: #D4A024;">|</span>
-                <a href="refund-policy.html" style="color: #B8960C; text-decoration: none; font-size: 13px; font-weight: 600;">Refund & Cancellation Policy</a>
+                <a href="refund-policy.html"
+                    style="color: #B8960C; text-decoration: none; font-size: 13px; font-weight: 600;">Refund &
+                    Cancellation Policy</a>
                 <span style="color: #D4A024;">|</span>
-                <a href="contact.html" style="color: #B8960C; text-decoration: none; font-size: 13px; font-weight: 600;">Contact Us</a>
+                <a href="contact.html"
+                    style="color: #B8960C; text-decoration: none; font-size: 13px; font-weight: 600;">Contact Us</a>
             </div>
             <p style="margin: 8px 0; color: #5C5440; font-size: 13px; font-weight: 500;">
                 SNEHA-SAURABHA 2025-26 | Rotary District 3181<br>
@@ -580,53 +612,42 @@
     <div id="bypassCodeModal" class="modal-overlay" style="display: none;">
         <div class="modal-content bypass-modal">
             <button onclick="closeBypassModal()" class="modal-close" type="button">✕</button>
-            
+
             <div class="modal-header">
                 <h2>🔐 Manual Registration</h2>
                 <p class="modal-subtitle">For authorized personnel only</p>
             </div>
-            
+
             <div class="modal-body">
                 <!-- Step 1: Bypass Code Verification -->
                 <div id="bypassStep1" class="bypass-step">
                     <div class="input-group">
                         <label for="bypassCodeInput">Enter Bypass Code</label>
-                        <input 
-                            type="password" 
-                            id="bypassCodeInput" 
-                            placeholder="Enter your bypass code"
-                            class="modal-input"
-                            autocomplete="off"
-                        />
+                        <input type="password" id="bypassCodeInput" placeholder="Enter your bypass code"
+                            class="modal-input" autocomplete="off" />
                     </div>
                     <div id="bypassCodeError" class="error-message" style="display: none;"></div>
                     <button onclick="verifyBypassCode()" type="button" class="btn-modal-primary">
                         Verify Code
                     </button>
                 </div>
-                
+
                 <!-- Step 2: UTR Entry (hidden initially) -->
                 <div id="bypassStep2" class="bypass-step" style="display: none;">
                     <div class="success-indicator">
                         <span class="success-icon">✅</span>
                         <span class="success-text">Code Verified Successfully</span>
                     </div>
-                    
+
                     <div class="input-group">
                         <label for="utrInput">Payment Reference (UTR/Transaction ID)</label>
-                        <input 
-                            type="text" 
-                            id="utrInput" 
-                            placeholder="Enter UTR or Transaction ID"
-                            class="modal-input"
-                            autocomplete="off"
-                            maxlength="50"
-                        />
+                        <input type="text" id="utrInput" placeholder="Enter UTR or Transaction ID" class="modal-input"
+                            autocomplete="off" maxlength="50" />
                         <span class="input-hint">This will be stored as reference for manual payment</span>
                     </div>
-                    
+
                     <div id="utrError" class="error-message" style="display: none;"></div>
-                    
+
                     <div class="modal-actions">
                         <button onclick="submitBypassRegistration()" type="button" class="btn-modal-success">
                             ✅ Complete Registration
@@ -642,25 +663,25 @@
     <!-- ============= END BYPASS MODAL ============= -->
 
     <script src="scripts/app.js"></script>
-    
+
     <!-- Force Fix Desktop Spacing with JavaScript -->
     <script>
         // Execute immediately on DOM load to fix spacing
-        (function() {
+        (function () {
             function forceFixSpacing() {
                 if (window.innerWidth >= 768) {
                     const screens = document.querySelectorAll('.screen');
                     const screenContents = document.querySelectorAll('.screen-content');
                     const bannerContent = document.querySelector('.banner-content');
                     const body = document.body;
-                    
+
                     // Force body styles
                     body.style.padding = '20px';
                     body.style.minHeight = 'auto';
                     body.style.overflowY = 'auto';
-                    
+
                     // Force all screen styles
-                    screens.forEach(function(screen) {
+                    screens.forEach(function (screen) {
                         screen.style.position = 'relative';
                         screen.style.height = 'auto';
                         screen.style.minHeight = '0';
@@ -672,35 +693,36 @@
                         screen.style.width = '100%';
                         screen.style.maxWidth = '800px';
                     });
-                    
+
                     // Force content styles
-                    screenContents.forEach(function(content) {
+                    screenContents.forEach(function (content) {
                         content.style.padding = '20px';
                         content.style.display = 'block';
                         content.style.flex = 'none';
                     });
-                    
+
                     // Force banner content
                     if (bannerContent) {
                         bannerContent.style.minHeight = '0';
                         bannerContent.style.display = 'block';
                     }
-                    
+
                     console.log('✅ Desktop spacing fixed via JavaScript');
                 }
             }
-            
+
             // Run immediately
             forceFixSpacing();
-            
+
             // Run after DOM is fully loaded
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', forceFixSpacing);
             }
-            
+
             // Run after window is fully loaded
             window.addEventListener('load', forceFixSpacing);
         })();
     </script>
 </body>
+
 </html>
