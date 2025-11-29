@@ -1310,10 +1310,11 @@
                 ['SNEHA SAURABHA 2025-26 - ZONE-WISE CLUB SUMMARY'],
                 ['Generated on:', new Date().toLocaleString('en-IN')],
                 [''],
-                ['Zone', 'Rank', 'Club Name', 'Registrations', 'Percentage']
+                ['Zone', 'Rank', 'Club Name', 'Registrations', 'Total Members', '% Registered', 'Zone Share %']
             ];
 
             let grandTotal = 0;
+            let grandTotalMembers = 0;
 
             // Get all unique zones from the dynamic mapping
             // ZONE_CLUBS keys are like "Zone 1", "Zone 2A", etc.
@@ -1351,15 +1352,35 @@
                 const sortedClubs = Object.entries(clubStats).sort((a, b) => b[1].count - a[1].count);
                 const zoneTotal = sortedClubs.reduce((sum, [, stats]) => sum + stats.count, 0);
 
+                // Calculate zone total members
+                let zoneMembers = 0;
+                // We need to iterate over ALL clubs in this zone, not just those with registrations
+                // Find all subzones for this main zone
+                const subZones = zoneKeys.filter(k => {
+                    const m = k.match(/Zone\s+(\d+)/i);
+                    return m && parseInt(m[1]) === zoneNum;
+                });
+
+                subZones.forEach(sz => {
+                    const clubs = ZONE_CLUBS[sz] || [];
+                    clubs.forEach(c => {
+                        zoneMembers += (CLUB_MEMBERS[c] || 0);
+                    });
+                });
+
                 grandTotal += zoneTotal;
+                grandTotalMembers += zoneMembers;
 
                 // Add zone header
-                zoneData.push(['', '', '', '', '']);
-                zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Clubs)`, '', '']);
+                zoneData.push(['', '', '', '', '', '', '']);
+                zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Active Clubs)`, '', '', '', '']);
 
                 // Add clubs with rankings
                 sortedClubs.forEach(([club, stats], idx) => {
-                    const percentage = zoneTotal > 0 ? ((stats.count / zoneTotal) * 100).toFixed(1) : '0.0';
+                    const totalMembers = CLUB_MEMBERS[club] || 0;
+                    const regPercentage = totalMembers > 0 ? ((stats.count / totalMembers) * 100).toFixed(1) : '0.0';
+                    const zoneShare = zoneTotal > 0 ? ((stats.count / zoneTotal) * 100).toFixed(1) : '0.0';
+
                     const rank = idx + 1;
                     let medal = '';
                     if (rank === 1) medal = '🥇';
@@ -1371,28 +1392,38 @@
                         `${medal} ${rank}`,
                         club,
                         stats.count,
-                        `${percentage}%`
+                        totalMembers,
+                        `${regPercentage}%`,
+                        `${zoneShare}%`
                     ]);
                 });
 
                 // Add zone total
+                const zoneRegPct = zoneMembers > 0 ? ((zoneTotal / zoneMembers) * 100).toFixed(1) : '0.0';
+
                 zoneData.push([
                     '',
                     '',
                     `ZONE ${zoneNum} TOTAL`,
                     zoneTotal,
+                    zoneMembers,
+                    `${zoneRegPct}%`,
                     '100%'
                 ]);
             }
 
             // Add grand total
-            zoneData.push(['', '', '', '', '']);
-            zoneData.push(['', '', '', '', '']);
+            const grandRegPct = grandTotalMembers > 0 ? ((grandTotal / grandTotalMembers) * 100).toFixed(1) : '0.0';
+
+            zoneData.push(['', '', '', '', '', '', '']);
+            zoneData.push(['', '', '', '', '', '', '']);
             zoneData.push([
                 'GRAND TOTAL',
                 '',
                 'All Zones',
                 grandTotal,
+                grandTotalMembers,
+                `${grandRegPct}%`,
                 '100%'
             ]);
 
@@ -1403,11 +1434,13 @@
                 { wch: 10 },  // Rank
                 { wch: 35 },  // Club Name
                 { wch: 15 },  // Registrations
-                { wch: 12 }   // Percentage
+                { wch: 15 },  // Total Members
+                { wch: 15 },  // % Registered
+                { wch: 15 }   // Zone Share %
             ];
 
             // Add autofilter
-            ws['!autofilter'] = { ref: 'A4:E4' };
+            ws['!autofilter'] = { ref: 'A4:G4' };
 
             XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
 
