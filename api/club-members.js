@@ -2,7 +2,7 @@
 // GET /api/club-members?action=list&clubName=xxx
 // POST /api/club-members?action=import
 
-const { sql } = require('../lib/db');
+const { Pool } = require('pg');
 const { normalizeClubName } = require('../lib/zone-mapping');
 
 module.exports = async (req, res) => {
@@ -22,13 +22,20 @@ module.exports = async (req, res) => {
         return res.status(400).json({ success: false, error: 'clubName required' });
       }
 
-      // Use shared sql client - using tagged template literal syntax
-      const result = await sql`
-        SELECT id, member_name, email, mobile, member_type 
-        FROM club_members 
-        WHERE club_name = ${normalizeClubName(clubName)} AND is_active = true 
-        ORDER BY member_name ASC
-      `;
+      const pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+      });
+
+      const result = await pool.query(
+        `SELECT id, member_name, email, mobile, member_type 
+         FROM club_members 
+         WHERE club_name = $1 AND is_active = true 
+         ORDER BY member_name ASC`,
+        [normalizeClubName(clubName)]
+      );
+
+      await pool.end();
 
       return res.json({
         success: true,
@@ -43,7 +50,6 @@ module.exports = async (req, res) => {
         }))
       });
     } catch (error) {
-      console.error('Error fetching club members:', error);
       return res.status(500).json({ success: false, error: error.message });
     }
   }
