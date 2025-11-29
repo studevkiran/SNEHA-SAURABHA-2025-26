@@ -35,13 +35,13 @@ module.exports = async (req, res) => {
     const registrationSource = req.query.registrationSource || '';
 
     console.log('📊 Fetching confirmed registrations from Neon PostgreSQL...');
-    
+
     // Query only registrations table (all are SUCCESS by definition)
     let query = 'SELECT * FROM registrations';
     const conditions = [];
     const values = [];
     let paramIndex = 1;
-    
+
     // Build WHERE conditions
     if (search) {
       conditions.push(`(
@@ -53,48 +53,57 @@ module.exports = async (req, res) => {
       values.push(`%${search.toLowerCase()}%`);
       paramIndex++;
     }
-    
+
     if (registrationType) {
       conditions.push(`registration_type = $${paramIndex}`);
       values.push(registrationType);
       paramIndex++;
     }
-    
+
     if (mealPreference) {
       conditions.push(`meal_preference = $${paramIndex}`);
       values.push(mealPreference);
       paramIndex++;
     }
-    
+
     if (clubId) {
       conditions.push(`club_id = $${paramIndex}`);
       values.push(parseInt(clubId));
       paramIndex++;
     }
-    
+
     if (registrationSource) {
       conditions.push(`registration_source = $${paramIndex}`);
       values.push(registrationSource);
       paramIndex++;
     }
-    
+
     if (conditions.length > 0) {
       query += ' WHERE ' + conditions.join(' AND ');
     }
-    
+
     // Sort by the numeric part of registration_id (last 4 digits) in descending order
     query += ' ORDER BY CAST(RIGHT(registration_id, 4) AS INTEGER) DESC';
-    
+
     const result = await pool.query(query, values);
     const registrations = result.rows;
-    
-    console.log(`✅ Loaded ${registrations.length} confirmed registrations`);
+
+    // Calculate total revenue
+    const totalRevenue = registrations.reduce((sum, reg) => {
+      // Handle both column names and ensure it's a number
+      const val = reg.registration_amount !== undefined ? reg.registration_amount : reg.amount;
+      const amount = parseFloat(val);
+      return sum + (isNaN(amount) ? 0 : amount);
+    }, 0);
+
+    console.log(`✅ Loaded ${registrations.length} confirmed registrations, Total Revenue: ₹${totalRevenue}`);
 
     return res.status(200).json({
       success: true,
       data: {
         registrations: registrations,
         total: registrations.length,
+        totalRevenue: totalRevenue,
         page: page
       }
     });
