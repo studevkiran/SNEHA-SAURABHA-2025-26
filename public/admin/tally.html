@@ -572,6 +572,105 @@
         </div>
     </div>
 
+    <!-- Edit Registration Modal -->
+    <div class="zone-modal-overlay" id="editModal" onclick="closeEditModal()">
+        <div class="zone-modal" onclick="event.stopPropagation()" style="max-width: 500px;">
+            <div class="zone-modal-header" style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);">
+                <button class="zone-modal-close" onclick="closeEditModal()">✕</button>
+                <h2>✏️ Edit Registration</h2>
+                <p>Update registration details</p>
+            </div>
+            <div class="zone-modal-body">
+                <form id="editForm" style="display: flex; flex-direction: column; gap: 15px;">
+                    <input type="hidden" id="edit_registration_id">
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Full
+                            Name</label>
+                        <input type="text" id="edit_name" required
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Mobile
+                            Number</label>
+                        <input type="tel" id="edit_mobile" required pattern="[0-9]{10}"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div>
+                        <label
+                            style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Email</label>
+                        <input type="email" id="edit_email"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Club
+                            Name</label>
+                        <input type="text" id="edit_club"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label
+                                style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Type</label>
+                            <select id="edit_registration_type"
+                                style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                                <option value="Rotarian">Rotarian</option>
+                                <option value="Rotary Ann">Rotary Ann</option>
+                                <option value="Rotary Annet">Rotary Annet</option>
+                                <option value="Rotarian with Spouse">Rotarian with Spouse</option>
+                                <option value="Guest">Guest</option>
+                                <option value="Rotaractor">Rotaractor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Meal</label>
+                            <select id="edit_meal_preference"
+                                style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                                <option value="Veg">Veg</option>
+                                <option value="Non-Veg">Non-Veg</option>
+                                <option value="Jain">Jain</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">T-Shirt
+                            Size</label>
+                        <select id="edit_tshirt_size"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="XXXL">XXXL</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Reason for
+                            Edit (Required)</label>
+                        <textarea id="edit_remarks" required placeholder="Why are you editing this?"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px; min-height: 60px;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button type="button" onclick="closeEditModal()"
+                            style="flex: 1; padding: 12px; border: 1px solid #E5E7EB; background: white; border-radius: 6px; cursor: pointer;">Cancel</button>
+                        <button type="submit"
+                            style="flex: 1; padding: 12px; background: #3B82F6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Save
+                            Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         let allRegistrations = [];
@@ -580,8 +679,36 @@
 
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function () {
-            fetchRegistrations();
+            fetchZoneData().then(() => {
+                fetchRegistrations();
+            });
         });
+
+        // Global variables for Zone Data
+        let ZONE_MAPPING = {};
+        let CLUB_MEMBERS = {};
+        let ZONE_CLUBS = {};
+        let CLUB_ALIASES = {};
+
+        async function fetchZoneData() {
+            try {
+                console.log('🔄 Fetching zone data...');
+                const response = await fetch('/api/admin/zone-data');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    ZONE_MAPPING = result.data.ZONE_MAPPING || {};
+                    CLUB_MEMBERS = result.data.CLUB_MEMBERS || {};
+                    ZONE_CLUBS = result.data.ZONE_CLUBS || {};
+                    CLUB_ALIASES = result.data.CLUB_ALIASES || {};
+                    console.log('✅ Zone data loaded:', Object.keys(ZONE_CLUBS).length, 'zones');
+                } else {
+                    console.error('❌ Failed to load zone data:', result.error);
+                }
+            } catch (error) {
+                console.error('❌ Error fetching zone data:', error);
+            }
+        }
 
         async function fetchRegistrations() {
             try {
@@ -978,77 +1105,8 @@
             }
         }
 
-        // Club member counts (from official Rotary District 3181 data)
-        const CLUB_MEMBERS = {
-            'Mulky': 23, 'Bajpe': 25, 'Kinnigoli': 44, 'Moodbidri Mid Town': 20,
-            'Surathkal': 58, 'Mangalore East': 54, 'Mangalore Coastal': 19, 'Mangalore North': 63, 'Mangalore Hill-Side': 43, 'Mangalore Hillside': 43,
-            'Baikampady': 43, 'Mangalore Sunrise': 19, 'Mangalore Central': 67, 'Mangalore Port Town': 21,
-            'Mangalore Down Town': 25, 'Mangalore Downtown': 25, 'Mangalore South': 57, 'Mangalore City': 31, 'Deralakatte': 19,
-            'Mangalore Seaside': 23, 'Mangalore Sea Side': 23, 'Mangalore Metro': 42, 'Mangalore Midtown': 23, 'Mangalore Mid-Town': 23, 'Mangalore': 78,
-            'Modankap': 14, 'Farangipete': 16, 'B C Road City': 41, 'BC Road City': 41,
-            'Bantwal Town': 41, 'Belthangady': 71, 'Bantwal': 83, 'Madanthyar': 35,
-            'Moodabidri': 93, 'Moodbidri Temple Town': 43, 'Siddakatte Phalguni': 44, 'Bantwal Loretto Hills': 56,
-            'Puttur City': 68, 'Vittal': 30, 'Uppinangadi': 30,
-            'Puttur Yuva': 49, 'Puttur-East': 64, 'Puttur East': 64, 'Puttur Swarna': 25, 'Puttur Elite': 41,
-            'Puttur': 103, 'Puttur Central': 34, 'Subramanya': 38, 'Kadaba Town': 20,
-            'Sullia City': 42, 'Sullia': 84, 'Bellare Town': 38, 'Birumale Hills Puttur': 11,
-            'Virajpet': 27, 'Virajpete': 27, 'Gonikoppal': 50, 'Gonikoppal ': 50, 'Madikeri': 31, 'Misty Hills Madikeri': 67, 'Misty Hills Madikeri ': 67, 'Madikeri Woods': 23,
-            'Malleshwara Alur Siddapura': 14, 'Shanivarsanthe': 25, 'Hemavathi Kodlipet': 20, 'Somwarpet Hills': 41, 'Kushalnagar': 47,
-            'Krishnarajanagar': 30, 'Periyapatna Mid Town': 54, 'Periyapatna Midtown': 54, 'Periyapatna Icons': 42, 'Hunsur, Hunsur': 34, 'Hunsur': 34,
-            'Panchsheel Mysore': 46, 'Panchsheel': 46, 'Ivory City Mysuru': 47, 'Krishnaraja': 14, 'Mysore': 101, 'Mysore Shreegandha': 20, 'Mysore Metro': 50,
-            'E-Club of Mysuru Center': 31, 'E Club Mysure Center': 31, 'Mysore Mid-Town': 72, 'Mysore Midtown': 72, 'Central Mysore': 55, 'Mysore Jayaprakash Nagar': 27, 'Mysore East': 30, 'Seva Mysore': 18,
-            'Mysore South East': 56, 'Mysore Brindavan': 29, 'Vijayanagar Mysore': 21, 'Vijaynagar Mysore': 21, 'Mysuru Diamond': 23, 'Mysore Diamonds': 23, 'Mysore North': 78, 'Mysore Ambari': 19,
-            'Mysore Elite': 39, 'Mysore West': 95, 'Mysore Royal': 28, 'Mysore Stars': 13, 'H.D. Kote': 22, 'HD Kote': 22, 'Heritage Mysuru': 61,
-            'Chamarajanagar': 55, 'Chamarajanagar Silk City': 30, 'Nanjangud': 30,
-            'Bannur': 38, 'Yelanduru Greenway': 17, 'Kollegal': 39, 'Kollegal Mid Town': 28, 'Kollegal Midtown': 28
-        };
-
-        // Zone to Clubs mapping (unique clubs only, no aliases)
-        const ZONE_CLUBS = {
-            'Zone 1': ['Mulky', 'Bajpe', 'Kinnigoli', 'Moodbidri Mid Town'],
-            'Zone 2A': ['Surathkal', 'Mangalore East', 'Mangalore Coastal', 'Mangalore North', 'Mangalore Hill-Side'],
-            'Zone 2B': ['Baikampady', 'Mangalore Sunrise', 'Mangalore Central', 'Mangalore Port Town'],
-            'Zone 3A': ['Mangalore Down Town', 'Mangalore South', 'Mangalore City', 'Deralakatte'],
-            'Zone 3B': ['Mangalore Seaside', 'Mangalore Metro', 'Mangalore Midtown', 'Mangalore'],
-            'Zone 4A': ['Modankap', 'Farangipete', 'B C Road City'],
-            'Zone 4B': ['Bantwal Town', 'Belthangady', 'Bantwal', 'Madanthyar'],
-            'Zone 4C': ['Moodabidri', 'Moodbidri Temple Town', 'Siddakatte Phalguni', 'Bantwal Loretto Hills'],
-            'Zone 4D': ['Puttur City', 'Vittal', 'Uppinangadi'],
-            'Zone 5A': ['Puttur Yuva', 'Puttur-East', 'Puttur Swarna', 'Puttur Elite'],
-            'Zone 5B': ['Puttur', 'Puttur Central', 'Subramanya', 'Kadaba Town'],
-            'Zone 5C': ['Sullia City', 'Sullia', 'Bellare Town', 'Birumale Hills Puttur'],
-            'Zone 6A': ['Virajpet', 'Gonikoppal', 'Madikeri', 'Misty Hills Madikeri', 'Madikeri Woods'],
-            'Zone 6B': ['Malleshwara Alur Siddapura', 'Shanivarsanthe', 'Hemavathi Kodlipet', 'Somwarpet Hills', 'Kushalnagar'],
-            'Zone 6C': ['Krishnarajanagar', 'Periyapatna Mid Town', 'Periyapatna Icons', 'Hunsur, Hunsur'],
-            'Zone 7A': ['Panchsheel Mysore', 'Ivory City Mysuru', 'Krishnaraja', 'Mysore', 'Mysore Shreegandha', 'Mysore Metro'],
-            'Zone 7B': ['E-Club of Mysuru Center', 'Mysore Mid-Town', 'Central Mysore', 'Mysore Jayaprakash Nagar', 'Mysore East', 'Seva Mysore'],
-            'Zone 8A': ['Mysore South East', 'Mysore Brindavan', 'Vijayanagar Mysore', 'Mysuru Diamond', 'Mysore North', 'Mysore Ambari'],
-            'Zone 8B': ['Mysore Elite', 'Mysore West', 'Mysore Royal', 'Mysore Stars', 'H.D. Kote', 'Heritage Mysuru'],
-            'Zone 9A': ['Chamarajanagar', 'Chamarajanagar Silk City', 'Nanjangud'],
-            'Zone 9B': ['Bannur', 'Yelanduru Greenway', 'Kollegal', 'Kollegal Mid Town']
-        };
-
-        // Known Aliases Mapping (Database Name -> Official Name)
-        const CLUB_ALIASES = {
-            'BC Road City': 'B C Road City',
-            'Mangalore Hillside': 'Mangalore Hill-Side',
-            'Mangalore Downtown': 'Mangalore Down Town',
-            'Mangalore Sea Side': 'Mangalore Seaside',
-            'Mysore Midtown': 'Mysore Mid-Town',
-            'Puttur East': 'Puttur-East',
-            'Periyapatna Midtown': 'Periyapatna Mid Town',
-            'Hunsur': 'Hunsur, Hunsur',
-            'Panchsheel': 'Panchsheel Mysore',
-            'E Club Mysure Center': 'E-Club of Mysuru Center',
-            'Vijaynagar Mysore': 'Vijayanagar Mysore',
-            'Mysore Diamonds': 'Mysuru Diamond',
-            'HD Kote': 'H.D. Kote',
-            'Kollegal Midtown': 'Kollegal Mid Town',
-            'Moodbidri Midtown': 'Moodbidri Mid Town',
-            'Virajpete': 'Virajpet',
-            'Gonikoppal ': 'Gonikoppal',
-            'Misty Hills Madikeri ': 'Misty Hills Madikeri'
-        };
+        // Zone data is now fetched dynamically from API
+        // ZONE_CLUBS, CLUB_MEMBERS, CLUB_ALIASES are populated by fetchZoneData()
 
         function showZoneDetails(zoneNum) {
             // Get all possible sub-zones for this zone
@@ -1187,138 +1245,46 @@
             tbody.innerHTML = `<tr><td colspan="12" class="error">${message}</td></tr>`;
         }
 
-        // Version: 2025-11-27-v4 (Hierarchical Zone/Sub-zone Report)
+        // Version: 2025-11-29 (Filtered Export - Non-Confidential)
         function prepareReport() {
-            if (allRegistrations.length === 0) {
-                alert('No data to export');
+            if (!filteredRegistrations || filteredRegistrations.length === 0) {
+                alert('No data to export. Please adjust your search/filters.');
                 return;
             }
-
-            // Filter valid registrations
-            const validRegs = allRegistrations.filter(r => {
-                if (r.payment_status === 'test') return false;
-                if (r.mobile === '0000000001' || r.mobile === '9999999999') return false;
-                if (r.email && (r.email.includes('test@') || r.email === 'test@test.com')) return false;
-                if (r.name && r.name.toUpperCase().includes('TEST ENTRY')) return false;
-                return true;
-            });
 
             // Create workbook
             const wb = XLSX.utils.book_new();
 
-            // === HIERARCHICAL SUMMARY SHEET ===
-            const summaryData = [
-                ['SNEHA SAURABHA 2025-26 - DETAILED ZONE SUMMARY'],
-                ['Generated on:', new Date().toLocaleString('en-IN')],
-                [''],
-                ['Hierarchy', 'Registered', 'Total Members', 'Percentage']
-            ];
-
-            let grandTotalReg = 0;
-            let grandTotalMembers = 0;
-
-            // Iterate through Zones 1 to 9
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                let zoneTotalReg = 0;
-                let zoneTotalMembers = 0;
-                const zoneRows = [];
-
-                // Find all sub-zones for this zone (e.g., Zone 1, Zone 2A, Zone 2B)
-                // Note: Zone 1 has no lettered sub-zones in the map, so we treat it as a single sub-zone
-                const subZoneKeys = Object.keys(ZONE_CLUBS).filter(k => k.startsWith(`Zone ${zoneNum}`));
-
-                if (subZoneKeys.length === 0) continue;
-
-                subZoneKeys.sort(); // Ensure A, B, C order
-
-                subZoneKeys.forEach(subZoneKey => {
-                    let subZoneReg = 0;
-                    let subZoneMembers = 0;
-                    const clubRows = [];
-
-                    const clubs = ZONE_CLUBS[subZoneKey];
-                    clubs.forEach(clubName => {
-                        // Get registered count (using aliases)
-                        const clubRegCount = validRegs.filter(r => {
-                            let rClub = r.club || 'Unknown';
-                            if (CLUB_ALIASES[rClub]) rClub = CLUB_ALIASES[rClub];
-                            return rClub === clubName;
-                        }).length;
-
-                        // Get total members
-                        const totalMembers = CLUB_MEMBERS[clubName] || 0;
-
-                        subZoneReg += clubRegCount;
-                        subZoneMembers += totalMembers;
-
-                        const pct = totalMembers > 0 ? ((clubRegCount / totalMembers) * 100).toFixed(1) + '%' : '0%';
-
-                        clubRows.push(['      ' + clubName, clubRegCount, totalMembers, pct]);
-                    });
-
-                    zoneTotalReg += subZoneReg;
-                    zoneTotalMembers += subZoneMembers;
-
-                    const subZonePct = subZoneMembers > 0 ? ((subZoneReg / subZoneMembers) * 100).toFixed(1) + '%' : '0%';
-
-                    // Add Sub-zone Header
-                    zoneRows.push(['   ' + subZoneKey, subZoneReg, subZoneMembers, subZonePct]);
-                    // Add Club Rows
-                    zoneRows.push(...clubRows);
-                });
-
-                grandTotalReg += zoneTotalReg;
-                grandTotalMembers += zoneTotalMembers;
-
-                const zonePct = zoneTotalMembers > 0 ? ((zoneTotalReg / zoneTotalMembers) * 100).toFixed(1) + '%' : '0%';
-
-                // Add Zone Total Row
-                summaryData.push([`ZONE ${zoneNum} TOTAL`, zoneTotalReg, zoneTotalMembers, zonePct]);
-                // Add Sub-zone and Club rows
-                summaryData.push(...zoneRows);
-                summaryData.push(['']); // Spacer
-            }
-
-            // Add Grand Total
-            const grandPct = grandTotalMembers > 0 ? ((grandTotalReg / grandTotalMembers) * 100).toFixed(1) + '%' : '0%';
-            summaryData.push(['GRAND TOTAL', grandTotalReg, grandTotalMembers, grandPct]);
-
-            // Create Summary Sheet
-            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            summaryWs['!cols'] = [{ wch: 40 }, { wch: 15 }, { wch: 15 }, { wch: 15 }];
-
-            // Style Totals (Basic styling via cell objects isn't fully supported in basic version, but structure helps)
-            XLSX.utils.book_append_sheet(wb, summaryWs, 'Detailed Summary');
-
-            // === ALL REGISTRATIONS SHEET ===
-            const excelData = validRegs.map((reg, index) => ({
+            // === FILTERED LIST SHEET ===
+            // Export only what is currently visible/filtered
+            const excelData = filteredRegistrations.map((reg, index) => ({
                 'S.No': index + 1,
                 'Registration ID': reg.registration_id,
                 'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
                 'Name': reg.name,
                 'Club Name': reg.club || 'N/A',
-                'Normalized Club': CLUB_ALIASES[reg.club] || reg.club || 'N/A',
-                'Zone': reg.zone || 'Unmapped',
                 'Type': reg.registration_type,
-                'Meal': reg.meal_preference
+                'Meal': reg.meal_preference,
+                'T-Shirt': reg.tshirt_size || 'N/A',
+                'Zone': reg.zone || 'Unmapped'
             }));
 
             const ws = XLSX.utils.json_to_sheet(excelData);
             ws['!cols'] = [
                 { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 },
-                { wch: 30 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, { wch: 12 }
+                { wch: 30 }, { wch: 20 }, { wch: 12 }, { wch: 10 }, { wch: 12 }
             ];
             ws['!autofilter'] = { ref: `A1:I${excelData.length + 1}` };
 
-            XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
+            XLSX.utils.book_append_sheet(wb, ws, 'Filtered Registrations');
 
             // Download
             const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `SNEHA-SAURABHA-Hierarchical-Report-${timestamp}.xlsx`;
+            const filename = `SNEHA-SAURABHA-Filtered-Report-${timestamp}.xlsx`;
             XLSX.writeFile(wb, filename);
 
-            console.log('✅ Hierarchical Excel exported:', filename);
-            alert(`✅ Detailed Report downloaded!\n\nFile: ${filename}\nTotal: ${grandTotalReg}/${grandTotalMembers} (${grandPct})`);
+            console.log('✅ Filtered Excel exported:', filename);
+            alert(`✅ Filtered Report downloaded!\n\nFile: ${filename}\nTotal Rows: ${excelData.length}`);
         }
 
         function exportZoneWise() {
@@ -1327,15 +1293,11 @@
                 return;
             }
 
-            // Filter out test entries (by status, mobile, email, and name patterns)
+            // Use ALL registrations for zone summary
             const validRegs = allRegistrations.filter(r => {
-                // Exclude by payment status
                 if (r.payment_status === 'test') return false;
-                // Exclude test mobile numbers
                 if (r.mobile === '0000000001' || r.mobile === '9999999999') return false;
-                // Exclude test emails
                 if (r.email && (r.email.includes('test@') || r.email === 'test@test.com')) return false;
-                // Exclude TEST names
                 if (r.name && r.name.toUpperCase().includes('TEST ENTRY')) return false;
                 return true;
             });
@@ -1353,16 +1315,32 @@
 
             let grandTotal = 0;
 
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
+            // Get all unique zones from the dynamic mapping
+            // ZONE_CLUBS keys are like "Zone 1", "Zone 2A", etc.
+            // We want to group by main Zone number (1, 2, 3...)
+            const zoneKeys = Object.keys(ZONE_CLUBS);
+            const mainZones = new Set();
+            zoneKeys.forEach(k => {
+                const match = k.match(/Zone\s+(\d+)/i);
+                if (match) mainZones.add(parseInt(match[1]));
+            });
+
+            const sortedZones = Array.from(mainZones).sort((a, b) => a - b);
+
+            for (const zoneNum of sortedZones) {
+                // Filter registrations for this main zone (including subzones)
                 const zoneRegs = validRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
-                    return m && m[1] == zoneNum;
+                    return m && parseInt(m[1]) === zoneNum;
                 });
 
                 // Count by club
                 const clubStats = {};
                 zoneRegs.forEach(r => {
-                    const club = r.club || 'Unknown';
+                    let club = r.club || 'Unknown';
+                    // Normalize
+                    if (CLUB_ALIASES[club]) club = CLUB_ALIASES[club];
+
                     if (!clubStats[club]) {
                         clubStats[club] = { count: 0 };
                     }
@@ -1413,7 +1391,7 @@
             zoneData.push([
                 'GRAND TOTAL',
                 '',
-                'All 9 Zones',
+                'All Zones',
                 grandTotal,
                 '100%'
             ]);

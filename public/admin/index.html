@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
@@ -19,16 +20,16 @@
             padding: 20px;
             overflow-y: auto;
         }
-        
+
         .container {
             max-width: 1600px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         header {
             display: flex;
             align-items: center;
@@ -38,31 +39,31 @@
             border-bottom: 2px solid #D4AF37;
             gap: 20px;
         }
-        
+
         .header-logo {
             width: 80px;
             height: 80px;
             object-fit: contain;
             flex-shrink: 0;
         }
-        
+
         .header-center {
             flex: 1;
             text-align: center;
         }
-        
+
         header h1 {
             color: #D4AF37;
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 5px;
         }
-        
+
         header p {
             color: #666;
             font-size: 14px;
         }
-        
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -71,12 +72,12 @@
             gap: 15px;
             flex-wrap: wrap;
         }
-        
+
         .search-box {
             flex: 1;
             max-width: 350px;
         }
-        
+
         .search-box input {
             width: 100%;
             padding: 10px 14px;
@@ -85,24 +86,24 @@
             font-size: 14px;
             transition: all 0.3s;
         }
-        
+
         .search-box input:focus {
             outline: none;
             border-color: #D4AF37;
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
         }
-        
+
         .stat-item {
             font-size: 13px;
             color: #666;
         }
-        
+
         .stat-item strong {
             color: #D4AF37;
             font-size: 16px;
             margin-right: 5px;
         }
-        
+
         .export-btn {
             background: #22C55E;
             color: white;
@@ -114,12 +115,12 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .export-btn:hover {
             background: #16A34A;
             transform: translateY(-2px);
         }
-        
+
         .table-wrapper {
             overflow-x: auto;
             overflow-y: auto;
@@ -127,20 +128,20 @@
             border-radius: 8px;
             border: 1px solid #E5E7EB;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
         }
-        
+
         thead {
             background: #F9FAFB;
             position: sticky;
             top: 0;
             z-index: 10;
         }
-        
+
         th {
             padding: 12px 10px;
             text-align: left;
@@ -152,37 +153,37 @@
             user-select: none;
             position: relative;
         }
-        
+
         th:hover {
             background: #F3F4F6;
         }
-        
+
         th.sortable::after {
             content: ' ⇅';
             color: #9CA3AF;
             font-size: 12px;
         }
-        
+
         th.sorted-asc::after {
             content: ' ↑';
             color: #D4AF37;
         }
-        
+
         th.sorted-desc::after {
             content: ' ↓';
             color: #D4AF37;
         }
-        
+
         td {
             padding: 10px;
             border-bottom: 1px solid #F3F4F6;
             color: #4B5563;
         }
-        
+
         tbody tr:hover {
             background: #F9FAFB;
         }
-        
+
         .status-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -190,32 +191,32 @@
             font-size: 12px;
             font-weight: 600;
         }
-        
+
         .status-paid {
             background: #D1FAE5;
             color: #065F46;
         }
-        
+
         .status-pending {
             background: #FEF3C7;
             color: #92400E;
         }
-        
+
         .meal-veg {
             color: #16A34A;
             font-weight: 600;
         }
-        
+
         .meal-non-veg {
             color: #DC2626;
             font-weight: 600;
         }
-        
+
         .meal-jain {
             color: #D97706;
             font-weight: 600;
         }
-        
+
         .badge-imported {
             display: inline-block;
             padding: 4px 10px;
@@ -225,7 +226,7 @@
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
         }
-        
+
         .badge-new {
             display: inline-block;
             padding: 4px 10px;
@@ -235,93 +236,90 @@
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
-        
+
         .loading {
             text-align: center;
             padding: 60px;
             color: #9CA3AF;
         }
-        
+
         .error {
             text-align: center;
             padding: 60px;
             color: #DC2626;
         }
-        
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
             }
-            
+
             header {
                 flex-direction: column;
                 gap: 15px;
             }
-            
+
             .header-logo {
                 width: 80px;
                 height: 80px;
             }
-            
+
             header h1 {
                 font-size: 24px;
             }
-            
+
             .controls {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             table {
                 font-size: 12px;
             }
-            
-            th, td {
+
+            th,
+            td {
                 padding: 8px 6px;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Authentication Modal -->
-    <div id="authModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 99999; align-items: center; justify-content: center;">
-        <div style="background: white; border-radius: 16px; padding: 40px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+    <div id="authModal"
+        style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 99999; align-items: center; justify-content: center;">
+        <div
+            style="background: white; border-radius: 16px; padding: 40px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
             <div style="text-align: center; margin-bottom: 30px;">
-                <div style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px;">
+                <div
+                    style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px;">
                     🔐
                 </div>
                 <h2 style="color: #D4AF37; margin-bottom: 8px;">Admin Access</h2>
                 <p style="color: #666; font-size: 14px;">Enter credentials to access admin dashboard</p>
             </div>
-            
+
             <form id="authForm">
                 <div style="margin-bottom: 20px;">
-                    <input 
-                        type="text" 
-                        id="adminUsername" 
-                        placeholder="Username"
+                    <input type="text" id="adminUsername" placeholder="Username"
                         style="width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;"
-                        required
-                        autocomplete="username"
-                    />
+                        required autocomplete="username" />
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
-                    <input 
-                        type="password" 
-                        id="adminPassword" 
-                        placeholder="Password"
+                    <input type="password" id="adminPassword" placeholder="Password"
                         style="width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;"
-                        required
-                        autocomplete="current-password"
-                    />
+                        required autocomplete="current-password" />
                 </div>
-                
-                <button type="submit" id="authButton" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+
+                <button type="submit" id="authButton"
+                    style="width: 100%; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
                     🔓 Unlock Dashboard
                 </button>
-                
-                <div id="authError" style="display: none; margin-top: 15px; padding: 12px; background: #FEE; border-radius: 8px; color: #C53030; font-size: 14px; text-align: center;">
+
+                <div id="authError"
+                    style="display: none; margin-top: 15px; padding: 12px; background: #FEE; border-radius: 8px; color: #C53030; font-size: 14px; text-align: center;">
                     ❌ Invalid username or password
                 </div>
             </form>
@@ -337,31 +335,41 @@
             </div>
             <img src="../images/header-right.jpg" alt="Right Logo" class="header-logo">
         </header>
-        
+
         <!-- Admin Action Buttons -->
         <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center;">
-            <button onclick="openDeleteEntryModal()" style="background: #EF4444; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);" onmouseover="this.style.background='#DC2626'" onmouseout="this.style.background='#EF4444'">
+            <button onclick="openDeleteEntryModal()"
+                style="background: #EF4444; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);"
+                onmouseover="this.style.background='#DC2626'" onmouseout="this.style.background='#EF4444'">
                 🗑️ Delete Entry
             </button>
-            <button onclick="openWhatsAppResendModal()" style="background: #10B981; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
+            <button onclick="openWhatsAppResendModal()"
+                style="background: #10B981; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);"
+                onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
                 📲 WhatsApp Resend
             </button>
-            <a href="/admin/recover-payment.html" style="background: #F59E0B; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); text-decoration: none; display: inline-block;" onmouseover="this.style.background='#D97706'" onmouseout="this.style.background='#F59E0B'">
+            <a href="/admin/recover-payment.html"
+                style="background: #F59E0B; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); text-decoration: none; display: inline-block;"
+                onmouseover="this.style.background='#D97706'" onmouseout="this.style.background='#F59E0B'">
                 💳 Payment Recovery
             </a>
         </div>
 
         <div class="controls">
             <div class="search-box">
-                <input type="text" id="search-input" placeholder="🔍 Search by name, mobile, email, club, registration ID..." onkeyup="searchTable()">
+                <input type="text" id="search-input"
+                    placeholder="🔍 Search by name, mobile, email, club, registration ID..." onkeyup="searchTable()">
             </div>
             <div class="stat-item">
                 <strong id="total-count">0</strong> Total Registrations
             </div>
+            <div class="stat-item" style="margin-left: 20px; border-left: 2px solid #E5E7EB; padding-left: 20px;">
+                <strong id="total-revenue" style="color: #10B981;">₹0</strong> Total Revenue
+            </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
         </div>
 
-        
+
         <div class="table-wrapper">
             <table id="registrations-table">
                 <thead>
@@ -391,49 +399,61 @@
     </div>
 
     <!-- Edit Registration Modal -->
-    <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; overflow-y: auto;">
+    <div id="editModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; overflow-y: auto;">
         <div style="max-width: 600px; margin: 50px auto; background: white; border-radius: 12px; padding: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
                 <h2 style="color: #D4AF37; margin: 0;">Edit Registration</h2>
-                <button onclick="closeEditModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">&times;</button>
+                <button onclick="closeEditModal()"
+                    style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">&times;</button>
             </div>
-            
+
             <form id="editForm">
                 <input type="hidden" id="edit_registration_id">
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Name *</label>
-                    <input type="text" id="edit_name" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <input type="text" id="edit_name" required
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Mobile *</label>
-                    <input type="tel" id="edit_mobile" required pattern="[0-9]{10}" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <input type="tel" id="edit_mobile" required pattern="[0-9]{10}"
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Email</label>
-                    <input type="email" id="edit_email" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <input type="email" id="edit_email"
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Order ID / UTR</label>
-                    <input type="text" id="edit_order_id" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Order ID /
+                        UTR</label>
+                    <input type="text" id="edit_order_id"
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registration Amount (₹) *</label>
-                    <input type="number" id="edit_registration_amount" required min="0" step="1" style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registration
+                        Amount (₹) *</label>
+                    <input type="number" id="edit_registration_amount" required min="0" step="1"
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Club *</label>
-                    <input type="text" id="edit_club" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <input type="text" id="edit_club" required
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registration Type *</label>
-                    <select id="edit_registration_type" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registration Type
+                        *</label>
+                    <select id="edit_registration_type" required
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                         <option value="Rotarian">Rotarian</option>
                         <option value="Rotarian with Spouse">Rotarian with Spouse</option>
                         <option value="Rotary Ann">Rotary Ann</option>
@@ -447,19 +467,23 @@
                         <option value="Patron Sponsor">Patron Sponsor</option>
                     </select>
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Meal Preference *</label>
-                    <select id="edit_meal_preference" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Meal Preference
+                        *</label>
+                    <select id="edit_meal_preference" required
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                         <option value="Veg">Veg</option>
                         <option value="Non-Veg">Non-Veg</option>
                         <option value="Jain">Jain</option>
                     </select>
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">T-Shirt Size *</label>
-                    <select id="edit_tshirt_size" required style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">T-Shirt Size
+                        *</label>
+                    <select id="edit_tshirt_size" required
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
                         <option value="S">S</option>
                         <option value="M">M</option>
                         <option value="L">L</option>
@@ -468,25 +492,32 @@
                         <option value="XXXL">XXXL</option>
                     </select>
                 </div>
-                
-                <div style="margin-bottom: 25px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 700; color: #92400E;">Edit Remarks (Mandatory) *</label>
-                    <textarea id="edit_remarks" required minlength="5" placeholder="Why are you editing this registration? (minimum 5 characters)" style="width: 100%; padding: 12px; border: 2px solid #FCD34D; border-radius: 8px; font-size: 14px; min-height: 80px; resize: vertical;"></textarea>
-                    <small style="color: #92400E; font-size: 13px;">⚠️ This remark will be saved permanently and exported in Excel reports.</small>
+
+                <div
+                    style="margin-bottom: 25px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700; color: #92400E;">Edit Remarks
+                        (Mandatory) *</label>
+                    <textarea id="edit_remarks" required minlength="5"
+                        placeholder="Why are you editing this registration? (minimum 5 characters)"
+                        style="width: 100%; padding: 12px; border: 2px solid #FCD34D; border-radius: 8px; font-size: 14px; min-height: 80px; resize: vertical;"></textarea>
+                    <small style="color: #92400E; font-size: 13px;">⚠️ This remark will be saved permanently and
+                        exported in Excel reports.</small>
                 </div>
-                
+
                 <div style="display: flex; gap: 12px;">
-                    <button type="submit" style="flex: 1; padding: 14px; background: #10B981; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                    <button type="submit"
+                        style="flex: 1; padding: 14px; background: #10B981; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
                         💾 Save Changes
                     </button>
-                    <button type="button" onclick="closeEditModal()" style="flex: 1; padding: 14px; background: #6B7280; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                    <button type="button" onclick="closeEditModal()"
+                        style="flex: 1; padding: 14px; background: #6B7280; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
                         Cancel
                     </button>
                 </div>
             </form>
         </div>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         // ==================== AUTHENTICATION ====================
@@ -494,7 +525,7 @@
         function checkAuth() {
             const modal = document.getElementById('authModal');
             const container = document.querySelector('.container');
-            
+
             if (sessionStorage.getItem('adminAuthenticated') === 'true') {
                 modal.style.display = 'none';
                 container.style.display = 'block';
@@ -512,7 +543,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-                
+
                 const result = await response.json();
                 return result.success;
             } catch (error) {
@@ -526,31 +557,31 @@
             const password = document.getElementById('adminPassword').value;
             const errorDiv = document.getElementById('authError');
             const authButton = document.getElementById('authButton');
-            
+
             if (!username || !password) {
                 errorDiv.textContent = '⚠️ Please enter both username and password';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
+
             // Disable button and show loading state
             authButton.disabled = true;
             authButton.textContent = '⏳ Verifying...';
             errorDiv.style.display = 'none';
-            
+
             const authenticated = await verifyCredentials(username, password);
-            
+
             if (authenticated) {
                 sessionStorage.setItem('adminAuthenticated', 'true');
                 checkAuth();
             } else {
                 errorDiv.textContent = '❌ Invalid username or password';
                 errorDiv.style.display = 'block';
-                
+
                 // Re-enable button
                 authButton.disabled = false;
                 authButton.textContent = '🔓 Unlock Dashboard';
-                
+
                 // Clear password field
                 document.getElementById('adminPassword').value = '';
                 document.getElementById('adminPassword').focus();
@@ -558,61 +589,97 @@
         }
 
         // Handle form submission
-        document.getElementById('authForm').addEventListener('submit', function(e) {
+        document.getElementById('authForm').addEventListener('submit', function (e) {
             e.preventDefault();
             unlockDashboard();
         });
 
-                // Check auth on page load
-                window.addEventListener('DOMContentLoaded', checkAuth);
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', checkAuth);
 
-                // ===== API BASE (handles custom domain vs Vercel) =====
-                const API_BASE = (location.hostname.includes('sneha2026.in'))
-                    ? 'https://sneha2026.vercel.app'
-                    : '';
+        // ===== API BASE (handles custom domain vs Vercel) =====
+        const API_BASE = (location.hostname.includes('sneha2026.in'))
+            ? 'https://sneha2026.vercel.app'
+            : '';
 
-                // ========== MAIN TALLY FUNCTIONS ==========
-        
+        // ========== MAIN TALLY FUNCTIONS ==========
+
         let allRegistrations = [];
         let filteredRegistrations = [];
         let currentSort = { column: 'registration_id', direction: 'desc' }; // Default descending
-        
+
         // Fetch registrations on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             if (sessionStorage.getItem('adminAuthenticated') === 'true') {
-                fetchRegistrations();
+                fetchZoneData().then(() => {
+                    fetchRegistrations();
+                });
             }
         });
-        
+
+        // Global variables for Zone Data
+        let ZONE_MAPPING = {};
+        let CLUB_MEMBERS = {};
+        let ZONE_CLUBS = {};
+        let CLUB_ALIASES = {};
+
+        async function fetchZoneData() {
+            try {
+                console.log('🔄 Fetching zone data...');
+                const response = await fetch('/api/admin/zone-data');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    ZONE_MAPPING = result.data.ZONE_MAPPING || {};
+                    CLUB_MEMBERS = result.data.CLUB_MEMBERS || {};
+                    ZONE_CLUBS = result.data.ZONE_CLUBS || {};
+                    CLUB_ALIASES = result.data.CLUB_ALIASES || {};
+                    console.log('✅ Zone data loaded:', Object.keys(ZONE_CLUBS).length, 'zones');
+                } else {
+                    console.error('❌ Failed to load zone data:', result.error);
+                }
+            } catch (error) {
+                console.error('❌ Error fetching zone data:', error);
+            }
+        }
+
         async function fetchRegistrations() {
             try {
                 console.log('🔄 Fetching registrations from /api/registrations/list');
-                
+
                 // Use the correct serverless function endpoint
                 const response = await fetch(`${API_BASE}/api/registrations/list`);
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('❌ API Response Error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 console.log('✅ API Response:', data);
                 console.log('📊 Total registrations:', data?.data?.total || 0);
-                
+                console.log('💰 Total revenue:', data?.data?.totalRevenue || 0);
+
+                // Update Total Revenue Display
+                const totalRevenue = data?.data?.totalRevenue || 0;
+                const revenueElement = document.getElementById('total-revenue');
+                if (revenueElement) {
+                    revenueElement.textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+                }
+
                 // API returns {success: true, data: {registrations: [...], total: ...}}
                 if (data.success && data.data && data.data.registrations) {
                     allRegistrations = data.data.registrations || [];
                     console.log('📋 Loaded registrations:', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
-                    
+
                     // Apply default sort by registration_id ascending
                     sortRegistrationsByDefault();
-                    
+
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
-                    
+
                     if (allRegistrations.length === 0) {
                         console.warn('⚠️ No registrations in database');
                     }
@@ -621,10 +688,10 @@
                     allRegistrations = data.registrations || [];
                     console.log('📋 Loaded registrations (fallback):', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
-                    
+
                     // Apply default sort by registration_id ascending
                     sortRegistrationsByDefault();
-                    
+
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
                 } else {
@@ -636,10 +703,10 @@
                 showError('Error loading data: ' + error.message);
             }
         }
-        
+
         function searchTable() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            
+
             if (searchTerm === '') {
                 filteredRegistrations = [...allRegistrations];
             } else {
@@ -654,26 +721,26 @@
                     );
                 });
             }
-            
+
             // Apply current sort after filtering
             if (currentSort.column) {
                 sortByColumn(currentSort.column, currentSort.direction);
             }
-            
+
             displayRegistrations(filteredRegistrations);
             updateStats(filteredRegistrations);
         }
-        
+
         function sortRegistrationsByDefault() {
             // Sort by registration_id DESCENDING (2026RTY0734, 2026RTY0733, etc.) - newest first
             filteredRegistrations.sort((a, b) => {
                 // Extract last 4 digits as numbers for proper sorting
                 const aNum = parseInt((a.registration_id || '').slice(-4)) || 0;
                 const bNum = parseInt((b.registration_id || '').slice(-4)) || 0;
-                
+
                 return bNum - aNum; // Descending order (highest first)
             });
-            
+
             // Update UI to show sorted state
             const headers = document.querySelectorAll('th.sortable');
             headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
@@ -681,16 +748,16 @@
                 headers[0].classList.add('sorted-desc'); // Show descending indicator
             }
         }
-        
+
         function sortByColumn(column, direction) {
             filteredRegistrations.sort((a, b) => {
                 let aVal = a[column];
                 let bVal = b[column];
-                
+
                 // Handle null/undefined
                 if (aVal === null || aVal === undefined) aVal = '';
                 if (bVal === null || bVal === undefined) bVal = '';
-                
+
                 // Handle dates
                 if (column === 'created_at') {
                     aVal = new Date(aVal).getTime();
@@ -701,11 +768,11 @@
                     aVal = String(aVal).toLowerCase();
                     bVal = String(bVal).toLowerCase();
                 }
-                
+
                 // Primary sort by selected column
                 if (aVal < bVal) return direction === 'asc' ? -1 : 1;
                 if (aVal > bVal) return direction === 'asc' ? 1 : -1;
-                
+
                 // Secondary sort by registration_id (always ascending)
                 const aRegId = String(a.registration_id || '').toLowerCase();
                 const bRegId = String(b.registration_id || '').toLowerCase();
@@ -714,7 +781,7 @@
                 return 0;
             });
         }
-        
+
         // Cyclic sorting function for columns with limited distinct values
         function cyclicSort(column) {
             // Get all unique values for this column, sorted alphabetically (case-insensitive)
@@ -722,28 +789,28 @@
                 const val = r[column];
                 return val ? String(val).toLowerCase() : '';
             }).filter(v => v))].sort();
-            
+
             // Track current cycle position per column
             if (!window.cyclicSortState) window.cyclicSortState = {};
             if (window.cyclicSortState[column] === undefined) window.cyclicSortState[column] = -1;
-            
+
             // Move to next value in cycle
             window.cyclicSortState[column] = (window.cyclicSortState[column] + 1) % uniqueValues.length;
             const targetValue = uniqueValues[window.cyclicSortState[column]];
-            
+
             console.log(`🔄 Cyclic sort ${column}: showing "${targetValue}" (${window.cyclicSortState[column] + 1}/${uniqueValues.length})`);
-            
+
             // Sort: target value first (by regid), then all others (by regid)
             filteredRegistrations.sort((a, b) => {
                 const aVal = String(a[column] || '').toLowerCase();
                 const bVal = String(b[column] || '').toLowerCase();
                 const aIsTarget = aVal === targetValue;
                 const bIsTarget = bVal === targetValue;
-                
+
                 // Target value comes first
                 if (aIsTarget && !bIsTarget) return -1;
                 if (!aIsTarget && bIsTarget) return 1;
-                
+
                 // Within same group (target or non-target), sort by registration_id
                 const aRegId = String(a.registration_id || '').toLowerCase();
                 const bRegId = String(b.registration_id || '').toLowerCase();
@@ -751,25 +818,25 @@
                 if (aRegId > bRegId) return 1;
                 return 0;
             });
-            
+
             // Update UI
             const headers = document.querySelectorAll('th.sortable');
             headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
-            
+
             displayRegistrations(filteredRegistrations);
         }
-        
+
         function cyclicSortSource() {
             // Three states: Imported (1-689), New (690+), All
             if (!window.cyclicSortState) window.cyclicSortState = {};
             if (window.cyclicSortState.source === undefined) window.cyclicSortState.source = -1;
-            
+
             const states = ['imported', 'new', 'all'];
             window.cyclicSortState.source = (window.cyclicSortState.source + 1) % states.length;
             const currentState = states[window.cyclicSortState.source];
-            
+
             console.log(`🔄 Cyclic sort source: showing "${currentState}" (${window.cyclicSortState.source + 1}/${states.length})`);
-            
+
             // Filter based on state
             if (currentState === 'imported') {
                 // Show only 1-689 (imported entries)
@@ -787,36 +854,36 @@
                 // Show all
                 filteredRegistrations = [...allRegistrations];
             }
-            
+
             // Sort by registration_id within the filtered set
             filteredRegistrations.sort((a, b) => {
                 const aNum = parseInt((a.registration_id || '').replace(/\D/g, '')) || 0;
                 const bNum = parseInt((b.registration_id || '').replace(/\D/g, '')) || 0;
                 return aNum - bNum;
             });
-            
+
             // Update UI
             const headers = document.querySelectorAll('th.sortable');
             headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
-            
+
             displayRegistrations(filteredRegistrations);
         }
-        
+
         function sortTable(columnIndex) {
             const headers = document.querySelectorAll('th.sortable');
             const column = headers[columnIndex].getAttribute('data-column');
-            
+
             // Special cyclic sorting for specific columns (including source)
             if (column === 'source') {
                 cyclicSortSource();
                 return;
             }
-            
+
             if (column === 'meal_preference' || column === 'registration_type' || column === 'club' || column === 'tshirt_size') {
                 cyclicSort(column);
                 return;
             }
-            
+
             // Toggle sort direction for regular columns
             if (currentSort.column === column) {
                 currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
@@ -824,29 +891,29 @@
                 currentSort.column = column;
                 currentSort.direction = 'asc';
             }
-            
+
             // Remove all sort classes
             headers.forEach(h => {
                 h.classList.remove('sorted-asc', 'sorted-desc');
             });
-            
+
             // Add sort class to current header
             headers[columnIndex].classList.add(currentSort.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
-            
+
             // Sort the data with registration_id as secondary sort
             filteredRegistrations.sort((a, b) => {
                 let aVal = a[column];
                 let bVal = b[column];
-                
+
                 // Handle null/undefined
                 if (aVal === null || aVal === undefined) aVal = '';
                 if (bVal === null || bVal === undefined) bVal = '';
-                
+
                 // Handle numbers (amount)
                 if (column === 'registration_amount') {
                     aVal = parseFloat(aVal) || 0;
                     bVal = parseFloat(bVal) || 0;
-                } 
+                }
                 // Handle dates
                 else if (column === 'created_at') {
                     aVal = new Date(aVal).getTime();
@@ -857,11 +924,11 @@
                     aVal = String(aVal).toLowerCase();
                     bVal = String(bVal).toLowerCase();
                 }
-                
+
                 // Primary sort by selected column
                 if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
                 if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
-                
+
                 // Secondary sort by registration_id (always ascending)
                 const aRegId = String(a.registration_id || '').toLowerCase();
                 const bRegId = String(b.registration_id || '').toLowerCase();
@@ -869,30 +936,30 @@
                 if (aRegId > bRegId) return 1;
                 return 0;
             });
-            
+
             displayRegistrations(filteredRegistrations);
         }
-        
+
         function displayRegistrations(registrations) {
             const tbody = document.getElementById('registrations-body');
-            
+
             if (registrations.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
                 return;
             }
-            
+
             tbody.innerHTML = registrations.map(reg => {
                 const date = new Date(reg.created_at).toLocaleDateString('en-IN');
-                const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' : 
-                                 reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
+                const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' :
+                    reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
                 const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
-                
+
                 // Determine source (Imported vs New)
                 const regNumber = parseInt((reg.registration_id || '').replace(/\D/g, '')) || 0;
                 const isImported = regNumber >= 1 && regNumber <= 689;
                 const sourceLabel = isImported ? '📥 Imported' : '🆕 New';
                 const sourceClass = isImported ? 'badge-imported' : 'badge-new';
-                
+
                 return `
                     <tr>
                         <td>${reg.registration_id}</td>
@@ -915,14 +982,14 @@
                 `;
             }).join('');
         }
-        
+
         function updateStats(registrations) {
             console.log('🔢 Updating stats for', registrations.length, 'registrations');
-            
+
             // Count only non-test registrations for total
             const nonTestCount = registrations.filter(r => r.payment_status !== 'test').length;
             document.getElementById('total-count').textContent = nonTestCount;
-            
+
             // Count registration types from ALL registrations (not filtered)
             const typeCounts = {
                 'Rotarian': 0,
@@ -938,17 +1005,17 @@
                 'Patron Sponsor': 0,
                 'deregistered': 0
             };
-            
+
             // Helper function to convert database format to expected format
             const normalizeType = (dbType) => {
                 if (!dbType) return 'Unknown';
-                
+
                 // Convert to lowercase, then title case each word
                 const titleCase = dbType.toLowerCase()
                     .split(' ')
                     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(' ');
-                
+
                 // Handle special cases
                 const typeMap = {
                     'Rotarian': 'Rotarian',
@@ -964,18 +1031,18 @@
                     'Platinum Sponsor': 'Platinum Sponsor',
                     'Patron Sponsor': 'Patron Sponsor'
                 };
-                
+
                 return typeMap[titleCase] || titleCase;
             };
-            
+
             // Debug: Check what registration types exist in data
             const uniqueTypes = new Set();
-            
+
             // Always count from allRegistrations (not filtered ones)
             allRegistrations.forEach(reg => {
                 const rawType = reg.registration_type;
                 uniqueTypes.add(rawType);
-                
+
                 if (reg.payment_status === 'test') {
                     typeCounts['deregistered']++;
                 } else {
@@ -987,31 +1054,31 @@
                     }
                 }
             });
-            
+
             console.log('📋 Unique registration types in data:', Array.from(uniqueTypes));
             console.log('📊 Type counts:', typeCounts);
-            
+
             // Registration breakdown removed - stats calculated for Excel only
         }
-        
+
         function showError(message) {
             const tbody = document.getElementById('registrations-body');
             tbody.innerHTML = `<tr><td colspan="12" class="error">${message}</td></tr>`;
         }
-        
-        // Version: 2025-11-17-v3 (comprehensive test filtering)
+
+        // Version: 2025-11-29 (Dynamic Zone Logic)
         function exportToExcel() {
             if (allRegistrations.length === 0) {
                 alert('No data to export');
                 return;
             }
-            
+
             // DON'T filter - export ALL registrations including test entries
             const allRegs = [...allRegistrations];
-            
+
             // Create workbook
             const wb = XLSX.utils.book_new();
-            
+
             // === SHEET 1: Summary Dashboard ===
             const summaryData = [
                 ['SNEHA SAURABHA 2025-26 - REGISTRATION SUMMARY'],
@@ -1023,7 +1090,7 @@
                 ['REGISTRATION TYPE BREAKDOWN'],
                 ['Type', 'Count']
             ];
-            
+
             // Calculate type-wise breakdown
             const typeStats = {};
             allRegs.forEach(r => {
@@ -1033,35 +1100,44 @@
                 }
                 typeStats[type].count++;
             });
-            
+
             Object.entries(typeStats).sort((a, b) => b[1].count - a[1].count).forEach(([type, stats]) => {
                 summaryData.push([type, stats.count]);
             });
-            
+
             summaryData.push(['', '']);
             summaryData.push(['ZONE-WISE BREAKDOWN']);
             summaryData.push(['Zone', 'Clubs', 'Registrations']);
-            
+
+            // Get sorted main zones
+            const zoneKeys = Object.keys(ZONE_CLUBS);
+            const mainZones = new Set();
+            zoneKeys.forEach(k => {
+                const match = k.match(/Zone\s+(\d+)/i);
+                if (match) mainZones.add(parseInt(match[1]));
+            });
+            const sortedZones = Array.from(mainZones).sort((a, b) => a - b);
+
             // Calculate zone-wise breakdown
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
+            for (const zoneNum of sortedZones) {
                 const zoneRegs = allRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
-                    return m && m[1] == zoneNum;
+                    return m && parseInt(m[1]) === zoneNum;
                 });
                 const zoneClubs = new Set(zoneRegs.map(r => r.club)).size;
                 summaryData.push([`Zone ${zoneNum}`, zoneClubs, zoneRegs.length]);
             }
-            
+
             const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
             summaryWs['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 20 }];
-            
+
             // Format header rows
             if (summaryWs['A1']) summaryWs['A1'].s = { font: { bold: true, sz: 14 }, fill: { fgColor: { rgb: 'D4AF37' } } };
             if (summaryWs['A4']) summaryWs['A4'].s = { font: { bold: true }, fill: { fgColor: { rgb: 'F4D03F' } } };
             if (summaryWs['A7']) summaryWs['A7'].s = { font: { bold: true }, fill: { fgColor: { rgb: 'F4D03F' } } };
-            
+
             XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
-            
+
             // === SHEET 2: All Registrations ===
             // Sort by registration_id number to get proper sequence (1, 2, 3...)
             const sortedRegs = [...allRegs].sort((a, b) => {
@@ -1069,13 +1145,13 @@
                 const bNum = parseInt((b.registration_id || '').replace(/\D/g, '')) || 0;
                 return aNum - bNum;
             });
-            
+
             // Map S.No to Registration ID number (not index)
             const excelData = sortedRegs.map((reg) => {
                 const regNumber = parseInt((reg.registration_id || '').replace(/\D/g, '')) || 0;
                 const isImported = regNumber >= 1 && regNumber <= 689;
                 const source = isImported ? 'Imported (1-689)' : 'New Registration';
-                
+
                 return {
                     'S.No': regNumber, // Use registration number as S.No
                     'Registration ID': reg.registration_id,
@@ -1099,27 +1175,27 @@
                     'Last Updated': reg.updated_at ? new Date(reg.updated_at).toLocaleString('en-IN') : 'N/A'
                 };
             });
-            
+
             const ws = XLSX.utils.json_to_sheet(excelData);
             ws['!cols'] = [
-                { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 }, { wch: 15 }, 
-                { wch: 30 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, 
+                { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 }, { wch: 15 },
+                { wch: 30 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 25 },
                 { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 15 }, { wch: 20 },
                 { wch: 30 }, { wch: 25 }, { wch: 20 }, { wch: 35 }, { wch: 20 }
             ];
-            
+
             // Add autofilter
             ws['!autofilter'] = { ref: `A1:T${excelData.length + 1}` };
-            
+
             XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
-            
+
             // === SHEETS 3-11: Zone-wise Details ===
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
+            for (const zoneNum of sortedZones) {
                 const zoneRegs = allRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
-                    return m && m[1] == zoneNum;
+                    return m && parseInt(m[1]) === zoneNum;
                 });
-                
+
                 // Zone header data
                 const zoneHeaderData = [
                     [`ZONE ${zoneNum} - DETAILED BREAKDOWN`],
@@ -1128,28 +1204,31 @@
                     ['CLUB-WISE SUMMARY'],
                     ['Rank', 'Club Name', 'Registrations', 'Percentage']
                 ];
-                
+
                 // Count by club
                 const clubStats = {};
                 zoneRegs.forEach(r => {
-                    const club = r.club || 'Unknown';
+                    let club = r.club || 'Unknown';
+                    // Normalize
+                    if (CLUB_ALIASES[club]) club = CLUB_ALIASES[club];
+
                     if (!clubStats[club]) {
                         clubStats[club] = { count: 0 };
                     }
                     clubStats[club].count++;
                 });
-                
+
                 // Sort by count descending
-                const sortedClubs = Object.entries(clubStats).sort((a,b) => b[1].count - a[1].count);
-                
+                const sortedClubs = Object.entries(clubStats).sort((a, b) => b[1].count - a[1].count);
+
                 sortedClubs.forEach(([club, stats], idx) => {
-                    const percentage = ((stats.count / zoneRegs.length) * 100).toFixed(1);
+                    const percentage = zoneRegs.length > 0 ? ((stats.count / zoneRegs.length) * 100).toFixed(1) : '0.0';
                     const rank = idx + 1;
                     let medal = '';
                     if (rank === 1) medal = '🥇';
                     else if (rank === 2) medal = '🥈';
                     else if (rank === 3) medal = '🥉';
-                    
+
                     zoneHeaderData.push([
                         `${medal} ${rank}`,
                         club,
@@ -1157,15 +1236,15 @@
                         `${percentage}%`
                     ]);
                 });
-                
+
                 // Add total row
                 zoneHeaderData.push(['', 'TOTAL', zoneRegs.length, '100%']);
                 zoneHeaderData.push(['']);
                 zoneHeaderData.push(['DETAILED REGISTRATIONS']);
-                
+
                 // Create zone sheet
                 const zoneWs = XLSX.utils.aoa_to_sheet(zoneHeaderData);
-                
+
                 // Add detailed registrations below summary
                 const zoneDetailData = zoneRegs.map((reg, idx) => ({
                     'S.No': idx + 1,
@@ -1175,41 +1254,41 @@
                     'Type': reg.registration_type,
                     'Meal': reg.meal_preference
                 }));
-                
-                XLSX.utils.sheet_add_json(zoneWs, zoneDetailData, { 
+
+                XLSX.utils.sheet_add_json(zoneWs, zoneDetailData, {
                     origin: `A${zoneHeaderData.length + 1}`,
                     skipHeader: false
                 });
-                
+
                 zoneWs['!cols'] = [
                     { wch: 10 }, { wch: 35 }, { wch: 15 }, { wch: 15 }, { wch: 12 }
                 ];
-                
+
                 XLSX.utils.book_append_sheet(wb, zoneWs, `Zone ${zoneNum}`);
             }
-            
+
             // Generate filename with timestamp
             const timestamp = new Date().toISOString().split('T')[0];
             const filename = `SNEHA-SAURABHA-Complete-Report-${timestamp}.xlsx`;
-            
+
             // Download
             XLSX.writeFile(wb, filename);
             console.log('✅ Enhanced Excel exported with complete breakdown:', filename);
             alert(`✅ Excel file downloaded!\n\nFile: ${filename}\nTotal Registrations: ${allRegs.length}`);
         }
-        
+
         function exportZoneWise() {
             if (allRegistrations.length === 0) {
                 alert('No data to export');
                 return;
             }
-            
+
             // Use ALL registrations - no filtering
             const allRegs = allRegistrations;
-            
+
             // Create workbook
             const wb = XLSX.utils.book_new();
-            
+
             // Build comprehensive zone summary data
             const zoneData = [
                 ['SNEHA SAURABHA 2025-26 - ZONE-WISE CLUB SUMMARY'],
@@ -1217,15 +1296,15 @@
                 [''],
                 ['Zone', 'Rank', 'Club Name', 'Registrations', 'Percentage']
             ];
-            
+
             let grandTotal = 0;
-            
+
             for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
                 const zoneRegs = allRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
                     return m && m[1] == zoneNum;
                 });
-                
+
                 // Count by club
                 const clubStats = {};
                 zoneRegs.forEach(r => {
@@ -1235,17 +1314,17 @@
                     }
                     clubStats[club].count++;
                 });
-                
+
                 // Sort by count descending
-                const sortedClubs = Object.entries(clubStats).sort((a,b) => b[1].count - a[1].count);
-                const zoneTotal = sortedClubs.reduce((sum,[,stats]) => sum + stats.count, 0);
-                
+                const sortedClubs = Object.entries(clubStats).sort((a, b) => b[1].count - a[1].count);
+                const zoneTotal = sortedClubs.reduce((sum, [, stats]) => sum + stats.count, 0);
+
                 grandTotal += zoneTotal;
-                
+
                 // Add zone header
                 zoneData.push(['', '', '', '', '']);
                 zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Clubs)`, '', '']);
-                
+
                 // Add clubs with rankings
                 sortedClubs.forEach(([club, stats], idx) => {
                     const percentage = zoneTotal > 0 ? ((stats.count / zoneTotal) * 100).toFixed(1) : '0.0';
@@ -1254,7 +1333,7 @@
                     if (rank === 1) medal = '🥇';
                     else if (rank === 2) medal = '🥈';
                     else if (rank === 3) medal = '🥉';
-                    
+
                     zoneData.push([
                         '',
                         `${medal} ${rank}`,
@@ -1263,7 +1342,7 @@
                         `${percentage}%`
                     ]);
                 });
-                
+
                 // Add zone total
                 zoneData.push([
                     '',
@@ -1273,7 +1352,7 @@
                     '100%'
                 ]);
             }
-            
+
             // Add grand total
             zoneData.push(['', '', '', '', '']);
             zoneData.push(['', '', '', '', '']);
@@ -1284,7 +1363,7 @@
                 grandTotal,
                 '100%'
             ]);
-            
+
             // Create worksheet
             const ws = XLSX.utils.aoa_to_sheet(zoneData);
             ws['!cols'] = [
@@ -1294,12 +1373,12 @@
                 { wch: 15 },  // Registrations
                 { wch: 12 }   // Percentage
             ];
-            
+
             // Add autofilter
             ws['!autofilter'] = { ref: 'A4:E4' };
-            
+
             XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
-            
+
             // Download
             const timestamp = new Date().toISOString().split('T')[0];
             const filename = `SNEHA-SAURABHA-Zone-Summary-${timestamp}.xlsx`;
@@ -1307,15 +1386,15 @@
             console.log('✅ Enhanced zone-wise Excel exported:', filename);
             alert(`✅ Zone Summary downloaded!\n\nFile: ${filename}\nTotal: ${grandTotal} registrations`);
         }
-        
+
         // Manual refresh only - removed auto-refresh
         // User will click refresh button before operations
         // setInterval(() => {
         //     fetchRegistrations();
         // }, 60000);
-        
+
         // ========== EDIT FUNCTIONS ==========
-        
+
         function openEditModalById(registrationId) {
             const registration = allRegistrations.find(r => r.registration_id === registrationId);
             if (!registration) {
@@ -1324,7 +1403,7 @@
             }
             openEditModal(registration);
         }
-        
+
         function openEditModal(registration) {
             document.getElementById('edit_registration_id').value = registration.registration_id;
             document.getElementById('edit_name').value = registration.name;
@@ -1337,28 +1416,28 @@
             document.getElementById('edit_meal_preference').value = registration.meal_preference;
             document.getElementById('edit_tshirt_size').value = registration.tshirt_size || 'M';
             document.getElementById('edit_remarks').value = '';
-            
+
             document.getElementById('editModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
-        
+
         function closeEditModal() {
             document.getElementById('editModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             document.getElementById('editForm').reset();
         }
-        
-        document.getElementById('editForm').addEventListener('submit', async function(e) {
+
+        document.getElementById('editForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const registration_id = document.getElementById('edit_registration_id').value;
             const remarks = document.getElementById('edit_remarks').value.trim();
-            
+
             if (remarks.length < 5) {
                 alert('❌ Edit remarks must be at least 5 characters long!');
                 return;
             }
-            
+
             const updateData = {
                 registration_id,
                 name: document.getElementById('edit_name').value,
@@ -1372,16 +1451,16 @@
                 tshirt_size: document.getElementById('edit_tshirt_size').value,
                 edit_remarks: remarks
             };
-            
+
             try {
                 const response = await fetch(`${API_BASE}/api/registrations/update`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updateData)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     alert('✅ Registration updated successfully!');
                     closeEditModal();
@@ -1394,7 +1473,7 @@
                 alert('❌ Error updating registration. Please try again.');
             }
         });
-        
+
         function printReceipt(orderId) {
             // Open receipt page in new tab
             const receiptUrl = `https://www.sneha2026.in/index.html?payment=success&order_id=${orderId}`;
@@ -1481,7 +1560,7 @@
             const regId = document.getElementById('confirmDeleteBtn').dataset.regId;
             if (!confirm(`⚠️ FINAL CONFIRMATION\\n\\nAre you absolutely sure you want to DELETE registration ${regId}?\\n\\nThis action is PERMANENT and cannot be undone!`)) return;
             try {
-                const response = await fetch(`${API_BASE}/api/registrations/delete`, { 
+                const response = await fetch(`${API_BASE}/api/registrations/delete`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ registration_id: regId })
@@ -1608,9 +1687,9 @@
                 btn.innerHTML = '📲 Send WhatsApp';
             }
         }
-        
+
         // ========== BULK WHATSAPP ==========
-        
+
         function openBulkWhatsappModal() {
             const modal = document.createElement('div');
             modal.className = 'modal';
@@ -1675,30 +1754,30 @@
             `;
             document.body.appendChild(modal);
         }
-        
+
         let selectedBulkRecipients = [];
-        
+
         function isValidForWhatsApp(reg) {
             const status = (reg.payment_status || '').toLowerCase();
             const validStatuses = ['success', 'paid', 'manual', 'manual-s', 'manual-b', 'manual-p', 'imported'];
-            return validStatuses.includes(status) && 
-                   reg.mobile && 
-                   reg.mobile.length === 10 &&
-                   reg.mobile !== '0000000001' &&
-                   reg.mobile !== '9999999999' &&
-                   !reg.mobile.startsWith('916'); // Exclude landlines
+            return validStatuses.includes(status) &&
+                reg.mobile &&
+                reg.mobile.length === 10 &&
+                reg.mobile !== '0000000001' &&
+                reg.mobile !== '9999999999' &&
+                !reg.mobile.startsWith('916'); // Exclude landlines
         }
-        
+
         function selectBulkFilter(filterType) {
             const optionsDiv = document.getElementById('bulk-filter-options');
-            
+
             if (filterType === 'all') {
                 selectedBulkRecipients = allRegistrations.filter(r => isValidForWhatsApp(r));
                 optionsDiv.innerHTML = '';
                 updateBulkCount();
                 return;
             }
-            
+
             if (filterType === 'zone') {
                 const zones = [...new Set(allRegistrations.map(r => r.zone))].filter(z => z).sort();
                 optionsDiv.innerHTML = `
@@ -1728,32 +1807,32 @@
                 `;
             }
         }
-        
+
         function filterByZone(zone) {
             if (zone) {
                 selectedBulkRecipients = allRegistrations.filter(r => r.zone === zone && isValidForWhatsApp(r));
                 updateBulkCount();
             }
         }
-        
+
         function filterByClub(club) {
             if (club) {
                 selectedBulkRecipients = allRegistrations.filter(r => r.club === club && isValidForWhatsApp(r));
                 updateBulkCount();
             }
         }
-        
+
         function filterByType(type) {
             if (type) {
                 selectedBulkRecipients = allRegistrations.filter(r => r.registration_type === type && isValidForWhatsApp(r));
                 updateBulkCount();
             }
         }
-        
+
         function updateBulkCount() {
             const countDiv = document.getElementById('bulk-selected-count');
             const sendBtn = document.getElementById('bulk-send-btn');
-            
+
             if (selectedBulkRecipients.length > 0) {
                 countDiv.innerHTML = `✅ Selected: <strong>${selectedBulkRecipients.length}</strong> recipients`;
                 sendBtn.disabled = false;
@@ -1762,38 +1841,38 @@
                 sendBtn.disabled = true;
             }
         }
-        
+
         async function sendBulkWhatsApp() {
             if (selectedBulkRecipients.length === 0) {
                 alert('Please select recipients first');
                 return;
             }
-            
+
             if (!confirm(`Send WhatsApp to ${selectedBulkRecipients.length} recipients?\n\nThis will use your 24-hour message limit.`)) {
                 return;
             }
-            
+
             const progressDiv = document.getElementById('bulk-progress');
             const progressBar = document.getElementById('bulk-progress-bar');
             const progressText = document.getElementById('bulk-progress-text');
             const sendBtn = document.getElementById('bulk-send-btn');
-            
+
             progressDiv.style.display = 'block';
             sendBtn.disabled = true;
-            
+
             let sent = 0;
             let failed = 0;
-            
+
             for (let i = 0; i < selectedBulkRecipients.length; i++) {
                 const reg = selectedBulkRecipients[i];
-                
+
                 try {
                     const response = await fetch(`${API_BASE}/api/resend-whatsapp`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ registration_id: reg.registration_id })
                     });
-                    
+
                     if (response.ok) {
                         sent++;
                     } else {
@@ -1802,25 +1881,27 @@
                 } catch (error) {
                     failed++;
                 }
-                
+
                 // Update progress
                 const progress = ((i + 1) / selectedBulkRecipients.length) * 100;
                 progressBar.style.width = progress + '%';
                 progressText.innerHTML = `Sent: ${sent} | Failed: ${failed} | Total: ${i + 1}/${selectedBulkRecipients.length}`;
-                
+
                 // Small delay to avoid rate limiting (500ms between messages)
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
-            
+
             alert(`✅ Bulk WhatsApp Complete!\n\nSent: ${sent}\nFailed: ${failed}\nTotal: ${selectedBulkRecipients.length}`);
             document.querySelector('.modal').remove();
         }
-        
+
     </script>
 </body>
+
 </html>
 
 ```
-    </script>
+</script>
 </body>
+
 </html>
