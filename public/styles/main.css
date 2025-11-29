@@ -107,10 +107,14 @@ body {
         margin: 0 auto 20px auto !important;
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.1) !important;
         padding: 0 !important;
-        display: block !important;
+        display: none !important; /* Hide by default on desktop */
         top: auto !important;
         left: auto !important;
         width: 100% !important;
+    }
+
+    .screen.active {
+        display: block !important; /* Only show active screen */
     }
     
     body {
