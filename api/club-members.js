@@ -22,14 +22,13 @@ module.exports = async (req, res) => {
         return res.status(400).json({ success: false, error: 'clubName required' });
       }
 
-      // Use shared sql client - much faster than creating new Pool
-      const result = await sql.query(
-        `SELECT id, member_name, email, mobile, member_type 
-         FROM club_members 
-         WHERE club_name = $1 AND is_active = true 
-         ORDER BY member_name ASC`,
-        [normalizeClubName(clubName)]
-      );
+      // Use shared sql client - using tagged template literal syntax
+      const result = await sql`
+        SELECT id, member_name, email, mobile, member_type 
+        FROM club_members 
+        WHERE club_name = ${normalizeClubName(clubName)} AND is_active = true 
+        ORDER BY member_name ASC
+      `;
 
       return res.json({
         success: true,
