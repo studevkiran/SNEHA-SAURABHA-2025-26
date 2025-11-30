@@ -2440,16 +2440,18 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================= */
 function initScrollProgress() {
     const progressPath = document.querySelector('.progress-wrap path');
+    const progressWrap = document.querySelector('.progress-wrap');
+
+    if (!progressPath || !progressWrap) return;
+
     const pathLength = progressPath.getTotalLength();
 
     // Set up the path styling for the animation
-    if (progressPath) {
-        progressPath.style.transition = 'none';
-        progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
-        progressPath.style.strokeDashoffset = pathLength;
-        progressPath.getBoundingClientRect();
-        progressPath.style.transition = 'stroke-dashoffset 10ms linear';
-    }
+    progressPath.style.transition = 'none';
+    progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
+    progressPath.style.strokeDashoffset = pathLength;
+    progressPath.getBoundingClientRect();
+    progressPath.style.transition = 'stroke-dashoffset 10ms linear';
 
     const updateProgress = () => {
         const scroll = window.scrollY || window.pageYOffset;
@@ -2458,7 +2460,6 @@ function initScrollProgress() {
         progressPath.style.strokeDashoffset = progress;
 
         // Show/Hide button based on scroll position
-        const progressWrap = document.querySelector('.progress-wrap');
         if (scroll > 50) {
             progressWrap.classList.add('active-progress');
         } else {
@@ -2473,7 +2474,7 @@ function initScrollProgress() {
     updateProgress();
 
     // Scroll to top on click
-    document.querySelector('.progress-wrap').addEventListener('click', (event) => {
+    progressWrap.addEventListener('click', (event) => {
         event.preventDefault();
         window.scrollTo({
             top: 0,
