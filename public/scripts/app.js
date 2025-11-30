@@ -2400,13 +2400,16 @@ function renderHotels(hotels) {
             phoneHtml = `<a href="tel:${hotel.phone[0]}" class="contact-link">📞 Call</a>`;
         }
 
-        // Handle image - use local placeholder
+        // Handle image - use real image if available, fallback to placeholder
         let imageSrc = 'images/placeholder-hotel.jpg';
+        if (hotel.images && hotel.images.exterior && hotel.images.exterior.length > 0) {
+            imageSrc = hotel.images.exterior[0];
+        }
 
         html += `
             <div class="hotel-card">
                 <div class="hotel-image">
-                    <img src="${imageSrc}" alt="${hotel.name}">
+                    <img src="${imageSrc}" alt="${hotel.name}" onerror="this.src='images/placeholder-hotel.jpg'">
                     <div class="hotel-category">${hotel.category.toUpperCase()}</div>
                     <div class="hotel-rating">
                         <span class="rating-score">${hotel.rating}</span>
