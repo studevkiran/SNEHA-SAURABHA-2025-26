@@ -41,20 +41,31 @@
                 <img src="images/UPDATED LOGO.png" alt="Sneha Saurabha 2025-26" class="header-img">
             </div>
 
+            <!-- Navigation Bar (Desktop & Mobile) -->
+            <div class="nav-container">
+                <!-- Desktop Navigation -->
+                <nav class="desktop-nav">
+                    <a href="#" onclick="showScreen('screen-banner'); return false;" class="nav-link active">Home</a>
+                    <a href="#" onclick="showScreen('screen-committee'); return false;" class="nav-link">Committee</a>
+                    <a href="#" onclick="showScreen('screen-accommodation'); return false;" class="nav-link">Where to
+                        Stay</a>
+                    <a href="admin/tally.html" target="_blank" class="nav-link">Reports</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" onclick="toggleMenu()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                    <span>Menu</span>
+                </button>
+            </div>
+
             <!-- Main Event Info -->
             <div class="event-info">
-                <!-- Menu Button -->
-                <div style="position: absolute; top: 20px; right: 20px; z-index: 100;">
-                    <button onclick="toggleMenu()"
-                        style="background: none; border: none; cursor: pointer; padding: 10px;">
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
 
                 <h2 class="subtitle">ROTARY DISTRICT CONFERENCE</h2>
                 <h1 class="main-title">SNEHA SAURABHA</h1>
