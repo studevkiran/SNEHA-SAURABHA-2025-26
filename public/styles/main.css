@@ -3306,14 +3306,7 @@ h3 {
 
 
 
-    /* Review Section: Two Columns */
-    .review-container {
-        display: grid !important;
-        grid-template-columns: 1.5fr 1fr !important;
-        /* Info wider than coupon */
-        gap: 30px !important;
-        align-items: start !important;
-    }
+
 
     /* Ensure screen content is centered but wide */
     .screen-content {
