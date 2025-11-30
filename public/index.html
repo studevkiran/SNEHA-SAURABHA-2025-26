@@ -54,8 +54,7 @@
                     <a href="#" onclick="showScreen('screen-banner'); return false;" class="nav-link active">Home</a>
                     <a href="#" onclick="showScreen('screen-about'); return false;" class="nav-link">About</a>
                     <a href="#" onclick="showScreen('screen-committee'); return false;" class="nav-link">Committee</a>
-                    <a href="#" onclick="showScreen('screen-accommodation'); return false;" class="nav-link">Where to
-                        Stay</a>
+                    <a href="#" onclick="showScreen('screen-hotels'); return false;" class="nav-link">Hotels</a>
                     <a href="admin/tally.html" target="_blank" class="nav-link">Reports</a>
                 </nav>
             </div>
@@ -722,13 +721,14 @@
         </div>
     </div>
 
-    <!-- Screen 9: Accommodation -->
-    <div id="screen-accommodation" class="screen">
+    <!-- Screen 9: Hotels -->
+    <div id="screen-hotels" class="screen">
         <div class="screen-content">
-            <button class="btn-back" onclick="showScreen('screen-banner')">← Back</button>
-            <h2>Where to Stay</h2>
+            <button class="btn-back" onclick="showScreen('screen-banner')">← Back to Home</button>
+            <h2 class="section-title">Hotels</h2>
             <div id="hotels-container" class="hotels-grid">
                 <!-- Dynamic content -->
+                <div class="loading-spinner">Loading hotels...</div>
             </div>
         </div>
     </div>
@@ -750,8 +750,8 @@
                 <a href="#" onclick="toggleMenu(); showScreen('screen-committee'); return false;">
                     👥 Committee
                 </a>
-                <a href="#" onclick="toggleMenu(); showScreen('screen-accommodation'); return false;">
-                    🛏️ Where to Stay
+                <a href="#" onclick="toggleMenu(); showScreen('screen-hotels'); return false;">
+                    🏨 Hotels
                 </a>
                 <a href="admin/tally.html" target="_blank">
                     📊 Reports

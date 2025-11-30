@@ -2363,13 +2363,18 @@ function renderCommittee(data) {
 }
 
 // Load Hotel Data
+// Load Hotel Data
 async function loadHotelData() {
     try {
         const response = await fetch('data/hotels.json');
         const data = await response.json();
-        renderHotels(data);
+        renderHotels(data.hotels);
     } catch (error) {
         console.error('Error loading hotel data:', error);
+        const container = document.getElementById('hotels-container');
+        if (container) {
+            container.innerHTML = '<div class="error-message">Failed to load hotels. Please try again later.</div>';
+        }
     }
 }
 
@@ -2380,37 +2385,60 @@ function renderHotels(hotels) {
     let html = '';
 
     hotels.forEach(hotel => {
+        let amenitiesHtml = hotel.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('');
+
+        let bookingLinksHtml = '';
+        if (hotel.bookingLinks) {
+            for (const [platform, link] of Object.entries(hotel.bookingLinks)) {
+                bookingLinksHtml += `<a href="${link}" target="_blank" class="booking-btn ${platform}">${platform.charAt(0).toUpperCase() + platform.slice(1)}</a>`;
+            }
+        }
+
+        // Handle phone numbers
+        let phoneHtml = '';
+        if (hotel.phone && hotel.phone.length > 0) {
+            phoneHtml = `<a href="tel:${hotel.phone[0]}" class="contact-link">📞 Call</a>`;
+        }
+
+        // Handle image
+        let imageSrc = 'images/placeholder-hotel.jpg';
+        if (hotel.images && hotel.images.exterior && hotel.images.exterior.length > 0) {
+            imageSrc = hotel.images.exterior[0];
+        }
+
         html += `
             <div class="hotel-card">
-                <div class="hotel-name">${hotel.name}</div>
-                <div class="hotel-contact">
-        `;
-
-        if (hotel.phones && hotel.phones.length > 0) {
-            hotel.phones.forEach(phone => {
-                // Clean phone number for tel link
-                const cleanPhone = phone.replace(/[^0-9+]/g, '');
-                html += `
-                    <div class="contact-row">
-                        <a href="tel:${cleanPhone}" class="contact-btn btn-call">
-                            📞 ${phone}
-                        </a>
+                <div class="hotel-image">
+                    <img src="${imageSrc}" alt="${hotel.name}" onerror="this.src='images/placeholder-hotel.jpg'">
+                    <div class="hotel-category">${hotel.category.toUpperCase()}</div>
+                    <div class="hotel-rating">
+                        <span class="rating-score">${hotel.rating}</span>
+                        <span class="rating-platform">on ${hotel.ratingPlatform || 'Agoda'}</span>
                     </div>
-                `;
-            });
-        }
-
-        if (hotel.email) {
-            html += `
-                <div class="contact-row">
-                    <a href="mailto:${hotel.email}" class="contact-btn btn-email">
-                        ✉️ Email
-                    </a>
                 </div>
-            `;
-        }
+                <div class="hotel-details">
+                    <h3 class="hotel-name">${hotel.name}</h3>
+                    <p class="hotel-address">📍 ${hotel.address} (${hotel.distanceFromVenue} from venue)</p>
+                    <p class="hotel-price">${hotel.priceRange} <span class="per-night">/ night</span></p>
+                    
+                    <div class="hotel-highlights">
+                        <p>✨ ${hotel.highlights}</p>
+                    </div>
 
-        html += `
+                    <div class="hotel-amenities">
+                        ${amenitiesHtml}
+                    </div>
+
+                    <div class="hotel-actions">
+                        <div class="booking-links">
+                            ${bookingLinksHtml}
+                        </div>
+                        <div class="contact-links">
+                            ${phoneHtml}
+                            ${hotel.googleMapsLink ? `<a href="${hotel.googleMapsLink}" target="_blank" class="contact-link">🗺️ Map</a>` : ''}
+                            ${hotel.website ? `<a href="${hotel.website}" target="_blank" class="contact-link">🌐 Website</a>` : ''}
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
