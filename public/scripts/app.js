@@ -2419,8 +2419,63 @@ function renderHotels(hotels) {
     container.innerHTML = html;
 }
 
-// Initialize new sections on load
+// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    loadCommitteeData();
-    loadHotelData();
+    // Initialize screens
+    showScreen('screen-banner');
+
+    // Initialize Committee Data
+    initCommittee();
+
+    // Initialize Hotel Data
+    initHotels();
+
+    // Initialize Scroll Progress Button
+    initScrollProgress();
 });
+
+/* =========================================
+   Scroll Progress Button Logic
+   ========================================= */
+function initScrollProgress() {
+    const progressPath = document.querySelector('.progress-wrap path');
+    const pathLength = progressPath.getTotalLength();
+
+    // Set up the path styling for the animation
+    progressPath.style.transition = 'progressPath.style.transition = "none"';
+    progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
+    progressPath.style.strokeDashoffset = pathLength;
+    progressPath.getBoundingClientRect();
+    progressPath.style.transition = 'stroke-dashoffset 10ms linear';
+
+    const updateProgress = () => {
+        const scroll = window.scrollY || window.pageYOffset;
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = pathLength - (scroll * pathLength / height);
+        progressPath.style.strokeDashoffset = progress;
+
+        // Show/Hide button based on scroll position
+        const progressWrap = document.querySelector('.progress-wrap');
+        if (scroll > 50) {
+            progressWrap.classList.add('active-progress');
+        } else {
+            progressWrap.classList.remove('active-progress');
+        }
+    };
+
+    // Update on scroll
+    window.addEventListener('scroll', updateProgress);
+
+    // Initial update
+    updateProgress();
+
+    // Scroll to top on click
+    document.querySelector('.progress-wrap').addEventListener('click', (event) => {
+        event.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        return false;
+    });
+}
