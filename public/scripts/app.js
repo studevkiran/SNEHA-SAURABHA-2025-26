@@ -2417,7 +2417,7 @@ function renderHotels(hotels) {
                 </div>
                 <div class="hotel-details">
                     <h3 class="hotel-name">${hotel.name}</h3>
-                    <p class="hotel-address">📍 ${hotel.address} (${hotel.distanceFromVenue} from venue)</p>
+                    <p class="hotel-address">📍 ${hotel.address}</p>
                     
                     <div class="hotel-highlights">
                         <p>✨ ${hotel.highlights}</p>
