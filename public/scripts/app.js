@@ -2429,7 +2429,6 @@ function renderHotels(hotels) {
 
                     <div class="hotel-actions">
                         <div class="contact-links" style="justify-content: center; gap: 20px;">
-                            ${phoneHtml ? phoneHtml.replace('class="contact-link"', 'class="action-btn call-btn"') : ''}
                             ${hotel.googleMapsLink ? `<a href="${hotel.googleMapsLink}" target="_blank" class="action-btn map-btn">🗺️ Map</a>` : ''}
                         </div>
                     </div>
