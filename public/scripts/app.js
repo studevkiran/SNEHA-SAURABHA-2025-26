@@ -2333,8 +2333,12 @@ function renderCommittee(data) {
     let html = '';
 
     data.sections.forEach(section => {
+        // Add specific class for District Team to apply special layout
+        const isDistrictTeam = section.title === 'District Team';
+        const sectionClass = isDistrictTeam ? 'committee-section district-team-section' : 'committee-section';
+
         html += `
-            <div class="committee-section">
+            <div class="${sectionClass}">
                 <div class="committee-header">
                     <h3>${section.title}</h3>
                 </div>
