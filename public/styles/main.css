@@ -3277,3 +3277,51 @@ h3 {
     padding-top: 15px;
     border-top: 1px solid #F3F4F6;
 }
+/* =========================================
+   Desktop Layout Fixes (Comprehensive)
+   ========================================= */
+@media (min-width: 768px) {
+    /* Ensure all main containers use full available width */
+    .about-container,
+    .committee-list,
+    .review-container,
+    .hotels-grid {
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* About Section: Side-by-side messages */
+    .about-container {
+        flex-direction: row !important;
+        align-items: stretch !important;
+        gap: 30px !important;
+    }
+
+    .about-card {
+        flex: 1 !important;
+        width: auto !important;
+    }
+
+    /* Committee Section: Grid Layout */
+    .committee-list {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+        gap: 30px !important;
+    }
+
+    /* Review Section: Two Columns */
+    .review-container {
+        display: grid !important;
+        grid-template-columns: 1.5fr 1fr !important; /* Info wider than coupon */
+        gap: 30px !important;
+        align-items: start !important;
+    }
+
+    /* Ensure screen content is centered but wide */
+    .screen-content {
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+    }
+}
