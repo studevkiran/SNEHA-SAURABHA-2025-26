@@ -1677,12 +1677,15 @@ h3 {
     box-shadow: 0 2px 6px rgba(212, 175, 55, 0.3);
 }
 
-/* Mobile Menu Button (Absolute) */
+/* Mobile Menu Wrapper */
+.mobile-menu-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+/* Mobile Menu Button (In-flow) */
 .mobile-menu-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 100;
     display: flex;
     /* Shown on mobile */
     align-items: center;
@@ -1690,7 +1693,7 @@ h3 {
     background: none;
     border: none;
     color: var(--primary-gold);
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
     transition: transform 0.2s;
 }
@@ -1706,7 +1709,7 @@ h3 {
         /* Show on desktop */
     }
 
-    .mobile-menu-btn {
+    .mobile-menu-wrapper {
         display: none;
     }
 }
