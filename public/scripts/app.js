@@ -2346,8 +2346,8 @@ function renderCommittee(data) {
         `;
 
         section.members.forEach(member => {
-            const isHighlight = member.role && (member.role.includes('Governor') || member.role.includes('Chairman'));
-            const highlightClass = isHighlight ? 'highlight' : '';
+            // Removed generic highlight logic as per user request to only highlight District Team top member via CSS
+            const highlightClass = '';
 
             html += `
                 <div class="committee-member ${highlightClass}">
