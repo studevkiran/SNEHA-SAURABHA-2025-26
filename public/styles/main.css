@@ -3325,3 +3325,32 @@ h3 {
         width: 100% !important;
     }
 }
+
+/* =========================================
+   Registration Pages Constraint (Desktop)
+   ========================================= */
+@media (min-width: 768px) {
+    /* Constrain registration flow screens to a focused width */
+    #screen-register-type,
+    #screen-personal-details,
+    #screen-review,
+    #screen-payment,
+    #screen-success,
+    #screen-failure {
+        max-width: 600px !important;
+        margin: 0 auto 20px auto !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important;
+    }
+
+    /* Ensure content within these screens is centered and contained */
+    #screen-register-type .screen-content,
+    #screen-personal-details .screen-content,
+    #screen-review .screen-content,
+    #screen-payment .screen-content,
+    #screen-success .screen-content,
+    #screen-failure .screen-content {
+        max-width: 100% !important;
+        padding: 30px !important;
+    }
+}
