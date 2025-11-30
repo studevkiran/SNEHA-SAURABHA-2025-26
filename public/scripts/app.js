@@ -2410,21 +2410,14 @@ function renderHotels(hotels) {
             <div class="hotel-card">
                 <div class="hotel-image">
                     <img src="${imageSrc}" alt="${hotel.name}" onerror="this.src='images/placeholder-hotel.jpg'">
-                    <div class="hotel-category">${hotel.category.toUpperCase()}</div>
                     <div class="hotel-rating">
                         <span class="rating-score">${hotel.rating}</span>
                         <span class="rating-platform">on ${hotel.ratingPlatform || 'Agoda'}</span>
                     </div>
-                    ${hotel.galleryLink ? `
-                    <a href="${hotel.galleryLink}" target="_blank" class="view-photos-btn">
-                        📷 View Photos
-                    </a>
-                    ` : ''}
                 </div>
                 <div class="hotel-details">
                     <h3 class="hotel-name">${hotel.name}</h3>
                     <p class="hotel-address">📍 ${hotel.address} (${hotel.distanceFromVenue} from venue)</p>
-                    <p class="hotel-price">${hotel.priceRange} <span class="per-night">/ night</span></p>
                     
                     <div class="hotel-highlights">
                         <p>✨ ${hotel.highlights}</p>
@@ -2435,13 +2428,9 @@ function renderHotels(hotels) {
                     </div>
 
                     <div class="hotel-actions">
-                        <div class="booking-links">
-                            ${bookingLinksHtml}
-                        </div>
-                        <div class="contact-links">
-                            ${phoneHtml}
-                            ${hotel.googleMapsLink ? `<a href="${hotel.googleMapsLink}" target="_blank" class="contact-link">🗺️ Map</a>` : ''}
-                            ${hotel.website ? `<a href="${hotel.website}" target="_blank" class="contact-link">🌐 Website</a>` : ''}
+                        <div class="contact-links" style="justify-content: center; gap: 20px;">
+                            ${phoneHtml ? phoneHtml.replace('class="contact-link"', 'class="action-btn call-btn"') : ''}
+                            ${hotel.googleMapsLink ? `<a href="${hotel.googleMapsLink}" target="_blank" class="action-btn map-btn">🗺️ Map</a>` : ''}
                         </div>
                     </div>
                 </div>

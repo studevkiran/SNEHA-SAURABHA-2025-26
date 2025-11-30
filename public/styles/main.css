@@ -3201,3 +3201,45 @@ h3 {
     background: rgba(0, 0, 0, 0.9);
     transform: scale(1.05);
 }
+
+/* =========================================
+   Hotel Action Buttons (New)
+   ========================================= */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    flex: 1;
+    max-width: 150px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.call-btn {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    border: none;
+}
+
+.map-btn {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    color: white;
+    border: none;
+}
+
+.hotel-actions {
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #F3F4F6;
+}
