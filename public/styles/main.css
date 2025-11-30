@@ -1677,15 +1677,28 @@ h3 {
     box-shadow: 0 2px 6px rgba(212, 175, 55, 0.3);
 }
 
-/* Mobile Menu Wrapper */
-.mobile-menu-wrapper {
+/* Header Row (Subtitle + Menu) */
+.header-row {
+    position: relative;
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
-/* Mobile Menu Button (In-flow) */
+.header-row .subtitle {
+    margin-bottom: 0;
+    /* Remove bottom margin as row handles spacing */
+    padding: 0 40px;
+    /* Add padding to prevent overlap with button */
+}
+
+/* Mobile Menu Button (Absolute in Header Row) */
 .mobile-menu-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     /* Shown on mobile */
     align-items: center;
@@ -1696,10 +1709,11 @@ h3 {
     padding: 5px;
     cursor: pointer;
     transition: transform 0.2s;
+    z-index: 10;
 }
 
 .mobile-menu-btn:active {
-    transform: scale(0.9);
+    transform: translateY(-50%) scale(0.9);
 }
 
 /* Responsive Visibility */
@@ -1709,8 +1723,12 @@ h3 {
         /* Show on desktop */
     }
 
-    .mobile-menu-wrapper {
+    .mobile-menu-btn {
         display: none;
+    }
+
+    .header-row .subtitle {
+        padding: 0;
     }
 }
 
