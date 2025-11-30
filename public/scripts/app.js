@@ -2420,15 +2420,16 @@ function renderHotels(hotels) {
 }
 
 // Initialize everything when DOM is loaded
+// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize screens
     showScreen('screen-banner');
 
     // Initialize Committee Data
-    initCommittee();
+    loadCommitteeData();
 
     // Initialize Hotel Data
-    initHotels();
+    loadHotelData();
 
     // Initialize Scroll Progress Button
     initScrollProgress();
