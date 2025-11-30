@@ -1885,7 +1885,7 @@ h3 {
 
 .member-name {
     font-size: 15px;
-    color: var(--text-dark);
+    color: var(--primary-gold);
     font-weight: 500;
 }
 
@@ -1895,7 +1895,6 @@ h3 {
 }
 
 .committee-member.highlight .member-name {
-    color: var(--primary-gold);
     font-weight: 700;
 }
 
