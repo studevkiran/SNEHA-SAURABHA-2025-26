@@ -2302,3 +2302,125 @@ window.showScreen = function (screenId) {
 
 console.log('✅ Simplified coupon system initialized with codes:', Object.keys(VALID_COUPONS));
 console.log('✅ All global functions exposed to window object');
+
+/* =========================================
+   Menu & New Sections Logic
+   ========================================= */
+
+// Toggle Menu
+window.toggleMenu = function () {
+    const menu = document.getElementById('menu-overlay');
+    if (menu) {
+        menu.classList.toggle('active');
+    }
+};
+
+// Load Committee Data
+async function loadCommitteeData() {
+    try {
+        const response = await fetch('data/committee.json');
+        const data = await response.json();
+        renderCommittee(data);
+    } catch (error) {
+        console.error('Error loading committee data:', error);
+    }
+}
+
+function renderCommittee(data) {
+    const container = document.getElementById('committee-container');
+    if (!container) return;
+
+    let html = '';
+
+    data.sections.forEach(section => {
+        html += `
+            <div class="committee-section">
+                <div class="committee-header">
+                    <h3>${section.title}</h3>
+                </div>
+                <div class="committee-members">
+        `;
+
+        section.members.forEach(member => {
+            const isHighlight = member.role && (member.role.includes('Governor') || member.role.includes('Chairman'));
+            const highlightClass = isHighlight ? 'highlight' : '';
+
+            html += `
+                <div class="committee-member ${highlightClass}">
+                    ${member.role ? `<div class="member-role">${member.role}</div>` : ''}
+                    <div class="member-name">${member.name}</div>
+                </div>
+            `;
+        });
+
+        html += `
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+// Load Hotel Data
+async function loadHotelData() {
+    try {
+        const response = await fetch('data/hotels.json');
+        const data = await response.json();
+        renderHotels(data);
+    } catch (error) {
+        console.error('Error loading hotel data:', error);
+    }
+}
+
+function renderHotels(hotels) {
+    const container = document.getElementById('hotels-container');
+    if (!container) return;
+
+    let html = '';
+
+    hotels.forEach(hotel => {
+        html += `
+            <div class="hotel-card">
+                <div class="hotel-name">${hotel.name}</div>
+                <div class="hotel-contact">
+        `;
+
+        if (hotel.phones && hotel.phones.length > 0) {
+            hotel.phones.forEach(phone => {
+                // Clean phone number for tel link
+                const cleanPhone = phone.replace(/[^0-9+]/g, '');
+                html += `
+                    <div class="contact-row">
+                        <a href="tel:${cleanPhone}" class="contact-btn btn-call">
+                            📞 ${phone}
+                        </a>
+                    </div>
+                `;
+            });
+        }
+
+        if (hotel.email) {
+            html += `
+                <div class="contact-row">
+                    <a href="mailto:${hotel.email}" class="contact-btn btn-email">
+                        ✉️ Email
+                    </a>
+                </div>
+            `;
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+// Initialize new sections on load
+document.addEventListener('DOMContentLoaded', () => {
+    loadCommitteeData();
+    loadHotelData();
+});

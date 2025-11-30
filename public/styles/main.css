@@ -107,16 +107,18 @@ body {
         margin: 0 auto 20px auto !important;
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.1) !important;
         padding: 0 !important;
-        display: none !important; /* Hide by default on desktop */
+        display: none !important;
+        /* Hide by default on desktop */
         top: auto !important;
         left: auto !important;
         width: 100% !important;
     }
 
     .screen.active {
-        display: block !important; /* Only show active screen */
+        display: block !important;
+        /* Only show active screen */
     }
-    
+
     body {
         padding: 20px 20px !important;
         overflow-y: auto !important;
@@ -219,7 +221,7 @@ body {
     font-weight: 800;
     color: var(--primary-gold);
     margin: 0 0 15px 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     text-transform: uppercase;
     letter-spacing: 2px;
     order: 2;
@@ -468,7 +470,7 @@ h3 {
     border-radius: 8px;
     margin-top: 5px;
     z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .club-options-list.show {
@@ -619,8 +621,8 @@ h3 {
     color: var(--primary-gold);
 }
 
-.form-group input:focus + label,
-.form-group input:not(:placeholder-shown) + label {
+.form-group input:focus+label,
+.form-group input:not(:placeholder-shown)+label {
     top: -10px;
     left: 10px;
     font-size: 12px;
@@ -870,7 +872,7 @@ h3 {
     .selection-group {
         grid-template-columns: repeat(3, 1fr);
     }
-    
+
     .event-card {
         max-width: 500px;
     }
@@ -1267,16 +1269,16 @@ h3 {
     .screen-content {
         padding: 15px;
     }
-    
+
     h2 {
         font-size: 20px;
         margin-bottom: 15px;
     }
-    
+
     .selection-card {
         padding: 15px;
     }
-    
+
     .form-group {
         margin-bottom: 15px;
     }
@@ -1287,15 +1289,15 @@ h3 {
     .event-banner {
         min-height: 150px;
     }
-    
+
     .register-card {
         padding: 20px 15px;
     }
-    
+
     .acknowledgment {
         padding: 10px;
     }
-    
+
     .success-icon,
     .failure-icon {
         width: 60px;
@@ -1312,26 +1314,26 @@ h3 {
         min-height: auto;
         border-radius: 12px;
     }
-    
+
     .ticket-title h1 {
         font-size: 24px;
         letter-spacing: 1px;
     }
-    
+
     .ticket-subtitle {
         font-size: 12px;
     }
-    
+
     .logo-left img,
     .logo-right img {
         max-width: 50px;
         max-height: 50px;
     }
-    
+
     .section-title {
         font-size: 14px;
     }
-    
+
     .detail-label,
     .detail-value {
         font-size: 12px;
@@ -1344,11 +1346,11 @@ h3 {
     .event-info {
         padding: 40px 30px 50px 30px;
     }
-    
+
     .main-title {
         font-size: 42px;
     }
-    
+
     .btn-register {
         font-size: 20px;
         padding: 18px 50px;
@@ -1362,7 +1364,7 @@ h3 {
         left: 0;
         right: 0;
     }
-    
+
     .screen {
         max-width: 600px;
         margin: 0 auto;
@@ -1379,14 +1381,14 @@ h3 {
         height: auto;
         max-width: 800px;
     }
-    
+
     .screen {
         position: relative;
         height: auto;
         min-height: 100vh;
         overflow: visible;
     }
-    
+
     #screen-banner {
         overflow: visible;
     }
@@ -1403,7 +1405,7 @@ h3 {
     border-radius: 6px;
     max-height: 300px;
     overflow-y: auto;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     margin-top: 4px;
 }
@@ -1489,8 +1491,13 @@ h3 {
 }
 
 @keyframes shimmer {
-    0% { left: -100%; }
-    100% { left: 100%; }
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
 }
 
 .coupon-content {
@@ -1511,8 +1518,15 @@ h3 {
 }
 
 @keyframes sparkle {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.1); }
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
 }
 
 .coupon-header h3 {
@@ -1558,9 +1572,26 @@ h3 {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-    20%, 40%, 60%, 80% { transform: translateX(10px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-10px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(10px);
+    }
 }
 
 .coupon-btn {
@@ -1598,10 +1629,249 @@ h3 {
     animation: shrinkPulse 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* =========================================
+   Menu & New Sections Styles
+   ========================================= */
+
+/* Menu Overlay */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu-content {
+    position: absolute;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background: var(--white);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-overlay.active .menu-content {
+    right: 0;
+}
+
+.menu-header {
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-gold) 0%, var(--amber) 100%);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: white;
+}
+
+.menu-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.menu-links {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-links a:hover {
+    background: var(--light-gold);
+    color: var(--dark-gold);
+}
+
+/* Committee Styles */
+.committee-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding-bottom: 40px;
+}
+
+.committee-section {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--light-gold);
+}
+
+.committee-header {
+    background: linear-gradient(135deg, var(--light-gold) 0%, #FFF 100%);
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--light-gold);
+    position: sticky;
+    top: 0;
+}
+
+.committee-header h3 {
+    margin: 0;
+    color: var(--dark-gold);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.committee-members {
+    padding: 10px;
+}
+
+.committee-member {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.committee-member:last-child {
+    border-bottom: none;
+}
+
+.member-role {
+    font-size: 12px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.member-name {
+    font-size: 15px;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* Highlight key roles */
+.committee-member.highlight {
+    background: #FFFDF5;
+}
+
+.committee-member.highlight .member-name {
+    color: var(--primary-gold);
+    font-weight: 700;
+}
+
+/* Hotels Styles */
+.hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding-bottom: 40px;
+}
+
+.hotel-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid var(--primary-gold);
+    display: flex;
+    flex-direction: column;
+}
+
+.hotel-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.hotel-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.contact-btn:active {
+    transform: scale(0.98);
+}
+
+.btn-call {
+    background: #E3F2FD;
+    color: #1565C0;
+}
+
+.btn-email {
+    background: #F3E5F5;
+    color: #7B1FA2;
+}
+
+.btn-web {
+    background: #E8F5E9;
+    color: #2E7D32;
+}
+
 @keyframes shrinkPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(0.85); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.85);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .btn-icon {
@@ -1641,6 +1911,7 @@ h3 {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1664,9 +1935,19 @@ h3 {
 }
 
 @keyframes successPop {
-    0% { transform: scale(0.8) rotate(-3deg); opacity: 0; }
-    50% { transform: scale(1.15) rotate(3deg); }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    0% {
+        transform: scale(0.8) rotate(-3deg);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.15) rotate(3deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
 }
 
 .discount-info {
@@ -1681,9 +1962,22 @@ h3 {
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
 }
 
 .discount-details {
@@ -1790,9 +2084,22 @@ h3 {
 }
 
 @keyframes amountBounce {
-    0%, 20%, 50%, 80%, 100% { transform: scale(1); }
-    40% { transform: scale(1.15); }
-    60% { transform: scale(1.05); }
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.15);
+    }
+
+    60% {
+        transform: scale(1.05);
+    }
 }
 
 /* ===================================================================================
@@ -1815,8 +2122,13 @@ h3 {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content {
@@ -1836,6 +2148,7 @@ h3 {
         opacity: 0;
         transform: translateY(-40px) scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -2031,30 +2344,30 @@ h3 {
     .coupon-input-group {
         flex-direction: column;
     }
-    
+
     .coupon-btn {
         width: 100%;
         justify-content: center;
     }
-    
+
     .discount-display {
         flex-direction: column;
         gap: 12px;
         text-align: center;
     }
-    
+
     .discount-savings {
         align-items: center;
     }
-    
+
     .amount-value-large {
         font-size: 24px;
     }
-    
+
     .modal-actions {
         flex-direction: column;
     }
-    
+
     .modal-content {
         width: 95%;
     }
@@ -2064,12 +2377,12 @@ h3 {
     .coupon-header h3 {
         font-size: 16px;
     }
-    
+
     .coupon-input {
         font-size: 14px;
         padding: 10px 14px;
     }
-    
+
     .coupon-btn {
         font-size: 14px;
         padding: 10px 20px;
@@ -2109,21 +2422,26 @@ h3 {
 }
 
 @keyframes pulseBorder {
-    0%, 100% {
+
+    0%,
+    100% {
         border-color: #F59E0B;
         box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
         transform: scale(1);
     }
+
     25% {
         border-color: #D97706;
         box-shadow: 0 6px 16px rgba(217, 119, 6, 0.4);
         transform: scale(1.02);
     }
+
     50% {
         border-color: #F59E0B;
         box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
         transform: scale(1);
     }
+
     75% {
         border-color: #FBBF24;
         box-shadow: 0 6px 16px rgba(251, 191, 36, 0.3);
@@ -2238,6 +2556,7 @@ h3 {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -2289,12 +2608,12 @@ h3 {
     .coupon-input-container {
         flex-wrap: wrap;
     }
-    
+
     .coupon-simple-input {
         font-size: 15px;
         padding: 12px 14px;
     }
-    
+
     .coupon-simple-btn,
     .coupon-remove-btn {
         padding: 10px 16px;
@@ -2307,11 +2626,10 @@ h3 {
         font-size: 14px;
         padding: 10px 12px;
     }
-    
+
     .coupon-simple-btn,
     .coupon-remove-btn {
         padding: 9px 14px;
         font-size: 12px;
     }
 }
-

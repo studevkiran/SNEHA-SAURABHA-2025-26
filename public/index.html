@@ -43,11 +43,17 @@
 
             <!-- Main Event Info -->
             <div class="event-info">
-                <!-- Tally Link -->
-                <div style="text-align: right; margin-bottom: 10px; width: 100%; align-self: flex-end;">
-                    <a href="admin/tally.html" target="_blank"
-                        style="color: #D4A024; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block;">Reports
-                        →</a>
+                <!-- Menu Button -->
+                <div style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+                    <button onclick="toggleMenu()"
+                        style="background: none; border: none; cursor: pointer; padding: 10px;">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
 
                 <h2 class="subtitle">ROTARY DISTRICT CONFERENCE</h2>
@@ -607,6 +613,52 @@
             </p>
         </div>
     </footer>
+
+    <!-- Screen 8: Committee -->
+    <div id="screen-committee" class="screen">
+        <div class="screen-content">
+            <button class="btn-back" onclick="showScreen('screen-banner')">← Back</button>
+            <h2>District Team & Committee</h2>
+            <div id="committee-container" class="committee-list">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 9: Accommodation -->
+    <div id="screen-accommodation" class="screen">
+        <div class="screen-content">
+            <button class="btn-back" onclick="showScreen('screen-banner')">← Back</button>
+            <h2>Where to Stay</h2>
+            <div id="hotels-container" class="hotels-grid">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()">
+        <div class="menu-content" onclick="event.stopPropagation()">
+            <div class="menu-header">
+                <h3>Menu</h3>
+                <button onclick="toggleMenu()" class="menu-close">✕</button>
+            </div>
+            <nav class="menu-links">
+                <a href="#" onclick="toggleMenu(); showScreen('screen-banner'); return false;">
+                    🏠 Home
+                </a>
+                <a href="#" onclick="toggleMenu(); showScreen('screen-committee'); return false;">
+                    👥 District Team / Committee
+                </a>
+                <a href="#" onclick="toggleMenu(); showScreen('screen-accommodation'); return false;">
+                    🏨 Where to Stay
+                </a>
+                <a href="admin/tally.html" target="_blank">
+                    📊 Reports (Admin)
+                </a>
+            </nav>
+        </div>
+    </div>
 
     <!-- ============= BYPASS CODE MODAL ============= -->
     <div id="bypassCodeModal" class="modal-overlay" style="display: none;">

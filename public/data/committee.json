@@ -1,0 +1,346 @@
+{
+    "sections": [
+        {
+            "title": "District Team",
+            "members": [
+                {
+                    "role": "District Governor",
+                    "name": "Rtn. Ramakrishna P K"
+                },
+                {
+                    "role": "I P District Governor",
+                    "name": "Rtn. Vikram Datta"
+                },
+                {
+                    "role": "District Governor Elect",
+                    "name": "Rtn. Satish Bolar"
+                },
+                {
+                    "role": "District Governor Nominee",
+                    "name": "Rtn. Yashaswi S Somashekar"
+                }
+            ]
+        },
+        {
+            "title": "District Core Team",
+            "members": [
+                {
+                    "role": "District Governor",
+                    "name": "Rtn. Ramakrishna P K"
+                },
+                {
+                    "role": "District Secretary General",
+                    "name": "Rtn. Raghavendra S"
+                },
+                {
+                    "role": "District Secretary Events",
+                    "name": "Rtn. Umesh K"
+                },
+                {
+                    "role": "Additional Dist. Secretary General",
+                    "name": "Rtn. Venkatesh R"
+                },
+                {
+                    "role": "District Secretariat Administrator",
+                    "name": "Rtn. Sunil Baliga"
+                },
+                {
+                    "role": "District Treasurer",
+                    "name": "Rtn. Perumal M"
+                },
+                {
+                    "role": "District Executive Secretary",
+                    "name": "Rtn. Padmaja Muralidhar"
+                },
+                {
+                    "role": "Additional District Executive Secretary",
+                    "name": "Rtn. Dr. Sachidanand"
+                },
+                {
+                    "role": "District Sergeant at Arms",
+                    "name": "Rtn Umesha N"
+                },
+                {
+                    "role": "District Secretary Projects",
+                    "name": "Rtn Rathan Thammaiah"
+                },
+                {
+                    "role": "District Directory Editor",
+                    "name": "Rtn. Rathnaraj M"
+                },
+                {
+                    "role": "District GML Editor",
+                    "name": "Rtn. Bhanuchandran M"
+                }
+            ]
+        },
+        {
+            "title": "Advisory Board",
+            "members": [
+                {
+                    "role": "District Advisor",
+                    "name": "PDG Rtn. R Guru"
+                },
+                {
+                    "role": "District Mentor",
+                    "name": "IPDG Rtn. Vikram Datta"
+                },
+                {
+                    "role": "District Learning Facilitator",
+                    "name": "PDG Rtn. Keshav"
+                },
+                {
+                    "role": "District Counsellor",
+                    "name": "PDG Rtn. Dr. Nagarjuna"
+                },
+                {
+                    "role": "District Events Advisor",
+                    "name": "PDG Rtn. Lakshminarayan M"
+                },
+                {
+                    "role": "District Conference Advisor",
+                    "name": "PDG Rtn. Ravindra Bhat A R"
+                }
+            ]
+        },
+        {
+            "title": "College of Governors",
+            "members": [
+                {
+                    "name": "Rtn. Dr.Shivanna H S"
+                },
+                {
+                    "name": "Rtn. Balakrishna G K"
+                },
+                {
+                    "name": "Rtn. Guru R"
+                },
+                {
+                    "name": "Rtn. Vishwanath Mallya V"
+                },
+                {
+                    "name": "Rtn. Krishna R"
+                },
+                {
+                    "name": "Rtn. Lakshminarayan M"
+                },
+                {
+                    "name": "Rtn. Krishna Shetty K"
+                },
+                {
+                    "name": "Rtn. Dr. Ravi Appaji K"
+                },
+                {
+                    "name": "Rtn. Devdas Rai B"
+                },
+                {
+                    "name": "Rtn. Gururaj S"
+                },
+                {
+                    "name": "Rtn. Dr. Bhaskar S"
+                },
+                {
+                    "name": "Rtn. Dr. Nagarjuna R S"
+                },
+                {
+                    "name": "Rtn. Suresh Chengappa M M"
+                },
+                {
+                    "name": "Rtn. Joseph Mathew"
+                },
+                {
+                    "name": "Rtn. Ranganath Bhat M"
+                },
+                {
+                    "name": "Rtn. Ravindra Bhat A R"
+                },
+                {
+                    "name": "Rtn. Prakash Karanth"
+                },
+                {
+                    "name": "Rtn. Keshav H R"
+                },
+                {
+                    "name": "Rtn. Vikram Datta"
+                },
+                {
+                    "name": "Rtn. Ramakrishna P K"
+                },
+                {
+                    "name": "Rtn. Satish Bolar"
+                },
+                {
+                    "name": "Rtn. Yashaswi S Somashekar"
+                }
+            ]
+        },
+        {
+            "title": "District Regional Co-ordinators",
+            "members": [
+                {
+                    "role": "Zones - 1,2,3",
+                    "name": "Rtn. Vinayaka Prabhu"
+                },
+                {
+                    "role": "Zones - 4,5,6",
+                    "name": "Rtn. Dr. Keshava P K"
+                },
+                {
+                    "role": "Zones - 7,8,9",
+                    "name": "Rtn. Subash R"
+                }
+            ]
+        },
+        {
+            "title": "Assistant Governors",
+            "members": [
+                {
+                    "role": "Zone 1",
+                    "name": "Rtn. Robert Rego"
+                },
+                {
+                    "role": "Zone 2A",
+                    "name": "Rtn. Chinnagiri Gowda"
+                },
+                {
+                    "role": "Zone 2B",
+                    "name": "Rtn. Shantharam Shetty C A"
+                },
+                {
+                    "role": "Zone 3A",
+                    "name": "Rtn. Rajani Bhat"
+                },
+                {
+                    "role": "Zone 3B",
+                    "name": "Rtn. Ravi Shankar Rao"
+                },
+                {
+                    "role": "Zone 4A",
+                    "name": "Rtn. Umesh Rao"
+                },
+                {
+                    "role": "Zone 4B",
+                    "name": "Rtn. Jayakumar Shetty"
+                },
+                {
+                    "role": "Zone 4C",
+                    "name": "Rtn. Padmanabha Rai"
+                },
+                {
+                    "role": "Zone 4D",
+                    "name": "Rtn. Dr. Rajaram K B"
+                },
+                {
+                    "role": "Zone 5A",
+                    "name": "Rtn. Balakrishna Pai"
+                },
+                {
+                    "role": "Zone 5B",
+                    "name": "Rtn. Pramila Rao"
+                },
+                {
+                    "role": "Zone 5C",
+                    "name": "Rtn. Pramod Nair"
+                },
+                {
+                    "role": "Zone 6A",
+                    "name": "Rtn. Dhillon Chengappa"
+                },
+                {
+                    "role": "Zone 6B",
+                    "name": "Rtn. Ullas Krishna"
+                },
+                {
+                    "role": "Zone 6C",
+                    "name": "Rtn. Raje Gowda"
+                },
+                {
+                    "role": "Zone 7A",
+                    "name": "Rtn. Naveen Chandra M S"
+                },
+                {
+                    "role": "Zone 7B",
+                    "name": "Rtn. Harish B"
+                },
+                {
+                    "role": "Zone 8A",
+                    "name": "Rtn. Raghavendra Prasad"
+                },
+                {
+                    "role": "Zone 8B",
+                    "name": "Rtn. Jagadish S H"
+                },
+                {
+                    "role": "Zone 9A",
+                    "name": "Rtn. Girish D"
+                },
+                {
+                    "role": "Zone 9B",
+                    "name": "Rtn. Basavaraj"
+                }
+            ]
+        },
+        {
+            "title": "Conference Committee",
+            "members": [
+                {
+                    "role": "Conference Advisor",
+                    "name": "PG Rtn. Ravindra Bhat A R"
+                },
+                {
+                    "role": "Conference Chairman",
+                    "name": "Rtn. Dr. Prahlad K A"
+                },
+                {
+                    "role": "Conference Co-Chairman",
+                    "name": "Rtn. Rohit Ramdev"
+                },
+                {
+                    "role": "Conference Co-Chairman",
+                    "name": "Rtn. Subramanya Rao"
+                },
+                {
+                    "role": "Conference Secretary",
+                    "name": "Rtn. Srinivasan D"
+                },
+                {
+                    "role": "Additional Conference Secretary",
+                    "name": "Rtn. Vasudav T"
+                },
+                {
+                    "role": "Conference Treasurer",
+                    "name": "Rtn. Umesha N"
+                },
+                {
+                    "role": "Conference Co-Treasurer",
+                    "name": "Rtn. Satyendra Kashyap"
+                }
+            ]
+        },
+        {
+            "title": "Conference Registration Committee",
+            "members": [
+                {
+                    "role": "Committee Chairman",
+                    "name": "Rtn. Ramachandraraje Urs S"
+                },
+                {
+                    "role": "Additional Committee Chairman",
+                    "name": "Rtn. Mohan Gurumurthy"
+                },
+                {
+                    "name": "Rtn. Bharath Kumar"
+                },
+                {
+                    "name": "Rtn. Mahesh Guruswamy"
+                },
+                {
+                    "name": "Rtn. Srinivas M N"
+                },
+                {
+                    "name": "Rtn. Ravindra Babu R"
+                }
+            ]
+        }
+    ]
+}
