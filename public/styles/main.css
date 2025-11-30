@@ -2406,11 +2406,37 @@ h3 {
     margin-bottom: 0;
 }
 
+.profile-photo {
+    width: 150px;
+    height: 180px;
+    object-fit: contain;
+    /* Changed to contain for transparent images */
+    float: left;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--light-gold);
+    /* Thinner border */
+    background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+    /* Subtle background */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Specific style for full-body/long photos */
+.profile-photo-long {
+    height: auto;
+    max-height: 350px;
+    width: auto;
+    max-width: 200px;
+}
+
 .signature {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #eee;
     text-align: right;
+    clear: both;
+    /* Ensure signature is below floated image */
 }
 
 .signature p {
@@ -2434,6 +2460,21 @@ h3 {
 
     .about-body {
         padding: 20px;
+    }
+
+    .profile-photo {
+        float: none;
+        display: block;
+        margin: 0 auto 20px auto;
+        width: 160px;
+        height: 190px;
+    }
+
+    .profile-photo-long {
+        width: auto;
+        height: auto;
+        max-height: 300px;
+        max-width: 100%;
     }
 }
 
