@@ -25,17 +25,7 @@
                 "Fitness Center"
             ],
             "highlights": "Spacious rooms, excellent staff, great breakfast, sauna & steam facilities",
-            "images": {
-                "exterior": [
-                    "https://www.agoda.com/en-in/radisson-blu-plaza-hotel-mysore_8/hotel/mysore-in.html",
-                    "https://www.makemytrip.com/hotels/photos-of-radisson_blu_plaza_mysore-details-mysore.html",
-                    "https://in.trip.com/hotels/mysore-hotel-detail-3121078/radisson-blu-plaza-hotel-mysore/photo.html"
-                ],
-                "rooms": "https://www.expedia.co.in/Mysore-Hotels-Radisson-Blu-Plaza-Hotel-Mysore.h9398400.Hotel-Information",
-                "dining": "https://www.radissonhotels.com/en-us/hotels/radisson-blu-mysore",
-                "instagram": "https://www.instagram.com/radissonbluplazahotelmysore",
-                "gallery": "https://www.agoda.com/en-in/radisson-blu-plaza-hotel-mysore_8/hotel/mysore-in.html"
-            },
+            "galleryLink": "https://www.agoda.com/en-in/radisson-blu-plaza-hotel-mysore_8/hotel/mysore-in.html",
             "bookingLinks": {
                 "agoda": "https://www.agoda.com/en-in/radisson-blu-plaza-hotel-mysore_8/hotel/mysore-in.html",
                 "expedia": "https://www.expedia.co.in/Mysore-Hotels-Radisson-Blu-Plaza-Hotel-Mysore.h9398400.Hotel-Information",
@@ -72,17 +62,7 @@
                 "Rooftop Bar"
             ],
             "highlights": "Chamundi Hills views, luxury 4-star, full-service spa, excellent breakfast buffet",
-            "images": {
-                "exterior": [
-                    "https://www.makemytrip.com/hotels/photos-of-fortune_jp_palace_mysore_member_itc_hotels_group-details-mysore.html",
-                    "https://www.tripadvisor.in/Hotel_Review-g304553-d2070754-Reviews-Fortune_Jp_Palace-Mysuru_Mysore_Mysore_District_Karnataka.html",
-                    "https://www.agoda.com/en-in/fortune-jp-palace-hotel/hotel/mysore-in.html"
-                ],
-                "rooms": "https://www.goibibo.com/hotels/fortune-jp-palace-mysore-member-itc-hotels-group-hotel-in-mysore-1372932456972980747/",
-                "dining": "https://www.itchotels.com/in/en/fortunejppalace-mysore",
-                "instagram": "https://www.instagram.com/fortunejppalacemysore",
-                "gallery": "https://www.makemytrip.com/hotels/photos-of-fortune_jp_palace_mysore_member_itc_hotels_group-details-mysore.html"
-            },
+            "galleryLink": "https://www.makemytrip.com/hotels/photos-of-fortune_jp_palace_mysore_member_itc_hotels_group-details-mysore.html",
             "bookingLinks": {
                 "makemytrip": "https://www.makemytrip.com/hotels/fortune_jp_palace_mysore_member_itc_hotels_group-details-mysore.html",
                 "agoda": "https://www.agoda.com/en-in/fortune-jp-palace-hotel/hotel/mysore-in.html",
@@ -117,17 +97,7 @@
                 "Gym"
             ],
             "highlights": "Near palace & market, full-service spa, free WiFi & parking, friendly staff, rooftop views",
-            "images": {
-                "exterior": [
-                    "https://www.expedia.co.in/Mysore-Hotels-Grand-Mercure-Mysore.h13455660.Hotel-Information",
-                    "https://www.tripadvisor.in/Hotel_Review-g304553-d10065306-Reviews-Grand_Mercure_Mysore-Mysuru_Mysore_Mysore_District_Karnataka.html",
-                    "https://www.makemytrip.com/hotels/photos-of-grand_mercure_mysore_an_accorhotels_brand-details-mysore.html"
-                ],
-                "rooms": "https://www.goibibo.com/hotels/grand-mercure-mysore-an-accorhotels-brand-hotel-in-mysore-510861793624886716/",
-                "dining": "https://all.accor.com/hotel/9306/index.en.shtml",
-                "instagram": "https://www.instagram.com/grandmercuremysore",
-                "gallery": "https://www.expedia.co.in/Mysore-Hotels-Grand-Mercure-Mysore.h13455660.Hotel-Information"
-            },
+            "galleryLink": "https://www.expedia.co.in/Mysore-Hotels-Grand-Mercure-Mysore.h13455660.Hotel-Information",
             "bookingLinks": {
                 "expedia": "https://www.expedia.co.in/Mysore-Hotels-Grand-Mercure-Mysore.h13455660.Hotel-Information",
                 "goibibo": "https://www.goibibo.com/hotels/grand-mercure-mysore-an-accorhotels-brand-hotel-in-mysore-510861793624886716/",
@@ -163,17 +133,7 @@
                 "Gym"
             ],
             "highlights": "Central location near Zoo/Temple/Palace, excellent food, spacious rooms, swimming pool",
-            "images": {
-                "exterior": [
-                    "https://www.tripadvisor.in/Hotel_Review-g304553-d479474-Reviews-Hotel_Sandesh_The_Prince-Mysuru_Mysore_Mysore_District_Karnataka.html",
-                    "https://www.makemytrip.com/hotels/hotel_sandesh_the_prince-details-mysore.html",
-                    "https://www.goibibo.com/hotels/sandesh-the-prince-hotel-in-mysore-5021192034104181614/"
-                ],
-                "rooms": "https://in.hotels.com/ho659291/sandesh-the-prince-mysore-india/",
-                "dining": "https://www.sandeshtheprince.com/index.htm",
-                "pool": "https://in.hotels.com/ho659291/sandesh-the-prince-mysore-india/",
-                "gallery": "https://www.goibibo.com/hotels/sandesh-the-prince-hotel-in-mysore-5021192034104181614/"
-            },
+            "galleryLink": "https://www.tripadvisor.in/Hotel_Review-g304553-d479474-Reviews-Hotel_Sandesh_The_Prince-Mysuru_Mysore_Mysore_District_Karnataka.html",
             "bookingLinks": {
                 "makemytrip": "https://www.makemytrip.com/hotels/hotel_sandesh_the_prince-details-mysore.html",
                 "goibibo": "https://www.goibibo.com/hotels/sandesh-the-prince-hotel-in-mysore-5021192034104181614/",
@@ -209,17 +169,7 @@
                 "Gym"
             ],
             "highlights": "3 themed levels, excellent service, good food, family-friendly, value for money",
-            "images": {
-                "exterior": [
-                    "https://www.tripadvisor.in/Hotel_Review-g304553-d6487121-Reviews-Hotel_Le_Ruchi_the_Prince-Mysuru_Mysore_Mysore_District_Karnataka.html",
-                    "https://www.makemytrip.com/hotels/hotel_le_ruchi_the_prince-details-mysore.html",
-                    "https://www.goibibo.com/hotels/le-ruchi-the-prince-hotel-in-mysore-2506706035291620379/"
-                ],
-                "rooms": "https://www.expedia.co.in/Mysore-Hotels-Hotel-Le-Ruchi-The-Prince.h12689483.Hotel-Information",
-                "gallery": "https://www.leruchi.com/image-gallery/1",
-                "dining": "https://www.leruchi.com",
-                "instagram": "https://www.instagram.com/explore/locations/250466500/hotel-le-ruchi-the-prince/"
-            },
+            "galleryLink": "https://www.tripadvisor.in/Hotel_Review-g304553-d6487121-Reviews-Hotel_Le_Ruchi_the_Prince-Mysuru_Mysore_Mysore_District_Karnataka.html",
             "bookingLinks": {
                 "booking": "https://www.booking.com/hotel/in/le-ruchi-the-prince-mysore.html",
                 "expedia": "https://www.expedia.co.in/Mysore-Hotels-Hotel-Le-Ruchi-The-Prince.h12689483.Hotel-Information",
@@ -252,14 +202,7 @@
                 "Banquet Hall"
             ],
             "highlights": "Spacious rooms, courteous staff, complimentary breakfast, nice location",
-            "images": {
-                "exterior": [
-                    "https://www.tripadvisor.in/Hotel_Review-g304553-d123456-Reviews-Rio_Meridian_Hotel-Mysuru_Mysore_Mysore_District_Karnataka.html"
-                ],
-                "rooms": "https://www.goibibo.com/hotels/rio-meridian-hotel-in-mysore-123456/",
-                "dining": "https://www.riomeridianhotels.com/dining",
-                "gallery": "https://www.riomeridianhotels.com/gallery"
-            },
+            "galleryLink": "https://www.goibibo.com/hotels/rio-meridian-hotel-in-mysore-123456/",
             "bookingLinks": {
                 "makemytrip": "https://www.makemytrip.com/hotels/rio_meridian_hotel",
                 "goibibo": "https://www.goibibo.com/hotels/rio-meridian-hotel",
@@ -291,13 +234,7 @@
                 "Room Service"
             ],
             "highlights": "Peaceful location, clean rooms, spacious, courteous staff, good value",
-            "images": {
-                "exterior": [
-                    "https://www.makemytrip.com/hotels/lexus_inn-details-mysore.html"
-                ],
-                "rooms": "https://www.goibibo.com/hotels/lexus-inn-hotel-in-mysore-123456/",
-                "gallery": "https://www.lexusinn.com/gallery"
-            },
+            "galleryLink": "https://www.makemytrip.com/hotels/lexus_inn-details-mysore.html",
             "bookingLinks": {
                 "makemytrip": "https://www.makemytrip.com/hotels/lexus_inn",
                 "goibibo": "https://www.goibibo.com/hotels/lexus-inn-hotel",
@@ -330,14 +267,7 @@
                 "Garden"
             ],
             "highlights": "Heritage palace experience, royal ambiance, spacious rooms, unique architecture",
-            "images": {
-                "exterior": [
-                    "https://www.makemytrip.com/hotels/lalitha_mahal_palace-details-mysore.html"
-                ],
-                "rooms": "https://www.goibibo.com/hotels/lalitha-mahal-palace-hotel-in-mysore-123456/",
-                "dining": "https://www.lalithamahalpalace.co.in/dining",
-                "gallery": "https://www.lalithamahalpalace.co.in/gallery"
-            },
+            "galleryLink": "https://www.makemytrip.com/hotels/lalitha_mahal_palace-details-mysore.html",
             "bookingLinks": {
                 "makemytrip": "https://www.makemytrip.com/hotels/lalitha_mahal_palace",
                 "goibibo": "https://www.goibibo.com/hotels/review-lalitha-mahal-palace",
@@ -370,14 +300,7 @@
                 "AC"
             ],
             "highlights": "Brindavan Garden views, 5-star experience, spa, beautiful gardens, family-friendly",
-            "images": {
-                "exterior": [
-                    "https://www.booking.com/hotel/in/royal-orchid-brindavan.html"
-                ],
-                "rooms": "https://www.goibibo.com/hotels/royal-orchid-brindavan-garden-hotel-in-mysore-123456/",
-                "dining": "https://www.royalorchidhotels.com/royal-orchid-brindavan-garden-mysore/dining",
-                "gallery": "https://www.royalorchidhotels.com/royal-orchid-brindavan-garden-mysore/gallery"
-            },
+            "galleryLink": "https://www.booking.com/hotel/in/royal-orchid-brindavan.html",
             "bookingLinks": {
                 "booking": "https://www.booking.com/hotel/royal-orchid-brindavan",
                 "goibibo": "https://www.goibibo.com/hotels/royal-orchid-brindavan-garden",
