@@ -2453,10 +2453,25 @@ function initScrollProgress() {
     progressPath.getBoundingClientRect();
     progressPath.style.transition = 'stroke-dashoffset 10ms linear';
 
-    const updateProgress = () => {
-        const scroll = window.scrollY || window.pageYOffset;
-        const height = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = pathLength - (scroll * pathLength / height);
+    const updateProgress = (event) => {
+        let scroll, height, clientHeight;
+
+        if (event && event.target && event.target !== document) {
+            // Element scroll (Mobile)
+            scroll = event.target.scrollTop;
+            height = event.target.scrollHeight;
+            clientHeight = event.target.clientHeight;
+        } else {
+            // Window scroll (Desktop)
+            scroll = window.scrollY || window.pageYOffset;
+            height = document.documentElement.scrollHeight;
+            clientHeight = window.innerHeight;
+        }
+
+        // Prevent division by zero
+        const scrollableHeight = height - clientHeight;
+        const progress = scrollableHeight > 0 ? pathLength - (scroll * pathLength / scrollableHeight) : pathLength;
+
         progressPath.style.strokeDashoffset = progress;
 
         // Show/Hide button based on scroll position
@@ -2467,8 +2482,8 @@ function initScrollProgress() {
         }
     };
 
-    // Update on scroll
-    window.addEventListener('scroll', updateProgress);
+    // Update on scroll (use capture to catch events from overflow:auto elements)
+    window.addEventListener('scroll', updateProgress, true);
 
     // Initial update
     updateProgress();
@@ -2476,10 +2491,22 @@ function initScrollProgress() {
     // Scroll to top on click
     progressWrap.addEventListener('click', (event) => {
         event.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+
+        // Try scrolling window (Desktop)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Try scrolling active screen (Mobile)
+        const activeScreen = document.querySelector('.screen.active');
+        if (activeScreen) {
+            activeScreen.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Also try scrolling content inside screen if it exists
+            const screenContent = activeScreen.querySelector('.screen-content, .banner-content');
+            if (screenContent) {
+                screenContent.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
         return false;
     });
 }
