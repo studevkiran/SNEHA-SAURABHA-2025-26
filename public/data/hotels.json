@@ -355,6 +355,149 @@
             "googleMapsLink": "https://maps.google.com/?q=Royal+Orchid+Brindavan+Garden+Mysore",
             "website": "https://www.royalorchidhotels.com/royal-orchid-brindavan-garden-mysore/overview",
             "distanceFromVenue": "15 km"
+        },
+        {
+            "id": 10,
+            "name": "Zentora",
+            "category": "mid-range",
+            "rating": 4.0,
+            "ratingPlatform": "Google",
+            "reviewCount": "100+",
+            "priceRange": "Contact for rates",
+            "phone": [],
+            "email": "",
+            "address": "Mysore",
+            "amenities": [
+                "WiFi",
+                "Parking",
+                "AC"
+            ],
+            "highlights": "Comfortable stay, good location",
+            "galleryLink": "",
+            "images": {
+                "exterior": [
+                    "https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/202410031515394871-22276219-6192-4556-890e-8c1b0283a4ac.jpg"
+                ]
+            },
+            "bookingLinks": {},
+            "googleMapsLink": "https://maps.google.com/?q=Zentora+Hotel+Mysore",
+            "website": "",
+            "distanceFromVenue": "Contact for distance"
+        },
+        {
+            "id": 11,
+            "name": "Silent Shores Resort & Spa",
+            "category": "luxury",
+            "rating": 4.5,
+            "ratingPlatform": "Google",
+            "reviewCount": "2000+",
+            "priceRange": "Contact for rates",
+            "phone": [],
+            "email": "",
+            "address": "Hootagalli, Mysore",
+            "amenities": [
+                "WiFi",
+                "Pool",
+                "Spa",
+                "Lake View"
+            ],
+            "highlights": "Lakeside resort, spa, peaceful ambiance",
+            "galleryLink": "",
+            "images": {
+                "exterior": [
+                    "https://silentshoresresort.com/wp-content/uploads/2022/05/ss-summer-post-banner.jpg"
+                ]
+            },
+            "bookingLinks": {},
+            "googleMapsLink": "https://maps.google.com/?q=Silent+Shores+Resort+Mysore",
+            "website": "https://silentshoresresort.com",
+            "distanceFromVenue": "Contact for distance"
+        },
+        {
+            "id": 12,
+            "name": "Rajmahal Inn",
+            "category": "budget",
+            "rating": 4.0,
+            "ratingPlatform": "Google",
+            "reviewCount": "500+",
+            "priceRange": "Contact for rates",
+            "phone": [],
+            "email": "",
+            "address": "Bannimantap, Mysore",
+            "amenities": [
+                "WiFi",
+                "Parking",
+                "AC"
+            ],
+            "highlights": "Budget friendly, clean rooms",
+            "galleryLink": "",
+            "images": {
+                "exterior": [
+                    "https://rajmahalinn.com/wp-content/uploads/2025/04/1.jpg"
+                ]
+            },
+            "bookingLinks": {},
+            "googleMapsLink": "https://maps.google.com/?q=Rajmahal+Inn+Mysore",
+            "website": "https://rajmahalinn.com",
+            "distanceFromVenue": "Contact for distance"
+        },
+        {
+            "id": 13,
+            "name": "Royal Orchid Metropole",
+            "category": "luxury",
+            "rating": 4.4,
+            "ratingPlatform": "Google",
+            "reviewCount": "1500+",
+            "priceRange": "Contact for rates",
+            "phone": [],
+            "email": "",
+            "address": "Jhansi Rani Lakshmi Bai Road, Mysore",
+            "amenities": [
+                "Heritage",
+                "Pool",
+                "Garden",
+                "Restaurant"
+            ],
+            "highlights": "Heritage hotel, royal ambiance, central location",
+            "galleryLink": "",
+            "images": {
+                "exterior": [
+                    "https://www.royalorchidhotels.com/Images/slider/21_09_2024_05_09_15fac.jpg"
+                ]
+            },
+            "bookingLinks": {},
+            "googleMapsLink": "https://maps.google.com/?q=Royal+Orchid+Metropole+Mysore",
+            "website": "https://www.royalorchidhotels.com",
+            "distanceFromVenue": "Contact for distance"
+        },
+        {
+            "id": 14,
+            "name": "The President Hotel",
+            "category": "mid-range",
+            "rating": 4.1,
+            "ratingPlatform": "Google",
+            "reviewCount": "1000+",
+            "priceRange": "Contact for rates",
+            "phone": [],
+            "email": "",
+            "address": "Bangalore-Nilgiri Road, Mysore",
+            "amenities": [
+                "WiFi",
+                "Restaurant",
+                "AC",
+                "Business Center"
+            ],
+            "highlights": "Business hotel, central location, modern amenities",
+            "galleryLink": "",
+            "images": {
+                "exterior": [
+                    "http://d2u1z1lopyfwlx.cloudfront.net/thumbnails/7f2d967d-8771-564c-b7b0-313da6857e30/6257f57e-c7ae-5b04-976a-b25dd14886af.jpg"
+                ]
+            },
+            "bookingLinks": {},
+            "googleMapsLink": "https://maps.google.com/?q=The+President+Hotel+Mysore",
+            "website": "",
+            "distanceFromVenue": "Contact for distance"
         }
     ]
 }
