@@ -2339,6 +2339,104 @@ h3 {
     transform: translate(-50%, -60%);
 }
 
+/* =========================================
+   About Section Styles
+   ========================================= */
+.about-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-bottom: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--light-gold);
+}
+
+.about-header {
+    background: linear-gradient(135deg, var(--light-gold) 0%, #FFF 100%);
+    padding: 20px;
+    border-bottom: 1px solid var(--light-gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.about-header h3 {
+    margin: 0;
+    color: var(--dark-gold);
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.role-badge {
+    background: var(--primary-gold);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.about-body {
+    padding: 25px;
+    color: var(--text-dark);
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.about-body p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.about-body p:last-child {
+    margin-bottom: 0;
+}
+
+.signature {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+.signature p {
+    margin: 2px 0;
+    text-align: right;
+    color: var(--text-light);
+}
+
+.signature strong {
+    display: block;
+    color: var(--primary-gold);
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+    .about-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .about-body {
+        padding: 20px;
+    }
+}
+
 .bypass-modal {
     border-top: 4px solid #D97706;
 }
