@@ -2442,11 +2442,13 @@ function initScrollProgress() {
     const pathLength = progressPath.getTotalLength();
 
     // Set up the path styling for the animation
-    progressPath.style.transition = 'progressPath.style.transition = "none"';
-    progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
-    progressPath.style.strokeDashoffset = pathLength;
-    progressPath.getBoundingClientRect();
-    progressPath.style.transition = 'stroke-dashoffset 10ms linear';
+    if (progressPath) {
+        progressPath.style.transition = 'none';
+        progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
+        progressPath.style.strokeDashoffset = pathLength;
+        progressPath.getBoundingClientRect();
+        progressPath.style.transition = 'stroke-dashoffset 10ms linear';
+    }
 
     const updateProgress = () => {
         const scroll = window.scrollY || window.pageYOffset;
