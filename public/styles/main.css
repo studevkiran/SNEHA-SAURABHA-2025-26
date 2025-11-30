@@ -3420,3 +3420,23 @@ h3 {
         gap: 10px;
     }
 }
+/* =========================================
+   Committee Layout: First Member Highlight
+   ========================================= */
+.committee-member:first-child {
+    grid-column: 1 / -1; /* Span all columns */
+    justify-self: center; /* Center horizontally */
+    max-width: 400px; /* Limit width of the highlighted member */
+    width: 100%;
+    background: #FFFBEB; /* Subtle highlight background */
+    border-color: #D4AF37; /* Gold border for the lead */
+    transform: scale(1.02); /* Slight emphasis */
+}
+
+.committee-member:first-child .member-role {
+    font-size: 14px; /* Larger role text */
+}
+
+.committee-member:first-child .member-name {
+    font-size: 18px; /* Larger name text */
+}
