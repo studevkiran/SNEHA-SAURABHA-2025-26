@@ -103,7 +103,7 @@ body {
         height: auto !important;
         min-height: 0 !important;
         overflow-y: visible !important;
-        max-width: 800px !important;
+        max-width: 1200px !important;
         margin: 0 auto 20px auto !important;
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.1) !important;
         padding: 0 !important;
@@ -124,6 +124,7 @@ body {
     body {
         padding: 20px 20px !important;
         overflow-y: auto !important;
+        max-width: 100% !important;
     }
 }
 
@@ -1381,7 +1382,7 @@ h3 {
         overflow: auto;
         position: relative;
         height: auto;
-        max-width: 800px;
+        max-width: 100%;
     }
 
     .screen {
