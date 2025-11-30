@@ -3280,3 +3280,27 @@ h3 {
         max-width: 1200px !important;
     }
 }
+
+/* Fix for desktop overlay issues */
+@media (min-width: 768px) {
+    #screen-hotels {
+        position: relative !important;
+        z-index: 10 !important;
+        overflow: visible !important;
+        padding-top: 20px !important;
+    }
+
+    .hotels-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 40px !important;
+        margin-top: 30px !important;
+    }
+
+    .hotel-card {
+        height: auto !important;
+        min-height: 100% !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+}
