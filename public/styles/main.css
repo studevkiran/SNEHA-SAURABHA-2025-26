@@ -3277,13 +3277,14 @@ h3 {
     padding-top: 15px;
     border-top: 1px solid #F3F4F6;
 }
+
 /* =========================================
    Desktop Layout Fixes (Comprehensive)
    ========================================= */
 @media (min-width: 768px) {
+
     /* Ensure all main containers use full available width */
     .about-container,
-    .committee-list,
     .review-container,
     .hotels-grid {
         max-width: 100% !important;
@@ -3303,17 +3304,13 @@ h3 {
         width: auto !important;
     }
 
-    /* Committee Section: Grid Layout */
-    .committee-list {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
-        gap: 30px !important;
-    }
+
 
     /* Review Section: Two Columns */
     .review-container {
         display: grid !important;
-        grid-template-columns: 1.5fr 1fr !important; /* Info wider than coupon */
+        grid-template-columns: 1.5fr 1fr !important;
+        /* Info wider than coupon */
         gap: 30px !important;
         align-items: start !important;
     }
@@ -3330,6 +3327,7 @@ h3 {
    Registration Pages Constraint (Desktop)
    ========================================= */
 @media (min-width: 768px) {
+
     /* Constrain registration flow screens to a focused width */
     #screen-register-type,
     #screen-personal-details,
@@ -3340,7 +3338,7 @@ h3 {
         max-width: 600px !important;
         margin: 0 auto 20px auto !important;
         border-radius: 16px !important;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
     }
 
     /* Ensure content within these screens is centered and contained */
