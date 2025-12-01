@@ -73,7 +73,7 @@ const EMBEDDED_CLUBS = [
     { "id": 51, "name": "Moodbidri Mid Town" },
     { "id": 52, "name": "Moodbidri Temple Town" },
     { "id": 53, "name": "Mulky" },
-    { "id": 54, "name": "Mysore" },
+    { "id": 54, "name": "Mysore Main" },
     { "id": 55, "name": "Mysore Ambari" },
     { "id": 56, "name": "Mysore Brindavan" },
     { "id": 57, "name": "Mysore East" },
@@ -415,7 +415,7 @@ async function loadClubs() {
     } else {
         try {
             // Try fetching the clubs JSON (works when served over http/https)
-            const response = await fetch('data/clubs.json?v=' + Date.now());
+            const response = await fetch('data/clubs_list.json?v=' + Date.now());
             if (!response.ok) throw new Error('Network response was not ok');
             clubsList = await response.json();
         } catch (error) {
@@ -725,7 +725,7 @@ function initializeClubSearch() {
     const clubDropdown = document.getElementById('club-dropdown-quick');
 
     // Load clubs from the existing clubs data
-    fetch('data/clubs.json?v=' + Date.now())
+    fetch('data/clubs_list.json?v=' + Date.now())
         .then(response => response.json())
         .then(clubs => {
             // Store clubs globally for filtering
