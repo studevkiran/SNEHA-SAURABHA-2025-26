@@ -415,7 +415,7 @@ async function loadClubs() {
     } else {
         try {
             // Try fetching the clubs JSON (works when served over http/https)
-            const response = await fetch('data/clubs.json');
+            const response = await fetch('data/clubs.json?v=' + Date.now());
             if (!response.ok) throw new Error('Network response was not ok');
             clubsList = await response.json();
         } catch (error) {
@@ -725,7 +725,7 @@ function initializeClubSearch() {
     const clubDropdown = document.getElementById('club-dropdown-quick');
 
     // Load clubs from the existing clubs data
-    fetch('data/clubs.json')
+    fetch('data/clubs.json?v=' + Date.now())
         .then(response => response.json())
         .then(clubs => {
             // Store clubs globally for filtering
@@ -2300,7 +2300,6 @@ window.showScreen = function (screenId) {
     }
 };
 
-console.log('✅ Simplified coupon system initialized with codes:', Object.keys(VALID_COUPONS));
 console.log('✅ All global functions exposed to window object');
 
 /* =========================================
