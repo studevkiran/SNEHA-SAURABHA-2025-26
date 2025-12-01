@@ -73,7 +73,7 @@ const EMBEDDED_CLUBS = [
     { "id": 51, "name": "Moodbidri Mid Town" },
     { "id": 52, "name": "Moodbidri Temple Town" },
     { "id": 53, "name": "Mulky" },
-    { "id": 54, "name": "Mysore Main" },
+    { "id": 54, "name": "Mysore" },
     { "id": 55, "name": "Mysore Ambari" },
     { "id": 56, "name": "Mysore Brindavan" },
     { "id": 57, "name": "Mysore East" },
