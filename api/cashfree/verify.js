@@ -1,9 +1,10 @@
 // API: Verify Cashfree payment status
 const CashfreeService = require('../../lib/cashfree');
-const { 
-  getPaymentAttempt, 
+const {
+  getPaymentAttempt,
   createConfirmedRegistration,
-  updatePaymentAttemptStatus 
+  updatePaymentAttemptStatus,
+  query // Import query
 } = require('../../lib/db-neon');
 
 module.exports = async (req, res) => {
@@ -25,10 +26,10 @@ module.exports = async (req, res) => {
     // Payment SUCCESS - Create confirmed registration
     if (statusResponse.success && statusResponse.paymentSuccess) {
       console.log('✅ Payment verified as SUCCESS');
-      
+
       // Check if already processed (avoid duplicate registration)
       const attempt = await getPaymentAttempt(orderId);
-      
+
       if (!attempt) {
         console.error('❌ Payment attempt not found for order:', orderId);
         return res.status(404).json({
@@ -36,22 +37,40 @@ module.exports = async (req, res) => {
           error: 'Payment attempt not found. Please contact support: +91 99805 57785'
         });
       }
-      
+
       if (attempt.payment_status === 'SUCCESS') {
         console.log('⚠️ Payment already processed, returning existing registration');
         // Get existing registration from registrations table
-        const { Pool } = require('pg');
-        const pool = new Pool({
-          connectionString: process.env.DATABASE_URL,
-          ssl: { rejectUnauthorized: false }
-        });
-        const regResult = await pool.query(
+        const regResult = await query(
           'SELECT * FROM registrations WHERE order_id = $1',
           [orderId]
         );
-        
+
         if (regResult.rows.length > 0) {
           const registration = regResult.rows[0];
+
+          // Ensure WhatsApp is sent (in case webhook failed to send it)
+          try {
+            const { sendWhatsApp } = require('../../lib/whatsapp');
+            console.log('📱 Verify (Existing): Triggering WhatsApp via shared lib...');
+            await sendWhatsApp({
+              name: registration.name,
+              mobile: registration.mobile,
+              email: registration.email,
+              registrationId: registration.registration_id,
+              registrationType: registration.registration_type,
+              amount: registration.registration_amount,
+              mealPreference: registration.meal_preference,
+              tshirtSize: registration.tshirt_size,
+              clubName: registration.club,
+              orderId: registration.order_id,
+              receiptNo: statusResponse.transactionId || registration.registration_id
+            });
+            console.log('✅ WhatsApp sent successfully (retry)!');
+          } catch (whatsappError) {
+            console.error('❌ WhatsApp error (retry):', whatsappError.message);
+          }
+
           return res.status(200).json({
             success: true,
             paymentSuccess: true,
@@ -62,111 +81,90 @@ module.exports = async (req, res) => {
             paymentMethod: statusResponse.paymentMethod,
             paymentTime: statusResponse.paymentTime,
             registration: {
+              registration_id: registration.registration_id,
+              order_id: registration.order_id,
               name: registration.name,
               email: registration.email,
               mobile: registration.mobile,
-              clubName: registration.club,
-              clubId: registration.club_id,
-              registrationType: registration.registration_type,
-              amount: registration.registration_amount,
-              mealPreference: registration.meal_preference,
-              confirmationId: registration.registration_id
+              club: registration.club,
+              zone: registration.zone,
+              registration_type: registration.registration_type,
+              registration_amount: parseFloat(registration.registration_amount),
+              meal_preference: registration.meal_preference,
+              tshirt_size: registration.tshirt_size,
+              payment_status: registration.payment_status,
+              payment_method: registration.payment_method,
+              transaction_id: registration.transaction_id,
+              upi_id: registration.upi_id,
+              created_at: registration.created_at
             }
           });
         }
       }
-      
+
       // Create confirmed registration (generates registration ID)
       console.log('🎫 Creating confirmed registration...');
-      const confirmResult = await createConfirmedRegistration(
-        orderId,
-        statusResponse.transactionId
-      );
-      
+      let confirmResult;
+      try {
+        confirmResult = await createConfirmedRegistration(
+          orderId,
+          statusResponse.transactionId
+        );
+      } catch (createError) {
+        // If duplicate key error, registration was already created by webhook
+        if (createError.message && createError.message.includes('duplicate key')) {
+          console.log('⚠️ Registration already exists (webhook created it), fetching existing...');
+          const regResult = await query(
+            'SELECT * FROM registrations WHERE order_id = $1',
+            [orderId]
+          );
+
+          if (regResult.rows.length > 0) {
+            confirmResult = {
+              success: true,
+              registration: regResult.rows[0],
+              registrationId: regResult.rows[0].registration_id
+            };
+          } else {
+            throw new Error('Failed to create or fetch confirmed registration');
+          }
+        } else {
+          throw createError;
+        }
+      }
+
       if (!confirmResult.success) {
         throw new Error('Failed to create confirmed registration');
       }
-      
+
       const registration = confirmResult.registration;
       console.log('✅ Confirmed registration created:', confirmResult.registrationId);
-      
+
       // Send WhatsApp confirmation via Infobip (direct API call)
       try {
-        console.log('📱 Preparing WhatsApp message...');
-        
-        // Format phone number
-        let phoneNumber = registration.mobile.toString().replace(/\D/g, '');
-        if (!phoneNumber.startsWith('91')) {
-          phoneNumber = '91' + phoneNumber;
-        }
-        
-        // Use Vercel URL for payment callback format
-        const baseUrl = 'https://sneha2026.in';
-        // Use payment callback URL format instead of r.html
-        const confirmationLink = `${baseUrl}/index.html?payment=success&order_id=${registration.registration_id}`;
-        // Use Cashfree transaction ID as receipt number (unique payment identifier)
-        const receiptNo = statusResponse.transactionId || registration.registration_id;
-        
-        const messageData = {
-          messages: [{
-            from: process.env.INFOBIP_WHATSAPP_NUMBER || '917892045223',
-            to: phoneNumber,
-            messageId: `reg-${registration.registration_id}-${Date.now()}`,
-            content: {
-              templateName: 'registration_confirmation_v4',
-              templateData: {
-                header: {
-                  type: 'IMAGE',
-                  mediaUrl: 'https://res.cloudinary.com/dnai1dz03/image/upload/v1763028752/WhatsApp_Image_2025-11-13_at_09.00.02_ny0cn9.jpg'
-                },
-                body: {
-                  placeholders: [
-                    registration.name,
-                    registration.name,
-                    phoneNumber,
-                    registration.email || 'Not Provided',
-                    registration.registration_type || 'Registration',
-                    registration.meal_preference || 'Veg',
-                    registration.tshirt_size || 'N/A',
-                    registration.registration_amount.toLocaleString('en-IN'),
-                    confirmationLink
-                  ]
-                }
-              },
-              language: 'en'
-            }
-          }]
-        };
-        
-        console.log('📤 Sending to Infobip for:', phoneNumber);
-        console.log('📋 Template data:', JSON.stringify(messageData, null, 2));
-        
-        // Send to Infobip and AWAIT the response
-        const whatsappResponse = await fetch(`https://${process.env.INFOBIP_BASE_URL}/whatsapp/1/message/template`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `App ${process.env.INFOBIP_API_KEY}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(messageData)
+        const { sendWhatsApp } = require('../../lib/whatsapp');
+        console.log('📱 Verify: Triggering WhatsApp via shared lib...');
+
+        await sendWhatsApp({
+          name: registration.name,
+          mobile: registration.mobile,
+          email: registration.email,
+          registrationId: registration.registration_id,
+          registrationType: registration.registration_type,
+          amount: registration.registration_amount,
+          mealPreference: registration.meal_preference,
+          tshirtSize: registration.tshirt_size,
+          clubName: registration.club,
+          orderId: registration.order_id,
+          receiptNo: statusResponse.transactionId || registration.registration_id
         });
-        
-        const whatsappResult = await whatsappResponse.json();
-        
-        console.log('📥 Infobip Response Status:', whatsappResponse.status);
-        console.log('📥 Infobip Response:', JSON.stringify(whatsappResult, null, 2));
-        
-        if (whatsappResponse.ok) {
-          console.log('✅ WhatsApp sent successfully!');
-        } else {
-          console.error('❌ Infobip API error:', whatsappResult);
-        }
-        
+
+        console.log('✅ WhatsApp sent successfully!');
+
       } catch (whatsappError) {
-        console.error('❌ WhatsApp error:', whatsappError.message, whatsappError.stack);
+        console.error('❌ WhatsApp error:', whatsappError.message);
       }
-      
+
       return res.status(200).json({
         success: true,
         paymentSuccess: true,
@@ -177,32 +175,39 @@ module.exports = async (req, res) => {
         paymentMethod: statusResponse.paymentMethod,
         paymentTime: statusResponse.paymentTime,
         registration: {
+          registration_id: registration.registration_id,
+          order_id: registration.order_id,
           name: registration.name,
           email: registration.email,
           mobile: registration.mobile,
-          clubName: registration.club,
-          clubId: registration.club_id,
-          registrationType: registration.registration_type,
-          amount: registration.registration_amount,
-          mealPreference: registration.meal_preference,
-          confirmationId: registration.registration_id
+          club: registration.club,
+          zone: registration.zone,
+          registration_type: registration.registration_type,
+          registration_amount: parseFloat(registration.registration_amount),
+          meal_preference: registration.meal_preference,
+          tshirt_size: registration.tshirt_size,
+          payment_status: registration.payment_status,
+          payment_method: registration.payment_method,
+          transaction_id: registration.transaction_id,
+          upi_id: registration.upi_id,
+          created_at: registration.created_at
         }
       });
-    } 
-    
+    }
+
     // Payment FAILED or CANCELLED
-    else if (statusResponse.status === 'FAILED' || 
-             statusResponse.status === 'CANCELLED' ||
-             statusResponse.status === 'USER_DROPPED') {
+    else if (statusResponse.status === 'FAILED' ||
+      statusResponse.status === 'CANCELLED' ||
+      statusResponse.status === 'USER_DROPPED') {
       console.log('❌ Payment failed/cancelled:', statusResponse.status);
-      
+
       // Update payment attempt to FAILED
       await updatePaymentAttemptStatus(
         orderId,
         'FAILED',
         statusResponse.error || 'Payment cancelled by user'
       );
-      
+
       return res.status(200).json({
         success: false,
         paymentSuccess: false,
@@ -211,7 +216,7 @@ module.exports = async (req, res) => {
         message: 'Payment was not successful. You can try registering again.'
       });
     }
-    
+
     // Payment still PENDING
     else if (statusResponse.success) {
       console.log('⏳ Payment still pending:', statusResponse.status);
@@ -221,8 +226,8 @@ module.exports = async (req, res) => {
         status: statusResponse.status,
         orderId
       });
-    } 
-    
+    }
+
     // Verification failed
     else {
       console.error('❌ Payment verification failed:', statusResponse.error);
