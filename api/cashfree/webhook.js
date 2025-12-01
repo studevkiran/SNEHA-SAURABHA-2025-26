@@ -79,7 +79,18 @@ module.exports = async (req, res) => {
         .update(signatureData)
         .digest('base64');
 
-      const verified = computedSignature === signature;
+      // IMPORTANT: Cashfree signatures might have trailing '=' padding differences or URL encoding
+      // We should normalize both before comparing
+      const normalize = (str) => str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+      // Try standard comparison first
+      let verified = computedSignature === signature;
+
+      // If failed, try URL-safe comparison (some versions of Cashfree use URL-safe base64)
+      if (!verified) {
+        console.log('⚠️ Standard signature mismatch, trying URL-safe comparison...');
+        verified = normalize(computedSignature) === normalize(signature);
+      }
 
       console.log(verified ? '✅ Signature verified' : '❌ Signature mismatch');
 
