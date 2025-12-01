@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
 
   try {
     const payload = req.body;
-    console.log('📥 RAW WEBHOOK PAYLOAD:', JSON.stringify(payload));
+    // console.log('📥 RAW WEBHOOK PAYLOAD:', JSON.stringify(payload));
 
     // Log incoming webhook immediately
     try {
