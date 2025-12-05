@@ -1,370 +1,462 @@
 [
   {
-    "id": 1,
-    "name": "B C Road City"
-  },
-  {
-    "id": 2,
-    "name": "Baikampady"
+    "id": 108,
+    "name": "Mulky",
+    "zone": "Zone 1"
   },
   {
     "id": 3,
-    "name": "Bajpe"
-  },
-  {
-    "id": 4,
-    "name": "Bannur"
-  },
-  {
-    "id": 5,
-    "name": "Bantwal"
-  },
-  {
-    "id": 6,
-    "name": "Bantwal Loretto Hills"
-  },
-  {
-    "id": 7,
-    "name": "Bantwal Town"
-  },
-  {
-    "id": 8,
-    "name": "Bellare Town"
-  },
-  {
-    "id": 9,
-    "name": "Belthangady"
-  },
-  {
-    "id": 10,
-    "name": "Birumale Hills Puttur"
-  },
-  {
-    "id": 11,
-    "name": "Central Mysore"
-  },
-  {
-    "id": 93,
-    "name": "Chamarajanagar"
-  },
-  {
-    "id": 94,
-    "name": "Chamarajanagar Silk City"
-  },
-  {
-    "id": 14,
-    "name": "Deralakatte"
-  },
-  {
-    "id": 95,
-    "name": "E-Club of Mysuru Center"
-  },
-  {
-    "id": 16,
-    "name": "Farangipete"
-  },
-  {
-    "id": 17,
-    "name": "Gonikoppal"
-  },
-  {
-    "id": 18,
-    "name": "H.D. Kote"
-  },
-  {
-    "id": 96,
-    "name": "Hemavathi Kodlipet"
-  },
-  {
-    "id": 21,
-    "name": "Heritage Mysuru"
-  },
-  {
-    "id": 97,
-    "name": "Hunsur, Hunsur"
-  },
-  {
-    "id": 98,
-    "name": "Ivory City Mysuru"
-  },
-  {
-    "id": 99,
-    "name": "Kadaba Town"
+    "name": "Bajpe",
+    "zone": "Zone 1"
   },
   {
     "id": 100,
-    "name": "Kinnigoli"
-  },
-  {
-    "id": 101,
-    "name": "Kollegal"
-  },
-  {
-    "id": 102,
-    "name": "Kollegal Mid Town"
-  },
-  {
-    "id": 27,
-    "name": "Krishnaraja"
-  },
-  {
-    "id": 103,
-    "name": "Krishnarajanagar"
-  },
-  {
-    "id": 104,
-    "name": "Kushalnagar"
-  },
-  {
-    "id": 30,
-    "name": "Madanthyar"
-  },
-  {
-    "id": 31,
-    "name": "Madikeri"
-  },
-  {
-    "id": 32,
-    "name": "Madikeri Woods"
-  },
-  {
-    "id": 105,
-    "name": "Malleshwara Alur Siddapura"
-  },
-  {
-    "id": 34,
-    "name": "Mangalore"
-  },
-  {
-    "id": 35,
-    "name": "Mangalore Central"
-  },
-  {
-    "id": 36,
-    "name": "Mangalore City"
-  },
-  {
-    "id": 37,
-    "name": "Mangalore Coastal"
-  },
-  {
-    "id": 38,
-    "name": "Mangalore Down Town"
-  },
-  {
-    "id": 39,
-    "name": "Mangalore East"
-  },
-  {
-    "id": 40,
-    "name": "Mangalore Hill-Side"
-  },
-  {
-    "id": 41,
-    "name": "Mangalore Metro"
-  },
-  {
-    "id": 42,
-    "name": "Mangalore Midtown"
-  },
-  {
-    "id": 43,
-    "name": "Mangalore North"
-  },
-  {
-    "id": 44,
-    "name": "Mangalore Port Town"
-  },
-  {
-    "id": 45,
-    "name": "Mangalore Seaside"
-  },
-  {
-    "id": 46,
-    "name": "Mangalore South"
-  },
-  {
-    "id": 47,
-    "name": "Mangalore Sunrise"
-  },
-  {
-    "id": 48,
-    "name": "Misty Hills Madikeri"
-  },
-  {
-    "id": 49,
-    "name": "Modankap"
-  },
-  {
-    "id": 50,
-    "name": "Moodabidri"
+    "name": "Kinnigoli",
+    "zone": "Zone 1"
   },
   {
     "id": 106,
-    "name": "Moodbidri Mid Town"
+    "name": "Moodbidri Mid Town",
+    "zone": "Zone 1"
   },
   {
-    "id": 107,
-    "name": "Moodbidri Temple Town"
+    "id": 2,
+    "name": "Baikampady",
+    "zone": "Zone 2A"
   },
   {
-    "id": 108,
-    "name": "Mulky"
+    "id": 47,
+    "name": "Mangalore Sunrise",
+    "zone": "Zone 2A"
   },
   {
-    "id": 54,
-    "name": "Mysore"
+    "id": 35,
+    "name": "Mangalore Central",
+    "zone": "Zone 2A"
   },
   {
-    "id": 55,
-    "name": "Mysore Ambari"
+    "id": 44,
+    "name": "Mangalore Port Town",
+    "zone": "Zone 2A"
   },
   {
-    "id": 56,
-    "name": "Mysore Brindavan"
-  },
-  {
-    "id": 57,
-    "name": "Mysore East"
-  },
-  {
-    "id": 58,
-    "name": "Mysore Elite"
-  },
-  {
-    "id": 59,
-    "name": "Mysore Jayaprakash Nagar"
-  },
-  {
-    "id": 60,
-    "name": "Mysore Metro"
-  },
-  {
-    "id": 61,
-    "name": "Mysore Mid-Town"
-  },
-  {
-    "id": 62,
-    "name": "Mysore North"
-  },
-  {
-    "id": 63,
-    "name": "Mysore Royal"
-  },
-  {
-    "id": 109,
-    "name": "Mysore Shreegandha"
-  },
-  {
-    "id": 65,
-    "name": "Mysore South East"
-  },
-  {
-    "id": 67,
-    "name": "Mysore Stars"
-  },
-  {
-    "id": 68,
-    "name": "Mysore West"
-  },
-  {
-    "id": 69,
-    "name": "Mysuru Diamond"
-  },
-  {
-    "id": 70,
-    "name": "Nanjangud"
-  },
-  {
-    "id": 110,
-    "name": "Panchsheel Mysore"
-  },
-  {
-    "id": 72,
-    "name": "Periyapatna Icons"
-  },
-  {
-    "id": 73,
-    "name": "Periyapatna Mid Town"
-  },
-  {
-    "id": 74,
-    "name": "Puttur"
-  },
-  {
-    "id": 75,
-    "name": "Puttur Central"
-  },
-  {
-    "id": 76,
-    "name": "Puttur City"
-  },
-  {
-    "id": 78,
-    "name": "Puttur Elite"
-  },
-  {
-    "id": 79,
-    "name": "Puttur Swarna"
-  },
-  {
-    "id": 80,
-    "name": "Puttur Yuva"
-  },
-  {
-    "id": 77,
-    "name": "Puttur-East"
-  },
-  {
-    "id": 111,
-    "name": "Seva Mysore"
-  },
-  {
-    "id": 112,
-    "name": "Shanivarsanthe"
-  },
-  {
-    "id": 113,
-    "name": "Siddakatte Phalguni"
-  },
-  {
-    "id": 114,
-    "name": "Somwarpet Hills"
-  },
-  {
-    "id": 84,
-    "name": "Subramanya"
-  },
-  {
-    "id": 85,
-    "name": "Sullia"
-  },
-  {
-    "id": 86,
-    "name": "Sullia City"
+    "id": 37,
+    "name": "Mangalore Coastal",
+    "zone": "Zone 2A"
   },
   {
     "id": 87,
-    "name": "Surathkal"
+    "name": "Surathkal",
+    "zone": "Zone 2B"
   },
   {
-    "id": 115,
-    "name": "Uppinangadi"
+    "id": 39,
+    "name": "Mangalore East",
+    "zone": "Zone 2B"
   },
   {
-    "id": 116,
-    "name": "Vijayanagar Mysore"
+    "id": 43,
+    "name": "Mangalore North",
+    "zone": "Zone 2B"
   },
   {
-    "id": 117,
-    "name": "Virajpet"
+    "id": 40,
+    "name": "Mangalore Hill-Side",
+    "zone": "Zone 2B"
+  },
+  {
+    "id": 45,
+    "name": "Mangalore Seaside",
+    "zone": "Zone 3A"
+  },
+  {
+    "id": 41,
+    "name": "Mangalore Metro",
+    "zone": "Zone 3A"
+  },
+  {
+    "id": 42,
+    "name": "Mangalore Midtown",
+    "zone": "Zone 3A"
+  },
+  {
+    "id": 34,
+    "name": "Mangalore",
+    "zone": "Zone 3A"
+  },
+  {
+    "id": 38,
+    "name": "Mangalore Down Town",
+    "zone": "Zone 3B"
+  },
+  {
+    "id": 46,
+    "name": "Mangalore South",
+    "zone": "Zone 3B"
+  },
+  {
+    "id": 36,
+    "name": "Mangalore City",
+    "zone": "Zone 3B"
+  },
+  {
+    "id": 14,
+    "name": "Deralakatte",
+    "zone": "Zone 3B"
+  },
+  {
+    "id": 50,
+    "name": "Moodabidri",
+    "zone": "Zone 4A"
+  },
+  {
+    "id": 107,
+    "name": "Moodbidri Temple Town",
+    "zone": "Zone 4A"
+  },
+  {
+    "id": 113,
+    "name": "Siddakatte Phalguni",
+    "zone": "Zone 4A"
+  },
+  {
+    "id": 6,
+    "name": "Bantwal Loretto Hills",
+    "zone": "Zone 4A"
+  },
+  {
+    "id": 7,
+    "name": "Bantwal Town",
+    "zone": "Zone 4B"
+  },
+  {
+    "id": 9,
+    "name": "Belthangady",
+    "zone": "Zone 4B"
+  },
+  {
+    "id": 5,
+    "name": "Bantwal",
+    "zone": "Zone 4B"
+  },
+  {
+    "id": 30,
+    "name": "Madanthyar",
+    "zone": "Zone 4B"
+  },
+  {
+    "id": 49,
+    "name": "Modankap",
+    "zone": "Zone 4C"
+  },
+  {
+    "id": 16,
+    "name": "Farangipete",
+    "zone": "Zone 4C"
+  },
+  {
+    "id": 1,
+    "name": "B C Road City",
+    "zone": "Zone 4C"
+  },
+  {
+    "id": 76,
+    "name": "Puttur City",
+    "zone": "Zone 4D"
   },
   {
     "id": 91,
-    "name": "Vittal"
+    "name": "Vittal",
+    "zone": "Zone 4D"
+  },
+  {
+    "id": 115,
+    "name": "Uppinangadi",
+    "zone": "Zone 4D"
+  },
+  {
+    "id": 74,
+    "name": "Puttur",
+    "zone": "Zone 5A"
+  },
+  {
+    "id": 75,
+    "name": "Puttur Central",
+    "zone": "Zone 5A"
+  },
+  {
+    "id": 84,
+    "name": "Subramanya",
+    "zone": "Zone 5A"
+  },
+  {
+    "id": 99,
+    "name": "Kadaba Town",
+    "zone": "Zone 5A"
+  },
+  {
+    "id": 80,
+    "name": "Puttur Yuva",
+    "zone": "Zone 5B"
+  },
+  {
+    "id": 77,
+    "name": "Puttur-East",
+    "zone": "Zone 5B"
+  },
+  {
+    "id": 79,
+    "name": "Puttur Swarna",
+    "zone": "Zone 5B"
+  },
+  {
+    "id": 78,
+    "name": "Puttur Elite",
+    "zone": "Zone 5B"
+  },
+  {
+    "id": 86,
+    "name": "Sullia City",
+    "zone": "Zone 5C"
+  },
+  {
+    "id": 85,
+    "name": "Sullia",
+    "zone": "Zone 5C"
+  },
+  {
+    "id": 8,
+    "name": "Bellare Town",
+    "zone": "Zone 5C"
+  },
+  {
+    "id": 10,
+    "name": "Birumale Hills Puttur",
+    "zone": "Zone 5C"
+  },
+  {
+    "id": 117,
+    "name": "Virajpet",
+    "zone": "Zone 6A"
+  },
+  {
+    "id": 17,
+    "name": "Gonikoppal",
+    "zone": "Zone 6A"
+  },
+  {
+    "id": 31,
+    "name": "Madikeri",
+    "zone": "Zone 6A"
+  },
+  {
+    "id": 48,
+    "name": "Misty Hills Madikeri",
+    "zone": "Zone 6A"
+  },
+  {
+    "id": 32,
+    "name": "Madikeri Woods",
+    "zone": "Zone 6A"
+  },
+  {
+    "id": 105,
+    "name": "Malleshwara Alur Siddapura",
+    "zone": "Zone 6B"
+  },
+  {
+    "id": 112,
+    "name": "Shanivarsanthe",
+    "zone": "Zone 6B"
+  },
+  {
+    "id": 96,
+    "name": "Hemavathi Kodlipet",
+    "zone": "Zone 6B"
+  },
+  {
+    "id": 114,
+    "name": "Somwarpet Hills",
+    "zone": "Zone 6B"
+  },
+  {
+    "id": 104,
+    "name": "Kushalnagar",
+    "zone": "Zone 6B"
+  },
+  {
+    "id": 103,
+    "name": "Krishnarajanagar",
+    "zone": "Zone 6C"
+  },
+  {
+    "id": 73,
+    "name": "Periyapatna Mid Town",
+    "zone": "Zone 6C"
+  },
+  {
+    "id": 72,
+    "name": "Periyapatna Icons",
+    "zone": "Zone 6C"
+  },
+  {
+    "id": 97,
+    "name": "Hunsur, Hunsur",
+    "zone": "Zone 6C"
+  },
+  {
+    "id": 110,
+    "name": "Panchsheel Mysore",
+    "zone": "Zone 7A"
+  },
+  {
+    "id": 98,
+    "name": "Ivory City Mysuru",
+    "zone": "Zone 7A"
+  },
+  {
+    "id": 27,
+    "name": "Krishnaraja",
+    "zone": "Zone 7A"
+  },
+  {
+    "id": 54,
+    "name": "Mysore",
+    "zone": "Zone 7A"
+  },
+  {
+    "id": 109,
+    "name": "Mysore Shreegandha",
+    "zone": "Zone 7A"
+  },
+  {
+    "id": 60,
+    "name": "Mysore Metro",
+    "zone": "Zone 7A"
+  },
+  {
+    "id": 111,
+    "name": "Seva Mysore",
+    "zone": "Zone 7A"
+  },
+  {
+    "id": 95,
+    "name": "E-Club of Mysuru Center",
+    "zone": "Zone 7B"
+  },
+  {
+    "id": 61,
+    "name": "Mysore Mid-Town",
+    "zone": "Zone 7B"
+  },
+  {
+    "id": 11,
+    "name": "Central Mysore",
+    "zone": "Zone 7B"
+  },
+  {
+    "id": 59,
+    "name": "Mysore Jayaprakash Nagar",
+    "zone": "Zone 7B"
+  },
+  {
+    "id": 57,
+    "name": "Mysore East",
+    "zone": "Zone 7B"
+  },
+  {
+    "id": 58,
+    "name": "Mysore Elite",
+    "zone": "Zone 8A"
+  },
+  {
+    "id": 68,
+    "name": "Mysore West",
+    "zone": "Zone 8A"
+  },
+  {
+    "id": 63,
+    "name": "Mysore Royal",
+    "zone": "Zone 8A"
+  },
+  {
+    "id": 67,
+    "name": "Mysore Stars",
+    "zone": "Zone 8A"
+  },
+  {
+    "id": 18,
+    "name": "H.D. Kote",
+    "zone": "Zone 8A"
+  },
+  {
+    "id": 21,
+    "name": "Heritage Mysuru",
+    "zone": "Zone 8A"
+  },
+  {
+    "id": 65,
+    "name": "Mysore South East",
+    "zone": "Zone 8B"
+  },
+  {
+    "id": 56,
+    "name": "Mysore Brindavan",
+    "zone": "Zone 8B"
+  },
+  {
+    "id": 116,
+    "name": "Vijayanagar Mysore",
+    "zone": "Zone 8B"
+  },
+  {
+    "id": 69,
+    "name": "Mysuru Diamond",
+    "zone": "Zone 8B"
+  },
+  {
+    "id": 62,
+    "name": "Mysore North",
+    "zone": "Zone 8B"
+  },
+  {
+    "id": 55,
+    "name": "Mysore Ambari",
+    "zone": "Zone 8B"
+  },
+  {
+    "id": 93,
+    "name": "Chamarajanagar",
+    "zone": "Zone 9A"
+  },
+  {
+    "id": 94,
+    "name": "Chamarajanagar Silk City",
+    "zone": "Zone 9A"
+  },
+  {
+    "id": 70,
+    "name": "Nanjangud",
+    "zone": "Zone 9A"
+  },
+  {
+    "id": 4,
+    "name": "Bannur",
+    "zone": "Zone 9B"
   },
   {
     "id": 118,
-    "name": "Yelanduru Greenway"
+    "name": "Yelanduru Greenway",
+    "zone": "Zone 9B"
+  },
+  {
+    "id": 101,
+    "name": "Kollegal",
+    "zone": "Zone 9B"
+  },
+  {
+    "id": 102,
+    "name": "Kollegal Mid Town",
+    "zone": "Zone 9B"
   }
 ]
