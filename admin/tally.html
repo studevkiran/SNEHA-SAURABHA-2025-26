@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,23 +12,23 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         header {
             display: flex;
             align-items: center;
@@ -37,31 +38,31 @@
             border-bottom: 2px solid #D4AF37;
             gap: 20px;
         }
-        
+
         .header-logo {
             width: 100px;
             height: 100px;
             object-fit: contain;
             flex-shrink: 0;
         }
-        
+
         .header-center {
             flex: 1;
             text-align: center;
         }
-        
+
         header h1 {
             color: #D4AF37;
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 8px;
         }
-        
+
         header p {
             color: #666;
             font-size: 16px;
         }
-        
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -70,12 +71,19 @@
             gap: 15px;
             flex-wrap: wrap;
         }
-        
+
+        .controls-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         .search-box {
             flex: 1;
-            max-width: 400px;
+            max-width: 500px;
         }
-        
+
         .search-box input {
             width: 100%;
             padding: 12px 16px;
@@ -84,24 +92,24 @@
             font-size: 15px;
             transition: all 0.3s;
         }
-        
+
         .search-box input:focus {
             outline: none;
             border-color: #D4AF37;
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
         }
-        
+
         .stat-item {
             font-size: 14px;
             color: #666;
         }
-        
+
         .stat-item strong {
             color: #D4AF37;
             font-size: 18px;
             margin-right: 5px;
         }
-        
+
         .export-btn {
             background: #22C55E;
             color: white;
@@ -113,30 +121,30 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .export-btn:hover {
             background: #16A34A;
             transform: translateY(-2px);
         }
-        
+
         .table-wrapper {
             overflow-x: auto;
             border-radius: 8px;
             border: 1px solid #E5E7EB;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
         }
-        
+
         thead {
             background: #F9FAFB;
             position: sticky;
             top: 0;
         }
-        
+
         th {
             padding: 14px 12px;
             text-align: left;
@@ -148,37 +156,37 @@
             user-select: none;
             position: relative;
         }
-        
+
         th:hover {
             background: #F3F4F6;
         }
-        
+
         th.sortable::after {
             content: ' ⇅';
             color: #9CA3AF;
             font-size: 12px;
         }
-        
+
         th.sorted-asc::after {
             content: ' ↑';
             color: #D4AF37;
         }
-        
+
         th.sorted-desc::after {
             content: ' ↓';
             color: #D4AF37;
         }
-        
+
         td {
             padding: 12px;
             border-bottom: 1px solid #F3F4F6;
             color: #4B5563;
         }
-        
+
         tbody tr:hover {
             background: #F9FAFB;
         }
-        
+
         .status-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -186,80 +194,414 @@
             font-size: 12px;
             font-weight: 600;
         }
-        
+
         .status-paid {
             background: #D1FAE5;
             color: #065F46;
         }
-        
+
         .status-pending {
             background: #FEF3C7;
             color: #92400E;
         }
-        
+
         .meal-veg {
             color: #16A34A;
             font-weight: 600;
         }
-        
+
         .meal-non-veg {
             color: #DC2626;
             font-weight: 600;
         }
-        
+
         .meal-jain {
             color: #D97706;
             font-weight: 600;
         }
-        
+
         .loading {
             text-align: center;
             padding: 60px;
             color: #9CA3AF;
         }
-        
+
         .error {
             text-align: center;
             padding: 60px;
             color: #DC2626;
         }
-        
+
+        /* Zone Modal Styles */
+        .zone-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .zone-modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .zone-modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .zone-modal-header {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+            padding: 24px;
+            color: white;
+            position: relative;
+        }
+
+        .zone-modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .zone-modal-header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .zone-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .zone-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .zone-modal-body {
+            padding: 24px;
+            max-height: calc(80vh - 140px);
+            overflow-y: auto;
+        }
+
+        .club-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: #F9FAFB;
+            border-radius: 12px;
+            border-left: 4px solid #D4AF37;
+            transition: all 0.3s;
+        }
+
+        .club-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+        }
+
+        .club-item.rank-1 {
+            border-left-color: #FFD700;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFFDF7 100%);
+        }
+
+        .club-item.rank-2 {
+            border-left-color: #C0C0C0;
+            background: linear-gradient(135deg, #F5F5F5 0%, #FAFAFA 100%);
+        }
+
+        .club-item.rank-3 {
+            border-left-color: #CD7F32;
+            background: linear-gradient(135deg, #FFF4E6 0%, #FFFBF5 100%);
+        }
+
+        .club-rank {
+            font-size: 28px;
+            margin-right: 16px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .club-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .club-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .club-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #000000;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .club-item.rank-1 .progress-fill {
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        .club-item.rank-2 .progress-fill {
+            background: linear-gradient(90deg, #C0C0C0 0%, #A8A8A8 100%);
+        }
+
+        .club-item.rank-3 .progress-fill {
+            background: linear-gradient(90deg, #CD7F32 0%, #B8860B 100%);
+        }
+
+        .club-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000000;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .club-item.rank-1 .club-count {
+            color: #D97706;
+        }
+
+        .club-item.rank-2 .club-count {
+            color: #6B7280;
+        }
+
+        .club-item.rank-3 .club-count {
+            color: #92400E;
+        }
+
+        .zone-card {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .zone-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                padding: 15px;
             }
-            
+
             header {
                 flex-direction: column;
+                text-align: center;
                 gap: 15px;
             }
-            
+
             .header-logo {
                 width: 80px;
                 height: 80px;
             }
-            
+
+            .zone-modal {
+                max-width: 100%;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .club-name {
+                font-size: 14px;
+            }
+
             header h1 {
                 font-size: 24px;
             }
-            
-            .controls {
+
+            .controls-row {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 15px;
             }
-            
-            table {
-                font-size: 12px;
+
+            .search-box {
+                max-width: 100%;
+                width: 100%;
             }
-            
-            th, td {
-                padding: 8px 6px;
+
+            .export-btn {
+                width: 100%;
+                justify-content: center;
             }
+
+            .btn-download {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+
+        /* Scroll to top button */
+        .progress-wrap {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            height: 46px;
+            width: 46px;
+            cursor: pointer;
+            display: block;
+            border-radius: 50px;
+            box-shadow: inset 0 0 0 2px rgba(212, 175, 55, 0.2);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 200ms linear;
+            background-color: #fff;
+        }
+
+        .progress-wrap.active-progress {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .progress-wrap::after {
+            position: absolute;
+            font-family: 'Inter', sans-serif;
+            content: '↑';
+            text-align: center;
+            line-height: 46px;
+            font-size: 24px;
+            color: #D4AF37;
+            left: 0;
+            top: 0;
+            height: 46px;
+            width: 46px;
+            cursor: pointer;
+            display: block;
+            z-index: 1;
+            transition: all 200ms linear;
+        }
+
+        .progress-wrap:hover::after {
+            opacity: 0;
+        }
+
+        .progress-wrap::before {
+            position: absolute;
+            font-family: 'Inter', sans-serif;
+            content: '↑';
+            text-align: center;
+            line-height: 46px;
+            font-size: 24px;
+            opacity: 0;
+            background: #D4AF37;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            left: 0;
+            top: 0;
+            height: 46px;
+            width: 46px;
+            cursor: pointer;
+            display: block;
+            z-index: 2;
+            transition: all 200ms linear;
+        }
+
+        .progress-wrap:hover::before {
+            opacity: 1;
+        }
+
+        .progress-wrap svg path {
+            fill: none;
+        }
+
+        .progress-wrap svg.progress-circle path {
+            stroke: #D4AF37;
+            stroke-width: 4;
+            box-sizing: border-box;
+            transition: all 200ms linear;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            padding: 8px 6px;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
+    <div class="container" id="mainContent">
         <header>
             <img src="../images/header-left.jpg" alt="Left Logo" class="header-logo">
             <div class="header-center">
@@ -268,101 +610,247 @@
             </div>
             <img src="../images/header-right.jpg" alt="Right Logo" class="header-logo">
         </header>
-        
-        <div class="controls">
+
+        <!-- Total Registrations Display (Centered) -->
+        <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            <div
+                style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); padding: 24px 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3); text-align: center; min-width: 280px;">
+                <div
+                    style="font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
+                    📊 Total Registrations</div>
+                <div style="font-size: 48px; font-weight: 800; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);"
+                    id="total-count">0</div>
+            </div>
+        </div>
+
+        <!-- Dynamic Counts Section -->
+        <div style="background: #FEF3C7; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #92400E; margin: 0 0 15px 0; font-size: 18px;">📊 Registration Type Breakdown</h3>
+            <div id="type-counts"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px;">
+                <!-- Dynamic type counts will be inserted here -->
+            </div>
+
+            <h3 style="color: #92400E; margin: 20px 0 15px 0; font-size: 18px;">🗺️ Zone-wise Breakdown</h3>
+            <div id="zone-counts"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                <!-- Dynamic zone counts will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Search Box and Download Button Row -->
+        <div class="controls-row">
             <div class="search-box">
-                <input type="text" id="search-input" placeholder="🔍 Search by name, mobile, email, club..." onkeyup="searchTable()">
+                <input type="text" id="search-input" placeholder="🔍 Search by name, club, type..."
+                    onkeyup="searchTable()">
             </div>
-            <div class="stat-item">
-                <strong id="total-count">0</strong> Total Registrations
-            </div>
-            <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
-            <button class="export-btn" style="background: #2563EB;" onclick="exportZoneWise()">📊 Zone-wise Excel</button>
-        </div>
-        
-        <!-- Registration Type Breakdown - Single Line Format -->
-        <div style="background: #FFF8E7; border: 2px solid #D4A024; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-            <h3 style="margin: 0 0 15px 0; color: #D97706; font-size: 18px;">REGISTRATION BREAKDOWN</h3>
-            <div style="font-size: 15px; line-height: 1.8;">
-                <strong>Rotarian:</strong> <span id="count-rotarian">0</span> | 
-                <strong>Rotary Ann:</strong> <span id="count-ann">0</span> | 
-                <strong>Rotary Annet:</strong> <span id="count-annet">0</span> | 
-                <strong>Rotarian with Spouse:</strong> <span id="count-spouse">0</span> | 
-                <strong>Guest:</strong> <span id="count-guest">0</span> | 
-                <strong>Rotaractor:</strong> <span id="count-rotaractor">0</span> | 
-                <strong>Silver Donor:</strong> <span id="count-silver-donor">0</span> | 
-                <strong>Silver Sponsor:</strong> <span id="count-silver-sponsor">0</span> | 
-                <strong>Gold Sponsor:</strong> <span id="count-gold-sponsor">0</span> | 
-                <strong>Platinum Sponsor:</strong> <span id="count-platinum-sponsor">0</span> | 
-                <strong>Patron Sponsor:</strong> <span id="count-patron-sponsor">0</span> | 
-                <span style="color: #DC2626;"><strong>De-registered:</strong> <span id="count-deregistered">0</span></span>
-            </div>
+            <button class="export-btn" onclick="prepareReport()">📄 Prepare Clubwise Report</button>
         </div>
 
 
-        
         <div class="table-wrapper">
             <table id="registrations-table">
                 <thead>
                     <tr>
-                        <th class="sortable" onclick="sortTable(0)" data-column="registration_id">ID</th>
-                        <th class="sortable" onclick="sortTable(1)" data-column="created_at">Date</th>
-                        <th class="sortable" onclick="sortTable(2)" data-column="name">Name</th>
-                        <th class="sortable" onclick="sortTable(3)" data-column="mobile">Mobile</th>
-                        <th class="sortable" onclick="sortTable(4)" data-column="email">Email</th>
-                        <th class="sortable" onclick="sortTable(5)" data-column="registration_type">Type</th>
-                        <th class="sortable" onclick="sortTable(6)" data-column="club">Club</th>
-                        <th class="sortable" onclick="sortTable(7)" data-column="meal_preference">Meal</th>
-                        <th class="sortable" onclick="sortTable(8)" data-column="tshirt_size">T-Shirt</th>
-                        <th class="sortable" onclick="sortTable(9)" data-column="registration_amount">Amount</th>
-                        <th class="sortable" onclick="sortTable(10)" data-column="payment_status">Status</th>
+                        <th class="sortable" onclick="sortTable(0)" data-column="registration_id">Reg No. ⇅</th>
+                        <th class="sortable" onclick="sortTable(1)" data-column="created_at">Reg Date</th>
+                        <th class="sortable" onclick="sortTable(2)" data-column="club">Club</th>
+                        <th>Name</th>
+                        <th class="sortable" onclick="sortTable(3)" data-column="registration_type">Type</th>
+                        <th class="sortable" onclick="sortTable(4)" data-column="meal_preference">Food</th>
+                        <th class="sortable" onclick="sortTable(5)" data-column="tshirt_size">Size</th>
                     </tr>
                 </thead>
                 <tbody id="registrations-body">
                     <tr>
-                        <td colspan="11" class="loading">Loading registrations...</td>
+                        <td colspan="7" class="loading">Loading registrations...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    
+
+    <!-- Zone Details Modal -->
+    <div class="zone-modal-overlay" id="zoneModal" onclick="closeZoneModal(event)">
+        <div class="zone-modal" onclick="event.stopPropagation()">
+            <div class="zone-modal-header">
+                <button class="zone-modal-close" onclick="closeZoneModal()">✕</button>
+                <h2 id="modalZoneTitle">🗺️ Zone 1</h2>
+                <p id="modalZoneSubtitle">Total Registrations: 0</p>
+            </div>
+            <div class="zone-modal-body" id="modalZoneContent">
+                <!-- Dynamic club breakdown will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Registration Modal -->
+    <div class="zone-modal-overlay" id="editModal" onclick="closeEditModal()">
+        <div class="zone-modal" onclick="event.stopPropagation()" style="max-width: 500px;">
+            <div class="zone-modal-header" style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);">
+                <button class="zone-modal-close" onclick="closeEditModal()">✕</button>
+                <h2>✏️ Edit Registration</h2>
+                <p>Update registration details</p>
+            </div>
+            <div class="zone-modal-body">
+                <form id="editForm" style="display: flex; flex-direction: column; gap: 15px;">
+                    <input type="hidden" id="edit_registration_id">
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Full
+                            Name</label>
+                        <input type="text" id="edit_name" required
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Mobile
+                            Number</label>
+                        <input type="tel" id="edit_mobile" required pattern="[0-9]{10}"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div>
+                        <label
+                            style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Email</label>
+                        <input type="email" id="edit_email"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Club
+                            Name</label>
+                        <input type="text" id="edit_club"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label
+                                style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Type</label>
+                            <select id="edit_registration_type"
+                                style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                                <option value="Rotarian">Rotarian</option>
+                                <option value="Rotary Ann">Rotary Ann</option>
+                                <option value="Rotary Annet">Rotary Annet</option>
+                                <option value="Rotarian with Spouse">Rotarian with Spouse</option>
+                                <option value="Guest">Guest</option>
+                                <option value="Rotaractor">Rotaractor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Meal</label>
+                            <select id="edit_meal_preference"
+                                style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                                <option value="Veg">Veg</option>
+                                <option value="Non-Veg">Non-Veg</option>
+                                <option value="Jain">Jain</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">T-Shirt
+                            Size</label>
+                        <select id="edit_tshirt_size"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px;">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="XXXL">XXXL</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Reason for
+                            Edit (Required)</label>
+                        <textarea id="edit_remarks" required placeholder="Why are you editing this?"
+                            style="width: 100%; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px; min-height: 60px;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button type="button" onclick="closeEditModal()"
+                            style="flex: 1; padding: 12px; border: 1px solid #E5E7EB; background: white; border-radius: 6px; cursor: pointer;">Cancel</button>
+                        <button type="submit"
+                            style="flex: 1; padding: 12px; background: #3B82F6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Save
+                            Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         let allRegistrations = [];
         let filteredRegistrations = [];
         let currentSort = { column: 'registration_id', direction: 'desc' }; // Default descending
-        
+
         // Fetch registrations on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchRegistrations();
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchZoneData().then(() => {
+                fetchRegistrations();
+            });
         });
-        
+
+        // Global variables for Zone Data
+        let ZONE_MAPPING = {};
+        let CLUB_MEMBERS = {};
+        let ZONE_CLUBS = {};
+        let CLUB_ALIASES = {};
+
+        async function fetchZoneData() {
+            try {
+                console.log('🔄 Fetching zone data...');
+                const response = await fetch('/api/admin/zone-data');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    ZONE_MAPPING = result.data.ZONE_MAPPING || {};
+                    CLUB_MEMBERS = result.data.CLUB_MEMBERS || {};
+                    ZONE_CLUBS = result.data.ZONE_CLUBS || {};
+                    CLUB_ALIASES = result.data.CLUB_ALIASES || {};
+                    console.log('✅ Zone data loaded:', Object.keys(ZONE_CLUBS).length, 'zones');
+                } else {
+                    console.error('❌ Failed to load zone data:', result.error);
+                }
+            } catch (error) {
+                console.error('❌ Error fetching zone data:', error);
+            }
+        }
+
         async function fetchRegistrations() {
             try {
                 console.log('🔄 Fetching registrations from /api/registrations/list');
-                
+
                 // Use the correct serverless function endpoint
                 const response = await fetch('/api/registrations/list');
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('❌ API Response Error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 console.log('✅ API Response:', data);
                 console.log('📊 Total registrations:', data?.data?.total || 0);
-                
+
                 // API returns {success: true, data: {registrations: [...], total: ...}}
                 if (data.success && data.data && data.data.registrations) {
                     allRegistrations = data.data.registrations || [];
                     console.log('📋 Loaded registrations:', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
+
+                    // Apply default sort by registration_id ascending
+                    sortRegistrationsByDefault();
+
                     displayRegistrations(filteredRegistrations);
                     updateStats(filteredRegistrations);
-                    
+
                     if (allRegistrations.length === 0) {
                         console.warn('⚠️ No registrations in database');
                     }
@@ -382,63 +870,167 @@
                 showError('Error loading data: ' + error.message);
             }
         }
-        
+
         function searchTable() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            
+
             if (searchTerm === '') {
                 filteredRegistrations = [...allRegistrations];
             } else {
                 filteredRegistrations = allRegistrations.filter(reg => {
                     return (
                         (reg.name || '').toLowerCase().includes(searchTerm) ||
-                        (reg.mobile || '').toLowerCase().includes(searchTerm) ||
-                        (reg.email || '').toLowerCase().includes(searchTerm) ||
                         (reg.club || '').toLowerCase().includes(searchTerm) ||
                         (reg.registration_id || '').toLowerCase().includes(searchTerm) ||
                         (reg.registration_type || '').toLowerCase().includes(searchTerm)
                     );
                 });
             }
-            
+
+            // Maintain current sort after filtering
+            if (currentSort.column) {
+                sortByColumn(currentSort.column, currentSort.direction);
+            }
+
             displayRegistrations(filteredRegistrations);
             updateStats(filteredRegistrations);
         }
-        
+
+        function sortRegistrationsByDefault() {
+            // Sort by registration_id DESCENDING (2026RTY0734, 2026RTY0733, etc.) - newest first
+            filteredRegistrations.sort((a, b) => {
+                // Extract last 4 digits as numbers for proper sorting
+                const aNum = parseInt((a.registration_id || '').slice(-4)) || 0;
+                const bNum = parseInt((b.registration_id || '').slice(-4)) || 0;
+
+                return bNum - aNum; // Descending order (highest first)
+            });
+
+            // Update UI to show sorted state
+            const headers = document.querySelectorAll('th.sortable');
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            if (headers[0]) {
+                headers[0].classList.add('sorted-desc'); // Show descending indicator
+            }
+        }
+
+        function sortByColumn(column, direction) {
+            filteredRegistrations.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+
+                // Handle null/undefined
+                if (aVal === null || aVal === undefined) aVal = '';
+                if (bVal === null || bVal === undefined) bVal = '';
+
+                // Handle dates
+                if (column === 'created_at') {
+                    aVal = new Date(aVal).getTime();
+                    bVal = new Date(bVal).getTime();
+                }
+                // Handle strings
+                else {
+                    aVal = String(aVal).toLowerCase();
+                    bVal = String(bVal).toLowerCase();
+                }
+
+                // Primary sort by selected column
+                if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+                if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+
+                // Secondary sort by registration_id (always ascending)
+                const aRegId = String(a.registration_id || '').toLowerCase();
+                const bRegId = String(b.registration_id || '').toLowerCase();
+                if (aRegId < bRegId) return -1;
+                if (aRegId > bRegId) return 1;
+                return 0;
+            });
+        }
+
+        // Cyclic sorting function for columns with limited distinct values
+        function cyclicSort(column) {
+            // Get all unique values for this column, sorted alphabetically (case-insensitive)
+            const uniqueValues = [...new Set(allRegistrations.map(r => {
+                const val = r[column];
+                return val ? String(val).toLowerCase() : '';
+            }).filter(v => v))].sort();
+
+            // Track current cycle position per column
+            if (!window.cyclicSortState) window.cyclicSortState = {};
+            if (window.cyclicSortState[column] === undefined) window.cyclicSortState[column] = -1;
+
+            // Move to next value in cycle
+            window.cyclicSortState[column] = (window.cyclicSortState[column] + 1) % uniqueValues.length;
+            const targetValue = uniqueValues[window.cyclicSortState[column]];
+
+            console.log(`🔄 Cyclic sort ${column}: showing "${targetValue}" (${window.cyclicSortState[column] + 1}/${uniqueValues.length})`);
+
+            // Sort: target value first (by regid), then all others (by regid)
+            filteredRegistrations.sort((a, b) => {
+                const aVal = String(a[column] || '').toLowerCase();
+                const bVal = String(b[column] || '').toLowerCase();
+                const aIsTarget = aVal === targetValue;
+                const bIsTarget = bVal === targetValue;
+
+                // Target value comes first
+                if (aIsTarget && !bIsTarget) return -1;
+                if (!aIsTarget && bIsTarget) return 1;
+
+                // Within same group (target or non-target), sort by registration_id
+                const aRegId = String(a.registration_id || '').toLowerCase();
+                const bRegId = String(b.registration_id || '').toLowerCase();
+                if (aRegId < bRegId) return -1;
+                if (aRegId > bRegId) return 1;
+                return 0;
+            });
+
+            // Update UI
+            const headers = document.querySelectorAll('th.sortable');
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+
+            displayRegistrations(filteredRegistrations);
+        }
+
         function sortTable(columnIndex) {
             const headers = document.querySelectorAll('th.sortable');
             const column = headers[columnIndex].getAttribute('data-column');
-            
-            // Toggle sort direction
+
+            // Special cyclic sorting for specific columns
+            if (column === 'meal_preference' || column === 'registration_type' || column === 'club' || column === 'tshirt_size') {
+                cyclicSort(column);
+                return;
+            }
+
+            // Toggle sort direction for regular columns
             if (currentSort.column === column) {
                 currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
             } else {
                 currentSort.column = column;
                 currentSort.direction = 'asc';
             }
-            
+
             // Remove all sort classes
             headers.forEach(h => {
                 h.classList.remove('sorted-asc', 'sorted-desc');
             });
-            
+
             // Add sort class to current header
             headers[columnIndex].classList.add(currentSort.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
-            
-            // Sort the data
+
+            // Sort the data with registration_id as secondary sort
             filteredRegistrations.sort((a, b) => {
                 let aVal = a[column];
                 let bVal = b[column];
-                
+
                 // Handle null/undefined
                 if (aVal === null || aVal === undefined) aVal = '';
                 if (bVal === null || bVal === undefined) bVal = '';
-                
+
                 // Handle numbers (amount)
                 if (column === 'registration_amount') {
                     aVal = parseFloat(aVal) || 0;
                     bVal = parseFloat(bVal) || 0;
-                } 
+                }
                 // Handle dates
                 else if (column === 'created_at') {
                     aVal = new Date(aVal).getTime();
@@ -449,54 +1041,58 @@
                     aVal = String(aVal).toLowerCase();
                     bVal = String(bVal).toLowerCase();
                 }
-                
+
+                // Primary sort by selected column
                 if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
                 if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+
+                // Secondary sort by registration_id (always ascending)
+                const aRegId = String(a.registration_id || '').toLowerCase();
+                const bRegId = String(b.registration_id || '').toLowerCase();
+                if (aRegId < bRegId) return -1;
+                if (aRegId > bRegId) return 1;
                 return 0;
             });
-            
+
             displayRegistrations(filteredRegistrations);
         }
-        
+
         function displayRegistrations(registrations) {
             const tbody = document.getElementById('registrations-body');
-            
+
             if (registrations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #9CA3AF;">No registrations found</td></tr>';
                 return;
             }
-            
-            tbody.innerHTML = registrations.map(reg => {
+
+            tbody.innerHTML = registrations.map((reg, index) => {
                 const date = new Date(reg.created_at).toLocaleDateString('en-IN');
-                const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' : 
-                                 reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
-                const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
-                
+                const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' :
+                    reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
+
                 return `
                     <tr>
                         <td>${reg.registration_id}</td>
                         <td>${date}</td>
-                        <td>${reg.name}</td>
-                        <td>${reg.mobile}</td>
-                        <td>${reg.email || 'N/A'}</td>
-                        <td>${reg.registration_type}</td>
                         <td>${reg.club || 'N/A'}</td>
+                        <td>${reg.name}</td>
+                        <td>${reg.registration_type}</td>
                         <td class="${mealClass}">${reg.meal_preference}</td>
                         <td>${reg.tshirt_size || 'N/A'}</td>
-                        <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
-                        <td><span class="status-badge ${statusClass}">${reg.payment_status || 'pending'}</span></td>
                     </tr>
                 `;
             }).join('');
         }
-        
+
         function updateStats(registrations) {
             console.log('🔢 Updating stats for', registrations.length, 'registrations');
-            
-            // Count only non-test registrations for total
-            const nonTestCount = registrations.filter(r => r.payment_status !== 'test').length;
+
+            // Count only valid registrations (exclude test entries only)
+            const nonTestCount = registrations.filter(r =>
+                r.payment_status !== 'test'
+            ).length;
             document.getElementById('total-count').textContent = nonTestCount;
-            
+
             // Count registration types from ALL registrations (not filtered)
             const typeCounts = {
                 'Rotarian': 0,
@@ -510,19 +1106,20 @@
                 'Gold Sponsor': 0,
                 'Platinum Sponsor': 0,
                 'Patron Sponsor': 0,
+                'Patron Sponsor': 0,
                 'deregistered': 0
             };
-            
+
             // Helper function to convert database format to expected format
             const normalizeType = (dbType) => {
                 if (!dbType) return 'Unknown';
-                
+
                 // Convert to lowercase, then title case each word
                 const titleCase = dbType.toLowerCase()
                     .split(' ')
                     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(' ');
-                
+
                 // Handle special cases
                 const typeMap = {
                     'Rotarian': 'Rotarian',
@@ -538,18 +1135,18 @@
                     'Platinum Sponsor': 'Platinum Sponsor',
                     'Patron Sponsor': 'Patron Sponsor'
                 };
-                
+
                 return typeMap[titleCase] || titleCase;
             };
-            
+
             // Debug: Check what registration types exist in data
             const uniqueTypes = new Set();
-            
+
             // Always count from allRegistrations (not filtered ones)
             allRegistrations.forEach(reg => {
                 const rawType = reg.registration_type;
                 uniqueTypes.add(rawType);
-                
+
                 if (reg.payment_status === 'test') {
                     typeCounts['deregistered']++;
                 } else {
@@ -558,352 +1155,395 @@
                         typeCounts[type]++;
                     } else {
                         console.warn('⚠️ Unknown registration type:', rawType, '→', type);
+                        // Only track unknown if we really want to see it, otherwise ignore or map to Guest?
+                        // For now, let's just log it.
                     }
                 }
             });
-            
+
             console.log('📋 Unique registration types in data:', Array.from(uniqueTypes));
             console.log('📊 Type counts:', typeCounts);
-            
-            // Update registration type DOM elements
-            document.getElementById('count-rotarian').textContent = typeCounts['Rotarian'];
-            document.getElementById('count-ann').textContent = typeCounts['Rotary Ann'];
-            document.getElementById('count-annet').textContent = typeCounts['Rotary Annet'];
-            document.getElementById('count-spouse').textContent = typeCounts['Rotarian with Spouse'];
-            document.getElementById('count-guest').textContent = typeCounts['Guest'];
-            document.getElementById('count-rotaractor').textContent = typeCounts['Rotaractor'];
-            document.getElementById('count-silver-donor').textContent = typeCounts['Silver Donor'];
-            document.getElementById('count-silver-sponsor').textContent = typeCounts['Silver Sponsor'];
-            document.getElementById('count-gold-sponsor').textContent = typeCounts['Gold Sponsor'];
-            document.getElementById('count-platinum-sponsor').textContent = typeCounts['Platinum Sponsor'];
-            document.getElementById('count-patron-sponsor').textContent = typeCounts['Patron Sponsor'];
-            document.getElementById('count-deregistered').textContent = typeCounts['deregistered'];
+
+            // Update Registration Type Counts Display - SHOW ALL TYPES (including zero counts)
+            const typeCountsDiv = document.getElementById('type-counts');
+            typeCountsDiv.innerHTML = Object.entries(typeCounts)
+                .filter(([type, count]) => type !== 'deregistered' && type !== 'Unknown')
+                .sort((a, b) => b[1] - a[1]) // Sort by count descending
+                .map(([type, count]) => `
+                    <div style="background: white; padding: 8px 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#D4AF37' : '#E5E7EB'}; min-width: 140px;">
+                        <div style="font-size: 13px; color: ${count > 0 ? '#666' : '#9CA3AF'}; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${type}</div>
+                        <div style="font-size: 22px; font-weight: 700; color: ${count > 0 ? '#D4AF37' : '#9CA3AF'};">${count}</div>
+                    </div>
+                `).join('');
+
+            // Update Zone-wise Counts Display
+            const zoneCounts = { 'Unmapped': 0 };
+            allRegistrations.forEach(reg => {
+                if (reg.payment_status !== 'test') {
+                    if (reg.zone) {
+                        const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
+                        if (zoneMatch) {
+                            const zoneNum = parseInt(zoneMatch[1]);
+                            zoneCounts[zoneNum] = (zoneCounts[zoneNum] || 0) + 1;
+                        } else {
+                            zoneCounts['Unmapped']++;
+                        }
+                    } else {
+                        zoneCounts['Unmapped']++;
+                    }
+                }
+            });
+
+            const zoneCountsDiv = document.getElementById('zone-counts');
+            zoneCountsDiv.innerHTML = Array.from({ length: 9 }, (_, i) => i + 1)
+                .map(zoneNum => {
+                    const count = zoneCounts[zoneNum] || 0;
+                    return `
+                        <div class="zone-card" onclick="showZoneDetails(${zoneNum})" style="background: white; padding: 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#10B981' : '#E5E7EB'};">
+                            <div style="font-size: 14px; color: #666; margin-bottom: 4px;">Zone ${zoneNum}</div>
+                            <div style="font-size: 20px; font-weight: 700; color: ${count > 0 ? '#10B981' : '#9CA3AF'};">${count}</div>
+                        </div>
+                    `;
+                }).join('');
+
+            // Add Unmapped Zone if any
+            if (zoneCounts['Unmapped'] > 0) {
+                zoneCountsDiv.innerHTML += `
+                    <div class="zone-card" style="background: #FEE2E2; padding: 12px; border-radius: 6px; border-left: 4px solid #EF4444;">
+                        <div style="font-size: 14px; color: #991B1B; margin-bottom: 4px;">Unmapped</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #DC2626;">${zoneCounts['Unmapped']}</div>
+                    </div>
+                `;
+            }
         }
-        
-        function showError(message) {
-            const tbody = document.getElementById('registrations-body');
-            tbody.innerHTML = `<tr><td colspan="11" class="error">${message}</td></tr>`;
-        }
-        
-        // Version: 2025-11-17-v3 (comprehensive test filtering)
-        function exportToExcel() {
-            if (allRegistrations.length === 0) {
-                alert('No data to export');
+
+        // Zone data is now fetched dynamically from API
+        // ZONE_CLUBS, CLUB_MEMBERS, CLUB_ALIASES are populated by fetchZoneData()
+
+        function showZoneDetails(zoneNum) {
+            // Get all possible sub-zones for this zone
+            const allSubZones = Object.keys(ZONE_CLUBS).filter(z => z.startsWith(`Zone ${zoneNum}`));
+
+            if (allSubZones.length === 0) {
+                alert(`No sub-zones defined for Zone ${zoneNum}`);
                 return;
             }
-            
-            // Filter out test entries (by status, mobile, email, and name patterns)
-            const validRegs = allRegistrations.filter(r => {
-                // Exclude by payment status
-                if (r.payment_status === 'test' || r.payment_status === 'manual-B') return false;
-                // Exclude test mobile numbers
-                if (r.mobile === '0000000001' || r.mobile === '9999999999') return false;
-                // Exclude test emails
-                if (r.email && (r.email.includes('test@') || r.email === 'test@test.com')) return false;
-                // Exclude TEST names
-                if (r.name && r.name.toUpperCase().includes('TEST ENTRY')) return false;
-                return true;
+
+            // Filter registrations for this zone
+            const zoneRegs = allRegistrations.filter(r => {
+                if (r.payment_status === 'test') return false;
+                const m = (r.zone || '').match(/Zone\s+(\d+)/i);
+                return m && m[1] == zoneNum;
             });
-            
+
+            // Calculate total zone members and registrations
+            let totalZoneMembers = 0;
+            let totalZoneRegs = zoneRegs.length;
+
+            // Count all members in this zone
+            allSubZones.forEach(subZone => {
+                const clubs = ZONE_CLUBS[subZone] || [];
+                clubs.forEach(club => {
+                    totalZoneMembers += (CLUB_MEMBERS[club] || 0);
+                });
+            });
+
+            const zonePercentage = totalZoneMembers > 0 ? ((totalZoneRegs / totalZoneMembers) * 100).toFixed(1) : '0.0';
+
+            // Update modal header
+            document.getElementById('modalZoneTitle').textContent = `🗺️ Zone ${zoneNum} - Complete Club List`;
+            document.getElementById('modalZoneSubtitle').textContent = `${totalZoneRegs}/${totalZoneMembers} registrations (${zonePercentage}%) | ${allSubZones.length} sub-zone${allSubZones.length > 1 ? 's' : ''}`;
+
+            // Generate HTML for each sub-zone
+            const modalContent = document.getElementById('modalZoneContent');
+            let html = '';
+
+            allSubZones.forEach(subZone => {
+                // Get ALL clubs in this sub-zone (from ZONE_CLUBS)
+                const allClubsInSubZone = ZONE_CLUBS[subZone] || [];
+
+                // Count registrations by club
+                const clubStats = {};
+                allClubsInSubZone.forEach(club => {
+                    clubStats[club] = { count: 0, members: CLUB_MEMBERS[club] || 0 };
+                });
+
+                // Add registration counts
+                zoneRegs.forEach(r => {
+                    if (r.zone === subZone) {
+                        let club = r.club || 'Unknown';
+                        // Normalize club name using aliases
+                        if (CLUB_ALIASES[club]) {
+                            club = CLUB_ALIASES[club];
+                        }
+
+                        if (clubStats[club]) {
+                            clubStats[club].count++;
+                        }
+                    }
+                });
+
+                // Calculate sub-zone totals
+                const subZoneTotalMembers = Object.values(clubStats).reduce((sum, s) => sum + s.members, 0);
+                const subZoneTotalRegs = Object.values(clubStats).reduce((sum, s) => sum + s.count, 0);
+                const subZonePercentage = subZoneTotalMembers > 0 ? ((subZoneTotalRegs / subZoneTotalMembers) * 100).toFixed(1) : '0.0';
+
+                // Sort clubs by percentage (highest first), then by member count
+                const sortedClubs = Object.entries(clubStats).sort((a, b) => {
+                    const percA = a[1].members > 0 ? (a[1].count / a[1].members) * 100 : 0;
+                    const percB = b[1].members > 0 ? (b[1].count / b[1].members) * 100 : 0;
+                    if (percB !== percA) return percB - percA;
+                    return b[1].members - a[1].members; // Secondary sort by member count
+                });
+
+                // Sub-zone header
+                html += `
+                    <div style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); padding: 10px 14px; border-radius: 6px; margin: 16px 0 10px 0;">
+                        <div style="font-weight: 600; font-size: 15px; color: #1F2937; margin-bottom: 2px;">${subZone}</div>
+                        <div style="font-size: 13px; color: #4B5563;">${subZoneTotalRegs}/${subZoneTotalMembers} registrations (${subZonePercentage}%)</div>
+                    </div>
+                `;
+
+                // Club cards - SHOW ALL CLUBS (including zero count)
+                sortedClubs.forEach(([club, stats], index) => {
+                    const percentage = stats.members > 0 ? ((stats.count / stats.members) * 100).toFixed(1) : 0;
+                    const serialNum = index + 1;
+                    const hasRegistrations = stats.count > 0;
+                    const borderColor = hasRegistrations ? '#10B981' : '#E5E7EB';
+                    const textColor = hasRegistrations ? '#1F2937' : '#9CA3AF';
+                    const barColor = hasRegistrations ? 'linear-gradient(90deg, #10B981 0%, #059669 100%)' : '#E5E7EB';
+
+                    html += `
+                        <div class="club-item" style="margin-bottom: 6px; background: white; border-radius: 6px; border-left: 3px solid ${borderColor}; padding: 10px 12px; display: flex; align-items: center; gap: 10px;">
+                            <div style="min-width: 28px; text-align: center; font-weight: 600; color: #9CA3AF; font-size: 13px;">${serialNum}</div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-weight: 500; color: ${textColor}; margin-bottom: 5px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${club}</div>
+                                <div style="background: #F3F4F6; height: 20px; border-radius: 3px; overflow: hidden; position: relative;">
+                                    <div style="background: ${barColor}; height: 100%; width: ${Math.min(percentage, 100)}%; transition: width 0.3s ease;"></div>
+                                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: ${percentage > 50 && hasRegistrations ? 'white' : '#1F2937'};">
+                                        ${stats.count}/${stats.members} (${percentage}%)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            modalContent.innerHTML = html;
+
+            // Show modal
+            document.getElementById('zoneModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeZoneModal(event) {
+            // Close if clicking overlay or if no event (X button)
+            if (!event || event.target.id === 'zoneModal') {
+                document.getElementById('zoneModal').classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeZoneModal();
+            }
+        });
+
+        function showError(message) {
+            const tbody = document.getElementById('registrations-body');
+            tbody.innerHTML = `<tr><td colspan="12" class="error">${message}</td></tr>`;
+        }
+
+        // Version: 2025-11-29 (Filtered Export - Non-Confidential)
+        function prepareReport() {
+            if (!filteredRegistrations || filteredRegistrations.length === 0) {
+                alert('No data to export. Please adjust your search/filters.');
+                return;
+            }
+
             // Create workbook
             const wb = XLSX.utils.book_new();
-            
-            // === SHEET 1: Summary Dashboard ===
-            const summaryData = [
-                ['SNEHA SAURABHA 2025-26 - REGISTRATION SUMMARY'],
-                ['Generated on:', new Date().toLocaleString('en-IN')],
-                [''],
-                ['OVERALL STATISTICS'],
-                ['Total Registrations:', validRegs.length],
-                [''],
-                ['REGISTRATION TYPE BREAKDOWN'],
-                ['Type', 'Count']
-            ];
-            
-            // Calculate type-wise breakdown
-            const typeStats = {};
-            validRegs.forEach(r => {
-                const type = r.registration_type || 'Unknown';
-                if (!typeStats[type]) {
-                    typeStats[type] = { count: 0 };
-                }
-                typeStats[type].count++;
-            });
-            
-            Object.entries(typeStats).sort((a, b) => b[1].count - a[1].count).forEach(([type, stats]) => {
-                summaryData.push([type, stats.count]);
-            });
-            
-            summaryData.push(['', '']);
-            summaryData.push(['ZONE-WISE BREAKDOWN']);
-            summaryData.push(['Zone', 'Clubs', 'Registrations']);
-            
-            // Calculate zone-wise breakdown
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                const zoneRegs = validRegs.filter(r => {
-                    const m = (r.zone || '').match(/Zone\s+(\d+)/i);
-                    return m && m[1] == zoneNum;
-                });
-                const zoneClubs = new Set(zoneRegs.map(r => r.club)).size;
-                summaryData.push([`Zone ${zoneNum}`, zoneClubs, zoneRegs.length]);
-            }
-            
-            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            summaryWs['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 20 }];
-            
-            // Format header rows
-            if (summaryWs['A1']) summaryWs['A1'].s = { font: { bold: true, sz: 14 }, fill: { fgColor: { rgb: 'D4AF37' } } };
-            if (summaryWs['A4']) summaryWs['A4'].s = { font: { bold: true }, fill: { fgColor: { rgb: 'F4D03F' } } };
-            if (summaryWs['A7']) summaryWs['A7'].s = { font: { bold: true }, fill: { fgColor: { rgb: 'F4D03F' } } };
-            
-            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
-            
-            // === SHEET 2: All Registrations ===
-            const excelData = validRegs.map((reg, index) => ({
+
+            // === FILTERED LIST SHEET ===
+            // Export only what is currently visible/filtered
+            const excelData = filteredRegistrations.map((reg, index) => ({
                 'S.No': index + 1,
                 'Registration ID': reg.registration_id,
                 'Date': new Date(reg.created_at).toLocaleDateString('en-IN'),
                 'Name': reg.name,
-                'Mobile': reg.mobile,
-                'Email': reg.email || 'N/A',
-                'Registration Type': reg.registration_type,
                 'Club Name': reg.club || 'N/A',
-                'Zone': reg.zone || 'Unmapped',
-                'AG Name': reg.zone_ag_name || 'N/A',
-                'AG Mobile': reg.zone_ag_mobile || 'N/A',
+                'Type': reg.registration_type,
                 'Meal': reg.meal_preference,
                 'T-Shirt': reg.tshirt_size || 'N/A',
-                'Payment Status': reg.payment_status || 'pending',
-                'Order ID': reg.order_id || 'N/A'
+                'Zone': reg.zone || 'Unmapped'
             }));
-            
+
             const ws = XLSX.utils.json_to_sheet(excelData);
             ws['!cols'] = [
-                { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 }, { wch: 15 }, 
-                { wch: 30 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, 
-                { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 15 }, { wch: 30 }
+                { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 30 },
+                { wch: 30 }, { wch: 20 }, { wch: 12 }, { wch: 10 }, { wch: 12 }
             ];
-            
-            // Add autofilter
-            ws['!autofilter'] = { ref: `A1:O${excelData.length + 1}` };
-            
-            XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
-            
-            // === SHEETS 3-11: Zone-wise Details ===
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                const zoneRegs = validRegs.filter(r => {
-                    const m = (r.zone || '').match(/Zone\s+(\d+)/i);
-                    return m && m[1] == zoneNum;
-                });
-                
-                // Zone header data
-                const zoneHeaderData = [
-                    [`ZONE ${zoneNum} - DETAILED BREAKDOWN`],
-                    ['Total Registrations:', zoneRegs.length],
-                    [''],
-                    ['CLUB-WISE SUMMARY'],
-                    ['Rank', 'Club Name', 'Registrations', 'Percentage']
-                ];
-                
-                // Count by club
-                const clubStats = {};
-                zoneRegs.forEach(r => {
-                    const club = r.club || 'Unknown';
-                    if (!clubStats[club]) {
-                        clubStats[club] = { count: 0 };
-                    }
-                    clubStats[club].count++;
-                });
-                
-                // Sort by count descending
-                const sortedClubs = Object.entries(clubStats).sort((a,b) => b[1].count - a[1].count);
-                
-                sortedClubs.forEach(([club, stats], idx) => {
-                    const percentage = ((stats.count / zoneRegs.length) * 100).toFixed(1);
-                    const rank = idx + 1;
-                    let medal = '';
-                    if (rank === 1) medal = '🥇';
-                    else if (rank === 2) medal = '🥈';
-                    else if (rank === 3) medal = '🥉';
-                    
-                    zoneHeaderData.push([
-                        `${medal} ${rank}`,
-                        club,
-                        stats.count,
-                        `${percentage}%`
-                    ]);
-                });
-                
-                // Add total row
-                zoneHeaderData.push(['', 'TOTAL', zoneRegs.length, '100%']);
-                zoneHeaderData.push(['']);
-                zoneHeaderData.push(['DETAILED REGISTRATIONS']);
-                
-                // Create zone sheet
-                const zoneWs = XLSX.utils.aoa_to_sheet(zoneHeaderData);
-                
-                // Add detailed registrations below summary
-                const zoneDetailData = zoneRegs.map((reg, idx) => ({
-                    'S.No': idx + 1,
-                    'Name': reg.name,
-                    'Mobile': reg.mobile,
-                    'Club': reg.club || 'N/A',
-                    'Type': reg.registration_type,
-                    'Meal': reg.meal_preference
-                }));
-                
-                XLSX.utils.sheet_add_json(zoneWs, zoneDetailData, { 
-                    origin: `A${zoneHeaderData.length + 1}`,
-                    skipHeader: false
-                });
-                
-                zoneWs['!cols'] = [
-                    { wch: 10 }, { wch: 35 }, { wch: 15 }, { wch: 15 }, { wch: 12 }
-                ];
-                
-                XLSX.utils.book_append_sheet(wb, zoneWs, `Zone ${zoneNum}`);
-            }
-            
-            // Generate filename with timestamp
-            const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `SNEHA-SAURABHA-Complete-Report-${timestamp}.xlsx`;
-            
-            // Download
-            XLSX.writeFile(wb, filename);
-            console.log('✅ Enhanced Excel exported with complete breakdown:', filename);
-            alert(`✅ Excel file downloaded!\n\nFile: ${filename}\nTotal Registrations: ${validRegs.length}`);
-        }
-        
-        function exportZoneWise() {
-            if (allRegistrations.length === 0) {
-                alert('No data to export');
-                return;
-            }
-            
-            // Filter out test entries (by status, mobile, email, and name patterns)
-            const validRegs = allRegistrations.filter(r => {
-                // Exclude by payment status
-                if (r.payment_status === 'test' || r.payment_status === 'manual-B') return false;
-                // Exclude test mobile numbers
-                if (r.mobile === '0000000001' || r.mobile === '9999999999') return false;
-                // Exclude test emails
-                if (r.email && (r.email.includes('test@') || r.email === 'test@test.com')) return false;
-                // Exclude TEST names
-                if (r.name && r.name.toUpperCase().includes('TEST ENTRY')) return false;
-                return true;
-            });
-            
-            // Create workbook
-            const wb = XLSX.utils.book_new();
-            
-            // Build comprehensive zone summary data
-            const zoneData = [
-                ['SNEHA SAURABHA 2025-26 - ZONE-WISE CLUB SUMMARY'],
-                ['Generated on:', new Date().toLocaleString('en-IN')],
-                [''],
-                ['Zone', 'Rank', 'Club Name', 'Registrations', 'Percentage']
-            ];
-            
-            let grandTotal = 0;
-            
-            for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
-                const zoneRegs = validRegs.filter(r => {
-                    const m = (r.zone || '').match(/Zone\s+(\d+)/i);
-                    return m && m[1] == zoneNum;
-                });
-                
-                // Count by club
-                const clubStats = {};
-                zoneRegs.forEach(r => {
-                    const club = r.club || 'Unknown';
-                    if (!clubStats[club]) {
-                        clubStats[club] = { count: 0 };
-                    }
-                    clubStats[club].count++;
-                });
-                
-                // Sort by count descending
-                const sortedClubs = Object.entries(clubStats).sort((a,b) => b[1].count - a[1].count);
-                const zoneTotal = sortedClubs.reduce((sum,[,stats]) => sum + stats.count, 0);
-                
-                grandTotal += zoneTotal;
-                
-                // Add zone header
-                zoneData.push(['', '', '', '', '']);
-                zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Clubs)`, '', '']);
-                
-                // Add clubs with rankings
-                sortedClubs.forEach(([club, stats], idx) => {
-                    const percentage = zoneTotal > 0 ? ((stats.count / zoneTotal) * 100).toFixed(1) : '0.0';
-                    const rank = idx + 1;
-                    let medal = '';
-                    if (rank === 1) medal = '🥇';
-                    else if (rank === 2) medal = '🥈';
-                    else if (rank === 3) medal = '🥉';
-                    
-                    zoneData.push([
-                        '',
-                        `${medal} ${rank}`,
-                        club,
-                        stats.count,
-                        `${percentage}%`
-                    ]);
-                });
-                
-                // Add zone total
-                zoneData.push([
-                    '',
-                    '',
-                    `ZONE ${zoneNum} TOTAL`,
-                    zoneTotal,
-                    '100%'
-                ]);
-            }
-            
-            // Add grand total
-            zoneData.push(['', '', '', '', '']);
-            zoneData.push(['', '', '', '', '']);
-            zoneData.push([
-                'GRAND TOTAL',
-                '',
-                'All 9 Zones',
-                grandTotal,
-                '100%'
-            ]);
-            
-            // Create worksheet
-            const ws = XLSX.utils.aoa_to_sheet(zoneData);
-            ws['!cols'] = [
-                { wch: 12 },  // Zone
-                { wch: 10 },  // Rank
-                { wch: 35 },  // Club Name
-                { wch: 15 },  // Registrations
-                { wch: 12 }   // Percentage
-            ];
-            
-            // Add autofilter
-            ws['!autofilter'] = { ref: 'A4:E4' };
-            
-            XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
-            
+            ws['!autofilter'] = { ref: `A1:I${excelData.length + 1}` };
+
+            XLSX.utils.book_append_sheet(wb, ws, 'Filtered Registrations');
+
             // Download
             const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `SNEHA-SAURABHA-Zone-Summary-${timestamp}.xlsx`;
+            const filename = `SNEHA-SAURABHA-Filtered-Report-${timestamp}.xlsx`;
             XLSX.writeFile(wb, filename);
-            console.log('✅ Enhanced zone-wise Excel exported:', filename);
-            alert(`✅ Zone Summary downloaded!\n\nFile: ${filename}\nTotal: ${grandTotal} registrations`);
+
+            console.log('✅ Filtered Excel exported:', filename);
+            alert(`✅ Filtered Report downloaded!\n\nFile: ${filename}\nTotal Rows: ${excelData.length}`);
         }
-        
-        // Auto-refresh registration list every 60 seconds (DISABLED)
+
+
+
+        // Auto-refresh disabled to prevent automatic sorting
         // setInterval(() => {
         //     fetchRegistrations();
         // }, 60000);
-        
-    </script>
-</body>
-</html>
 
-```
+        // ========== EDIT FUNCTIONS ==========
+
+        function openEditModal(registration) {
+            document.getElementById('edit_registration_id').value = registration.registration_id;
+            document.getElementById('edit_name').value = registration.name;
+            document.getElementById('edit_mobile').value = registration.mobile;
+            document.getElementById('edit_email').value = registration.email || '';
+            document.getElementById('edit_club').value = registration.club || '';
+            document.getElementById('edit_registration_type').value = registration.registration_type;
+            document.getElementById('edit_meal_preference').value = registration.meal_preference;
+            document.getElementById('edit_tshirt_size').value = registration.tshirt_size || 'M';
+            document.getElementById('edit_remarks').value = '';
+
+            document.getElementById('editModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('editForm').reset();
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const registration_id = document.getElementById('edit_registration_id').value;
+            const remarks = document.getElementById('edit_remarks').value.trim();
+
+            if (remarks.length < 5) {
+                alert('❌ Edit remarks must be at least 5 characters long!');
+                return;
+            }
+
+            const updateData = {
+                registration_id,
+                name: document.getElementById('edit_name').value,
+                mobile: document.getElementById('edit_mobile').value,
+                email: document.getElementById('edit_email').value,
+                club: document.getElementById('edit_club').value,
+                registration_type: document.getElementById('edit_registration_type').value,
+                meal_preference: document.getElementById('edit_meal_preference').value,
+                tshirt_size: document.getElementById('edit_tshirt_size').value,
+                edit_remarks: remarks
+            };
+
+            try {
+                const response = await fetch('/api/registrations/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Registration updated successfully!');
+                    closeEditModal();
+                    fetchRegistrations(); // Reload data
+                } else {
+                    alert('❌ Error: ' + (result.error || 'Failed to update'));
+                }
+            } catch (error) {
+                console.error('Error updating registration:', error);
+                alert('❌ Error updating registration. Please try again.');
+            }
+        });
+
+        function printReceipt(orderId) {
+            // Open receipt page in new window for printing
+            const receiptUrl = `/index.html?payment=success&order_id=${orderId}`;
+            const printWindow = window.open(receiptUrl, '_blank');
+
+            // Wait for page to load, then trigger print dialog
+            if (printWindow) {
+                printWindow.addEventListener('load', function () {
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 1000);
+                });
+            }
+        }
+
+    </script>
+    <!-- Scroll to top button -->
+    <div class="progress-wrap">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+    </div>
+
+    <script>
+        // Scroll to top functionality
+        (function ($) {
+            "use strict";
+
+            // Switch to vanilla JS since jQuery might not be available
+            const progressPath = document.querySelector('.progress-wrap path');
+            const pathLength = progressPath.getTotalLength();
+
+            progressPath.style.transition = progressPath.style.WebkitTransition = 'none';
+            progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
+            progressPath.style.strokeDashoffset = pathLength;
+            progressPath.getBoundingClientRect();
+            progressPath.style.transition = progressPath.style.WebkitTransition = 'stroke-dashoffset 10ms linear';
+
+            const updateProgress = function () {
+                const scroll = window.scrollY || window.pageYOffset;
+                const height = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = pathLength - (scroll * pathLength / height);
+                progressPath.style.strokeDashoffset = progress;
+            }
+
+            updateProgress();
+            window.addEventListener('scroll', updateProgress);
+
+            const offset = 50;
+            const duration = 550;
+
+            window.addEventListener('scroll', function () {
+                if ((window.scrollY || window.pageYOffset) > offset) {
+                    document.querySelector('.progress-wrap').classList.add('active-progress');
+                } else {
+                    document.querySelector('.progress-wrap').classList.remove('active-progress');
+                }
+            });
+
+            document.querySelector('.progress-wrap').addEventListener('click', function (event) {
+                event.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                return false;
+            });
+
+        })();
     </script>
 </body>
+
 </html>
