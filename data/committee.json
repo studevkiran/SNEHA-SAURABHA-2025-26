@@ -1,0 +1,70 @@
+{
+  "event": {
+    "name": "SNEHA SAURABHA 2025-26",
+    "date": "30-31 Jan & 1 Feb 2026",
+    "venue": "Silent Shores, Mysore",
+    "district": "Rotary District 3181"
+  },
+  "committee": [
+    {
+      "id": 1,
+      "name": "District Governor Name",
+      "role": "District Governor",
+      "club": "Rotary Club Name",
+      "logo": "images/committee/dg.jpg",
+      "phone": "+91 98765 43210",
+      "email": "dg@rotary3181.org",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "name": "Conference Chair Name",
+      "role": "Conference Chair",
+      "club": "Rotary Club Name",
+      "logo": "images/committee/chair.jpg",
+      "phone": "+91 98765 43211",
+      "email": "chair@snehasaurabha.org",
+      "order": 2
+    },
+    {
+      "id": 3,
+      "name": "Secretary Name",
+      "role": "Conference Secretary",
+      "club": "Rotary Club Name",
+      "logo": "images/committee/secretary.jpg",
+      "phone": "+91 98765 43212",
+      "email": "secretary@snehasaurabha.org",
+      "order": 3
+    },
+    {
+      "id": 4,
+      "name": "Treasurer Name",
+      "role": "Conference Treasurer",
+      "club": "Rotary Club Name",
+      "logo": "images/committee/treasurer.jpg",
+      "phone": "+91 98765 43213",
+      "email": "treasurer@snehasaurabha.org",
+      "order": 4
+    },
+    {
+      "id": 5,
+      "name": "Registration Head Name",
+      "role": "Registration Committee Head",
+      "club": "Rotary Club Name",
+      "logo": "images/committee/registration.jpg",
+      "phone": "+91 98765 43214",
+      "email": "registration@snehasaurabha.org",
+      "order": 5
+    },
+    {
+      "id": 6,
+      "name": "Hospitality Head Name",
+      "role": "Hospitality Committee Head",
+      "club": "Rotary Club Name",
+      "logo": "images/committee/hospitality.jpg",
+      "phone": "+91 98765 43215",
+      "email": "hospitality@snehasaurabha.org",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+:root {
+    --amber: #FFA500;
+    --gold: #FFD700;
+    --dark-gold: #FF8C00;
+    --light-gold: #FFF5E6;
+    --shadow: rgba(255, 165, 0, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--amber) 0%, var(--gold) 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, var(--amber) 0%, var(--dark-gold) 100%);
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.subtitle {
+    font-size: 1.3em;
+    opacity: 0.95;
+    margin-bottom: 5px;
+}
+
+.event-details {
+    font-size: 1em;
+    opacity: 0.9;
+}
+
+main {
+    padding: 40px 30px;
+}
+
+.committee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.committee-card {
+    background: white;
+    border: 3px solid var(--gold);
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+.committee-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px var(--shadow);
+    border-color: var(--amber);
+}
+
+.logo-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 4px solid var(--gold);
+    background: linear-gradient(135deg, var(--light-gold) 0%, #FFE4B3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.logo-placeholder {
+    font-size: 2.5em;
+    color: var(--amber);
+    font-weight: bold;
+}
+
+.member-info {
+    flex: 1;
+}
+
+.member-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--dark-gold);
+    margin-bottom: 5px;
+}
+
+.member-role {
+    font-size: 1.1em;
+    color: var(--amber);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.member-club {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.member-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.member-contact a {
+    color: var(--amber);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.member-contact a:hover {
+    color: var(--dark-gold);
+    text-decoration: underline;
+}
+
+footer {
+    background: var(--light-gold);
+    padding: 30px;
+    text-align: center;
+}
+
+.back-button {
+    background: linear-gradient(135deg, var(--amber) 0%, var(--dark-gold) 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.1em;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px var(--shadow);
+}
+
+.back-button:active {
+    transform: translateY(-1px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .committee-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    header h1 {
+        font-size: 1.5em;
+    }
+    
+    .subtitle {
+        font-size: 1.1em;
+    }
+    
+    .committee-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .member-contact {
+        align-items: center;
+    }
+}
