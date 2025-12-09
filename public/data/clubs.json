@@ -1,31 +1,31 @@
 [
   {
     "id": 1,
-    "name": "Baikampady"
+    "name": "B C Road City"
   },
   {
     "id": 2,
-    "name": "Bajpe"
+    "name": "Baikampady"
   },
   {
     "id": 3,
-    "name": "Bannur"
+    "name": "Bajpe"
   },
   {
     "id": 4,
-    "name": "Bantwal"
+    "name": "Bannur"
   },
   {
     "id": 5,
-    "name": "Bantwal Loretto Hills"
+    "name": "Bantwal"
   },
   {
     "id": 6,
-    "name": "Bantwal Town"
+    "name": "Bantwal Loretto Hills"
   },
   {
     "id": 7,
-    "name": "B C Road City"
+    "name": "Bantwal Town"
   },
   {
     "id": 8,
@@ -44,11 +44,11 @@
     "name": "Central Mysore"
   },
   {
-    "id": 12,
+    "id": 93,
     "name": "Chamarajanagar"
   },
   {
-    "id": 13,
+    "id": 94,
     "name": "Chamarajanagar Silk City"
   },
   {
@@ -56,7 +56,7 @@
     "name": "Deralakatte"
   },
   {
-    "id": 15,
+    "id": 95,
     "name": "E-Club of Mysuru Center"
   },
   {
@@ -72,35 +72,35 @@
     "name": "H.D. Kote"
   },
   {
-    "id": 19,
+    "id": 96,
     "name": "Hemavathi Kodlipet"
   },
   {
-    "id": 20,
+    "id": 21,
     "name": "Heritage Mysuru"
   },
   {
-    "id": 21,
+    "id": 97,
     "name": "Hunsur"
   },
   {
-    "id": 22,
+    "id": 98,
     "name": "Ivory City Mysuru"
   },
   {
-    "id": 23,
+    "id": 99,
     "name": "Kadaba Town"
   },
   {
-    "id": 24,
+    "id": 100,
     "name": "Kinnigoli"
   },
   {
-    "id": 25,
+    "id": 101,
     "name": "Kollegal"
   },
   {
-    "id": 26,
+    "id": 102,
     "name": "Kollegal Mid Town"
   },
   {
@@ -108,11 +108,11 @@
     "name": "Krishnaraja"
   },
   {
-    "id": 28,
+    "id": 103,
     "name": "Krishnarajanagar"
   },
   {
-    "id": 29,
+    "id": 104,
     "name": "Kushalnagar"
   },
   {
@@ -128,7 +128,7 @@
     "name": "Madikeri Woods"
   },
   {
-    "id": 33,
+    "id": 105,
     "name": "Malleshwara Alur Siddapura"
   },
   {
@@ -200,20 +200,16 @@
     "name": "Moodabidri"
   },
   {
-    "id": 51,
+    "id": 106,
     "name": "Moodbidri Mid Town"
   },
   {
-    "id": 52,
+    "id": 107,
     "name": "Moodbidri Temple Town"
   },
   {
-    "id": 53,
+    "id": 108,
     "name": "Mulky"
-  },
-  {
-    "id": 54,
-    "name": "Mysore"
   },
   {
     "id": 55,
@@ -236,6 +232,10 @@
     "name": "Mysore Jayaprakash Nagar"
   },
   {
+    "id": 54,
+    "name": "Mysore Main"
+  },
+  {
     "id": 60,
     "name": "Mysore Metro"
   },
@@ -252,7 +252,7 @@
     "name": "Mysore Royal"
   },
   {
-    "id": 64,
+    "id": 109,
     "name": "Mysore Shreegandha"
   },
   {
@@ -260,75 +260,75 @@
     "name": "Mysore South East"
   },
   {
-    "id": 66,
+    "id": 67,
     "name": "Mysore Stars"
   },
   {
-    "id": 67,
+    "id": 68,
     "name": "Mysore West"
   },
   {
-    "id": 68,
+    "id": 69,
     "name": "Mysuru Diamond"
   },
   {
-    "id": 69,
+    "id": 70,
     "name": "Nanjangud"
   },
   {
-    "id": 70,
+    "id": 110,
     "name": "Panchsheel Mysore"
   },
   {
-    "id": 71,
+    "id": 72,
     "name": "Periyapatna Icons"
   },
   {
-    "id": 72,
+    "id": 73,
     "name": "Periyapatna Mid Town"
   },
   {
-    "id": 73,
+    "id": 74,
     "name": "Puttur"
   },
   {
-    "id": 74,
+    "id": 75,
     "name": "Puttur Central"
   },
   {
-    "id": 75,
+    "id": 76,
     "name": "Puttur City"
   },
   {
-    "id": 76,
-    "name": "Puttur-East"
-  },
-  {
-    "id": 77,
+    "id": 78,
     "name": "Puttur Elite"
   },
   {
-    "id": 78,
+    "id": 79,
     "name": "Puttur Swarna"
   },
   {
-    "id": 79,
+    "id": 80,
     "name": "Puttur Yuva"
   },
   {
-    "id": 80,
+    "id": 77,
+    "name": "Puttur-East"
+  },
+  {
+    "id": 111,
     "name": "Seva Mysore"
   },
   {
-    "id": 81,
+    "id": 112,
     "name": "Shanivarsanthe"
   },
   {
-    "id": 82,
+    "id": 113,
     "name": "Siddakatte Phalguni"
   },
   {
-    "id": 83,
+    "id": 114,
     "name": "Somwarpet Hills"
   },
   {
@@ -348,15 +348,15 @@
     "name": "Surathkal"
   },
   {
-    "id": 88,
+    "id": 115,
     "name": "Uppinangadi"
   },
   {
-    "id": 89,
+    "id": 116,
     "name": "Vijayanagar Mysore"
   },
   {
-    "id": 90,
+    "id": 117,
     "name": "Virajpet"
   },
   {
@@ -364,7 +364,7 @@
     "name": "Vittal"
   },
   {
-    "id": 92,
+    "id": 118,
     "name": "Yelanduru Greenway"
   }
 ]
