@@ -25,18 +25,19 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Define the 2 registrations that need zone updates
+    // Define the 2 registrations that need club_id fixes
+    // These registrations have wrong club_id values that don't exist in clubs table
     const updates = [
-      { id: '2026RTY0778', zone: 'Zone 6B' },  // Somwarpet Hills → Zone 6B
-      { id: '2026RTY0772', zone: 'Zone 7A' }   // Ivory City Mysuru → Zone 7A
+      { id: '2026RTY0778', clubId: 114 },  // Somwarpet Hills → correct club_id = 114
+      { id: '2026RTY0772', clubId: 98 }    // Ivory City Mysuru → correct club_id = 98
     ];
     
     const results = [];
     
-    for (const { id, zone } of updates) {
+    for (const { id, clubId } of updates) {
       const result = await pool.query(
-        'UPDATE registrations SET zone = $1 WHERE registration_id = $2 RETURNING registration_id, name, club, zone',
-        [zone, id]
+        'UPDATE registrations SET club_id = $1 WHERE registration_id = $2 RETURNING registration_id, name, club, club_id',
+        [clubId, id]
       );
       
       if (result.rows.length > 0) {
@@ -53,19 +54,18 @@ module.exports = async (req, res) => {
       }
     }
     
-    // Verify no more NULL zones
-    const nullZones = await pool.query(
-      `SELECT registration_id, name, club, zone 
-       FROM registrations 
-       WHERE payment_status != 'test' 
-       AND (zone IS NULL OR zone = '')`
+    // Verify: Check if the updated registrations now have zones via JOIN
+    const verifyResult = await pool.query(
+      `SELECT r.registration_id, r.name, r.club, r.club_id, c.zone
+       FROM registrations r
+       LEFT JOIN clubs c ON r.club_id = c.id
+       WHERE r.registration_id IN ('2026RTY0778', '2026RTY0772')`
     );
     
     return res.status(200).json({
       success: true,
       updated: results,
-      remaining_null_zones: nullZones.rows.length,
-      null_zone_registrations: nullZones.rows
+      verification: verifyResult.rows
     });
     
   } catch (error) {
