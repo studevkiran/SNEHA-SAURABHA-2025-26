@@ -805,7 +805,10 @@
         async function fetchZoneData() {
             try {
                 console.log('🔄 Fetching zone data...');
-                const response = await fetch('/api/admin/zone-data');
+                const response = await fetch('/api/admin/zone-data?t=' + Date.now(), { 
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
                 const result = await response.json();
 
                 if (result.success && result.data) {
