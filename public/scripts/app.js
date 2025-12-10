@@ -694,8 +694,8 @@ function initializeRegistrationMode() {
     const guestMode = document.getElementById('guest-reg-mode');
     const autofilledDetails = document.getElementById('autofilled-details');
 
-    // Guest uses simple input mode (no club dropdown)
-    if (registrationData.typeName === 'Guest') {
+    // Guest and Innerwheel Member use simple input mode (no club dropdown)
+    if (registrationData.typeName === 'Guest' || registrationData.typeName === 'Innerwheel Member') {
         quickMode.style.display = 'none';
         manualMode.style.display = 'none';
         guestMode.style.display = 'block';
