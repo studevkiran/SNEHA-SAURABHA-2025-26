@@ -28,7 +28,8 @@ module.exports = async (req, res) => {
     // Define the fixes
     const fixes = [
       { id: '2026RTY0787', club: 'Somwarpet Hills', correct_club_id: 114 },
-      { id: '2026RTY0784', club: 'Ivory City Mysuru', correct_club_id: 98 }
+      { id: '2026RTY0784', club: 'Ivory City Mysuru', correct_club_id: 98 },
+      { id: '2026RTY0794', club: 'Bajpe', correct_club_id: 3 }
     ];
     
     const results = [];
