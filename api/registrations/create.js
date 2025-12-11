@@ -1,8 +1,9 @@
 // API: Create new registration
 const { createRegistration, createPaymentLog } = require('../../lib/db-functions');
 const { getZoneForClub } = require('../../lib/zone-mapping');
+const apiLogger = require('../../lib/api-logger-middleware');
 
-module.exports = async (req, res) => {
+const handler = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -193,3 +194,6 @@ module.exports = async (req, res) => {
     });
   }
 };
+
+// Export with logging middleware
+module.exports = apiLogger(handler);
