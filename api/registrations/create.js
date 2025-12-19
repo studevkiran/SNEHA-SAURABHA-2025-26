@@ -1,9 +1,8 @@
 // API: Create new registration
 const { createRegistration, createPaymentLog } = require('../../lib/db-functions');
 const { getZoneForClub } = require('../../lib/zone-mapping');
-const apiLogger = require('../../lib/api-logger-middleware');
 
-const handler = async (req, res) => {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -188,12 +187,10 @@ const handler = async (req, res) => {
 
   } catch (error) {
     console.error('Error creating registration:', error);
+    console.error('Error stack:', error.stack);
     return res.status(500).json({
       success: false,
-      error: 'Failed to create registration'
+      error: error.message || 'Failed to create registration'
     });
   }
 };
-
-// Export with logging middleware
-module.exports = apiLogger(handler);
