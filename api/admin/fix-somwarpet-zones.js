@@ -3,9 +3,14 @@
  * Assign IDs 3121 and 3119 to Zone 6B
  */
 
-import { query } from '../../../lib/db';
+const { Pool } = require('pg');
 
-export default async function handler(req, res) {
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -17,7 +22,7 @@ export default async function handler(req, res) {
     const idsToFix = [3121, 3119];
 
     // Update both zone and club_id
-    const result = await query(`
+    const result = await pool.query(`
       UPDATE registrations 
       SET zone = 'Zone 6B',
           club_id = 114,
@@ -29,7 +34,7 @@ export default async function handler(req, res) {
     console.log(`✅ Updated ${result.rows.length} registrations`);
 
     // Verify remaining unmapped
-    const unmappedCheck = await query(`
+    const unmappedCheck = await pool.query(`
       SELECT COUNT(*) as count
       FROM registrations
       WHERE (zone IS NULL OR zone = '' OR zone = 'Unmapped')
