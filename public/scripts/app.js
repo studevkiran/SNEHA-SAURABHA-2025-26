@@ -2573,6 +2573,8 @@ function showBirthdayWishes() {
         justify-content: center;
         z-index: 10000;
         animation: fadeIn 0.3s ease;
+        padding: 20px;
+        overflow-y: auto;
     `;
     
     modal.innerHTML = `
@@ -2580,47 +2582,56 @@ function showBirthdayWishes() {
             background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
             border: 3px solid #D4AF37;
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 30px 20px;
             max-width: 500px;
-            width: 90%;
+            width: 100%;
             text-align: center;
             position: relative;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.4s ease;
+            margin: auto;
         ">
             <button onclick="document.getElementById('birthday-wishes-modal').remove()" 
-                style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1;">
+                style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1; padding: 5px 10px;">
                 ×
             </button>
             
-            <h2 style="color: #C41E3A; font-size: 24px; margin-bottom: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+            <h2 style="color: #C41E3A; font-size: 20px; margin-bottom: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
                 Birthday Wishes
             </h2>
             
-            <div style="margin: 0 auto 20px; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 4px solid #D4AF37; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
+            <div style="margin: 0 auto 15px; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 3px solid #D4AF37; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
                 <img src="images/ramki sir.png" alt="DG Rtn. Ramakrishna P K" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">
             </div>
             
-            <div style="color: #333; font-size: 17px; line-height: 1.7; margin-bottom: 20px;">
+            <div style="color: #333; font-size: 15px; line-height: 1.6; margin-bottom: 15px;">
                 Warmest Birthday Wishes to<br>
-                <strong style="color: #D4AF37; font-size: 24px; display: block; margin: 8px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Rtn. Ramakrishna P K</strong>
-                <strong style="color: #666; font-size: 16px;">District Governor, Rotary District 3181</strong>
+                <strong style="color: #D4AF37; font-size: 20px; display: block; margin: 6px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Rtn. Ramakrishna P K</strong>
+                <strong style="color: #666; font-size: 14px;">District Governor, Rotary District 3181</strong>
             </div>
             
-            <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); color: white; padding: 20px; border-radius: 12px; margin: 25px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
-                <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: white;">
+            <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); padding: 18px 15px; border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
+                <div style="font-size: 15px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #FFF9E6;">
                     Special Announcement
                 </div>
-                <div style="font-size: 15px; line-height: 1.6; margin-bottom: 15px; color: white;">
+                <div style="font-size: 13px; line-height: 1.5; margin-bottom: 12px; color: #FFF;">
                     In celebration of our District Governor's Birthday, we are pleased to announce a special registration offer for today only:
                 </div>
-                <div style="font-size: 15px; line-height: 1.8; color: white;">
-                    <strong style="color: white;">Rotarian:</strong> <span style="text-decoration: line-through; opacity: 0.7; color: white;">₹5,000</span> <strong style="color: white;">₹4,500</strong><br>
-                    <strong style="color: white;">Rotarian with Spouse:</strong> <span style="text-decoration: line-through; opacity: 0.7; color: white;">₹8,000</span> <strong style="color: white;">₹7,500</strong>
+                <div style="font-size: 14px; line-height: 1.7; background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 8px;">
+                    <div style="margin-bottom: 6px;">
+                        <strong style="color: #FFF9E6;">Rotarian:</strong> 
+                        <span style="text-decoration: line-through; opacity: 0.8; color: #FFE8B3; margin: 0 5px;">₹5,000</span> 
+                        <strong style="color: #FFF; font-size: 16px;">₹4,500</strong>
+                    </div>
+                    <div>
+                        <strong style="color: #FFF9E6;">Rotarian with Spouse:</strong> 
+                        <span style="text-decoration: line-through; opacity: 0.8; color: #FFE8B3; margin: 0 5px;">₹8,000</span> 
+                        <strong style="color: #FFF; font-size: 16px;">₹7,500</strong>
+                    </div>
                 </div>
             </div>
             
-            <p style="color: #666; font-size: 13px; font-style: italic; margin-top: 15px;">
+            <p style="color: #666; font-size: 11px; font-style: italic; margin-top: 12px; line-height: 1.4;">
                 This is a goodwill gesture to honor the occasion.<br>
                 Valid for registrations made today only.
             </p>
@@ -2630,16 +2641,18 @@ function showBirthdayWishes() {
                     background: linear-gradient(135deg, #C41E3A 0%, #A01729 100%);
                     color: white;
                     border: none;
-                    padding: 16px 40px;
+                    padding: 14px 30px;
                     border-radius: 30px;
-                    font-size: 16px;
+                    font-size: 15px;
                     font-weight: 700;
                     cursor: pointer;
-                    margin-top: 20px;
+                    margin-top: 15px;
                     box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
                     transition: all 0.3s;
                     text-transform: uppercase;
                     letter-spacing: 1px;
+                    width: 100%;
+                    max-width: 280px;
                 "
                 onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(196, 30, 58, 0.6)';"
                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 6px 20px rgba(196, 30, 58, 0.4)';">
