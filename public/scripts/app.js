@@ -2607,16 +2607,16 @@ function showBirthdayWishes() {
                 <strong style="color: #D4AF37; font-size: 18px;">District Governor, Rotary District 3181</strong>
             </div>
             
-            <div style="background: #fff; border: 2px solid #D4AF37; padding: 20px; border-radius: 12px; margin: 25px 0;">
-                <div style="color: #C41E3A; font-size: 16px; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+            <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); color: white; padding: 20px; border-radius: 12px; margin: 25px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
+                <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.95;">
                     Special Announcement
                 </div>
-                <div style="color: #333; font-size: 15px; line-height: 1.6; margin-bottom: 15px;">
+                <div style="font-size: 15px; line-height: 1.6; margin-bottom: 15px; opacity: 0.95;">
                     In celebration of our District Governor's Birthday, we are pleased to announce a special registration offer for today only:
                 </div>
-                <div style="color: #333; font-size: 15px; line-height: 1.8;">
-                    <strong>Rotarian:</strong> <span style="text-decoration: line-through; color: #999;">₹5,000</span> <strong style="color: #C41E3A;">₹4,500</strong><br>
-                    <strong>Rotarian with Spouse:</strong> <span style="text-decoration: line-through; color: #999;">₹8,000</span> <strong style="color: #C41E3A;">₹7,500</strong>
+                <div style="font-size: 15px; line-height: 1.8;">
+                    <strong>Rotarian:</strong> <span style="text-decoration: line-through; opacity: 0.7;">₹5,000</span> <strong>₹4,500</strong><br>
+                    <strong>Rotarian with Spouse:</strong> <span style="text-decoration: line-through; opacity: 0.7;">₹8,000</span> <strong>₹7,500</strong>
                 </div>
             </div>
             
