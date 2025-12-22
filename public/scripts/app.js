@@ -2658,6 +2658,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000);
         }
         
+        // Update price displays to show discount (no badges)
+        const rotarianCard = document.querySelector('[data-type="rotarian"]');
+        const spouseCard = document.querySelector('[data-type="rotarian-spouse"]');
+        
+        if (rotarianCard) {
+            const priceDiv = rotarianCard.querySelector('.card-price');
+            if (priceDiv) {
+                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹5,000</span> <span style="color: #C41E3A; font-weight: 700;">₹4,500</span>';
+            }
+        }
+        
+        if (spouseCard) {
+            const priceDiv = spouseCard.querySelector('.card-price');
+            if (priceDiv) {
+                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹8,000</span> <span style="color: #C41E3A; font-weight: 700;">₹7,500</span>';
+            }
+        }
+        
         console.log('🎂 DG Birthday Special Active!');
     }
 });
