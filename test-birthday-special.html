@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Birthday Special Test - SNEHA SAURABHA 2025-26</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
+        }
+        .test-card {
+            background: white;
+            border: 3px solid #D4AF37;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #C41E3A;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .date-info {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #F9FAFB;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 16px;
+        }
+        .new-price {
+            color: #C41E3A;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        .savings {
+            background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 0;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+        .status.active {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 2px solid #10B981;
+        }
+        .status.inactive {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 2px solid #EF4444;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .feature-list li:before {
+            content: "✅ ";
+            margin-right: 8px;
+        }
+        code {
+            background: #F3F4F6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <h1>🎂 Birthday Special Test Page</h1>
+        <div class="date-info">
+            Testing DG Birthday Feature for Dec 23, 2025
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div class="test-section">
+            <h3>📅 Current Date Check</h3>
+            <p><strong>Today:</strong> <span id="current-date"></span></p>
+            <p><strong>Birthday Date:</strong> December 23, 2025</p>
+            <p><strong>Status:</strong> <span id="birthday-status"></span></p>
+        </div>
+
+        <div class="test-section">
+            <h3>💰 Pricing Test</h3>
+            
+            <div class="price-display">
+                <div>
+                    <strong>Rotarian</strong><br>
+                    <span class="old-price">₹5,000</span> → <span class="new-price" id="rotarian-price">₹4,500</span>
+                </div>
+                <div class="savings">Save ₹500</div>
+            </div>
+
+            <div class="price-display">
+                <div>
+                    <strong>Rotarian + Spouse</strong><br>
+                    <span class="old-price">₹8,000</span> → <span class="new-price" id="spouse-price">₹7,500</span>
+                </div>
+                <div class="savings">Save ₹500</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>✨ Features Implemented</h3>
+            <ul class="feature-list">
+                <li>Birthday banner on homepage</li>
+                <li>Auto-show wishes popup (once per session)</li>
+                <li>Discount badges on registration cards</li>
+                <li>Strikethrough pricing display</li>
+                <li>Special pricing only on Dec 23</li>
+                <li>Auto-reverts on Dec 24</li>
+            </ul>
+        </div>
+
+        <button onclick="testBirthdayWishes()">🎉 Test Birthday Wishes Popup</button>
+        <button onclick="window.open('index.html', '_blank')">🏠 Open Main Registration Page</button>
+        
+        <div class="test-section" style="margin-top: 30px; background: #FFFBEB; border: 2px solid #F59E0B;">
+            <h3>⚠️ How to Test</h3>
+            <p style="font-size: 14px; line-height: 1.6; color: #92400E;">
+                <strong>Option 1:</strong> Wait until tomorrow (Dec 23) to see it live<br>
+                <strong>Option 2:</strong> Temporarily change your system date to Dec 23, 2025<br>
+                <strong>Option 3:</strong> Use the test button above to see the popup
+            </p>
+        </div>
+
+        <div class="test-section" style="background: #EFF6FF; border: 2px solid #3B82F6; margin-top: 20px;">
+            <h3>🚀 To Deploy</h3>
+            <p style="font-size: 14px; color: #1E40AF;">
+                <code>git add -A</code><br>
+                <code>git commit -m "Add DG Birthday Special"</code><br>
+                <code>git push</code>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Display current date
+        const now = new Date();
+        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Check if birthday
+        const isBirthday = now.getDate() === 23 && now.getMonth() === 11 && now.getFullYear() === 2025;
+        const birthdayStatus = document.getElementById('birthday-status');
+        const statusDiv = document.getElementById('status');
+
+        if (isBirthday) {
+            birthdayStatus.textContent = '🎂 ACTIVE - Birthday pricing enabled!';
+            birthdayStatus.style.color = '#10B981';
+            birthdayStatus.style.fontWeight = '700';
+            statusDiv.className = 'status active';
+            statusDiv.textContent = '✅ Birthday Special is ACTIVE Today!';
+        } else {
+            birthdayStatus.textContent = '⏰ INACTIVE - Not Dec 23 yet';
+            birthdayStatus.style.color = '#EF4444';
+            birthdayStatus.style.fontWeight = '700';
+            statusDiv.className = 'status inactive';
+            statusDiv.textContent = '⏰ Birthday Special will activate on Dec 23, 2025';
+        }
+
+        // Show computed prices
+        document.getElementById('rotarian-price').textContent = isBirthday ? '₹4,500' : '₹5,000';
+        document.getElementById('spouse-price').textContent = isBirthday ? '₹7,500' : '₹8,000';
+
+        // Test birthday wishes popup
+        function testBirthdayWishes() {
+            const modal = document.createElement('div');
+            modal.id = 'birthday-wishes-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
+                    border: 3px solid #D4AF37;
+                    border-radius: 20px;
+                    padding: 40px 30px;
+                    max-width: 500px;
+                    width: 90%;
+                    text-align: center;
+                    position: relative;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                    animation: slideUp 0.4s ease;
+                ">
+                    <button onclick="this.closest('#birthday-wishes-modal').remove()" 
+                        style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1;">
+                        ×
+                    </button>
+                    
+                    <div style="font-size: 60px; margin-bottom: 15px;">🎂🎉</div>
+                    
+                    <h2 style="color: #C41E3A; font-size: 26px; margin-bottom: 15px; font-weight: 700;">
+                        Happy Birthday!
+                    </h2>
+                    
+                    <div style="color: #333; font-size: 18px; line-height: 1.6; margin-bottom: 25px;">
+                        Warmest Birthday Wishes to our<br>
+                        <strong style="color: #D4AF37; font-size: 20px;">District Governor</strong><br>
+                        on this special day!
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); color: white; padding: 20px; border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
+                        <div style="font-size: 16px; margin-bottom: 8px; opacity: 0.95;">🎁 Birthday Special Offer</div>
+                        <div style="font-size: 22px; font-weight: 700; margin-bottom: 5px;">Today Only!</div>
+                        <div style="font-size: 15px; opacity: 0.9;">
+                            Rotarian: <span style="text-decoration: line-through; opacity: 0.7;">₹5,000</span> → <strong>₹4,500</strong><br>
+                            Rotarian with Spouse: <span style="text-decoration: line-through; opacity: 0.7;">₹8,000</span> → <strong>₹7,500</strong>
+                        </div>
+                    </div>
+                    
+                    <p style="color: #666; font-size: 14px; font-style: italic; margin-top: 20px;">
+                        "A special goodwill announcement in celebration<br>
+                        of our District Governor's Birthday"
+                    </p>
+                    
+                    <button onclick="this.closest('#birthday-wishes-modal').remove(); window.open('index.html');" 
+                        style="
+                            background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%);
+                            color: white;
+                            border: none;
+                            padding: 15px 40px;
+                            border-radius: 30px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            margin-top: 20px;
+                            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+                            transition: transform 0.2s;
+                        "
+                        onmouseover="this.style.transform='scale(1.05)'"
+                        onmouseout="this.style.transform='scale(1)'">
+                        Register Now with Special Price 🎉
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.remove();
+            };
+        }
+    </script>
+</body>
+</html>

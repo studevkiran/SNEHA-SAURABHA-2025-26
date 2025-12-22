@@ -2028,3 +2028,121 @@ h3 {
     }
 }
 
+/* ==========================================
+   BIRTHDAY SPECIAL BANNER
+   ========================================== */
+.birthday-banner {
+    background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
+    border: 2px solid #D4AF37;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    transition: all 0.3s ease;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.birthday-banner:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+}
+
+.birthday-banner:active {
+    transform: translateY(-1px);
+}
+
+.birthday-icon {
+    font-size: 40px;
+    animation: bounce 1.5s ease-in-out infinite;
+}
+
+.birthday-text {
+    flex: 1;
+    text-align: left;
+}
+
+.birthday-title {
+    color: #C41E3A;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.birthday-subtitle {
+    color: #666;
+    font-size: 13px;
+}
+
+.birthday-badge {
+    background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    }
+    50% {
+        box-shadow: 0 8px 35px rgba(212, 175, 55, 0.5);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .birthday-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+    
+    .birthday-text {
+        text-align: center;
+    }
+    
+    .birthday-title {
+        font-size: 16px;
+    }
+    
+    .birthday-subtitle {
+        font-size: 12px;
+    }
+    
+    .birthday-badge {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+}

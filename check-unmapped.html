@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Unmapped Registrations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F9FAFB;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #111827;
+            margin-bottom: 10px;
+        }
+        .info {
+            background: #DBEAFE;
+            border-left: 4px solid #3B82F6;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: #1E40AF;
+        }
+        button {
+            background: #D4AF37;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #C19A2E;
+        }
+        button:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6B7280;
+        }
+        .results {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: #F3F4F6;
+            padding: 16px;
+            border-radius: 6px;
+            border-left: 4px solid #DC2626;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #DC2626;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background: #F9FAFB;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        tr:hover {
+            background: #F9FAFB;
+        }
+        .club-name {
+            font-weight: 600;
+            color: #111827;
+        }
+        .error {
+            background: #FEE2E2;
+            border-left: 4px solid #DC2626;
+            padding: 12px 16px;
+            border-radius: 4px;
+            color: #991B1B;
+            margin-top: 20px;
+        }
+        .success {
+            background: #D1FAE5;
+            border-left: 4px solid #10B981;
+            padding: 12px 16px;
+            border-radius: 4px;
+            color: #065F46;
+            margin-top: 20px;
+        }
+        .club-group {
+            background: #FFFBEB;
+            border-left: 4px solid #F59E0B;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+        .club-group h3 {
+            color: #92400E;
+            margin-bottom: 12px;
+        }
+        .registration-item {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .badge-guest {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+        .badge-rotaractor {
+            background: #FCE7F3;
+            color: #9F1239;
+        }
+        .badge-sponsor {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Find Unmapped Registrations</h1>
+        <div class="info">
+            This tool will fetch all registrations and identify which ones are showing as "Unmapped" in the zone breakdown.
+        </div>
+
+        <button id="checkBtn" onclick="checkUnmapped()">Check Unmapped Now</button>
+
+        <div id="loading" style="display: none;" class="loading">
+            <p>⏳ Loading registrations...</p>
+        </div>
+
+        <div id="results" style="display: none;"></div>
+    </div>
+
+    <script>
+        async function checkUnmapped() {
+            const btn = document.getElementById('checkBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            results.style.display = 'none';
+
+            try {
+                // Fetch all registrations from the API
+                const response = await fetch('/api/admin/registrations');
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const allRegistrations = data.registrations || [];
+
+                // Filter for unmapped registrations
+                const unmapped = allRegistrations.filter(reg => {
+                    // Skip test entries
+                    if (reg.payment_status === 'test') return false;
+                    
+                    // Only include completed payments
+                    if (reg.payment_status !== 'completed') return false;
+
+                    // Check if zone is unmapped
+                    if (!reg.zone) return true;
+                    if (reg.zone === '') return true;
+                    if (reg.zone === 'Unmapped') return true;
+
+                    // Check if zone doesn't match "Zone X" pattern
+                    const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
+                    return !zoneMatch;
+                });
+
+                // Group by club
+                const clubGroups = {};
+                unmapped.forEach(reg => {
+                    const club = reg.club || 'NO CLUB / GUEST';
+                    if (!clubGroups[club]) {
+                        clubGroups[club] = [];
+                    }
+                    clubGroups[club].push(reg);
+                });
+
+                // Display results
+                displayResults(unmapped, clubGroups);
+
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Error:</strong> ${error.message}
+                        <br><br>
+                        Make sure you're running this on the production site or have the API accessible.
+                    </div>
+                `;
+                results.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function displayResults(unmapped, clubGroups) {
+            const results = document.getElementById('results');
+            
+            if (unmapped.length === 0) {
+                results.innerHTML = `
+                    <div class="success">
+                        <strong>✅ Great news!</strong> No unmapped registrations found. All registrations are properly assigned to zones.
+                    </div>
+                `;
+                results.style.display = 'block';
+                return;
+            }
+
+            const clubCount = Object.keys(clubGroups).length;
+
+            let html = `
+                <div class="results">
+                    <h2>📊 Summary</h2>
+                    <div class="summary">
+                        <div class="stat-card">
+                            <div class="stat-label">Unmapped Registrations</div>
+                            <div class="stat-value">${unmapped.length}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Affected Clubs</div>
+                            <div class="stat-value">${clubCount}</div>
+                        </div>
+                    </div>
+
+                    <h2>🏢 By Club</h2>
+            `;
+
+            // Sort clubs by count
+            const sortedClubs = Object.entries(clubGroups).sort((a, b) => b[1].length - a[1].length);
+
+            sortedClubs.forEach(([club, regs]) => {
+                html += `
+                    <div class="club-group">
+                        <h3>${club} <span style="color: #DC2626;">(${regs.length} registration${regs.length > 1 ? 's' : ''})</span></h3>
+                `;
+
+                regs.forEach(reg => {
+                    const badge = getBadgeForType(reg.registration_type);
+                    html += `
+                        <div class="registration-item">
+                            <strong>ID:</strong> ${reg.id} | 
+                            <strong>Name:</strong> ${reg.name || 'N/A'} | 
+                            <strong>Type:</strong> ${reg.registration_type}${badge} | 
+                            <strong>Zone:</strong> ${reg.zone || 'NULL'} |
+                            <strong>Phone:</strong> ${reg.phone || 'N/A'}
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+            });
+
+            html += `
+                    <h2 style="margin-top: 30px;">📋 Complete List</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Club</th>
+                                <th>Type</th>
+                                <th>Zone</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            unmapped.forEach(reg => {
+                html += `
+                    <tr>
+                        <td>${reg.id}</td>
+                        <td>${reg.name || 'N/A'}</td>
+                        <td class="club-name">${reg.club || 'NO CLUB'}</td>
+                        <td>${reg.registration_type}</td>
+                        <td><code>${reg.zone || 'NULL'}</code></td>
+                        <td>${reg.phone || 'N/A'}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            results.innerHTML = html;
+            results.style.display = 'block';
+        }
+
+        function getBadgeForType(type) {
+            const lower = (type || '').toLowerCase();
+            if (lower.includes('guest')) {
+                return '<span class="badge badge-guest">GUEST</span>';
+            }
+            if (lower.includes('rotaractor')) {
+                return '<span class="badge badge-rotaractor">ROTARACTOR</span>';
+            }
+            if (lower.includes('sponsor') || lower.includes('donor')) {
+                return '<span class="badge badge-sponsor">SPONSOR</span>';
+            }
+            return '';
+        }
+    </script>
+</body>
+</html>

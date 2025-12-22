@@ -110,18 +110,31 @@ const EMBEDDED_CLUBS = [
 ];
 
 // Registration type options with complete details
+// Check if today is DG Birthday (Dec 23, 2025)
+function isBirthdaySpecial() {
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.getMonth() + 1; // 0-indexed
+    const year = today.getFullYear();
+    return day === 23 && month === 12 && year === 2025;
+}
+
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: 5000,
+        price: isBirthdaySpecial() ? 4500 : 5000,
+        originalPrice: 5000,
         description: 'Admission, Food & 1 Memento',
-        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento'],
+        birthdayDiscount: isBirthdaySpecial() ? 500 : 0
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: 8000,
+        price: isBirthdaySpecial() ? 7500 : 8000,
+        originalPrice: 8000,
         description: 'Admission with spouse, Food & 1 Memento',
-        inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
+        inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento'],
+        birthdayDiscount: isBirthdaySpecial() ? 500 : 0
     },
     'ann': {
         name: 'Ann',
@@ -2153,3 +2166,149 @@ window.showScreen = function (screenId) {
 
 console.log('✅ Coupon code system initialized with codes:', Object.keys(VALID_COUPONS));
 console.log('✅ All global functions exposed to window object');
+// ==========================================
+// BIRTHDAY SPECIAL FUNCTIONS
+// ==========================================
+
+// Show birthday wishes popup
+function showBirthdayWishes() {
+    const modal = document.createElement('div');
+    modal.id = 'birthday-wishes-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
+            border: 3px solid #D4AF37;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        ">
+            <button onclick="document.getElementById('birthday-wishes-modal').remove()" 
+                style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1;">
+                ×
+            </button>
+            
+            <div style="font-size: 60px; margin-bottom: 15px;">🎂🎉</div>
+            
+            <h2 style="color: #C41E3A; font-size: 26px; margin-bottom: 15px; font-weight: 700;">
+                Happy Birthday!
+            </h2>
+            
+            <div style="color: #333; font-size: 18px; line-height: 1.6; margin-bottom: 25px;">
+                Warmest Birthday Wishes to our<br>
+                <strong style="color: #D4AF37; font-size: 20px;">District Governor</strong><br>
+                on this special day!
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); color: white; padding: 20px; border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
+                <div style="font-size: 16px; margin-bottom: 8px; opacity: 0.95;">🎁 Birthday Special Offer</div>
+                <div style="font-size: 22px; font-weight: 700; margin-bottom: 5px;">Today Only!</div>
+                <div style="font-size: 15px; opacity: 0.9;">
+                    Rotarian: <span style="text-decoration: line-through; opacity: 0.7;">₹5,000</span> → <strong>₹4,500</strong><br>
+                    Rotarian with Spouse: <span style="text-decoration: line-through; opacity: 0.7;">₹8,000</span> → <strong>₹7,500</strong>
+                </div>
+            </div>
+            
+            <p style="color: #666; font-size: 14px; font-style: italic; margin-top: 20px;">
+                "A special goodwill announcement in celebration<br>
+                of our District Governor's Birthday"
+            </p>
+            
+            <button onclick="document.getElementById('birthday-wishes-modal').remove(); showScreen('screen-register-type');" 
+                style="
+                    background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%);
+                    color: white;
+                    border: none;
+                    padding: 15px 40px;
+                    border-radius: 30px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 20px;
+                    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+                    transition: transform 0.2s;
+                "
+                onmouseover="this.style.transform='scale(1.05)'"
+                onmouseout="this.style.transform='scale(1)'">
+                Register Now with Special Price 🎉
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.remove();
+    };
+}
+
+// Initialize birthday banner on page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (isBirthdaySpecial()) {
+        const banner = document.getElementById('birthday-banner');
+        if (banner) {
+            banner.style.display = 'flex';
+            // Auto-show wishes popup once (optional - can be removed if too intrusive)
+            if (!sessionStorage.getItem('birthday-wishes-shown')) {
+                setTimeout(() => {
+                    showBirthdayWishes();
+                    sessionStorage.setItem('birthday-wishes-shown', 'true');
+                }, 2000); // Show after 2 seconds
+            }
+        }
+        
+        // Add birthday discount badges to Rotarian cards
+        const rotarianCard = document.querySelector('[data-type="rotarian"]');
+        const spouseCard = document.querySelector('[data-type="rotarian-spouse"]');
+        
+        if (rotarianCard) {
+            const badge = document.createElement('div');
+            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; box-shadow: 0 3px 10px rgba(196, 30, 58, 0.4); z-index: 10;';
+            badge.textContent = '🎂 ₹500 OFF';
+            rotarianCard.style.position = 'relative';
+            rotarianCard.appendChild(badge);
+            
+            // Update price display
+            const priceDiv = rotarianCard.querySelector('.card-price');
+            if (priceDiv) {
+                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹5,000</span> <span style="color: #C41E3A; font-weight: 700;">₹4,500</span>';
+            }
+        }
+        
+        if (spouseCard) {
+            const badge = document.createElement('div');
+            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; box-shadow: 0 3px 10px rgba(196, 30, 58, 0.4); z-index: 10;';
+            badge.textContent = '🎂 ₹500 OFF';
+            spouseCard.style.position = 'relative';
+            spouseCard.appendChild(badge);
+            
+            // Update price display
+            const priceDiv = spouseCard.querySelector('.card-price');
+            if (priceDiv) {
+                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹8,000</span> <span style="color: #C41E3A; font-weight: 700;">₹7,500</span>';
+            }
+        }
+        
+        console.log('🎂 DG Birthday Special Active! Rotarian: ₹4,500 | Rotarian+Spouse: ₹7,500');
+    }
+});
+
+// Expose functions globally
+window.showBirthdayWishes = showBirthdayWishes;
