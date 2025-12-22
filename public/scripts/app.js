@@ -2618,14 +2618,14 @@ function showBirthdayWishes() {
                     In celebration of our District Governor's Birthday, we are pleased to announce a special registration offer for today only:
                 </div>
                 <div style="font-size: 14px; background: rgba(255, 255, 255, 0.2); padding: 12px; border-radius: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
                         <strong style="color: #FFFEF9; font-size: 14px;">Rotarian:</strong>
                         <div style="text-align: right;">
                             <span style="text-decoration: line-through; opacity: 0.75; color: #FFF3D4; font-size: 13px;">₹5,000</span><br>
                             <strong style="color: #FFF; font-size: 17px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">₹4,500</strong>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
                         <strong style="color: #FFFEF9; font-size: 14px;">Rotarian with Spouse:</strong>
                         <div style="text-align: right;">
                             <span style="text-decoration: line-through; opacity: 0.75; color: #FFF3D4; font-size: 13px;">₹8,000</span><br>
