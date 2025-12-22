@@ -2611,22 +2611,26 @@ function showBirthdayWishes() {
             </div>
             
             <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); padding: 18px 15px; border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
-                <div style="font-size: 15px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #8B0000;">
+                <div style="font-size: 15px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #8B1538;">
                     Special Announcement
                 </div>
-                <div style="font-size: 13px; line-height: 1.5; margin-bottom: 12px; color: #FFF;">
+                <div style="font-size: 13px; line-height: 1.5; margin-bottom: 12px; color: #FFFEF9;">
                     In celebration of our District Governor's Birthday, we are pleased to announce a special registration offer for today only:
                 </div>
-                <div style="font-size: 14px; line-height: 1.7; background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 8px;">
-                    <div style="margin-bottom: 6px;">
-                        <strong style="color: #FFF9E6;">Rotarian:</strong> 
-                        <span style="text-decoration: line-through; opacity: 0.8; color: #FFE8B3; margin: 0 5px;">₹5,000</span> 
-                        <strong style="color: #FFF; font-size: 16px;">₹4,500</strong>
+                <div style="font-size: 14px; background: rgba(255, 255, 255, 0.2); padding: 12px; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #FFFEF9; font-size: 14px;">Rotarian:</strong>
+                        <div style="text-align: right;">
+                            <span style="text-decoration: line-through; opacity: 0.75; color: #FFF3D4; font-size: 13px;">₹5,000</span><br>
+                            <strong style="color: #FFF; font-size: 17px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">₹4,500</strong>
+                        </div>
                     </div>
-                    <div>
-                        <strong style="color: #FFF9E6;">Rotarian with Spouse:</strong> 
-                        <span style="text-decoration: line-through; opacity: 0.8; color: #FFE8B3; margin: 0 5px;">₹8,000</span> 
-                        <strong style="color: #FFF; font-size: 16px;">₹7,500</strong>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: #FFFEF9; font-size: 14px;">Rotarian with Spouse:</strong>
+                        <div style="text-align: right;">
+                            <span style="text-decoration: line-through; opacity: 0.75; color: #FFF3D4; font-size: 13px;">₹8,000</span><br>
+                            <strong style="color: #FFF; font-size: 17px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">₹7,500</strong>
+                        </div>
                     </div>
                 </div>
             </div>
