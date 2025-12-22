@@ -2611,10 +2611,10 @@ function showBirthdayWishes() {
             </div>
             
             <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); padding: 18px 15px; border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
-                <div style="font-size: 15px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #FFF9E6;">
+                <div style="font-size: 15px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #8B0000;">
                     Special Announcement
                 </div>
-                <div style="font-size: 13px; line-height: 1.5; margin-bottom: 12px; color: #FFF;">
+                <div style="font-size: 13px; line-height: 1.5; margin-bottom: 12px; color: #2C1810;">
                     In celebration of our District Governor's Birthday, we are pleased to announce a special registration offer for today only:
                 </div>
                 <div style="font-size: 14px; line-height: 1.7; background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 8px;">
