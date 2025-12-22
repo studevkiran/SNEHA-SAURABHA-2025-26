@@ -2666,9 +2666,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (rotarianCard) {
             const badge = document.createElement('div');
-            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; box-shadow: 0 3px 10px rgba(196, 30, 58, 0.4); z-index: 10;';
+            badge.style.cssText = 'position: absolute; top: -8px; right: -8px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; box-shadow: 0 4px 12px rgba(196, 30, 58, 0.5); z-index: 100;';
             badge.textContent = '🎂 ₹500 OFF';
             rotarianCard.style.position = 'relative';
+            rotarianCard.style.overflow = 'visible';
             rotarianCard.appendChild(badge);
             
             const priceDiv = rotarianCard.querySelector('.card-price');
@@ -2679,9 +2680,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (spouseCard) {
             const badge = document.createElement('div');
-            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; box-shadow: 0 3px 10px rgba(196, 30, 58, 0.4); z-index: 10;';
+            badge.style.cssText = 'position: absolute; top: -8px; right: -8px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; box-shadow: 0 4px 12px rgba(196, 30, 58, 0.5); z-index: 100;';
             badge.textContent = '🎂 ₹500 OFF';
             spouseCard.style.position = 'relative';
+            spouseCard.style.overflow = 'visible';
             spouseCard.appendChild(badge);
             
             const priceDiv = spouseCard.querySelector('.card-price');
