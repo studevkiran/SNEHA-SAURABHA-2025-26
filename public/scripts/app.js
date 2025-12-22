@@ -2594,7 +2594,7 @@ function showBirthdayWishes() {
             </button>
             
             <div style="margin: 0 auto 20px; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 4px solid #D4AF37; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
-                <img src="images/ramki sir.png" alt="DG Rtn. Ramakrishna P K" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                <img src="images/ramki sir.png" alt="DG Rtn. Ramakrishna P K" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">
             </div>
             
             <h2 style="color: #C41E3A; font-size: 24px; margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
