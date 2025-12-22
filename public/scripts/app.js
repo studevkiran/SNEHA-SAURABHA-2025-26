@@ -2650,46 +2650,12 @@ function showBirthdayWishes() {
 // Initialize birthday banner on page load
 document.addEventListener('DOMContentLoaded', function() {
     if (isBirthdaySpecial()) {
-        const banner = document.getElementById('birthday-banner');
-        if (banner) {
-            banner.style.display = 'flex';
-            if (!sessionStorage.getItem('birthday-wishes-shown')) {
-                setTimeout(() => {
-                    showBirthdayWishes();
-                    sessionStorage.setItem('birthday-wishes-shown', 'true');
-                }, 2000);
-            }
-        }
-        
-        const rotarianCard = document.querySelector('[data-type="rotarian"]');
-        const spouseCard = document.querySelector('[data-type="rotarian-spouse"]');
-        
-        if (rotarianCard) {
-            const badge = document.createElement('div');
-            badge.style.cssText = 'position: absolute; top: -8px; right: -8px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; box-shadow: 0 4px 12px rgba(196, 30, 58, 0.5); z-index: 100;';
-            badge.textContent = '🎂 ₹500 OFF';
-            rotarianCard.style.position = 'relative';
-            rotarianCard.style.overflow = 'visible';
-            rotarianCard.appendChild(badge);
-            
-            const priceDiv = rotarianCard.querySelector('.card-price');
-            if (priceDiv) {
-                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹5,000</span> <span style="color: #C41E3A; font-weight: 700;">₹4,500</span>';
-            }
-        }
-        
-        if (spouseCard) {
-            const badge = document.createElement('div');
-            badge.style.cssText = 'position: absolute; top: -8px; right: -8px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; box-shadow: 0 4px 12px rgba(196, 30, 58, 0.5); z-index: 100;';
-            badge.textContent = '🎂 ₹500 OFF';
-            spouseCard.style.position = 'relative';
-            spouseCard.style.overflow = 'visible';
-            spouseCard.appendChild(badge);
-            
-            const priceDiv = spouseCard.querySelector('.card-price');
-            if (priceDiv) {
-                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹8,000</span> <span style="color: #C41E3A; font-weight: 700;">₹7,500</span>';
-            }
+        // Auto-show birthday wishes popup
+        if (!sessionStorage.getItem('birthday-wishes-shown')) {
+            setTimeout(() => {
+                showBirthdayWishes();
+                sessionStorage.setItem('birthday-wishes-shown', 'true');
+            }, 2000);
         }
         
         console.log('🎂 DG Birthday Special Active!');
