@@ -21,6 +21,9 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
+  // Set timeout to 30 seconds
+  res.socket.setTimeout(30000);
+
   try {
     console.log('🔍 Finding unmapped registrations...');
 
@@ -60,19 +63,21 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Fix each one
-    const fixedDetails = [];
+    // Fix all in one batch update
     let fixed = 0;
+    const fixedDetails = [];
 
+    // Build update cases for batch update
+    const updateCases = [];
+    const idsToUpdate = [];
+    
     for (const r of result.rows) {
       const club = r.club || 'Guest/No Club';
       const correctZone = getZoneForClub(club);
       
       if (correctZone && correctZone !== 'Unmapped') {
-        await pool.query(
-          'UPDATE registrations SET zone = $1 WHERE id = $2',
-          [correctZone, r.id]
-        );
+        updateCases.push(`WHEN ${r.id} THEN '${correctZone.replace(/'/g, "''")}'`);
+        idsToUpdate.push(r.id);
         
         fixedDetails.push({
           id: r.id,
@@ -81,8 +86,6 @@ module.exports = async (req, res) => {
           oldZone: r.zone || 'NULL',
           newZone: correctZone
         });
-        
-        console.log(`✅ Fixed ID ${r.id}: ${club} → ${correctZone}`);
         fixed++;
       } else {
         fixedDetails.push({
@@ -93,8 +96,20 @@ module.exports = async (req, res) => {
           newZone: 'Could not map',
           error: 'Club not in zone mapping'
         });
-        console.log(`⚠️  Cannot fix ID ${r.id}: ${club} not in mapping`);
       }
+    }
+
+    // Execute batch update if we have records to fix
+    if (idsToUpdate.length > 0) {
+      const batchUpdate = `
+        UPDATE registrations 
+        SET zone = CASE id 
+          ${updateCases.join(' ')}
+        END
+        WHERE id IN (${idsToUpdate.join(',')})
+      `;
+      await pool.query(batchUpdate);
+      console.log(`✅ Batch updated ${idsToUpdate.length} registrations`);
     }
 
     // Verify remaining unmapped (matching stats page logic)
