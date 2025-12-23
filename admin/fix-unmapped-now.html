@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Unmapped Registrations - SNEHA SAURABHA 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #FFB800;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .action-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 184, 0, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, #FFB800 0%, #FF8C00 100%);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 184, 0, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border-left: 4px solid #FFB800;
+        }
+
+        .status.success {
+            border-left-color: #00ff00;
+        }
+
+        .status.error {
+            border-left-color: #ff0000;
+        }
+
+        .details {
+            margin-top: 30px;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #FFB800;
+        }
+
+        .detail-item.fixed {
+            border-left-color: #00ff00;
+        }
+
+        .detail-item.error {
+            border-left-color: #ff0000;
+        }
+
+        .detail-item h3 {
+            color: #FFB800;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .detail-item p {
+            color: #ccc;
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 184, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 184, 0, 0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            color: #FFB800;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 184, 0, 0.1);
+            border-top: 4px solid #FFB800;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Fix Unmapped Registrations</h1>
+
+        <div class="action-section">
+            <button id="fixBtn" onclick="fixUnmapped()">Fix Unmapped Now</button>
+            <div id="status"></div>
+        </div>
+
+        <div id="results" class="details" style="display: none;"></div>
+    </div>
+
+    <script>
+        async function fixUnmapped() {
+            const btn = document.getElementById('fixBtn');
+            const status = document.getElementById('status');
+            const results = document.getElementById('results');
+
+            btn.disabled = true;
+            status.className = 'status';
+            status.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Fixing unmapped registrations...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/admin/fix-9-unmapped', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.className = 'status success';
+                    status.innerHTML = `
+                        <h2>✅ ${data.message}</h2>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <h3>${data.fixed}</h3>
+                                <p>Fixed</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>${data.total}</h3>
+                                <p>Total Found</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>${data.remainingUnmapped}</h3>
+                                <p>Still Unmapped</p>
+                            </div>
+                        </div>
+                    `;
+
+                    if (data.details && data.details.length > 0) {
+                        results.style.display = 'block';
+                        results.innerHTML = '<h2 style="color: #FFB800; margin-bottom: 20px;">Details:</h2>';
+
+                        data.details.forEach(item => {
+                            const itemClass = item.error ? 'error' : 'fixed';
+                            const itemHtml = `
+                                <div class="detail-item ${itemClass}">
+                                    <h3>${item.name} (ID: ${item.id})</h3>
+                                    <p><strong>Club:</strong> ${item.club}</p>
+                                    <p><strong>Old Zone:</strong> ${item.oldZone}</p>
+                                    <p><strong>New Zone:</strong> ${item.newZone}</p>
+                                    ${item.error ? `<p style="color: #ff6b6b;"><strong>Error:</strong> ${item.error}</p>` : ''}
+                                </div>
+                            `;
+                            results.innerHTML += itemHtml;
+                        });
+                    }
+                } else {
+                    status.className = 'status error';
+                    status.innerHTML = `
+                        <h2>❌ Error</h2>
+                        <p>${data.error || 'Failed to fix unmapped registrations'}</p>
+                        ${data.details ? `<p style="margin-top: 10px; color: #ff6b6b;">${data.details}</p>` : ''}
+                    `;
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = `
+                    <h2>❌ Error</h2>
+                    <p>Failed to connect to server: ${error.message}</p>
+                `;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
