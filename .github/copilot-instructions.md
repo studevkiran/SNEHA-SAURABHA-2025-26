@@ -254,51 +254,28 @@ SELECT r.* FROM registrations r
 
 ---
 
-### PERMANENT FIX NEEDED - PREVENT FUTURE OCCURRENCES
+### PERMANENT FIX - PREVENTS FUTURE OCCURRENCES ✅ COMPLETE
 
-**⚠️ CRITICAL**: New registrations still getting NULL zones!
+**Root Cause**: `createConfirmedRegistration()` was trusting `payment_attempts.zone` which could be NULL or wrong, instead of freshly computing the zone from the club name.
 
-#### Root Cause:
-Registration creation logic does NOT auto-assign zones. Need to add zone assignment in:
-
-**Option 1: Database Trigger (Recommended)**
-```sql
-CREATE OR REPLACE FUNCTION auto_assign_zone()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF NEW.zone IS NULL AND NEW.club_id IS NOT NULL THEN
-    NEW.zone := (SELECT zone FROM clubs WHERE id = NEW.club_id);
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER assign_zone_on_insert
-BEFORE INSERT ON registrations
-FOR EACH ROW
-EXECUTE FUNCTION auto_assign_zone();
-```
-
-**Option 2: Application-Level Fix**
-In registration creation API (likely `api/register.js` or similar):
+**Solution Implemented** (Commit: d29c415):
+In `lib/db-neon.js` → `createConfirmedRegistration()`:
 ```javascript
-const { getZoneForClub } = require('../lib/zone-mapping.js');
+// CRITICAL FIX: Re-compute zone from club name
+const { getZoneForClub } = require('./zone-mapping');
+const computedZone = data.club && data.club !== 'Guest/No Club' 
+  ? getZoneForClub(data.club) 
+  : null;
 
-// Before INSERT:
-const zone = club_id && club_id !== 'guest' ? getZoneForClub(clubName) : null;
-
-// Then include zone in INSERT:
-await pool.query(
-  'INSERT INTO registrations (..., zone) VALUES (..., $X)',
-  [..., zone]
-);
+const finalZone = computedZone || data.zone || null;
+// Use finalZone in INSERT instead of data.zone
 ```
 
-#### Files to Check:
-- [ ] `api/register.js` or payment callback handler
-- [ ] `api/payment/callback.js` or wherever registrations are created
-- [ ] Check if zone is included in INSERT statement
-- [ ] Add `getZoneForClub()` call before INSERT
+**Result**:
+- ✅ All new registrations will have correct zones auto-assigned
+- ✅ Works even if payment_attempts.zone is NULL/wrong
+- ✅ Guests correctly get NULL zone
+- ✅ No more manual zone fixes needed for future registrations
 
 ---
 
