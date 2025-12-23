@@ -1183,12 +1183,13 @@
                     </div>
                 `).join('');
 
-            // Update Zone-wise Counts Display
+            // Update Zone-wise Counts Display (supports both "Zone X" and "Zone XY" formats)
             const zoneCounts = { 'Unmapped': 0 };
             allRegistrations.forEach(reg => {
                 if (reg.payment_status !== 'test') {
                     if (reg.zone) {
-                        const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
+                        // Match both "Zone 7" and "Zone 7A/7B" formats
+                        const zoneMatch = reg.zone.match(/Zone\s+(\d+)[A-Z]?/i);
                         if (zoneMatch) {
                             const zoneNum = parseInt(zoneMatch[1]);
                             zoneCounts[zoneNum] = (zoneCounts[zoneNum] || 0) + 1;
