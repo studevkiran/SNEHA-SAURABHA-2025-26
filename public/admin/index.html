@@ -1113,7 +1113,7 @@
             const zoneKeys = Object.keys(ZONE_CLUBS);
             const mainZones = new Set();
             zoneKeys.forEach(k => {
-                const match = k.match(/Zone\s+(\d+)/i);
+                const match = k.match(/Zone\s+(\d+)[A-Z]?/i);
                 if (match) mainZones.add(parseInt(match[1]));
             });
             const sortedZones = Array.from(mainZones).sort((a, b) => a - b);

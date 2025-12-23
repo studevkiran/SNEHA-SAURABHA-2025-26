@@ -27,7 +27,7 @@ async function checkUnmapped() {
     const unmapped = allRegs.filter(r => {
       if (r.payment_status === 'test' || r.payment_status !== 'completed') return false;
       if (!r.zone || r.zone === '' || r.zone === 'Unmapped') return true;
-      const match = r.zone.match(/Zone\s+(\d+)/i);
+      const match = r.zone.match(/Zone\s+(\d+)[A-Z]?/i);
       return !match;
     });
 

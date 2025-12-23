@@ -186,6 +186,54 @@ See `docs/API_STRUCTURE.md` for:
 
 ---
 
+## CRITICAL FIX - Zone Unmapped Issue (Dec 23, 2025)
+
+### Problem Discovered
+The system uses **sub-zone format** (Zone 7A, Zone 7B, Zone 8A, Zone 8B, etc.) but multiple parts of the codebase were using regex `/Zone\s+(\d+)/i` which ONLY matches simple "Zone X" format. This caused all sub-zones to be counted as "Unmapped".
+
+### Root Cause
+- Zones are stored in database as: `Zone 7A`, `Zone 7B`, `Zone 8A`, `Zone 8B` (with letter suffix)
+- Old regex pattern: `/Zone\s+(\d+)/i` - only matches "Zone 1", "Zone 2" etc
+- This caused 800+ registrations to show as "Unmapped" even though they had valid zones
+
+### Solution Applied
+Changed ALL zone regex patterns from:
+```javascript
+/Zone\s+(\d+)/i  // ❌ WRONG - doesn't match Zone 7A
+```
+To:
+```javascript
+/Zone\s+(\d+)[A-Z]?/i  // ✅ CORRECT - matches both Zone 7 AND Zone 7A
+```
+
+### Files Fixed (Dec 23, 2025)
+1. ✅ `api/stats/zones.js` - Stats API (line 59)
+2. ✅ `public/admin/tally.html` - Tally dashboard zone breakdown (line 1192)
+3. ✅ `public/admin/index.html` - Admin index (multiple locations)
+4. ✅ `admin/tally.html` - Backup tally page (line 1191, 1242)
+5. ✅ `check-unmapped-now.js` - Unmapped check script
+
+### SQL Query Pattern (for fix-unmapped APIs)
+When checking for unmapped zones in SQL, use:
+```sql
+WHERE zone NOT SIMILAR TO 'Zone [0-9]+[A-Z]?'
+-- NOT: WHERE zone NOT LIKE 'Zone%'
+```
+
+### If This Issue Appears Again
+1. Search codebase for: `/Zone\s+\(\\d+\)/i` (without `[A-Z]?`)
+2. Replace with: `/Zone\s+(\d+)[A-Z]?/i`
+3. Check both frontend (HTML files) and backend (API files)
+4. Test with `curl "https://www.sneha2026.in/api/stats/zones?fresh=1"`
+5. Hard refresh browser (Cmd+Shift+R) to clear cache
+
+### Prevention
+- All zone regex patterns MUST use: `/Zone\s+(\d+)[A-Z]?/i`
+- SQL queries must use: `SIMILAR TO 'Zone [0-9]+[A-Z]?'`
+- Always test with both simple zones (Zone 1) and sub-zones (Zone 7A)
+
+---
+
 **Status**: Core development complete ✅  
 **Ready for**: Image upload, GitHub push, backend integration, deployment  
 **Repository**: https://github.com/studevkiran/SNEHA-SAURABHA-2025-26.git

@@ -1188,7 +1188,7 @@
             allRegistrations.forEach(reg => {
                 if (reg.payment_status !== 'test') {
                     if (reg.zone) {
-                        const zoneMatch = reg.zone.match(/Zone\s+(\d+)/i);
+                        const zoneMatch = reg.zone.match(/Zone\s+(\d+)[A-Z]?/i);
                         if (zoneMatch) {
                             const zoneNum = parseInt(zoneMatch[1]);
                             zoneCounts[zoneNum] = (zoneCounts[zoneNum] || 0) + 1;
