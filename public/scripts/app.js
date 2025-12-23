@@ -2369,8 +2369,13 @@ function renderCommittee(data) {
 
             html += `
                 <div class="committee-member ${highlightClass}">
-                    ${member.role ? `<div class="member-role">${member.role}</div>` : ''}
-                    <div class="member-name">${member.name}</div>
+                    <div class="member-content">
+                        <img src="images/comitee name logo.png" alt="Logo" class="member-logo">
+                        <div class="member-info">
+                            ${member.role ? `<div class="member-role">${member.role}</div>` : ''}
+                            <div class="member-name">${member.name}</div>
+                        </div>
+                    </div>
                 </div>
             `;
         });
