@@ -188,15 +188,12 @@ See `docs/API_STRUCTURE.md` for:
 
 ## CRITICAL FIX - Zone Unmapped Issue (Dec 23, 2025)
 
-### Problem Discovered
-The system uses **sub-zone format** (Zone 7A, Zone 7B, Zone 8A, Zone 8B, etc.) but multiple parts of the codebase were using regex `/Zone\s+(\d+)/i` which ONLY matches simple "Zone X" format. This caused all sub-zones to be counted as "Unmapped".
+### TWO SEPARATE PROBLEMS:
 
-### Root Cause
-- Zones are stored in database as: `Zone 7A`, `Zone 7B`, `Zone 8A`, `Zone 8B` (with letter suffix)
-- Old regex pattern: `/Zone\s+(\d+)/i` - only matches "Zone 1", "Zone 2" etc
-- This caused 800+ registrations to show as "Unmapped" even though they had valid zones
+#### Problem 1: Regex Pattern Not Matching Sub-Zones
+The system uses **sub-zone format** (Zone 7A, Zone 7B, Zone 8A, Zone 8B, etc.) but multiple parts of the codebase were using regex `/Zone\s+(\d+)/i` which ONLY matches simple "Zone X" format. This caused all sub-zones to be counted as "Unmapped" in stats.
 
-### Solution Applied
+**Solution:**
 Changed ALL zone regex patterns from:
 ```javascript
 /Zone\s+(\d+)/i  // ❌ WRONG - doesn't match Zone 7A
@@ -206,31 +203,74 @@ To:
 /Zone\s+(\d+)[A-Z]?/i  // ✅ CORRECT - matches both Zone 7 AND Zone 7A
 ```
 
-### Files Fixed (Dec 23, 2025)
-1. ✅ `api/stats/zones.js` - Stats API (line 59)
-2. ✅ `public/admin/tally.html` - Tally dashboard zone breakdown (line 1192)
-3. ✅ `public/admin/index.html` - Admin index (multiple locations)
-4. ✅ `admin/tally.html` - Backup tally page (line 1191, 1242)
-5. ✅ `check-unmapped-now.js` - Unmapped check script
+**Files Fixed:**
+- `api/stats/zones.js` - Stats API
+- `public/admin/tally.html` - Tally dashboard
+- `public/admin/index.html` - Admin index
+- `admin/tally.html` - Backup tally
+- `check-unmapped-now.js` - Check script
 
-### SQL Query Pattern (for fix-unmapped APIs)
-When checking for unmapped zones in SQL, use:
-```sql
-WHERE zone NOT SIMILAR TO 'Zone [0-9]+[A-Z]?'
--- NOT: WHERE zone NOT LIKE 'Zone%'
+#### Problem 2: New Registrations Getting NULL Zones
+Some recent registrations (IDs 3000+) were created with **NULL zones** in the database. The registration trigger/function that should auto-assign zones based on `club_id` was not working for these entries.
+
+**Root Cause:**
+- Database trigger or zone-assignment logic failed during registration
+- Records saved with `zone = NULL` instead of proper zone value
+- These show as "Unmapped" in all dashboards
+
+**Solution:**
+Created API endpoint `/api/admin/fix-9-ids` that:
+1. Directly queries specific IDs with NULL zones
+2. Uses `getZoneForClub()` to determine correct zone
+3. Updates database with `UPDATE registrations SET zone = $1 WHERE id = $2`
+
+**How to Fix When This Happens Again:**
+
+1. **Identify the unmapped registrations:**
+```bash
+curl -s "https://www.sneha2026.in/api/registrations/list" | python3 -c "
+import json, sys, re
+data = json.load(sys.stdin)
+regs = [r for r in data['data']['registrations'] if r.get('payment_status') not in ['test', 'manual-B']]
+bad = [r for r in regs if not r.get('zone') or not re.match(r'^Zone\s+\d+[A-Z]?$', str(r.get('zone')), re.I)]
+for r in bad:
+    print(f\"ID: {r['id']}, Name: {r['name']}, Club: {r['club']}, Zone: {r.get('zone')}\")
+"
 ```
 
-### If This Issue Appears Again
-1. Search codebase for: `/Zone\s+\(\\d+\)/i` (without `[A-Z]?`)
-2. Replace with: `/Zone\s+(\d+)[A-Z]?/i`
-3. Check both frontend (HTML files) and backend (API files)
-4. Test with `curl "https://www.sneha2026.in/api/stats/zones?fresh=1"`
-5. Hard refresh browser (Cmd+Shift+R) to clear cache
+2. **Update the fix API with new IDs:**
+   - Edit `/api/admin/fix-9-ids.js`
+   - Replace the `ids` array with the new problem IDs
+   - Commit and push
 
-### Prevention
-- All zone regex patterns MUST use: `/Zone\s+(\d+)[A-Z]?/i`
-- SQL queries must use: `SIMILAR TO 'Zone [0-9]+[A-Z]?'`
-- Always test with both simple zones (Zone 1) and sub-zones (Zone 7A)
+3. **Run the fix:**
+```bash
+curl -X POST https://www.sneha2026.in/api/admin/fix-9-ids
+```
+
+4. **Verify:**
+```bash
+curl -s "https://www.sneha2026.in/api/stats/zones?fresh=1"
+```
+
+5. **Clear browser cache:**
+   - Hard refresh dashboard: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
+
+### SQL Query Pattern (for fix-unmapped APIs)
+When checking for unmapped zones in SQL:
+```sql
+WHERE zone IS NULL 
+   OR zone = '' 
+   OR zone = 'Unmapped'
+   OR zone NOT SIMILAR TO 'Zone [0-9]+[A-Z]?'
+```
+
+### Prevention Checklist
+- [ ] All zone regex patterns use: `/Zone\s+(\d+)[A-Z]?/i`
+- [ ] SQL queries use: `SIMILAR TO 'Zone [0-9]+[A-Z]?'` or `IS NULL` checks
+- [ ] Always test with both simple zones (Zone 1) and sub-zones (Zone 7A)
+- [ ] Check zone assignment trigger is working for new registrations
+- [ ] Monitor new registrations (ID > 3150) for NULL zones
 
 ---
 
