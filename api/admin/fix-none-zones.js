@@ -23,24 +23,25 @@ module.exports = async (req, res) => {
   }
 
   try {
-    console.log('🔍 Finding registrations with zone="None"...');
+    console.log('🔍 Finding registrations with NULL zones...');
 
-    // Find all registrations with zone = 'None' (not NULL, the literal string 'None')
+    // Find all registrations with zone IS NULL or empty
     const result = await pool.query(`
       SELECT id, name, club, club_id, zone, registration_type
       FROM registrations 
-      WHERE zone = 'None'
+      WHERE (zone IS NULL OR zone = '' OR zone = 'Unmapped')
         AND payment_status != 'test'
         AND payment_status != 'manual-B'
+        AND club != 'Guest/No Club'
       ORDER BY id DESC
     `);
 
-    console.log(`📊 Found ${result.rows.length} registrations with zone='None'`);
+    console.log(`📊 Found ${result.rows.length} registrations with NULL/empty zones`);
 
     if (result.rows.length === 0) {
       return res.status(200).json({
         success: true,
-        message: 'No registrations with zone="None" found',
+        message: 'No registrations with NULL/empty zones found',
         fixed: 0
       });
     }
@@ -63,7 +64,7 @@ module.exports = async (req, res) => {
           id: r.id,
           name: r.name,
           club: club,
-          oldZone: 'None',
+          oldZone: r.zone || 'NULL',
           newZone: correctZone
         });
 
@@ -74,7 +75,7 @@ module.exports = async (req, res) => {
           id: r.id,
           name: r.name,
           club: club,
-          oldZone: 'None',
+          oldZone: r.zone || 'NULL',
           newZone: 'Could not map',
           error: 'Club not in zone mapping'
         });
@@ -86,14 +87,15 @@ module.exports = async (req, res) => {
     const verifyResult = await pool.query(`
       SELECT COUNT(*) as remaining
       FROM registrations 
-      WHERE zone = 'None'
+      WHERE (zone IS NULL OR zone = '' OR zone = 'Unmapped')
         AND payment_status != 'test'
         AND payment_status != 'manual-B'
+        AND club != 'Guest/No Club'
     `);
 
     res.status(200).json({
       success: true,
-      message: `Fixed ${fixed} out of ${result.rows.length} registrations with zone="None"`,
+      message: `Fixed ${fixed} out of ${result.rows.length} registrations with NULL/empty zones`,
       fixed: fixed,
       total: result.rows.length,
       remaining: parseInt(verifyResult.rows[0].remaining),
