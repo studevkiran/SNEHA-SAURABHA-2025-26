@@ -3410,6 +3410,10 @@ h3 {
     height: 40px;
     object-fit: contain;
     flex-shrink: 0;
+    border: 2px solid #D4AF37;
+    border-radius: 4px;
+    padding: 4px;
+    background: white;
 }
 
 .member-info {
@@ -3450,24 +3454,42 @@ h3 {
     /* Span all columns */
     justify-self: center;
     /* Center horizontally */
-    max-width: 400px;
+    max-width: 500px;
     /* Limit width of the highlighted member */
     width: 100%;
     background: #FFFBEB;
     /* Subtle highlight background */
     border-color: #D4AF37;
+    border-width: 2px;
     /* Gold border for the lead */
     transform: scale(1.02);
     /* Slight emphasis */
+    padding: 20px;
+}
+
+.district-team-section .committee-member:first-child .member-content {
+    justify-content: center;
+    gap: 15px;
+}
+
+.district-team-section .committee-member:first-child .member-logo {
+    width: 60px;
+    height: 60px;
+    border-width: 3px;
+    padding: 6px;
+}
+
+.district-team-section .committee-member:first-child .member-info {
+    text-align: center;
 }
 
 .district-team-section .committee-member:first-child .member-role {
-    font-size: 14px;
+    font-size: 13px;
     /* Larger role text */
 }
 
 .district-team-section .committee-member:first-child .member-name {
-    font-size: 18px;
+    font-size: 17px;
     /* Larger name text */
 }/* Birthday CSS */
         align-items: center;
