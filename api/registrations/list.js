@@ -36,11 +36,10 @@ module.exports = async (req, res) => {
 
     console.log('📊 Fetching confirmed registrations from Neon PostgreSQL...');
 
-    // Query registrations table with LEFT JOIN to clubs table to get zone information
+    // Query registrations table - use registration's own zone column
     let query = `
-      SELECT r.*, c.zone 
-      FROM registrations r 
-      LEFT JOIN clubs c ON r.club_id = c.id
+      SELECT r.* 
+      FROM registrations r
     `;
     const conditions = [];
     const values = [];
