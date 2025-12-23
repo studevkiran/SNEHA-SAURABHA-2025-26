@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
   try {
     console.log('🔍 Finding unmapped registrations...');
 
-    // Get all unmapped (excluding test entries)
+    // Get all unmapped (matching the stats page logic)
     const result = await pool.query(`
       SELECT 
         id, 
@@ -37,13 +37,14 @@ module.exports = async (req, res) => {
         payment_status,
         created_at
       FROM registrations 
-      WHERE payment_status = 'completed'
-        AND payment_status != 'test'
+      WHERE payment_status != 'test'
+        AND payment_status != 'manual-B'
+        AND club != 'Guest/No Club'
         AND (
           zone IS NULL 
           OR zone = '' 
           OR zone = 'Unmapped'
-          OR zone NOT LIKE 'Zone%'
+          OR zone NOT SIMILAR TO 'Zone [0-9]+'
         )
       ORDER BY created_at DESC
     `);
@@ -96,17 +97,18 @@ module.exports = async (req, res) => {
       }
     }
 
-    // Verify remaining unmapped
+    // Verify remaining unmapped (matching stats page logic)
     const verifyResult = await pool.query(`
       SELECT COUNT(*) as total_unmapped
       FROM registrations 
-      WHERE payment_status = 'completed'
-        AND payment_status != 'test'
+      WHERE payment_status != 'test'
+        AND payment_status != 'manual-B'
+        AND club != 'Guest/No Club'
         AND (
           zone IS NULL 
           OR zone = '' 
           OR zone = 'Unmapped'
-          OR zone NOT LIKE 'Zone%'
+          OR zone NOT SIMILAR TO 'Zone [0-9]+'
         )
     `);
 
