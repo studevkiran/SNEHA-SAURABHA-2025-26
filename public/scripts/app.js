@@ -2568,36 +2568,37 @@ function showBirthdayWishes() {
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
         z-index: 10000;
         animation: fadeIn 0.3s ease;
-        padding: 0;
-        overflow: hidden;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     `;
     
-    // Prevent body scroll when modal is open
-    document.body.style.overflow = 'hidden';
+    // Prevent background scroll on mobile - store scroll position
+    const scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    modal.dataset.scrollY = scrollY;
     
     modal.innerHTML = `
         <div style="
             background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
             border: 3px solid #D4AF37;
             border-radius: 20px;
-            padding: 30px 20px;
+            padding: 30px 20px 20px;
             max-width: 500px;
-            width: calc(100% - 40px);
-            max-height: calc(100vh - 40px);
+            width: 100%;
             text-align: center;
             position: relative;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.4s ease;
-            margin: 20px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            margin: 0 auto;
+            min-height: min-content;
         ">
-            <button onclick="const modal = document.getElementById('birthday-wishes-modal'); document.body.style.overflow = ''; modal.remove();" 
+            <button onclick="const modal = document.getElementById('birthday-wishes-modal'); const scrollY = modal.dataset.scrollY; document.body.style.position = ''; document.body.style.top = ''; document.body.style.width = ''; window.scrollTo(0, parseInt(scrollY || '0')); modal.remove();" 
                 style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1; padding: 5px 10px; z-index: 1;">
                 ×
             </button>
@@ -2646,7 +2647,7 @@ function showBirthdayWishes() {
                 Valid for registrations made today only.
             </p>
             
-            <button onclick="const modal = document.getElementById('birthday-wishes-modal'); document.body.style.overflow = ''; modal.remove(); showScreen('screen-register-type');" 
+            <button onclick="const modal = document.getElementById('birthday-wishes-modal'); const scrollY = modal.dataset.scrollY; document.body.style.position = ''; document.body.style.top = ''; document.body.style.width = ''; window.scrollTo(0, parseInt(scrollY || '0')); modal.remove(); showScreen('screen-register-type');" 
                 style="
                     background: linear-gradient(135deg, #C41E3A 0%, #A01729 100%);
                     color: white;
