@@ -186,78 +186,169 @@ See `docs/API_STRUCTURE.md` for:
 
 ---
 
-## CRITICAL FIX - Zone Unmapped Issue (Dec 23, 2025)
+## CRITICAL INCIDENT - Zone Unmapped Issue (Dec 23, 2025)
 
-### TWO SEPARATE PROBLEMS:
+### INCIDENT SUMMARY
+**Problem**: Dashboard showing 9 unmapped registrations  
+**Root Causes**: THREE separate issues found and fixed  
+**Status**: ✅ RESOLVED - 8 fixed, 1 guest correctly left unmapped
 
-#### Problem 1: Regex Pattern Not Matching Sub-Zones
-The system uses **sub-zone format** (Zone 7A, Zone 7B, Zone 8A, Zone 8B, etc.) but multiple parts of the codebase were using regex `/Zone\s+(\d+)/i` which ONLY matches simple "Zone X" format. This caused all sub-zones to be counted as "Unmapped" in stats.
+---
 
-**Solution:**
-Changed ALL zone regex patterns from:
-```javascript
-/Zone\s+(\d+)/i  // ❌ WRONG - doesn't match Zone 7A
-```
-To:
-```javascript
-/Zone\s+(\d+)[A-Z]?/i  // ✅ CORRECT - matches both Zone 7 AND Zone 7A
-```
+### ROOT CAUSE ANALYSIS
+
+#### Issue 1: Regex Pattern Bug (Frontend Display Issue)
+**Problem**: Regex `/Zone\s+(\d+)/i` only matches "Zone 1" format, NOT "Zone 7A" (sub-zones)  
+**Impact**: All sub-zones counted as "Unmapped" in stats despite having valid zones  
+**Fix**: Changed to `/Zone\s+(\d+)[A-Z]?/i` in all files
 
 **Files Fixed:**
-- `api/stats/zones.js` - Stats API
-- `public/admin/tally.html` - Tally dashboard
-- `public/admin/index.html` - Admin index
-- `admin/tally.html` - Backup tally
-- `check-unmapped-now.js` - Check script
+- `api/stats/zones.js` (line 59)
+- `public/admin/tally.html` (lines 1192, 1242)
+- `public/admin/index.html` (lines 1116, 1124, 1195, 1304)
+- `admin/tally.html` (lines 1191, 1242)
+- `check-unmapped-now.js` (line 30)
 
-#### Problem 2: New Registrations Getting NULL Zones
-Some recent registrations (IDs 3000+) were created with **NULL zones** in the database. The registration trigger/function that should auto-assign zones based on `club_id` was not working for these entries.
+#### Issue 2: Database NULL Zones (Data Issue)
+**Problem**: 9 registrations (IDs 3139-3169) had `zone = NULL` in database  
+**Root Cause**: Registration creation NOT auto-assigning zones (trigger/function broken)  
+**Impact**: New registrations saved without zones
 
-**Root Cause:**
-- Database trigger or zone-assignment logic failed during registration
-- Records saved with `zone = NULL` instead of proper zone value
-- These show as "Unmapped" in all dashboards
+**Affected Registrations:**
+- ID 3169, 3166, 3165, 3159: Chamarajanagar → Zone 9A
+- ID 3163, 3161: Somwarpet Hills → Zone 6B
+- ID 3149: Mulky → Zone 1
+- ID 3139: Ivory City Mysuru → Zone 7A
+- ID 3067: Guest/No Club → NULL (correctly left unmapped)
 
-**Solution:**
-Created API endpoint `/api/admin/fix-9-ids` that:
-1. Directly queries specific IDs with NULL zones
-2. Uses `getZoneForClub()` to determine correct zone
-3. Updates database with `UPDATE registrations SET zone = $1 WHERE id = $2`
+**Fix**: Created `api/admin/force-fix-zones.js` to directly update zones
 
-**How to Fix When This Happens Again:**
+#### Issue 3: List API Reading Wrong Table (Critical Bug)
+**Problem**: List API doing `LEFT JOIN clubs` and reading `c.zone` instead of `r.zone`  
+**Impact**: Zone updates to registrations table were invisible to frontend  
+**Fix**: Changed query from:
+```javascript
+// ❌ WRONG - reads from clubs table
+SELECT r.*, c.zone FROM registrations r LEFT JOIN clubs c ON r.club_id = c.id
 
-1. **Identify the unmapped registrations:**
+// ✅ CORRECT - reads from registrations table
+SELECT r.* FROM registrations r
+```
+**File Fixed**: `api/registrations/list.js` (line 46)
+
+---
+
+### WHAT WENT WRONG DURING THE FIX
+
+#### Trial-and-Error Mistakes Made:
+1. **api/admin/fix-9-unmapped.js** - Used wrong SQL (`WHERE zone = 'None'` instead of `IS NULL`) ❌
+2. **api/admin/fix-none-zones.js** - Same mistake, looking for string 'None' ❌
+3. **api/admin/fix-9-ids.js** - Updates worked but invisible due to Issue 3 ❌
+4. **api/admin/force-fix-zones.js** - Worked BUT incorrectly assigned zone to guest ❌
+5. **api/admin/revert-guest-3067.js** - Fixed the guest mistake ✅
+
+#### Key Learning:
+- NULL in database appears as `None` (Python) or `null` (JSON), NOT the string `'None'`
+- SQL: Use `WHERE zone IS NULL`, NOT `WHERE zone = 'None'`
+- Check which table the API is reading from (registrations vs clubs JOIN issue)
+
+---
+
+### PERMANENT FIX NEEDED - PREVENT FUTURE OCCURRENCES
+
+**⚠️ CRITICAL**: New registrations still getting NULL zones!
+
+#### Root Cause:
+Registration creation logic does NOT auto-assign zones. Need to add zone assignment in:
+
+**Option 1: Database Trigger (Recommended)**
+```sql
+CREATE OR REPLACE FUNCTION auto_assign_zone()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.zone IS NULL AND NEW.club_id IS NOT NULL THEN
+    NEW.zone := (SELECT zone FROM clubs WHERE id = NEW.club_id);
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER assign_zone_on_insert
+BEFORE INSERT ON registrations
+FOR EACH ROW
+EXECUTE FUNCTION auto_assign_zone();
+```
+
+**Option 2: Application-Level Fix**
+In registration creation API (likely `api/register.js` or similar):
+```javascript
+const { getZoneForClub } = require('../lib/zone-mapping.js');
+
+// Before INSERT:
+const zone = club_id && club_id !== 'guest' ? getZoneForClub(clubName) : null;
+
+// Then include zone in INSERT:
+await pool.query(
+  'INSERT INTO registrations (..., zone) VALUES (..., $X)',
+  [..., zone]
+);
+```
+
+#### Files to Check:
+- [ ] `api/register.js` or payment callback handler
+- [ ] `api/payment/callback.js` or wherever registrations are created
+- [ ] Check if zone is included in INSERT statement
+- [ ] Add `getZoneForClub()` call before INSERT
+
+---
+
+### HOW TO FIX WHEN THIS HAPPENS AGAIN
+
+1. **Identify unmapped registrations:**
 ```bash
 curl -s "https://www.sneha2026.in/api/registrations/list" | python3 -c "
 import json, sys, re
 data = json.load(sys.stdin)
 regs = [r for r in data['data']['registrations'] if r.get('payment_status') not in ['test', 'manual-B']]
 bad = [r for r in regs if not r.get('zone') or not re.match(r'^Zone\s+\d+[A-Z]?$', str(r.get('zone')), re.I)]
+print(f'Found {len(bad)} unmapped:')
 for r in bad:
-    print(f\"ID: {r['id']}, Name: {r['name']}, Club: {r['club']}, Zone: {r.get('zone')}\")
+    print(f\"  ID: {r['id']}, Name: {r['name']}, Club: {r['club']}, Zone: {r.get('zone')}\")
 "
 ```
 
-2. **Update the fix API with new IDs:**
-   - Edit `/api/admin/fix-9-ids.js`
-   - Replace the `ids` array with the new problem IDs
-   - Commit and push
+2. **Edit fix API with new IDs:**
+   - Copy `api/admin/force-fix-zones.js` or edit the `updates` array
+   - Map each ID to correct zone (check club in zone-mapping.js)
+   - **IMPORTANT**: Exclude guests - they should remain NULL
 
-3. **Run the fix:**
+3. **Deploy and run:**
 ```bash
-curl -X POST https://www.sneha2026.in/api/admin/fix-9-ids
+git add api/admin/force-fix-zones.js
+git commit -m "Fix new unmapped zones"
+git push
+sleep 40
+curl -X POST https://www.sneha2026.in/api/admin/force-fix-zones
 ```
 
-4. **Verify:**
+4. **Verify fix:**
 ```bash
-curl -s "https://www.sneha2026.in/api/stats/zones?fresh=1"
+curl -s "https://www.sneha2026.in/api/registrations/list" | python3 -c "
+import json, sys, re
+data = json.load(sys.stdin)
+regs = [r for r in data['data']['registrations'] if r.get('payment_status') not in ['test', 'manual-B']]
+bad = [r for r in regs if not r.get('zone') or not re.match(r'^Zone\s+\d+[A-Z]?$', str(r.get('zone')), re.I)]
+print(f'Unmapped count: {len(bad)}')
+"
 ```
 
-5. **Clear browser cache:**
-   - Hard refresh dashboard: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
+5. **Clear browser cache** on dashboard: `Cmd+Shift+R` or `Ctrl+Shift+R`
 
-### SQL Query Pattern (for fix-unmapped APIs)
-When checking for unmapped zones in SQL:
+---
+
+### SQL PATTERNS (for future fix APIs)
+
+**Check for unmapped:**
 ```sql
 WHERE zone IS NULL 
    OR zone = '' 
@@ -265,12 +356,53 @@ WHERE zone IS NULL
    OR zone NOT SIMILAR TO 'Zone [0-9]+[A-Z]?'
 ```
 
-### Prevention Checklist
+**Update with correct zone:**
+```sql
+UPDATE registrations 
+SET zone = $1 
+WHERE id = $2 
+  AND (club IS NOT NULL AND club != 'Guest/No Club')
+RETURNING id, zone
+```
+
+---
+
+### PREVENTION CHECKLIST
+
+#### Code Standards:
 - [ ] All zone regex patterns use: `/Zone\s+(\d+)[A-Z]?/i`
-- [ ] SQL queries use: `SIMILAR TO 'Zone [0-9]+[A-Z]?'` or `IS NULL` checks
-- [ ] Always test with both simple zones (Zone 1) and sub-zones (Zone 7A)
-- [ ] Check zone assignment trigger is working for new registrations
-- [ ] Monitor new registrations (ID > 3150) for NULL zones
+- [ ] SQL patterns use: `SIMILAR TO 'Zone [0-9]+[A-Z]?'` or proper `IS NULL` checks
+- [ ] APIs read from `registrations.zone` NOT `clubs.zone` via JOIN
+- [ ] Always test with sub-zones (Zone 7A) not just simple zones (Zone 1)
+
+#### Registration Flow:
+- [ ] Zone auto-assigned on registration creation (database trigger OR application logic)
+- [ ] Payment callback includes zone assignment
+- [ ] Manual registration form includes zone field
+- [ ] Guest registrations correctly left with `zone = NULL`
+
+#### Monitoring:
+- [ ] Check new registrations (last 24 hours) for NULL zones daily
+- [ ] Alert if unmapped count > expected (guests only)
+- [ ] Verify zone distribution stays consistent
+
+---
+
+### FILES CREATED DURING INCIDENT
+
+**Working Fixes:**
+- `api/admin/force-fix-zones.js` - Direct SQL update with verification ✅
+- `api/admin/revert-guest-3067.js` - Revert guest to NULL zone ✅
+
+**Failed Attempts (kept for reference):**
+- `api/admin/fix-9-unmapped.js` - Wrong SQL (looked for 'None' string)
+- `api/admin/fix-none-zones.js` - Same issue
+- `api/admin/fix-9-ids.js` - Updates worked but invisible (Issue 3)
+- `api/admin/fix-guest-3067.js` - Tried to set club_id NULL (constraint error)
+
+**Diagnostic Scripts:**
+- `check-zone-patterns.js` - Check zone format validity
+- `fix-unmapped-direct.js` - API caller script
 
 ---
 
