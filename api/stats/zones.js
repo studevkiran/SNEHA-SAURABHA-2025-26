@@ -55,7 +55,8 @@ module.exports = async (req, res) => {
         continue; // do not include in zone tally
       }
 
-      const m = zoneText.match(/Zone\s+(\d+)/i);
+      // Match both "Zone X" and "Zone XY" (with sub-zones like 7A, 8B)
+      const m = zoneText.match(/Zone\s+(\d+)[A-Z]?/i);
       if (!m) continue; // skip Unmapped
 
       const zNum = m[1];
