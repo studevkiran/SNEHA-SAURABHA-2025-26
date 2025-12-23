@@ -2573,9 +2573,12 @@ function showBirthdayWishes() {
         justify-content: center;
         z-index: 10000;
         animation: fadeIn 0.3s ease;
-        padding: 20px;
-        overflow-y: auto;
+        padding: 0;
+        overflow: hidden;
     `;
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
     
     modal.innerHTML = `
         <div style="
@@ -2584,15 +2587,18 @@ function showBirthdayWishes() {
             border-radius: 20px;
             padding: 30px 20px;
             max-width: 500px;
-            width: 100%;
+            width: calc(100% - 40px);
+            max-height: calc(100vh - 40px);
             text-align: center;
             position: relative;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.4s ease;
-            margin: auto;
+            margin: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         ">
-            <button onclick="document.getElementById('birthday-wishes-modal').remove()" 
-                style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1; padding: 5px 10px;">
+            <button onclick="const modal = document.getElementById('birthday-wishes-modal'); document.body.style.overflow = ''; modal.remove();" 
+                style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1; padding: 5px 10px; z-index: 1;">
                 ×
             </button>
             
@@ -2640,7 +2646,7 @@ function showBirthdayWishes() {
                 Valid for registrations made today only.
             </p>
             
-            <button onclick="document.getElementById('birthday-wishes-modal').remove(); showScreen('screen-register-type');" 
+            <button onclick="const modal = document.getElementById('birthday-wishes-modal'); document.body.style.overflow = ''; modal.remove(); showScreen('screen-register-type');" 
                 style="
                     background: linear-gradient(135deg, #C41E3A 0%, #A01729 100%);
                     color: white;
