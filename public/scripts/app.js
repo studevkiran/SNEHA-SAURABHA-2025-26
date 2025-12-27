@@ -115,23 +115,21 @@ const EMBEDDED_CLUBS = [
 ];
 
 // Registration type options with complete details
-// DG Birthday Special - LIVE NOW
+// DG Birthday Special - DISABLED
 function isBirthdaySpecial() {
-    return true; // Active now!
+    return false; // Disabled
 }
 
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: 4500,
-        originalPrice: 5000,
+        price: 5000,
         description: 'Admission, Food & 1 Memento',
         inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: 7500,
-        originalPrice: 8000,
+        price: 8000,
         description: 'Admission with spouse, Food & 1 Memento',
         inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
     },
@@ -2727,37 +2725,10 @@ function showBirthdayWishes() {
     };
 }
 
-// Initialize birthday banner on page load
+// Initialize on page load - birthday special disabled
 document.addEventListener('DOMContentLoaded', function() {
-    if (isBirthdaySpecial()) {
-        // Auto-show birthday wishes popup
-        if (!sessionStorage.getItem('birthday-wishes-shown')) {
-            setTimeout(() => {
-                showBirthdayWishes();
-                sessionStorage.setItem('birthday-wishes-shown', 'true');
-            }, 2000);
-        }
-        
-        // Update price displays to show discount (no badges)
-        const rotarianCard = document.querySelector('[data-type="rotarian"]');
-        const spouseCard = document.querySelector('[data-type="rotarian-spouse"]');
-        
-        if (rotarianCard) {
-            const priceDiv = rotarianCard.querySelector('.card-price');
-            if (priceDiv) {
-                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹5,000</span> <span style="color: #C41E3A; font-weight: 700;">₹4,500</span>';
-            }
-        }
-        
-        if (spouseCard) {
-            const priceDiv = spouseCard.querySelector('.card-price');
-            if (priceDiv) {
-                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹8,000</span> <span style="color: #C41E3A; font-weight: 700;">₹7,500</span>';
-            }
-        }
-        
-        console.log('🎂 DG Birthday Special Active!');
-    }
+    // Birthday special disabled
+    console.log('Regular pricing active');
 });
 
 window.showBirthdayWishes = showBirthdayWishes;

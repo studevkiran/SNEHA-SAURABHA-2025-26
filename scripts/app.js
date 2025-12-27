@@ -110,31 +110,23 @@ const EMBEDDED_CLUBS = [
 ];
 
 // Registration type options with complete details
-// Check if today is DG Birthday (Dec 23, 2025)
+// DG Birthday Special - DISABLED
 function isBirthdaySpecial() {
-    const today = new Date();
-    const day = today.getDate();
-    const month = today.getMonth() + 1; // 0-indexed
-    const year = today.getFullYear();
-    return day === 23 && month === 12 && year === 2025;
+    return false; // Disabled
 }
 
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: isBirthdaySpecial() ? 4500 : 5000,
-        originalPrice: 5000,
+        price: 5000,
         description: 'Admission, Food & 1 Memento',
-        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento'],
-        birthdayDiscount: isBirthdaySpecial() ? 500 : 0
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: isBirthdaySpecial() ? 7500 : 8000,
-        originalPrice: 8000,
+        price: 8000,
         description: 'Admission with spouse, Food & 1 Memento',
-        inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento'],
-        birthdayDiscount: isBirthdaySpecial() ? 500 : 0
+        inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
     },
     'ann': {
         name: 'Ann',
@@ -2259,55 +2251,10 @@ function showBirthdayWishes() {
     };
 }
 
-// Initialize birthday banner on page load
+// Initialize on page load - birthday special disabled
 document.addEventListener('DOMContentLoaded', function() {
-    if (isBirthdaySpecial()) {
-        const banner = document.getElementById('birthday-banner');
-        if (banner) {
-            banner.style.display = 'flex';
-            // Auto-show wishes popup once (optional - can be removed if too intrusive)
-            if (!sessionStorage.getItem('birthday-wishes-shown')) {
-                setTimeout(() => {
-                    showBirthdayWishes();
-                    sessionStorage.setItem('birthday-wishes-shown', 'true');
-                }, 2000); // Show after 2 seconds
-            }
-        }
-        
-        // Add birthday discount badges to Rotarian cards
-        const rotarianCard = document.querySelector('[data-type="rotarian"]');
-        const spouseCard = document.querySelector('[data-type="rotarian-spouse"]');
-        
-        if (rotarianCard) {
-            const badge = document.createElement('div');
-            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; box-shadow: 0 3px 10px rgba(196, 30, 58, 0.4); z-index: 10;';
-            badge.textContent = '🎂 ₹500 OFF';
-            rotarianCard.style.position = 'relative';
-            rotarianCard.appendChild(badge);
-            
-            // Update price display
-            const priceDiv = rotarianCard.querySelector('.card-price');
-            if (priceDiv) {
-                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹5,000</span> <span style="color: #C41E3A; font-weight: 700;">₹4,500</span>';
-            }
-        }
-        
-        if (spouseCard) {
-            const badge = document.createElement('div');
-            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #C41E3A 0%, #A01528 100%); color: white; padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; box-shadow: 0 3px 10px rgba(196, 30, 58, 0.4); z-index: 10;';
-            badge.textContent = '🎂 ₹500 OFF';
-            spouseCard.style.position = 'relative';
-            spouseCard.appendChild(badge);
-            
-            // Update price display
-            const priceDiv = spouseCard.querySelector('.card-price');
-            if (priceDiv) {
-                priceDiv.innerHTML = '<span style="text-decoration: line-through; opacity: 0.6; font-size: 18px;">₹8,000</span> <span style="color: #C41E3A; font-weight: 700;">₹7,500</span>';
-            }
-        }
-        
-        console.log('🎂 DG Birthday Special Active! Rotarian: ₹4,500 | Rotarian+Spouse: ₹7,500');
-    }
+    // Birthday special disabled
+    console.log('Regular pricing active');
 });
 
 // Expose functions globally
