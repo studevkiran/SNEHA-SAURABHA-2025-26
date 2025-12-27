@@ -2333,6 +2333,16 @@ window.toggleMenu = function () {
     }
 };
 
+// Toggle FAQ Sections
+window.toggleFAQ = function (button) {
+    const faqItem = button.parentElement;
+    const answer = faqItem.querySelector('.faq-answer');
+    
+    // Toggle active class
+    button.classList.toggle('active');
+    answer.classList.toggle('active');
+};
+
 // Load Committee Data
 async function loadCommitteeData() {
     try {

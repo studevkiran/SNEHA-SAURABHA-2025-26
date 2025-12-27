@@ -55,10 +55,10 @@
                     <a href="#" onclick="showScreen('screen-banner'); return false;" class="nav-link active">Home</a>
                     <a href="#" onclick="showScreen('screen-about'); return false;" class="nav-link">About</a>
                     <a href="#" onclick="showScreen('screen-committee'); return false;" class="nav-link">Committee</a>
-                    <a href="#" onclick="showScreen('screen-hotels'); return false;" class="nav-link">Hotels</a>
                     <a href="programme.html" class="nav-link">Programme</a>
                     <a href="speakers.html" class="nav-link">Speakers</a>
                     <a href="admin/tally.html" target="_blank" class="nav-link">Reports</a>
+                    <a href="#" onclick="showScreen('screen-faq'); return false;" class="nav-link">FAQ</a>
                 </nav>
             </div>
 
@@ -725,13 +725,30 @@
     </div>
 
     <!-- Screen 9: Hotels -->
-    <div id="screen-hotels" class="screen">
+    <div id="screen-faq" class="screen">
         <div class="screen-content">
             <button class="btn-back" onclick="showScreen('screen-banner')">← Back</button>
-            <h2 class="section-title">Hotels</h2>
-            <div id="hotels-container" class="hotels-grid">
-                <!-- Dynamic content -->
-                <div class="loading-spinner">Loading hotels...</div>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-container">
+                <!-- Where to Stay Section -->
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        <span>🏨 Where to Stay?</span>
+                        <span class="faq-icon">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div id="hotels-container" class="hotels-grid">
+                            <!-- Dynamic hotel content -->
+                            <div class="loading-spinner">Loading accommodation options...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder for more FAQ sections -->
+                <div class="faq-notice">
+                    <p>✨ More sections coming soon!</p>
+                </div>
             </div>
         </div>
     </div>
@@ -753,9 +770,6 @@
                 <a href="#" onclick="toggleMenu(); showScreen('screen-committee'); return false;">
                     👥 Committee
                 </a>
-                <a href="#" onclick="toggleMenu(); showScreen('screen-hotels'); return false;">
-                    🏨 Hotels
-                </a>
                 <a href="programme.html" onclick="toggleMenu()">
                     📅 Programme
                 </a>
@@ -764,6 +778,9 @@
                 </a>
                 <a href="admin/tally.html" target="_blank">
                     📊 Reports
+                </a>
+                <a href="#" onclick="toggleMenu(); showScreen('screen-faq'); return false;">
+                    ❓ FAQ
                 </a>
             </nav>
         </div>
