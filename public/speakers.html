@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Speakers & Guests - SNEHA SAURABHA 2025-26</title>
+    <link rel="icon" type="image/jpeg" href="images/event-logo.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #B8960C;
+            --light-gold: #F4E4C1;
+            --amber: #FFBF00;
+            --cream: #FFF8DC;
+            --text-dark: #2C2416;
+            --shadow: rgba(180, 150, 55, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--light-gold) 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-gold), var(--amber));
+            padding: 1rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--primary-gold);
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .gallery-item {
+            background: white;
+            border: 3px solid var(--primary-gold);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow);
+            border-color: var(--amber);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 36, 22, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border: 4px solid var(--primary-gold);
+            border-radius: 12px;
+            box-shadow: 0 0 50px var(--shadow);
+            background: white;
+        }
+
+        .lightbox-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .lightbox-btn {
+            background: linear-gradient(135deg, var(--primary-gold), var(--amber));
+            border: 2px solid var(--dark-gold);
+            color: var(--text-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .lightbox-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-gold);
+            border: 2px solid var(--dark-gold);
+            color: var(--text-dark);
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .close-lightbox:hover {
+            background: var(--amber);
+            transform: rotate(90deg);
+        }
+
+        .image-counter {
+            background: var(--primary-gold);
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            border: 2px solid var(--dark-gold);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.75rem;
+            }
+
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .header-title h1 {
+                font-size: 1.1rem;
+            }
+
+            .content-container {
+                padding: 1rem 0.75rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .gallery-item {
+                cursor: default;
+            }
+
+            .lightbox {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title h1 {
+                font-size: 1rem;
+            }
+
+            .content-container {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .gallery-grid {
+                gap: 0.75rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="/index.html" class="back-btn">
+                <span>←</span> Back to Home
+            </a>
+            <div class="header-title">
+                <h1>🎤 Speakers & Distinguished Guests</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="gallery-grid" id="speakersGallery"></div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <button class="close-lightbox" onclick="closeLightbox()">×</button>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-image" id="lightboxImage">
+            <div class="image-counter" id="imageCounter"></div>
+            <div class="lightbox-controls">
+                <button class="lightbox-btn" onclick="prevImage()">← Previous</button>
+                <button class="lightbox-btn" onclick="nextImage()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SPEAKER_IMAGES = Array.from({length: 21}, (_, i) => String(i + 1).padStart(2, '0'));
+        const IMAGE_PATH = 'images/KIRAN SPEAKERS/';
+        
+        let currentIndex = 0;
+        const isMobile = window.innerWidth <= 768;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSpeakerImages();
+        });
+
+        function loadSpeakerImages() {
+            const gallery = document.getElementById('speakersGallery');
+            gallery.innerHTML = '';
+            
+            SPEAKER_IMAGES.forEach((name, index) => {
+                const item = createGalleryItem(`${IMAGE_PATH}${name}.png`, `Speaker ${index + 1}`, index);
+                gallery.appendChild(item);
+            });
+        }
+
+        function createGalleryItem(src, title, index) {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            
+            if (!isMobile) {
+                item.onclick = () => openLightbox(index);
+            }
+            
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = title;
+            img.loading = 'lazy';
+            
+            item.appendChild(img);
+            return item;
+        }
+
+        function openLightbox(index) {
+            if (isMobile) return;
+            
+            currentIndex = index;
+            updateLightboxImage();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateLightboxImage() {
+            const img = document.getElementById('lightboxImage');
+            const counter = document.getElementById('imageCounter');
+            
+            img.src = `${IMAGE_PATH}${SPEAKER_IMAGES[currentIndex]}.png`;
+            counter.textContent = `${currentIndex + 1} / ${SPEAKER_IMAGES.length}`;
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + SPEAKER_IMAGES.length) % SPEAKER_IMAGES.length;
+            updateLightboxImage();
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % SPEAKER_IMAGES.length;
+            updateLightboxImage();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (isMobile) return;
+            
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.classList.contains('active')) {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') prevImage();
+                if (e.key === 'ArrowRight') nextImage();
+            }
+        });
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>

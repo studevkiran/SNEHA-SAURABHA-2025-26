@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Programme & Speakers - SNEHA SAURABHA 2025-26</title>
+    <link rel="icon" type="image/jpeg" href="images/event-logo.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #B8860B;
+            --light-gold: #FFD700;
+            --amber: #FFBF00;
+            --deep-amber: #FF8C00;
+            --bg-dark: #1a1a1a;
+            --bg-darker: #0d0d0d;
+            --text-light: #ffffff;
+            --text-gold: #F5DEB3;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--dark-gold), var(--amber));
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-3px);
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--dark-gold);
+        }
+
+        .tab-btn {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 191, 0, 0.2));
+            border: 2px solid var(--dark-gold);
+            color: var(--text-gold);
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--dark-gold), var(--amber));
+            color: white;
+            border-color: var(--light-gold);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+
+        .tab-btn .badge {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+        }
+
+        /* Content Container */
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Flip Book Container */
+        .flipbook-container {
+            background: white;
+            border: 3px solid var(--dark-gold);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+            margin-top: 1.5rem;
+        }
+
+        .flipbook-container iframe {
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            border: none;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .flipbook-container iframe {
+                height: 70vh;
+                min-height: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .flipbook-container iframe {
+                height: 60vh;
+                min-height: 400px;
+            }
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 0.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .gallery-item {
+            background: white;
+            border: 3px solid var(--dark-gold);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6);
+            border-color: var(--light-gold);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+            background: white;
+            padding: 10px;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.02);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 1rem;
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border: 3px solid var(--primary-gold);
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.5);
+            background: white;
+            padding: 15px;
+        }
+
+        .lightbox-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .lightbox-btn {
+            background: linear-gradient(135deg, var(--dark-gold), var(--amber));
+            border: 2px solid var(--light-gold);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lightbox-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 0, 0, 0.8);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-lightbox:hover {
+            background: red;
+            transform: rotate(90deg);
+        }
+
+        .image-counter {
+            background: rgba(212, 175, 55, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Section Header */
+        .section-header {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 191, 0, 0.2));
+            border-left: 5px solid var(--primary-gold);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            color: var(--text-gold);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        /* Download Section */
+        .download-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 191, 0, 0.1));
+            border: 2px solid var(--dark-gold);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--dark-gold), var(--amber));
+            border: 2px solid var(--light-gold);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-gold);
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(212, 175, 55, 0.2);
+            border-top: 4px solid var(--primary-gold);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: {
+                padding: 0.75rem;
+            }
+
+            .header-content {
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .header-title h1 {
+                font-size: 1.1rem;
+            }
+
+            .tab-navigation {
+                padding: 0.75rem 0.5rem;
+                gap: 0.5rem;
+            }
+
+            .tab-btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.85rem;
+                flex: 1;
+                min-width: unset;
+            }
+
+            .tab-btn .badge {
+                font-size: 0.75rem;
+                padding: 0.15rem 0.4rem;
+            }
+
+            .content-container {
+                padding: 1rem 0.5rem;
+            }
+
+            .section-header {
+                padding: 0.75rem 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .section-header p {
+                font-size: 0.85rem;
+            }
+
+            .download-section {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .download-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+            }
+
+            .lightbox-image {
+                max-height: 75vh;
+                padding: 10px;
+            }
+
+            .lightbox-controls {
+                gap: 0.5rem;
+                padding: 0 0.5rem;
+            }
+
+            .lightbox-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .close-lightbox {
+                width: 45px;
+                height: 45px;
+                font-size: 1.75rem;
+            }
+
+            .image-counter {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .toggle-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+            }
+
+            .gallery-item img {
+                padding: 8px;
+            }
+        }
+
+        /* Small Mobile Devices */
+        @media (max-width: 480px) {
+            .header-title h1 {
+                font-size: 1rem;
+            }
+
+            .tab-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .gallery-item img {
+                padding: 5px
+                max-height: 80vh;
+            }
+
+            .lightbox-controls {
+                gap: 0.5rem;
+            }
+
+            .lightbox-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* View All Toggle */
+        .view-toggle {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(255, 191, 0, 0.3));
+            border: 2px solid var(--dark-gold);
+            color: var(--text-gold);
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: linear-gradient(135deg, var(--dark-gold), var(--amber));
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .gallery-item.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <a href="/index.html" class="back-btn">
+                <span>←</span> Back to Home
+            </a>
+            <div class="header-title">
+                <h1>Programme & Speakers</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="programme">
+            📅 Programme Schedule
+            <span class="badge">6</span>
+        </button>
+        <button class="tab-btn" data-tab="speakers">
+            🎤 Speakers & Guests
+            <span class="badge">21</span>
+        </button>
+    </div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <!-- Programme Tab -->
+        <div id="programme" class="tab-content active">
+            <div class="section-header">
+                <h2>📅 Conference Programme</h2>
+                <p>Complete schedule for 30-31 January & 1 February 2026 at Silent Shores, Mysore</p>
+            </div>
+
+            <div class="download-section">
+                <h3 style="color: var(--text-gold); margin-bottom: 1rem;">Interactive Programme Flip Book</h3>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Browse through the complete programme schedule with page-turning effects</p>
+                <a href="images/Program Guide.pdf" download class="download-btn">
+                    📄 Download PDF
+                </a>
+            </div>
+
+            <div class="flipbook-container">
+                <iframe src="https://heyzine.com/flip-book/56a29a37d9.html" 
+                        allowfullscreen="allowfullscreen" 
+                        scrolling="no" 
+                        class="fp-iframe"
+                        title="Programme Schedule Flip Book"
+                        style="border: none; width: 100%; height: 100%;">
+                </iframe>
+            </div>
+
+            <div class="download-section" style="margin-top: 2rem;">
+                <h3 style="color: var(--text-gold); margin-bottom: 0.5rem;">Prefer Static Images?</h3>
+                <button class="toggle-btn" onclick="toggleGalleryView('programme')">
+                    📸 View as Image Gallery
+                </button>
+            </div>
+
+            <div class="gallery-grid" id="programmeGallery" style="display: none;">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading programme schedule...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Speakers Tab -->
+        <div id="speakers" class="tab-content">
+            <div class="section-header">
+                <h2>🎤 Distinguished Speakers & Guests</h2>
+                <p>Meet our esteemed speakers and dignitaries</p>
+            </div>
+
+            <div class="download-section">
+                <h3 style="color: var(--text-gold); margin-bottom: 1rem;">Download Speakers Information</h3>
+                <a href="images/For Website.pdf" download class="download-btn">
+                    📄 Download PDF
+                </a>
+            </div>
+
+            <div id="viewToggle" class="view-toggle" style="display: none;">
+                <button class="toggle-btn" onclick="toggleViewAll()">
+                    <span id="toggleText">View All Speakers</span>
+                </button>
+            </div>
+
+            <div class="gallery-grid" id="speakersGallery">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading speakers information...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <button class="close-lightbox" onclick="closeLightbox()">×</button>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-image" id="lightboxImage">
+            <div class="image-counter" id="imageCounter"></div>
+            <div class="lightbox-controls">
+                <button class="lightbox-btn" onclick="prevImage()">
+                    ← Previous
+                </button>
+                <button class="lightbox-btn" onclick="nextImage()">
+                    Next →
+                </button>
+                <button class="lightbox-btn" onclick="downloadImage()">
+                    💾 Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const PROGRAMME_IMAGES = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'];
+        const SPEAKER_IMAGES = Array.from({length: 21}, (_, i) => String(i + 1).padStart(2, '0'));
+        const INITIAL_SPEAKERS_SHOW = 6;
+        const IMAGE_PATH = 'images/KIRAN SPEAKERS/';
+        
+        let currentImages = [];
+        let currentIndex = 0;
+        let currentTab = 'programme';
+        let showAllSpeakers = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupTabs();
+            loadProgrammeImages();
+            loadSpeakerImages();
+        });
+
+        // Tab Management
+        function setupTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tab = btn.dataset.tab;
+                    switchTab(tab);
+                });
+            });
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === tab);
+            });
+            
+            // Update current images for lightbox
+            if (tab === 'programme') {
+                currentImages = PROGRAMME_IMAGES.map(name => `${IMAGE_PATH}${name}.png`);
+            } else {
+                currentImages = SPEAKER_IMAGES.map(name => `${IMAGE_PATH}${name}.png`);
+            }
+        }
+
+        // Load Programme Images
+        function loadProgrammeImages() {
+            const gallery = document.getElementById('programmeGallery');
+            gallery.innerHTML = '';
+            
+            PROGRAMME_IMAGES.forEach((name, index) => {
+                const item = createGalleryItem(`${IMAGE_PATH}${name}.png`, `Schedule Page ${index + 1}`, index);
+                gallery.appendChild(item);
+            });
+            
+            currentImages = PROGRAMME_IMAGES.map(name => `${IMAGE_PATH}${name}.png`);
+        }
+
+        // Load Speaker Images
+        function loadSpeakerImages() {
+            const gallery = document.getElementById('speakersGallery');
+            gallery.innerHTML = '';
+            
+            SPEAKER_IMAGES.forEach((name, index) => {
+                const item = createGalleryItem(`${IMAGE_PATH}${name}.png`, `Speaker ${index + 1}`, index);
+                if (index >= INITIAL_SPEAKERS_SHOW) {
+                    item.classList.add('hidden');
+                }
+                gallery.appendChild(item);
+            });
+            
+            // Show view toggle if more than initial count
+            if (SPEAKER_IMAGES.length > INITIAL_SPEAKERS_SHOW) {
+                document.getElementById('viewToggle').style.display = 'block';
+            }
+        }
+
+        // Create Gallery Item
+        function createGalleryItem(src, title, index) {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.onclick = () => openLightbox(index);
+            
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = title;
+            img.loading = 'lazy';
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.innerHTML = `<strong>${title}</strong><br>Click to view full size`;
+            
+            item.appendChild(img);
+            item.appendChild(overlay);
+            
+            return item;
+        }
+
+        // Toggle View All Speakers
+        function toggleViewAll() {
+            showAllSpeakers = !showAllSpeakers;
+            const items = document.querySelectorAll('#speakersGallery .gallery-item');
+            const toggleText = document.getElementById('toggleText');
+            
+            items.forEach((item, index) => {
+                if (index >= INITIAL_SPEAKERS_SHOW) {
+                    item.classList.toggle('hidden', !showAllSpeakers);
+                }
+            });
+            
+            toggleText.textContent = showAllSpeakers ? 'Show Less' : 'View All Speakers';
+        }
+
+        // Toggle Gallery View
+        function toggleGalleryView(tab) {
+            const flipbook = document.querySelector(`#${tab} .flipbook-container`);
+            const gallery = document.querySelector(`#${tab}Gallery`);
+            const toggleBtn = event.target;
+            
+            if (gallery.style.display === 'none') {
+                // Show gallery, hide flipbook
+                gallery.style.display = 'grid';
+                flipbook.style.display = 'none';
+                toggleBtn.innerHTML = '📖 View as Flip Book';
+                
+                // Load images if not already loaded
+                if (tab === 'programme' && gallery.innerHTML.includes('loading-spinner')) {
+                    loadProgrammeImages();
+                }
+            } else {
+                // Show flipbook, hide gallery
+                gallery.style.display = 'none';
+                flipbook.style.display = 'block';
+                toggleBtn.innerHTML = '📸 View as Image Gallery';
+            }
+        }
+
+        // Lightbox Functions
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightboxImage();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateLightboxImage() {
+            const img = document.getElementById('lightboxImage');
+            const counter = document.getElementById('imageCounter');
+            
+            img.src = currentImages[currentIndex];
+            counter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+            updateLightboxImage();
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % currentImages.length;
+            updateLightboxImage();
+        }
+
+        function downloadImage() {
+            const img = document.getElementById('lightboxImage');
+            const link = document.createElement('a');
+            link.href = img.src;
+            link.download = img.src.split('/').pop();
+            link.click();
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.classList.contains('active')) {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') prevImage();
+                if (e.key === 'ArrowRight') nextImage();
+            }
+        });
+
+        // Close lightbox on background click
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+
+        // Touch Swipe Support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.getElementById('lightbox').addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.getElementById('lightbox').addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextImage();
+            if (touchEndX > touchStartX + 50) prevImage();
+        }
+    </script>
+</body>
+</html>

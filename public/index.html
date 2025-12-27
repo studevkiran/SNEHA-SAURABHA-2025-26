@@ -56,6 +56,7 @@
                     <a href="#" onclick="showScreen('screen-about'); return false;" class="nav-link">About</a>
                     <a href="#" onclick="showScreen('screen-committee'); return false;" class="nav-link">Committee</a>
                     <a href="#" onclick="showScreen('screen-hotels'); return false;" class="nav-link">Hotels</a>
+                    <a href="speakers.html" class="nav-link">Speakers</a>
                     <a href="admin/tally.html" target="_blank" class="nav-link">Reports</a>
                 </nav>
             </div>
@@ -662,6 +663,29 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Programme Schedule Flip Book -->
+                <div class="about-card" style="margin-top: 30px;">
+                    <div class="about-header">
+                        <h3>📅 Conference Programme Schedule</h3>
+                    </div>
+                    <div class="about-body" style="padding: 0;">
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);">
+                            <iframe src="https://heyzine.com/flip-book/56a29a37d9.html" 
+                                    allowfullscreen="allowfullscreen" 
+                                    scrolling="no" 
+                                    class="fp-iframe"
+                                    title="Programme Schedule"
+                                    style="border: none; width: 100%; height: 70vh; min-height: 500px; display: block;">
+                            </iframe>
+                        </div>
+                        <div style="text-align: center; padding: 15px;">
+                            <a href="images/Program Guide.pdf" download style="color: #D4A024; text-decoration: none; font-weight: 600;">
+                                📄 Download Programme PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -753,6 +777,9 @@
                 </a>
                 <a href="#" onclick="toggleMenu(); showScreen('screen-hotels'); return false;">
                     🏨 Hotels
+                </a>
+                <a href="speakers.html" onclick="toggleMenu()">
+                    🎤 Speakers
                 </a>
                 <a href="admin/tally.html" target="_blank">
                     📊 Reports
