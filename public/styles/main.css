@@ -1244,23 +1244,25 @@ h3 {
 }
 
 .btn-back {
-    background: transparent;
-    border: none;
-    color: var(--primary-gold);
-    font-size: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--primary-gold);
+    color: var(--text-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    padding: 10px 0;
     margin-bottom: 15px;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    transition: all 0.2s;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 16px;
 }
 
 .btn-back:hover {
-    color: var(--amber);
+    background: white;
     transform: translateX(-3px);
+    box-shadow: 0 4px 12px rgba(180, 150, 55, 0.3);
 }
 
 .btn-secondary:active {
