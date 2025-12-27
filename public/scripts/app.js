@@ -2343,6 +2343,33 @@ window.toggleFAQ = function (button) {
     answer.classList.toggle('active');
 };
 
+// Hotel Slider Navigation
+let currentSlide = 0;
+
+window.slideHotels = function(direction) {
+    const slider = document.getElementById('hotels-slider');
+    const prevBtn = document.getElementById('hotel-prev');
+    const nextBtn = document.getElementById('hotel-next');
+    
+    if (!slider) return;
+    
+    const cards = slider.querySelectorAll('.hotel-card');
+    if (cards.length === 0) return;
+    
+    const cardWidth = cards[0].offsetWidth + 20; // card width + gap
+    const visibleCards = Math.floor(slider.parentElement.offsetWidth / cardWidth);
+    const maxSlide = Math.max(0, cards.length - visibleCards);
+    
+    currentSlide += direction;
+    currentSlide = Math.max(0, Math.min(currentSlide, maxSlide));
+    
+    slider.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+    
+    // Update button states
+    prevBtn.disabled = currentSlide === 0;
+    nextBtn.disabled = currentSlide >= maxSlide;
+};
+
 // Load Committee Data
 async function loadCommitteeData() {
     try {
@@ -2408,7 +2435,7 @@ async function loadHotelData() {
         renderHotels(data.hotels);
     } catch (error) {
         console.error('Error loading hotel data:', error);
-        const container = document.getElementById('hotels-container');
+        const container = document.getElementById('hotels-slider');
         if (container) {
             container.innerHTML = '<div class="error-message">Failed to load hotels. Please try again later.</div>';
         }
@@ -2416,7 +2443,7 @@ async function loadHotelData() {
 }
 
 function renderHotels(hotels) {
-    const container = document.getElementById('hotels-container');
+    const container = document.getElementById('hotels-slider');
     if (!container) return;
 
     let html = '';

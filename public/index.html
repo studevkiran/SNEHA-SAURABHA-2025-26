@@ -738,9 +738,13 @@
                         <span class="faq-icon">▼</span>
                     </button>
                     <div class="faq-answer">
-                        <div id="hotels-container" class="hotels-grid">
-                            <!-- Dynamic hotel content -->
-                            <div class="loading-spinner">Loading accommodation options...</div>
+                        <div class="hotels-grid">
+                            <button class="slider-btn prev" onclick="slideHotels(-1)" id="hotel-prev">‹</button>
+                            <div class="hotels-slider" id="hotels-slider">
+                                <!-- Dynamic hotel content -->
+                                <div class="loading-spinner">Loading accommodation options...</div>
+                            </div>
+                            <button class="slider-btn next" onclick="slideHotels(1)" id="hotel-next">›</button>
                         </div>
                     </div>
                 </div>

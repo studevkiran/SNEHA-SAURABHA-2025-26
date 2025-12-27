@@ -1321,7 +1321,7 @@ h3 {
 
 .faq-answer.active {
     max-height: 3000px;
-    padding: 1.5rem;
+    padding: 1.5rem 0.5rem;
 }
 
 .faq-notice {
@@ -1338,6 +1338,47 @@ h3 {
     font-weight: 600;
     color: var(--text-dark);
     margin: 0;
+}
+
+/* Mobile adjustments for slider */
+@media (max-width: 768px) {
+    .hotels-grid {
+        padding: 0 40px;
+    }
+
+    .slider-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.2rem;
+    }
+
+    .hotel-card {
+        min-width: 240px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hotels-grid {
+        padding: 0 35px;
+    }
+
+    .slider-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+
+    .slider-btn.prev {
+        left: 0;
+    }
+
+    .slider-btn.next {
+        right: 0;
+    }
+
+    .hotel-card {
+        min-width: 220px;
+    }
 }
 
 /* Responsive adjustments for very small screens */
@@ -1974,12 +2015,17 @@ h3 {
     font-weight: 700;
 }
 
-/* Hotels Styles */
+/* Hotels Slider Styles */
 .hotels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    position: relative;
+    overflow: hidden;
+    padding: 0 50px;
+}
+
+.hotels-slider {
+    display: flex;
+    transition: transform 0.4s ease;
     gap: 20px;
-    padding-bottom: 40px;
 }
 
 .hotel-card {
@@ -1990,6 +2036,57 @@ h3 {
     border-top: 4px solid var(--primary-gold);
     display: flex;
     flex-direction: column;
+    min-width: 280px;
+    flex-shrink: 0;
+}
+
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, var(--primary-gold), var(--amber));
+    border: 2px solid var(--dark-gold);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.slider-btn:hover {
+    background: linear-gradient(135deg, var(--amber), var(--primary-gold));
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px var(--shadow);
+}
+
+.slider-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.slider-btn.prev {
+    left: 5px;
+}
+
+.slider-btn.next {
+    right: 5px;
+}
+
+.slider-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: var(--light-gold);
+}
+
+.slider-btn:disabled:hover {
+    transform: translateY(-50%);
 }
 
 .hotel-name {
