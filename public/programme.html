@@ -3,7 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Programme & Speakers - SNEHA SAURABHA 2025-26</title>
+    <title>Programme Schedule - SNEHA SAURABHA 2025-26</title>
+    <link rel="icon" type="image/jpeg" href="images/event-logo.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #B8960C;
+            --light-gold: #F4E4C1;
+            --amber: #FFBF00;
+            --cream: #FFF8DC;
+            --text-dark: #2C2416;
+            --shadow: rgba(180, 150, 55, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--light-gold) 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-gold), var(--amber));
+            padding: 1rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--primary-gold);
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .flipbook-container {
+            background: white;
+            border: 3px solid var(--primary-gold);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px var(--shadow);
+        }
+
+        .flipbook-container iframe {
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            border: none;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.75rem;
+            }
+
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .header-title h1 {
+                font-size: 1.1rem;
+            }
+
+            .content-container {
+                padding: 1rem 0.75rem;
+            }
+
+            .flipbook-container iframe {
+                height: 70vh;
+                min-height: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title h1 {
+                font-size: 1rem;
+            }
+
+            .content-container {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .flipbook-container iframe {
+                height: 60vh;
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="/index.html" class="back-btn">
+                <span>←</span> Back to Home
+            </a>
+            <div class="header-title">
+                <h1>📅 Conference Programme Schedule</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="flipbook-container">
+            <iframe src="https://heyzine.com/flip-book/56a29a37d9.html" 
+                    allowfullscreen="allowfullscreen" 
+                    scrolling="no" 
+                    class="fp-iframe"
+                    title="Conference Programme Schedule"
+                    style="border: none; width: 100%; height: 100%;">
+            </iframe>
+        </div>
+    </div>
+</body>
+</html>
     <link rel="icon" type="image/jpeg" href="images/event-logo.jpeg">
     <style>
         * {

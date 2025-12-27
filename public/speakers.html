@@ -84,6 +84,22 @@
             padding: 2rem 1rem;
         }
 
+        .flipbook-container {
+            background: white;
+            border: 3px solid var(--primary-gold);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px var(--shadow);
+        }
+
+        .flipbook-container iframe {
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            border: none;
+            display: block;
+        }
+
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -225,17 +241,9 @@
                 padding: 1rem 0.75rem;
             }
 
-            .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .gallery-item {
-                cursor: default;
-            }
-
-            .lightbox {
-                display: none !important;
+            .flipbook-container iframe {
+                height: 70vh;
+                min-height: 500px;
             }
         }
 
@@ -279,107 +287,15 @@
     </div>
 
     <div class="content-container">
-        <div class="gallery-grid" id="speakersGallery"></div>
-    </div>
-
-    <div class="lightbox" id="lightbox">
-        <button class="close-lightbox" onclick="closeLightbox()">×</button>
-        <div class="lightbox-content">
-            <img src="" alt="" class="lightbox-image" id="lightboxImage">
-            <div class="image-counter" id="imageCounter"></div>
-            <div class="lightbox-controls">
-                <button class="lightbox-btn" onclick="prevImage()">← Previous</button>
-                <button class="lightbox-btn" onclick="nextImage()">Next →</button>
-            </div>
+        <div class="flipbook-container">
+            <iframe src="https://heyzine.com/flip-book/cd824ac6a3.html" 
+                    allowfullscreen="allowfullscreen" 
+                    scrolling="no" 
+                    class="fp-iframe"
+                    title="Speakers & Distinguished Guests"
+                    style="border: none; width: 100%; height: 80vh; min-height: 600px; display: block;">
+            </iframe>
         </div>
     </div>
-
-    <script>
-        const SPEAKER_IMAGES = Array.from({length: 21}, (_, i) => String(i + 1).padStart(2, '0'));
-        const IMAGE_PATH = 'images/KIRAN SPEAKERS/';
-        
-        let currentIndex = 0;
-        const isMobile = window.innerWidth <= 768;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSpeakerImages();
-        });
-
-        function loadSpeakerImages() {
-            const gallery = document.getElementById('speakersGallery');
-            gallery.innerHTML = '';
-            
-            SPEAKER_IMAGES.forEach((name, index) => {
-                const item = createGalleryItem(`${IMAGE_PATH}${name}.png`, `Speaker ${index + 1}`, index);
-                gallery.appendChild(item);
-            });
-        }
-
-        function createGalleryItem(src, title, index) {
-            const item = document.createElement('div');
-            item.className = 'gallery-item';
-            
-            if (!isMobile) {
-                item.onclick = () => openLightbox(index);
-            }
-            
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = title;
-            img.loading = 'lazy';
-            
-            item.appendChild(img);
-            return item;
-        }
-
-        function openLightbox(index) {
-            if (isMobile) return;
-            
-            currentIndex = index;
-            updateLightboxImage();
-            document.getElementById('lightbox').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        function updateLightboxImage() {
-            const img = document.getElementById('lightboxImage');
-            const counter = document.getElementById('imageCounter');
-            
-            img.src = `${IMAGE_PATH}${SPEAKER_IMAGES[currentIndex]}.png`;
-            counter.textContent = `${currentIndex + 1} / ${SPEAKER_IMAGES.length}`;
-        }
-
-        function prevImage() {
-            currentIndex = (currentIndex - 1 + SPEAKER_IMAGES.length) % SPEAKER_IMAGES.length;
-            updateLightboxImage();
-        }
-
-        function nextImage() {
-            currentIndex = (currentIndex + 1) % SPEAKER_IMAGES.length;
-            updateLightboxImage();
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (isMobile) return;
-            
-            const lightbox = document.getElementById('lightbox');
-            if (lightbox.classList.contains('active')) {
-                if (e.key === 'Escape') closeLightbox();
-                if (e.key === 'ArrowLeft') prevImage();
-                if (e.key === 'ArrowRight') nextImage();
-            }
-        });
-
-        document.getElementById('lightbox').addEventListener('click', (e) => {
-            if (e.target.id === 'lightbox') {
-                closeLightbox();
-            }
-        });
-    </script>
 </body>
 </html>
