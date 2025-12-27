@@ -1420,6 +1420,7 @@ h3 {
 
     .hotels-slider {
         margin-bottom: 3rem;
+        padding: 0 1rem;
     }
 
     .slider-btn {
@@ -1441,7 +1442,38 @@ h3 {
     }
 
     .hotel-card {
-        min-width: 260px;
+        min-width: calc(100vw - 3rem);
+        max-width: calc(100vw - 3rem);
+    }
+
+    .hotel-image {
+        height: 200px;
+    }
+
+    .hotel-details {
+        padding: 1rem;
+    }
+
+    .hotel-name {
+        font-size: 1.1rem;
+    }
+
+    .hotel-address {
+        font-size: 0.9rem;
+    }
+
+    .hotel-highlights {
+        font-size: 0.9rem;
+    }
+
+    .amenity-tag {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
     }
 
     .faq-question {
@@ -1457,6 +1489,10 @@ h3 {
 @media (max-width: 480px) {
     .hotels-grid {
         padding: 0;
+    }
+
+    .hotels-slider {
+        padding: 0 0.75rem;
     }
 
     .slider-btn {
@@ -1475,7 +1511,42 @@ h3 {
     }
 
     .hotel-card {
-        min-width: 240px;
+        min-width: calc(100vw - 2rem);
+        max-width: calc(100vw - 2rem);
+    }
+
+    .hotel-image {
+        height: 180px;
+    }
+
+    .hotel-details {
+        padding: 0.875rem;
+    }
+
+    .hotel-name {
+        font-size: 1rem;
+    }
+
+    .hotel-address {
+        font-size: 0.85rem;
+    }
+
+    .hotel-highlights {
+        font-size: 0.85rem;
+    }
+
+    .hotel-amenities {
+        gap: 0.375rem;
+    }
+
+    .amenity-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .action-btn {
+        padding: 0.45rem 0.875rem;
+        font-size: 0.85rem;
     }
 
     .faq-question {
