@@ -58,7 +58,6 @@
                     <a href="programme.html" class="nav-link">Programme</a>
                     <a href="speakers.html" class="nav-link">Speakers</a>
                     <a href="admin/tally.html" target="_blank" class="nav-link">Reports</a>
-                    <a href="#" onclick="showScreen('screen-faq'); return false;" class="nav-link">FAQ</a>
                 </nav>
             </div>
 
@@ -739,8 +738,8 @@
         </div>
     </div>
 
-    <!-- Screen 9: FAQ -->
-    <div id="screen-faq" class="screen">
+    <!-- Screen 9: FAQ (Hidden) -->
+    <div id="screen-faq" class="screen" style="display: none;">
         <div class="page-header">
             <div class="header-content">
                 <button class="btn-back-header" onclick="showScreen('screen-banner')">
@@ -804,9 +803,6 @@
                 </a>
                 <a href="admin/tally.html" target="_blank">
                     📊 Reports
-                </a>
-                <a href="#" onclick="toggleMenu(); showScreen('screen-faq'); return false;">
-                    ❓ FAQ
                 </a>
             </nav>
         </div>
