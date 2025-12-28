@@ -110,21 +110,23 @@ const EMBEDDED_CLUBS = [
 ];
 
 // Registration type options with complete details
-// DG Birthday Special - DISABLED
+// DG Birthday Special - LIVE NOW
 function isBirthdaySpecial() {
-    return false; // Disabled
+    return true; // Active now!
 }
 
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: 5000,
+        price: 4500,
+        originalPrice: 5000,
         description: 'Admission, Food & 1 Memento',
         inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: 8000,
+        price: 7500,
+        originalPrice: 8000,
         description: 'Admission with spouse, Food & 1 Memento',
         inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
     },
@@ -2251,10 +2253,19 @@ function showBirthdayWishes() {
     };
 }
 
-// Initialize on page load - birthday special disabled
+// Initialize birthday banner on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Birthday special disabled
-    console.log('Regular pricing active');
+    if (isBirthdaySpecial()) {
+        // Auto-show birthday wishes popup
+        if (!sessionStorage.getItem('birthday-wishes-shown')) {
+            setTimeout(() => {
+                showBirthdayWishes();
+                sessionStorage.setItem('birthday-wishes-shown', 'true');
+            }, 2000);
+        }
+        
+        console.log('🎂 DG Birthday Special Active!');
+    }
 });
 
 // Expose functions globally
