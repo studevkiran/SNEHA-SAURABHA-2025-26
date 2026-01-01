@@ -117,7 +117,7 @@ const EMBEDDED_CLUBS = [
 // Registration type options with complete details
 // DG Birthday Special - LIVE NOW
 function isBirthdaySpecial() {
-    return true; // Active now!
+    return false; // Offer ended
 }
 
 const registrationTypes = {
