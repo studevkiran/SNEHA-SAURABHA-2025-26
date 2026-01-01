@@ -123,14 +123,14 @@ function isBirthdaySpecial() {
 const registrationTypes = {
     'rotarian': {
         name: 'Rotarian',
-        price: 4500,
+        price: 5000,
         originalPrice: 5000,
         description: 'Admission, Food & 1 Memento',
         inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'rotarian-spouse': {
         name: 'Rotarian with Spouse',
-        price: 7500,
+        price: 8000,
         originalPrice: 8000,
         description: 'Admission with spouse, Food & 1 Memento',
         inclusions: ['Admission for Rotarian and spouse', 'Food for all', '1 Memento']
