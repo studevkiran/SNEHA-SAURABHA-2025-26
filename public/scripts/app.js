@@ -138,8 +138,8 @@ const registrationTypes = {
     'ann': {
         name: 'Ann',
         price: 4000,
-        description: 'Admission & Food',
-        inclusions: ['Conference admission', 'Food for all sessions']
+        description: 'Admission, Food & 1 Memento',
+        inclusions: ['Conference admission', 'Food for all sessions', '1 Memento']
     },
     'annet': {
         name: 'Annet',
