@@ -13,7 +13,7 @@ const registrationTypes = {
     'annet': { name: 'Annet', price: 2000 },
     'guest': { name: 'Guest', price: 4500 },
     'silver-donor': { name: 'Silver Donor', price: 20000 },
-    'silver-sponsor': { name: 'Silver Sponsor', price: 25000 },
+    'silver-sponsor': { name: 'Silver Sponsor', price: 30000 },
     'gold-sponsor': { name: 'Gold Sponsor', price: 50000 },
     'platinum-sponsor': { name: 'Platinum Sponsor', price: 75000 },
     'patron-sponsor': { name: 'Patron Sponsor', price: 100000 }

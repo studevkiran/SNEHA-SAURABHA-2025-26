@@ -168,7 +168,7 @@ const registrationTypes = {
     },
     'silver-sponsor': {
         name: 'Silver Sponsor',
-        price: 25000,
+        price: 30000,
         description: 'Admission with spouse + 2 children below 12 years, Food & 1 Memento, Double Room at venue (no extra beds)',
         inclusions: ['Admission for sponsor and spouse', 'Admission for 2 children below 12 years', 'Food for all', '1 Memento', 'Double Room at venue (no extra beds)']
     },
