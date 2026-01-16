@@ -241,6 +241,87 @@ function setupClearButtons() {
 let clubsList = [];
 
 // ===================================================================================
+// MAINTENANCE MODE CHECK
+// ===================================================================================
+
+let maintenanceStatus = {
+    active: false,
+    message: '',
+    expectedResume: ''
+};
+
+async function checkMaintenanceMode() {
+    try {
+        const response = await fetch('/api/maintenance-status');
+        const data = await response.json();
+        
+        maintenanceStatus = {
+            active: data.maintenanceMode,
+            message: data.message,
+            expectedResume: data.expectedResume
+        };
+        
+        // Show/hide maintenance banner
+        if (data.maintenanceMode) {
+            showMaintenanceBanner(data.message, data.expectedResume);
+        } else {
+            hideMaintenanceBanner();
+        }
+        
+    } catch (error) {
+        console.error('Failed to check maintenance status:', error);
+        // Fail-safe: allow registrations if check fails
+        maintenanceStatus.active = false;
+    }
+}
+
+function showMaintenanceBanner(message, expectedResume) {
+    let banner = document.getElementById('maintenance-banner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'maintenance-banner';
+        banner.className = 'maintenance-banner';
+        document.body.insertBefore(banner, document.body.firstChild);
+    }
+    
+    banner.innerHTML = `
+        <div class="maintenance-content">
+            <div class="maintenance-icon">⚠️</div>
+            <div class="maintenance-text">
+                <strong>Registrations Temporarily Paused</strong>
+                <p>${message}</p>
+                <p class="maintenance-resume">Expected Resume: ${expectedResume}</p>
+                <p class="maintenance-contact">For urgent queries: <a href="tel:+919980557785">+91 99805 57785</a></p>
+            </div>
+        </div>
+    `;
+    banner.style.display = 'block';
+    
+    // Disable Register Now button
+    const registerBtn = document.querySelector('.btn-register');
+    if (registerBtn) {
+        registerBtn.disabled = true;
+        registerBtn.style.opacity = '0.5';
+        registerBtn.style.cursor = 'not-allowed';
+    }
+}
+
+function hideMaintenanceBanner() {
+    const banner = document.getElementById('maintenance-banner');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+    
+    // Enable Register Now button
+    const registerBtn = document.querySelector('.btn-register');
+    if (registerBtn) {
+        registerBtn.disabled = false;
+        registerBtn.style.opacity = '1';
+        registerBtn.style.cursor = 'pointer';
+    }
+}
+
+// ===================================================================================
 // LOADING OVERLAY FUNCTIONS
 // ===================================================================================
 
@@ -267,6 +348,9 @@ function hideLoading() {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function () {
+    // Check maintenance mode first
+    checkMaintenanceMode();
+    
     // Check for payment callback from Cashfree
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
@@ -627,6 +711,12 @@ function validateInput(input) {
 
 // Show specific screen
 function showScreen(screenId) {
+    // Check maintenance mode before allowing registration flow
+    if (maintenanceStatus.active && screenId === 'screen-register-type') {
+        alert(`⚠️ Registrations Temporarily Paused\n\n${maintenanceStatus.message}\n\nExpected Resume: ${maintenanceStatus.expectedResume}\n\nFor urgent queries, contact: +91 99805 57785`);
+        return;
+    }
+    
     // Hide all screens
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
