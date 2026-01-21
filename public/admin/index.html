@@ -1136,6 +1136,14 @@
                 summaryData.push([`Zone ${zoneNum}`, zoneClubs, zoneRegs.length, `₹${zoneAmount.toLocaleString('en-IN')}`]);
             }
 
+            // Add Unmapped zone
+            const unmappedRegs = allRegs.filter(r => !r.zone || r.zone === 'Unmapped' || r.zone === 'None');
+            if (unmappedRegs.length > 0) {
+                const unmappedClubs = new Set(unmappedRegs.map(r => r.club)).size;
+                const unmappedAmount = unmappedRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+                summaryData.push(['Unmapped', unmappedClubs, unmappedRegs.length, `₹${unmappedAmount.toLocaleString('en-IN')}`]);
+            }
+
             const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
             summaryWs['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 20 }, { wch: 20 }];
 
@@ -1295,6 +1303,53 @@
                 ];
 
                 XLSX.utils.book_append_sheet(wb, zoneWs, `Zone ${zoneNum}`);
+            }
+
+            // === SHEET: UNMAPPED REGISTRATIONS ===
+            const unmappedRegs = allRegs.filter(r => !r.zone || r.zone === 'Unmapped' || r.zone === 'None');
+            
+            if (unmappedRegs.length > 0) {
+                const unmappedAmount = unmappedRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+
+                const unmappedHeaderData = [
+                    ['UNMAPPED REGISTRATIONS'],
+                    ['Total Registrations:', unmappedRegs.length],
+                    ['Total Amount:', `₹${unmappedAmount.toLocaleString('en-IN')}`],
+                    [''],
+                    ['Note: These registrations are not assigned to any zone'],
+                    [''],
+                    ['DETAILED REGISTRATIONS']
+                ];
+
+                const unmappedWs = XLSX.utils.aoa_to_sheet(unmappedHeaderData);
+
+                const unmappedDetailData = unmappedRegs.map((reg, idx) => ({
+                    'S.No': idx + 1,
+                    'Registration ID': reg.registration_id,
+                    'Name': reg.name,
+                    'Mobile': reg.mobile,
+                    'Email': reg.email || 'N/A',
+                    'Club': reg.club || 'N/A',
+                    'Type': reg.registration_type,
+                    'Meal': reg.meal_preference,
+                    'T-Shirt': reg.tshirt_size || 'N/A',
+                    'Amount': `₹${(parseFloat(reg.registration_amount) || 0).toLocaleString('en-IN')}`,
+                    'Payment Status': reg.payment_status || 'pending',
+                    'Date': new Date(reg.created_at).toLocaleDateString('en-IN')
+                }));
+
+                XLSX.utils.sheet_add_json(unmappedWs, unmappedDetailData, {
+                    origin: `A${unmappedHeaderData.length + 1}`,
+                    skipHeader: false
+                });
+
+                unmappedWs['!cols'] = [
+                    { wch: 6 }, { wch: 20 }, { wch: 30 }, { wch: 15 }, { wch: 30 },
+                    { wch: 30 }, { wch: 20 }, { wch: 10 }, { wch: 10 }, { wch: 15 },
+                    { wch: 15 }, { wch: 12 }
+                ];
+
+                XLSX.utils.book_append_sheet(wb, unmappedWs, 'Unmapped');
             }
 
             // Generate filename with timestamp
