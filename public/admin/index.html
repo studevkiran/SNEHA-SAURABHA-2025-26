@@ -367,6 +367,7 @@
                 <strong id="total-revenue" style="color: #10B981;">₹0</strong> Total Revenue
             </div>
             <button class="export-btn" onclick="exportToExcel()">📥 Download All</button>
+            <button class="export-btn" onclick="exportZoneWise()" style="background: #8B5CF6; margin-left: 10px;">📊 Zone-wise Excel</button>
         </div>
 
 
@@ -1080,34 +1081,40 @@
             const wb = XLSX.utils.book_new();
 
             // === SHEET 1: Summary Dashboard ===
+            // Calculate total revenue
+            const totalRevenue = allRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+
             const summaryData = [
                 ['SNEHA SAURABHA 2025-26 - REGISTRATION SUMMARY'],
                 ['Generated on:', new Date().toLocaleString('en-IN')],
                 [''],
                 ['OVERALL STATISTICS'],
                 ['Total Registrations:', allRegs.length],
+                ['Total Revenue:', `₹${totalRevenue.toLocaleString('en-IN')}`],
                 [''],
                 ['REGISTRATION TYPE BREAKDOWN'],
-                ['Type', 'Count']
+                ['Type', 'Count', 'Amount']
             ];
 
-            // Calculate type-wise breakdown
+            // Calculate type-wise breakdown with amounts
             const typeStats = {};
             allRegs.forEach(r => {
                 const type = r.registration_type || 'Unknown';
+                const amount = parseFloat(r.registration_amount) || 0;
                 if (!typeStats[type]) {
-                    typeStats[type] = { count: 0 };
+                    typeStats[type] = { count: 0, amount: 0 };
                 }
                 typeStats[type].count++;
+                typeStats[type].amount += amount;
             });
 
             Object.entries(typeStats).sort((a, b) => b[1].count - a[1].count).forEach(([type, stats]) => {
-                summaryData.push([type, stats.count]);
+                summaryData.push([type, stats.count, `₹${stats.amount.toLocaleString('en-IN')}`]);
             });
 
-            summaryData.push(['', '']);
+            summaryData.push(['', '', '']);
             summaryData.push(['ZONE-WISE BREAKDOWN']);
-            summaryData.push(['Zone', 'Clubs', 'Registrations']);
+            summaryData.push(['Zone', 'Clubs', 'Registrations', 'Amount']);
 
             // Get sorted main zones
             const zoneKeys = Object.keys(ZONE_CLUBS);
@@ -1118,18 +1125,19 @@
             });
             const sortedZones = Array.from(mainZones).sort((a, b) => a - b);
 
-            // Calculate zone-wise breakdown
+            // Calculate zone-wise breakdown with amounts
             for (const zoneNum of sortedZones) {
                 const zoneRegs = allRegs.filter(r => {
                     const m = (r.zone || '').match(/Zone\s+(\d+)/i);
                     return m && parseInt(m[1]) === zoneNum;
                 });
                 const zoneClubs = new Set(zoneRegs.map(r => r.club)).size;
-                summaryData.push([`Zone ${zoneNum}`, zoneClubs, zoneRegs.length]);
+                const zoneAmount = zoneRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+                summaryData.push([`Zone ${zoneNum}`, zoneClubs, zoneRegs.length, `₹${zoneAmount.toLocaleString('en-IN')}`]);
             }
 
             const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            summaryWs['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 20 }];
+            summaryWs['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 20 }, { wch: 20 }];
 
             // Format header rows
             if (summaryWs['A1']) summaryWs['A1'].s = { font: { bold: true, sz: 14 }, fill: { fgColor: { rgb: 'D4AF37' } } };
@@ -1196,16 +1204,19 @@
                     return m && parseInt(m[1]) === zoneNum;
                 });
 
-                // Zone header data
+                // Zone header data with amounts
+                const zoneAmount = zoneRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+
                 const zoneHeaderData = [
                     [`ZONE ${zoneNum} - DETAILED BREAKDOWN`],
                     ['Total Registrations:', zoneRegs.length],
+                    ['Total Amount:', `₹${zoneAmount.toLocaleString('en-IN')}`],
                     [''],
                     ['CLUB-WISE SUMMARY'],
-                    ['Rank', 'Club Name', 'Registrations', 'Percentage']
+                    ['Rank', 'Club Name', 'Registrations', 'Amount', 'Percentage']
                 ];
 
-                // Count by club
+                // Count by club with amounts
                 const clubStats = {};
                 zoneRegs.forEach(r => {
                     let club = r.club || 'Unknown';
@@ -1213,9 +1224,10 @@
                     if (CLUB_ALIASES[club]) club = CLUB_ALIASES[club];
 
                     if (!clubStats[club]) {
-                        clubStats[club] = { count: 0 };
+                        clubStats[club] = { count: 0, amount: 0 };
                     }
                     clubStats[club].count++;
+                    clubStats[club].amount += parseFloat(r.registration_amount) || 0;
                 });
 
                 // Sort by count descending
@@ -1233,12 +1245,13 @@
                         `${medal} ${rank}`,
                         club,
                         stats.count,
+                        `₹${stats.amount.toLocaleString('en-IN')}`,
                         `${percentage}%`
                     ]);
                 });
 
                 // Add total row
-                zoneHeaderData.push(['', 'TOTAL', zoneRegs.length, '100%']);
+                zoneHeaderData.push(['', 'TOTAL', zoneRegs.length, `₹${zoneAmount.toLocaleString('en-IN')}`, '100%']);
                 zoneHeaderData.push(['']);
                 zoneHeaderData.push(['DETAILED REGISTRATIONS']);
 
@@ -1261,7 +1274,7 @@
                 });
 
                 zoneWs['!cols'] = [
-                    { wch: 10 }, { wch: 35 }, { wch: 15 }, { wch: 15 }, { wch: 12 }
+                    { wch: 10 }, { wch: 35 }, { wch: 15 }, { wch: 18 }, { wch: 15 }, { wch: 12 }
                 ];
 
                 XLSX.utils.book_append_sheet(wb, zoneWs, `Zone ${zoneNum}`);
@@ -1289,15 +1302,20 @@
             // Create workbook
             const wb = XLSX.utils.book_new();
 
-            // Build comprehensive zone summary data
+            // Build comprehensive zone summary data with amounts
+            const totalRevenue = allRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
+
             const zoneData = [
                 ['SNEHA SAURABHA 2025-26 - ZONE-WISE CLUB SUMMARY'],
                 ['Generated on:', new Date().toLocaleString('en-IN')],
+                ['Total Registrations:', allRegs.length],
+                ['Total Revenue:', `₹${totalRevenue.toLocaleString('en-IN')}`],
                 [''],
-                ['Zone', 'Rank', 'Club Name', 'Registrations', 'Percentage']
+                ['Zone', 'Rank', 'Club Name', 'Registrations', 'Amount', 'Percentage']
             ];
 
             let grandTotal = 0;
+            let grandTotalAmount = 0;
 
             for (let zoneNum = 1; zoneNum <= 9; zoneNum++) {
                 const zoneRegs = allRegs.filter(r => {
@@ -1305,25 +1323,29 @@
                     return m && m[1] == zoneNum;
                 });
 
-                // Count by club
+                // Count by club with amounts
                 const clubStats = {};
                 zoneRegs.forEach(r => {
                     const club = r.club || 'Unknown';
+                    const amount = parseFloat(r.registration_amount) || 0;
                     if (!clubStats[club]) {
-                        clubStats[club] = { count: 0 };
+                        clubStats[club] = { count: 0, amount: 0 };
                     }
                     clubStats[club].count++;
+                    clubStats[club].amount += amount;
                 });
 
                 // Sort by count descending
                 const sortedClubs = Object.entries(clubStats).sort((a, b) => b[1].count - a[1].count);
                 const zoneTotal = sortedClubs.reduce((sum, [, stats]) => sum + stats.count, 0);
+                const zoneTotalAmount = sortedClubs.reduce((sum, [, stats]) => sum + stats.amount, 0);
 
                 grandTotal += zoneTotal;
+                grandTotalAmount += zoneTotalAmount;
 
                 // Add zone header
-                zoneData.push(['', '', '', '', '']);
-                zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Clubs)`, '', '']);
+                zoneData.push(['', '', '', '', '', '']);
+                zoneData.push([`ZONE ${zoneNum}`, '', `(${sortedClubs.length} Clubs)`, zoneTotal, `₹${zoneTotalAmount.toLocaleString('en-IN')}`, '']);
 
                 // Add clubs with rankings
                 sortedClubs.forEach(([club, stats], idx) => {
@@ -1339,6 +1361,7 @@
                         `${medal} ${rank}`,
                         club,
                         stats.count,
+                        `₹${stats.amount.toLocaleString('en-IN')}`,
                         `${percentage}%`
                     ]);
                 });
@@ -1349,18 +1372,20 @@
                     '',
                     `ZONE ${zoneNum} TOTAL`,
                     zoneTotal,
+                    `₹${zoneTotalAmount.toLocaleString('en-IN')}`,
                     '100%'
                 ]);
             }
 
             // Add grand total
-            zoneData.push(['', '', '', '', '']);
-            zoneData.push(['', '', '', '', '']);
+            zoneData.push(['', '', '', '', '', '']);
+            zoneData.push(['', '', '', '', '', '']);
             zoneData.push([
                 'GRAND TOTAL',
                 '',
                 'All 9 Zones',
                 grandTotal,
+                `₹${grandTotalAmount.toLocaleString('en-IN')}`,
                 '100%'
             ]);
 
@@ -1371,11 +1396,12 @@
                 { wch: 10 },  // Rank
                 { wch: 35 },  // Club Name
                 { wch: 15 },  // Registrations
+                { wch: 18 },  // Amount
                 { wch: 12 }   // Percentage
             ];
 
             // Add autofilter
-            ws['!autofilter'] = { ref: 'A4:E4' };
+            ws['!autofilter'] = { ref: 'A6:F6' };
 
             XLSX.utils.book_append_sheet(wb, ws, 'Zone-wise Summary');
 
