@@ -1253,19 +1253,25 @@
                 // Add total row
                 zoneHeaderData.push(['', 'TOTAL', zoneRegs.length, `₹${zoneAmount.toLocaleString('en-IN')}`, '100%']);
                 zoneHeaderData.push(['']);
-                zoneHeaderData.push(['DETAILED REGISTRATIONS']);
+                zoneHeaderData.push(['DETAILED REGISTRATIONS - ALL PARTICIPANTS']);
 
                 // Create zone sheet
                 const zoneWs = XLSX.utils.aoa_to_sheet(zoneHeaderData);
 
-                // Add detailed registrations below summary
+                // Add comprehensive detailed registrations below summary
                 const zoneDetailData = zoneRegs.map((reg, idx) => ({
                     'S.No': idx + 1,
+                    'Registration ID': reg.registration_id,
                     'Name': reg.name,
                     'Mobile': reg.mobile,
+                    'Email': reg.email || 'N/A',
                     'Club': reg.club || 'N/A',
                     'Type': reg.registration_type,
-                    'Meal': reg.meal_preference
+                    'Meal': reg.meal_preference,
+                    'T-Shirt': reg.tshirt_size || 'N/A',
+                    'Amount': `₹${(parseFloat(reg.registration_amount) || 0).toLocaleString('en-IN')}`,
+                    'Payment Status': reg.payment_status || 'pending',
+                    'Date': new Date(reg.created_at).toLocaleDateString('en-IN')
                 }));
 
                 XLSX.utils.sheet_add_json(zoneWs, zoneDetailData, {
@@ -1274,7 +1280,18 @@
                 });
 
                 zoneWs['!cols'] = [
-                    { wch: 10 }, { wch: 35 }, { wch: 15 }, { wch: 18 }, { wch: 15 }, { wch: 12 }
+                    { wch: 6 },   // S.No
+                    { wch: 20 },  // Registration ID
+                    { wch: 30 },  // Name
+                    { wch: 15 },  // Mobile
+                    { wch: 30 },  // Email
+                    { wch: 30 },  // Club
+                    { wch: 20 },  // Type
+                    { wch: 10 },  // Meal
+                    { wch: 10 },  // T-Shirt
+                    { wch: 15 },  // Amount
+                    { wch: 15 },  // Payment Status
+                    { wch: 12 }   // Date
                 ];
 
                 XLSX.utils.book_append_sheet(wb, zoneWs, `Zone ${zoneNum}`);
