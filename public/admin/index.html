@@ -1306,7 +1306,7 @@
             }
 
             // === SHEET: UNMAPPED REGISTRATIONS ===
-            const unmappedRegs = allRegs.filter(r => !r.zone || r.zone === 'Unmapped' || r.zone === 'None');
+            // Note: unmappedRegs already declared above in summary section
             
             if (unmappedRegs.length > 0) {
                 const unmappedAmount = unmappedRegs.reduce((sum, r) => sum + (parseFloat(r.registration_amount) || 0), 0);
