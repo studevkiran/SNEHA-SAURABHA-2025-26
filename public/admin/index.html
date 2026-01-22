@@ -521,6 +521,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
+        // ===== API BASE (handles custom domain vs Vercel) =====
+        const API_BASE = (location.hostname.includes('sneha2026.in'))
+            ? 'https://sneha2026.vercel.app'
+            : '';
+
         // ==================== AUTHENTICATION ====================
 
         function checkAuth() {
@@ -597,11 +602,6 @@
 
         // Check auth on page load
         window.addEventListener('DOMContentLoaded', checkAuth);
-
-        // ===== API BASE (handles custom domain vs Vercel) =====
-        const API_BASE = (location.hostname.includes('sneha2026.in'))
-            ? 'https://sneha2026.vercel.app'
-            : '';
 
         // ========== MAIN TALLY FUNCTIONS ==========
 
