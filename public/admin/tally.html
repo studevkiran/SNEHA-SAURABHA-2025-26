@@ -657,7 +657,6 @@
                         <th class="sortable" onclick="sortTable(2)" data-column="club">Club</th>
                         <th>Name</th>
                         <th class="sortable" onclick="sortTable(3)" data-column="registration_type">Type</th>
-                        <th class="sortable" onclick="sortTable(4)" data-column="meal_preference">Food</th>
                         <th class="sortable" onclick="sortTable(5)" data-column="tshirt_size">Size</th>
                     </tr>
                 </thead>
@@ -1071,8 +1070,6 @@
 
             tbody.innerHTML = registrations.map((reg, index) => {
                 const date = new Date(reg.created_at).toLocaleDateString('en-IN');
-                const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' :
-                    reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
 
                 return `
                     <tr>
@@ -1081,7 +1078,6 @@
                         <td>${reg.club || 'N/A'}</td>
                         <td>${reg.name}</td>
                         <td>${reg.registration_type}</td>
-                        <td class="${mealClass}">${reg.meal_preference}</td>
                         <td>${reg.tshirt_size || 'N/A'}</td>
                     </tr>
                 `;
