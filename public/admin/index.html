@@ -202,21 +202,6 @@
             color: #92400E;
         }
 
-        .meal-veg {
-            color: #16A34A;
-            font-weight: 600;
-        }
-
-        .meal-non-veg {
-            color: #DC2626;
-            font-weight: 600;
-        }
-
-        .meal-jain {
-            color: #D97706;
-            font-weight: 600;
-        }
-
         .badge-imported {
             display: inline-block;
             padding: 4px 10px;
@@ -382,7 +367,6 @@
                         <th>Email</th>
                         <th class="sortable" onclick="sortTable(3)" data-column="registration_type">Type</th>
                         <th class="sortable" onclick="sortTable(4)" data-column="club">Club</th>
-                        <th class="sortable" onclick="sortTable(5)" data-column="meal_preference">Meal</th>
                         <th class="sortable" onclick="sortTable(6)" data-column="tshirt_size">T-Shirt</th>
                         <th>Amount</th>
                         <th>Status</th>
@@ -392,7 +376,7 @@
                 </thead>
                 <tbody id="registrations-body">
                     <tr>
-                        <td colspan="12" class="loading">Loading registrations...</td>
+                        <td colspan="11" class="loading">Loading registrations...</td>
                     </tr>
                 </tbody>
             </table>
@@ -466,17 +450,6 @@
                         <option value="Gold Sponsor">Gold Sponsor</option>
                         <option value="Platinum Sponsor">Platinum Sponsor</option>
                         <option value="Patron Sponsor">Patron Sponsor</option>
-                    </select>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Meal Preference
-                        *</label>
-                    <select id="edit_meal_preference" required
-                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
-                        <option value="Veg">Veg</option>
-                        <option value="Non-Veg">Non-Veg</option>
-                        <option value="Jain">Jain</option>
                     </select>
                 </div>
 
@@ -951,8 +924,6 @@
 
             tbody.innerHTML = registrations.map(reg => {
                 const date = new Date(reg.created_at).toLocaleDateString('en-IN');
-                const mealClass = reg.meal_preference === 'Veg' ? 'meal-veg' :
-                    reg.meal_preference === 'Non-Veg' ? 'meal-non-veg' : 'meal-jain';
                 const statusClass = reg.payment_status === 'paid' ? 'status-paid' : 'status-pending';
 
                 // Determine source (Imported vs New)
@@ -970,7 +941,6 @@
                         <td>${reg.email || 'N/A'}</td>
                         <td>${reg.registration_type}</td>
                         <td>${reg.club || 'N/A'}</td>
-                        <td class="${mealClass}">${reg.meal_preference}</td>
                         <td>${reg.tshirt_size || 'N/A'}</td>
                         <td>₹${(reg.registration_amount || 0).toLocaleString('en-IN')}</td>
                         <td><span class="status-badge ${statusClass}">${reg.payment_status || 'pending'}</span></td>
@@ -1511,7 +1481,6 @@
             document.getElementById('edit_registration_amount').value = registration.registration_amount || 0;
             document.getElementById('edit_club').value = registration.club || '';
             document.getElementById('edit_registration_type').value = registration.registration_type;
-            document.getElementById('edit_meal_preference').value = registration.meal_preference;
             document.getElementById('edit_tshirt_size').value = registration.tshirt_size || 'M';
             document.getElementById('edit_remarks').value = '';
 
@@ -1545,7 +1514,6 @@
                 registration_amount: parseFloat(document.getElementById('edit_registration_amount').value) || 0,
                 club: document.getElementById('edit_club').value,
                 registration_type: document.getElementById('edit_registration_type').value,
-                meal_preference: document.getElementById('edit_meal_preference').value,
                 tshirt_size: document.getElementById('edit_tshirt_size').value,
                 edit_remarks: remarks
             };
