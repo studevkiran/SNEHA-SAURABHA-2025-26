@@ -454,6 +454,17 @@
                 </div>
 
                 <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Meal Preference
+                        *</label>
+                    <select id="edit_meal_preference" required
+                        style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 15px;">
+                        <option value="Veg">Veg</option>
+                        <option value="Non-Veg">Non-Veg</option>
+                        <option value="Jain">Jain</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">T-Shirt Size
                         *</label>
                     <select id="edit_tshirt_size" required
@@ -1481,6 +1492,7 @@
             document.getElementById('edit_registration_amount').value = registration.registration_amount || 0;
             document.getElementById('edit_club').value = registration.club || '';
             document.getElementById('edit_registration_type').value = registration.registration_type;
+            document.getElementById('edit_meal_preference').value = registration.meal_preference;
             document.getElementById('edit_tshirt_size').value = registration.tshirt_size || 'M';
             document.getElementById('edit_remarks').value = '';
 
@@ -1514,6 +1526,7 @@
                 registration_amount: parseFloat(document.getElementById('edit_registration_amount').value) || 0,
                 club: document.getElementById('edit_club').value,
                 registration_type: document.getElementById('edit_registration_type').value,
+                meal_preference: document.getElementById('edit_meal_preference').value,
                 tshirt_size: document.getElementById('edit_tshirt_size').value,
                 edit_remarks: remarks
             };
