@@ -900,13 +900,26 @@
         }
 
         function sortRegistrationsByDefault() {
-            // Sort by registration_id DESCENDING (2026RTY0734, 2026RTY0733, etc.) - newest first
+            // Sort by registration_id DESCENDING - newest first
+            // Handle both 2026RTY#### and SPT### formats
             filteredRegistrations.sort((a, b) => {
-                // Extract last 4 digits as numbers for proper sorting
-                const aNum = parseInt((a.registration_id || '').slice(-4)) || 0;
-                const bNum = parseInt((b.registration_id || '').slice(-4)) || 0;
-
-                return bNum - aNum; // Descending order (highest first)
+                const aId = a.registration_id || '';
+                const bId = b.registration_id || '';
+                
+                // Convert registration ID to sortable number
+                const getNumericValue = (id) => {
+                    if (id.startsWith('2026RTY')) {
+                        // Extract last 4 digits: 2026RTY1197 → 1197
+                        return parseInt(id.slice(-4)) || 0;
+                    } else if (id.startsWith('SPT')) {
+                        // SPT001 → 1198, SPT002 → 1199, etc.
+                        const num = parseInt(id.substring(3)) || 0;
+                        return 1197 + num;
+                    }
+                    return 0;
+                };
+                
+                return getNumericValue(bId) - getNumericValue(aId); // Descending
             });
 
             // Update UI to show sorted state
