@@ -85,8 +85,15 @@ module.exports = async (req, res) => {
       query += ' WHERE ' + conditions.join(' AND ');
     }
 
-    // Sort by created_at in descending order (newest first) to handle both 2026RTY#### and SPT### formats
-    query += ' ORDER BY created_at DESC';
+    // Sort by registration sequence: 2026RTY#### then SPT###
+    // For 2026RTY format: extract last 4 digits
+    // For SPT format: add 1197 to make SPT001=1198, SPT002=1199, etc.
+    query += ` ORDER BY 
+      CASE 
+        WHEN registration_id LIKE '2026RTY%' THEN CAST(RIGHT(registration_id, 4) AS INTEGER)
+        WHEN registration_id LIKE 'SPT%' THEN 1197 + CAST(SUBSTRING(registration_id FROM 4) AS INTEGER)
+        ELSE 0
+      END DESC`;
 
     const result = await pool.query(query, values);
     const registrations = result.rows;
