@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,7 +35,7 @@
             justify-content: space-between;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #D4AF37;
+            border-bottom: 2px solid #4CAF50;
             gap: 20px;
         }
 
@@ -52,7 +52,7 @@
         }
 
         header h1 {
-            color: #D4AF37;
+            color: #4CAF50;
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 8px;
@@ -95,7 +95,7 @@
 
         .search-box input:focus {
             outline: none;
-            border-color: #D4AF37;
+            border-color: #4CAF50;
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
         }
 
@@ -105,7 +105,7 @@
         }
 
         .stat-item strong {
-            color: #D4AF37;
+            color: #4CAF50;
             font-size: 18px;
             margin-right: 5px;
         }
@@ -169,12 +169,12 @@
 
         th.sorted-asc::after {
             content: ' ↑';
-            color: #D4AF37;
+            color: #4CAF50;
         }
 
         th.sorted-desc::after {
             content: ' ↓';
-            color: #D4AF37;
+            color: #4CAF50;
         }
 
         td {
@@ -265,7 +265,7 @@
         }
 
         .zone-modal-header {
-            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
             padding: 24px;
             color: white;
             position: relative;
@@ -318,7 +318,7 @@
             margin-bottom: 12px;
             background: #F9FAFB;
             border-radius: 12px;
-            border-left: 4px solid #D4AF37;
+            border-left: 4px solid #4CAF50;
             transition: all 0.3s;
         }
 
@@ -328,7 +328,7 @@
         }
 
         .club-item.rank-1 {
-            border-left-color: #FFD700;
+            border-left-color: #81C784;
             background: linear-gradient(135deg, #FFF9E6 0%, #FFFDF7 100%);
         }
 
@@ -386,7 +386,7 @@
         }
 
         .club-item.rank-1 .progress-fill {
-            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+            background: linear-gradient(90deg, #81C784 0%, #4CAF50 100%);
         }
 
         .club-item.rank-2 .progress-fill {
@@ -538,7 +538,7 @@
             text-align: center;
             line-height: 46px;
             font-size: 24px;
-            color: #D4AF37;
+            color: #4CAF50;
             left: 0;
             top: 0;
             height: 46px;
@@ -561,7 +561,7 @@
             line-height: 46px;
             font-size: 24px;
             opacity: 0;
-            background: #D4AF37;
+            background: #4CAF50;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             left: 0;
@@ -583,7 +583,7 @@
         }
 
         .progress-wrap svg.progress-circle path {
-            stroke: #D4AF37;
+            stroke: #4CAF50;
             stroke-width: 4;
             box-sizing: border-box;
             transition: all 200ms linear;
@@ -614,7 +614,7 @@
         <!-- Total Registrations Display (Centered) -->
         <div style="display: flex; justify-content: center; margin-bottom: 30px;">
             <div
-                style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); padding: 24px 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3); text-align: center; min-width: 280px;">
+                style="background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%); padding: 24px 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3); text-align: center; min-width: 280px;">
                 <div
                     style="font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
                     📊 Total Registrations</div>
@@ -1173,9 +1173,9 @@
                 .filter(([type, count]) => type !== 'deregistered' && type !== 'Unknown')
                 .sort((a, b) => b[1] - a[1]) // Sort by count descending
                 .map(([type, count]) => `
-                    <div style="background: white; padding: 8px 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#D4AF37' : '#E5E7EB'}; min-width: 140px;">
+                    <div style="background: white; padding: 8px 12px; border-radius: 6px; border-left: 4px solid ${count > 0 ? '#4CAF50' : '#E5E7EB'}; min-width: 140px;">
                         <div style="font-size: 13px; color: ${count > 0 ? '#666' : '#9CA3AF'}; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${type}</div>
-                        <div style="font-size: 22px; font-weight: 700; color: ${count > 0 ? '#D4AF37' : '#9CA3AF'};">${count}</div>
+                        <div style="font-size: 22px; font-weight: 700; color: ${count > 0 ? '#4CAF50' : '#9CA3AF'};">${count}</div>
                     </div>
                 `).join('');
 
@@ -1302,7 +1302,7 @@
 
                 // Sub-zone header
                 html += `
-                    <div style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%); padding: 10px 14px; border-radius: 6px; margin: 16px 0 10px 0;">
+                    <div style="background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%); padding: 10px 14px; border-radius: 6px; margin: 16px 0 10px 0;">
                         <div style="font-weight: 600; font-size: 15px; color: #1F2937; margin-bottom: 2px;">${subZone}</div>
                         <div style="font-size: 13px; color: #4B5563;">${subZoneTotalRegs}/${subZoneTotalMembers} registrations (${subZonePercentage}%)</div>
                     </div>

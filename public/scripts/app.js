@@ -1279,7 +1279,7 @@ async function verifyPaymentAndShowSuccess(orderId, pendingData) {
         if (bannerContent) {
             bannerContent.innerHTML = `
                 <div style="text-align: center; padding: 40px 20px;">
-                    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #D4AF37; 
+                    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #4CAF50; 
                                 border-radius: 50%; width: 60px; height: 60px; 
                                 animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
                     <h2 style="color: #2C2416; margin-bottom: 10px;">Verifying Payment...</h2>
@@ -2633,7 +2633,7 @@ function showBirthdayWishes() {
         ">
             <div id="birthday-modal-content" style="
                 background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
-                border: 3px solid #D4AF37;
+                border: 3px solid #4CAF50;
                 border-radius: 15px;
                 padding: 20px 15px 15px;
                 max-width: 420px;
@@ -2652,17 +2652,17 @@ function showBirthdayWishes() {
                 Birthday Wishes
             </h2>
             
-            <div style="margin: 0 auto 10px; width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 2px solid #D4AF37; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);">
+            <div style="margin: 0 auto 10px; width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 2px solid #4CAF50; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);">
                 <img src="images/ramki sir.png" alt="DG Rtn. Ramakrishna P K" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">
             </div>
             
             <div style="color: #333; font-size: 13px; line-height: 1.4; margin-bottom: 10px;">
                 Warmest Birthday Wishes to<br>
-                <strong style="color: #D4AF37; font-size: 16px; display: block; margin: 4px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Rtn. Ramakrishna P K</strong>
+                <strong style="color: #4CAF50; font-size: 16px; display: block; margin: 4px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Rtn. Ramakrishna P K</strong>
                 <strong style="color: #666; font-size: 11px;">District Governor, Rotary District 3181</strong>
             </div>
             
-            <div style="background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%); padding: 12px 10px; border-radius: 10px; margin: 12px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
+            <div style="background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%); padding: 12px 10px; border-radius: 10px; margin: 12px 0; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
                 <div style="font-size: 12px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; color: #8B1538;">
                     Special Announcement
                 </div>

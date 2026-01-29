@@ -1,14 +1,14 @@
-/* Kalparuksha Amber-Gold Theme - Mobile First */
+/* Green Theme - Mobile First (Changed from Amber-Gold for Spot Registration) */
 :root {
-    --primary-gold: #D4AF37;
-    --dark-gold: #B8960C;
-    --light-gold: #F4E4C1;
-    --amber: #FFBF00;
-    --cream: #FFF8DC;
+    --primary-gold: #4CAF50;
+    --dark-gold: #388E3C;
+    --light-gold: #C8E6C9;
+    --amber: #66BB6A;
+    --cream: #E8F5E9;
     --white: #FFFFFF;
-    --text-dark: #2C2416;
-    --text-light: #5C5440;
-    --shadow: rgba(180, 150, 55, 0.3);
+    --text-dark: #1B5E20;
+    --text-light: #4CAF50;
+    --shadow: rgba(76, 175, 80, 0.3);
     --success: #4CAF50;
     --error: #F44336;
 }
@@ -3372,7 +3372,7 @@ h3 {
     top: 15px;
     left: 15px;
     background: rgba(0, 0, 0, 0.7);
-    color: #D4AF37;
+    color: #4CAF50;
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 12px;
@@ -3432,7 +3432,7 @@ h3 {
 .hotel-price {
     font-size: 18px;
     font-weight: 700;
-    color: #D4AF37;
+    color: #4CAF50;
     margin-bottom: 15px;
 }
 
@@ -3447,7 +3447,7 @@ h3 {
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 15px;
-    border-left: 3px solid #D4AF37;
+    border-left: 3px solid #4CAF50;
 }
 
 .hotel-highlights p {
@@ -3557,7 +3557,7 @@ h3 {
 }
 
 .contact-link:hover {
-    color: #D4AF37;
+    color: #4CAF50;
 }
 
 @media (max-width: 768px) {
@@ -3717,7 +3717,7 @@ h3 {
 }
 
 .committee-header h3 {
-    color: #D4AF37;
+    color: #4CAF50;
     font-size: 20px;
     margin-bottom: 15px;
     text-transform: uppercase;
@@ -3751,7 +3751,7 @@ h3 {
 .committee-member:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border-color: #D4AF37;
+    border-color: #4CAF50;
 }
 
 .member-content {
@@ -3775,7 +3775,7 @@ h3 {
 
 .member-role {
     font-size: 11px;
-    color: #D4AF37;
+    color: #4CAF50;
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 2px;
@@ -3811,7 +3811,7 @@ h3 {
     width: 100%;
     background: #FFFBEB;
     /* Subtle highlight background */
-    border-color: #D4AF37;
+    border-color: #4CAF50;
     border-width: 2px;
     /* Gold border for the lead */
     transform: scale(1.02);
@@ -3879,7 +3879,7 @@ h3 {
    ========================================== */
 .birthday-banner {
     background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
-    border: 2px solid #D4AF37;
+    border: 2px solid #4CAF50;
     border-radius: 15px;
     padding: 20px;
     margin: 20px 0;
@@ -3924,7 +3924,7 @@ h3 {
 }
 
 .birthday-badge {
-    background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%);
+    background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
     color: white;
     padding: 8px 16px;
     border-radius: 20px;

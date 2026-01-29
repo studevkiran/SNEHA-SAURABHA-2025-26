@@ -2,8 +2,8 @@
 
 /* CSS Variables */
 :root {
-    --primary-gold: #FFA500;
-    --light-gold: #FFD700;
+    --primary-gold: #4CAF50;
+    --light-gold: #81C784;
     --cream: #FFF8DC;
     --white: #FFFFFF;
     --text-dark: #333333;
@@ -350,7 +350,7 @@ body {
 }
 
 .btn-action {
-    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+    background: linear-gradient(135deg, #4CAF50 0%, #FF8C00 100%);
     color: var(--white);
     border: none;
     padding: 10px 16px;
@@ -450,7 +450,7 @@ table {
 }
 
 thead {
-    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+    background: linear-gradient(135deg, #4CAF50 0%, #FF8C00 100%);
 }
 
 th, td {

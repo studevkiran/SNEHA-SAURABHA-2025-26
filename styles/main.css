@@ -1,14 +1,14 @@
-/* Kalparuksha Amber-Gold Theme - Mobile First */
+/* Green Theme - Mobile First (Changed from Amber-Gold for Spot Registration) */
 :root {
-    --primary-gold: #D4AF37;
-    --dark-gold: #B8960C;
-    --light-gold: #F4E4C1;
-    --amber: #FFBF00;
-    --cream: #FFF8DC;
+    --primary-gold: #4CAF50;
+    --dark-gold: #388E3C;
+    --light-gold: #C8E6C9;
+    --amber: #66BB6A;
+    --cream: #E8F5E9;
     --white: #FFFFFF;
-    --text-dark: #2C2416;
-    --text-light: #5C5440;
-    --shadow: rgba(180, 150, 55, 0.3);
+    --text-dark: #1B5E20;
+    --text-light: #4CAF50;
+    --shadow: rgba(76, 175, 80, 0.3);
     --success: #4CAF50;
     --error: #F44336;
 }
@@ -2033,7 +2033,7 @@ h3 {
    ========================================== */
 .birthday-banner {
     background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
-    border: 2px solid #D4AF37;
+    border: 2px solid #4CAF50;
     border-radius: 15px;
     padding: 20px;
     margin: 20px 0;
@@ -2078,7 +2078,7 @@ h3 {
 }
 
 .birthday-badge {
-    background: linear-gradient(135deg, #D4AF37 0%, #C19A2E 100%);
+    background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
