@@ -85,8 +85,8 @@ module.exports = async (req, res) => {
       query += ' WHERE ' + conditions.join(' AND ');
     }
 
-    // Sort by the numeric part of registration_id (last 4 digits) in descending order
-    query += ' ORDER BY CAST(RIGHT(registration_id, 4) AS INTEGER) DESC';
+    // Sort by created_at in descending order (newest first) to handle both 2026RTY#### and SPT### formats
+    query += ' ORDER BY created_at DESC';
 
     const result = await pool.query(query, values);
     const registrations = result.rows;
