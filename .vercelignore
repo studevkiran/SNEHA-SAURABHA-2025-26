@@ -1,0 +1,16 @@
+# Keep deployment small on Hobby by uploading only required API functions.
+api/**
+
+# Required API functions (12 total)
+!api/admin/login.js
+!api/admin/zone-data.js
+!api/registrations/create.js
+!api/registrations/list.js
+!api/registrations/update.js
+!api/registrations/by-order.js
+!api/registrations/by-reg-id.js
+!api/cashfree/initiate.js
+!api/cashfree/verify.js
+!api/cashfree/webhook.js
+!api/send-whatsapp-confirmation.js
+!api/attendance/checkin.js
