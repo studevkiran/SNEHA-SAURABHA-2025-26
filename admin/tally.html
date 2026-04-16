@@ -1260,11 +1260,14 @@
                 });
             }
 
-            const zonePercentage = totalZoneMembers > 0 ? ((totalZoneRegs / totalZoneMembers) * 100).toFixed(1) : '0.0';
+            const zonePercentage = totalZoneMembers > 0 ? ((totalZoneRegs / totalZoneMembers) * 100).toFixed(1) : 'N/A';
+            const subtitleRatio = totalZoneMembers > 0
+                ? `${totalZoneRegs}/${totalZoneMembers}`
+                : `${totalZoneRegs}/members data unavailable`;
 
             // Update modal header
             document.getElementById('modalZoneTitle').textContent = `🗺️ Zone ${zoneNum} - Complete Club List`;
-            document.getElementById('modalZoneSubtitle').textContent = `${totalZoneRegs}/${totalZoneMembers} registrations (${zonePercentage}%) | ${allSubZones.length} sub-zone${allSubZones.length > 1 ? 's' : ''}`;
+            document.getElementById('modalZoneSubtitle').textContent = `${subtitleRatio} registrations (${zonePercentage}${zonePercentage === 'N/A' ? '' : '%'}) | ${allSubZones.length} sub-zone${allSubZones.length > 1 ? 's' : ''}`;
 
             // Generate HTML for each sub-zone
             const modalContent = document.getElementById('modalZoneContent');
