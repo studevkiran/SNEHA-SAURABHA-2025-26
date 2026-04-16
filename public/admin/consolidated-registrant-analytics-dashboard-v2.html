@@ -1284,6 +1284,10 @@
             let html = '';
 
             allSubZones.forEach(subZone => {
+                const subZoneRegs = (usingFallbackSubZone || allSubZones.length === 1)
+                    ? zoneRegs
+                    : zoneRegs.filter(r => (r.zone || '').trim().toLowerCase() === subZone.trim().toLowerCase());
+
                 // Get ALL clubs in this sub-zone (from ZONE_CLUBS)
                 const allClubsInSubZone = usingFallbackSubZone
                     ? [...new Set(zoneRegs.map(r => r.club).filter(Boolean))]
@@ -1296,24 +1300,23 @@
                 });
 
                 // Add registration counts
-                zoneRegs.forEach(r => {
-                    if (r.zone === subZone) {
-                        let club = r.club || 'Unknown';
-                        // Normalize club name using aliases
-                        if (CLUB_ALIASES[club]) {
-                            club = CLUB_ALIASES[club];
-                        }
-
-                        if (clubStats[club]) {
-                            clubStats[club].count++;
-                        }
+                subZoneRegs.forEach(r => {
+                    let club = r.club || 'Unknown';
+                    if (CLUB_ALIASES[club]) {
+                        club = CLUB_ALIASES[club];
                     }
+
+                    if (!clubStats[club]) {
+                        clubStats[club] = { count: 0, members: CLUB_MEMBERS[club] || 0 };
+                    }
+
+                    clubStats[club].count++;
                 });
 
                 // Calculate sub-zone totals
                 const subZoneTotalMembers = Object.values(clubStats).reduce((sum, s) => sum + s.members, 0);
                 const subZoneTotalRegs = Object.values(clubStats).reduce((sum, s) => sum + s.count, 0);
-                const subZonePercentage = subZoneTotalMembers > 0 ? ((subZoneTotalRegs / subZoneTotalMembers) * 100).toFixed(1) : '0.0';
+                const subZonePercentage = subZoneTotalMembers > 0 ? ((subZoneTotalRegs / subZoneTotalMembers) * 100).toFixed(1) : 'N/A';
 
                 // Sort clubs by percentage (highest first), then by member count
                 const sortedClubs = Object.entries(clubStats).sort((a, b) => {
@@ -1327,7 +1330,7 @@
                 html += `
                     <div style="background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%); padding: 10px 14px; border-radius: 6px; margin: 16px 0 10px 0;">
                         <div style="font-weight: 600; font-size: 15px; color: #1F2937; margin-bottom: 2px;">${subZone}</div>
-                        <div style="font-size: 13px; color: #4B5563;">${subZoneTotalRegs}/${subZoneTotalMembers} registrations (${subZonePercentage}%)</div>
+                        <div style="font-size: 13px; color: #4B5563;">${subZoneTotalRegs}/${subZoneTotalMembers || 'members data unavailable'} registrations (${subZonePercentage}${subZonePercentage === 'N/A' ? '' : '%'})</div>
                     </div>
                 `;
 
