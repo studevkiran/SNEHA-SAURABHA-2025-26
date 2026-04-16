@@ -505,10 +505,33 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // ===== API BASE (handles custom domain vs Vercel) =====
-        const API_BASE = (location.hostname.includes('sneha2026.in'))
-            ? 'https://sneha2026.vercel.app'
-            : '';
+        // ===== API BASE FALLBACKS =====
+        const API_BASES = location.hostname.includes('sneha2026.in')
+            ? ['https://sneha2026.vercel.app', '']
+            : ['', 'https://sneha2026.vercel.app'];
+
+        async function fetchJsonWithFallback(path, options = {}) {
+            let lastError = null;
+
+            for (const base of API_BASES) {
+                const url = `${base}${path}`;
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        const body = await response.text();
+                        throw new Error(`HTTP ${response.status} from ${url}: ${body.slice(0, 120)}`);
+                    }
+
+                    const json = await response.json();
+                    return { json, url };
+                } catch (error) {
+                    lastError = error;
+                    console.warn(`API fallback failed for ${url}:`, error.message || error);
+                }
+            }
+
+            throw lastError || new Error('All API fallbacks failed');
+        }
 
         // ==================== AUTHENTICATION ====================
 
@@ -528,13 +551,11 @@
 
         async function verifyCredentials(username, password) {
             try {
-                const response = await fetch(`${API_BASE}/api/admin/auth`, {
+                const { json: result } = await fetchJsonWithFallback('/api/admin/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-
-                const result = await response.json();
                 return result.success;
             } catch (error) {
                 console.error('❌ Authentication error:', error);
@@ -611,8 +632,7 @@
         async function fetchZoneData() {
             try {
                 console.log('🔄 Fetching zone data...');
-                const response = await fetch('/api/admin/zone-data');
-                const result = await response.json();
+                const { json: result } = await fetchJsonWithFallback('/api/admin/zone-data');
 
                 if (result.success && result.data) {
                     ZONE_MAPPING = result.data.ZONE_MAPPING || {};
@@ -632,16 +652,8 @@
             try {
                 console.log('🔄 Fetching registrations from /api/registrations/list');
 
-                // Use the correct serverless function endpoint
-                const response = await fetch(`${API_BASE}/api/registrations/list`);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ API Response Error:', errorText);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
+                const { json: data, url: usedUrl } = await fetchJsonWithFallback('/api/registrations/list');
+                console.log('✅ Registrations API source:', usedUrl);
                 console.log('✅ API Response:', data);
                 console.log('📊 Total registrations:', data?.data?.total || 0);
                 console.log('💰 Total revenue:', data?.data?.totalRevenue || 0);
@@ -656,6 +668,11 @@
                 // API returns {success: true, data: {registrations: [...], total: ...}}
                 if (data.success && data.data && data.data.registrations) {
                     allRegistrations = data.data.registrations || [];
+                    try {
+                        localStorage.setItem('tally_cached_regs', JSON.stringify(allRegistrations));
+                    } catch (e) {
+                        console.warn('Could not cache registrations:', e);
+                    }
                     console.log('📋 Loaded registrations:', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
 
@@ -671,6 +688,11 @@
                 } else if (data.success && data.registrations) {
                     // Fallback if structure is different
                     allRegistrations = data.registrations || [];
+                    try {
+                        localStorage.setItem('tally_cached_regs', JSON.stringify(allRegistrations));
+                    } catch (e) {
+                        console.warn('Could not cache registrations:', e);
+                    }
                     console.log('📋 Loaded registrations (fallback):', allRegistrations.length);
                     filteredRegistrations = [...allRegistrations];
 
@@ -685,6 +707,21 @@
                 }
             } catch (error) {
                 console.error('❌ Error fetching registrations:', error);
+                const cached = localStorage.getItem('tally_cached_regs');
+                if (cached) {
+                    try {
+                        allRegistrations = JSON.parse(cached) || [];
+                        filteredRegistrations = [...allRegistrations];
+                        sortRegistrationsByDefault();
+                        displayRegistrations(filteredRegistrations);
+                        updateStats(filteredRegistrations);
+                        showError('Live API unavailable. Showing last cached data.');
+                        return;
+                    } catch (e) {
+                        console.error('❌ Failed to parse cached registrations:', e);
+                    }
+                }
+
                 showError('Error loading data: ' + error.message);
             }
         }
