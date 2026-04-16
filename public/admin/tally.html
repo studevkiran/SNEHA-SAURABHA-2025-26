@@ -790,6 +790,35 @@
         let filteredRegistrations = [];
         let currentSort = { column: 'registration_id', direction: 'desc' }; // Default descending
 
+        // Try local API first, then stable hosted API fallbacks.
+        const API_BASES = [
+            '',
+            'https://sneha2026.vercel.app',
+            'https://www.sneha2026.in'
+        ];
+
+        async function fetchJsonWithFallback(path, options = {}) {
+            let lastError = null;
+
+            for (const base of API_BASES) {
+                const url = `${base}${path}`;
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        const text = await response.text();
+                        throw new Error(`HTTP ${response.status} from ${url}: ${text.slice(0, 120)}`);
+                    }
+                    const json = await response.json();
+                    return { json, url };
+                } catch (error) {
+                    lastError = error;
+                    console.warn('API fallback failed:', url, error.message || error);
+                }
+            }
+
+            throw lastError || new Error('All API fallbacks failed');
+        }
+
         // Fetch registrations on page load
         document.addEventListener('DOMContentLoaded', function () {
             fetchZoneData().then(() => {
@@ -806,11 +835,11 @@
         async function fetchZoneData() {
             try {
                 console.log('🔄 Fetching zone data...');
-                const response = await fetch('/api/admin/zone-data?t=' + Date.now(), { 
+                const { json: result, url } = await fetchJsonWithFallback('/api/admin/zone-data?t=' + Date.now(), {
                     cache: 'no-store',
                     headers: { 'Cache-Control': 'no-cache' }
                 });
-                const result = await response.json();
+                console.log('✅ Zone data source:', url);
 
                 if (result.success && result.data) {
                     ZONE_MAPPING = result.data.ZONE_MAPPING || {};
@@ -830,16 +859,8 @@
             try {
                 console.log('🔄 Fetching registrations from /api/registrations/list');
 
-                // Use the correct serverless function endpoint
-                const response = await fetch('/api/registrations/list');
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ API Response Error:', errorText);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
+                const { json: data, url } = await fetchJsonWithFallback('/api/registrations/list');
+                console.log('✅ Registrations source:', url);
                 console.log('✅ API Response:', data);
                 console.log('📊 Total registrations:', data?.data?.total || 0);
 
@@ -1460,13 +1481,11 @@
             };
 
             try {
-                const response = await fetch('/api/registrations/update', {
+                const { json: result } = await fetchJsonWithFallback('/api/registrations/update', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updateData)
                 });
-
-                const result = await response.json();
 
                 if (result.success) {
                     alert('✅ Registration updated successfully!');
