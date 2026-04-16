@@ -1239,11 +1239,10 @@
 
         function showZoneDetails(zoneNum) {
             // Get all possible sub-zones for this zone
-            const allSubZones = Object.keys(ZONE_CLUBS).filter(z => z.startsWith(`Zone ${zoneNum}`));
-
-            if (allSubZones.length === 0) {
-                alert(`No sub-zones defined for Zone ${zoneNum}`);
-                return;
+            let allSubZones = Object.keys(ZONE_CLUBS).filter(z => z.startsWith(`Zone ${zoneNum}`));
+            const usingFallbackSubZone = allSubZones.length === 0;
+            if (usingFallbackSubZone) {
+                allSubZones = [`Zone ${zoneNum}`];
             }
 
             // Filter registrations for this zone
@@ -1257,13 +1256,19 @@
             let totalZoneMembers = 0;
             let totalZoneRegs = zoneRegs.length;
 
-            // Count all members in this zone
-            allSubZones.forEach(subZone => {
-                const clubs = ZONE_CLUBS[subZone] || [];
-                clubs.forEach(club => {
+            if (usingFallbackSubZone) {
+                const fallbackClubs = [...new Set(zoneRegs.map(r => r.club).filter(Boolean))];
+                fallbackClubs.forEach(club => {
                     totalZoneMembers += (CLUB_MEMBERS[club] || 0);
                 });
-            });
+            } else {
+                allSubZones.forEach(subZone => {
+                    const clubs = ZONE_CLUBS[subZone] || [];
+                    clubs.forEach(club => {
+                        totalZoneMembers += (CLUB_MEMBERS[club] || 0);
+                    });
+                });
+            }
 
             const zonePercentage = totalZoneMembers > 0 ? ((totalZoneRegs / totalZoneMembers) * 100).toFixed(1) : '0.0';
 
@@ -1277,7 +1282,9 @@
 
             allSubZones.forEach(subZone => {
                 // Get ALL clubs in this sub-zone (from ZONE_CLUBS)
-                const allClubsInSubZone = ZONE_CLUBS[subZone] || [];
+                const allClubsInSubZone = usingFallbackSubZone
+                    ? [...new Set(zoneRegs.map(r => r.club).filter(Boolean))]
+                    : (ZONE_CLUBS[subZone] || []);
 
                 // Count registrations by club
                 const clubStats = {};
